@@ -13,6 +13,7 @@ import '../../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../../view/otp_screens/model/VerifyOtpResponce.dart';
@@ -170,11 +171,13 @@ class DataProvider extends ChangeNotifier {
   PostPersonalDetailsResponseModel? get getPostPersonalDetailsResponseModel =>
       _getPostPersonalDetailsResponseModel;
 
+  CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
+  CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
+
   /*LeadBusinessDetailResponseModel? _getLeadBusinessDetailData;
   LeadBusinessDetailResponseModel? get getLeadBusinessDetailData => _getLeadBusinessDetailData;
 
-  CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
-  CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
+
 
   Result<PostLeadBuisnessDetailResponsModel,Exception>? _getPostLeadBuisnessDetailData;
   Result<PostLeadBuisnessDetailResponsModel,Exception>? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
@@ -434,15 +437,18 @@ class DataProvider extends ChangeNotifier {
 
   }
 
-  /*Future<void> getLeadBusinessDetail(String userId,String productCode) async {
-    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
-    notifyListeners();
-  }
 
   Future<void> getCustomerDetailUsingGST(String GSTNumber) async {
     _getCustomerDetailUsingGSTData = await apiService.getCustomerDetailUsingGST(GSTNumber);
     notifyListeners();
   }
+
+  /*Future<void> getLeadBusinessDetail(String userId,String productCode) async {
+    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
+    notifyListeners();
+  }
+
+
 
   Future<void> postLeadBuisnessDetail(PostLeadBuisnessDetailRequestModel postLeadBuisnessDetailRequestModel) async {
     _getPostLeadBuisnessDetailData = await apiService.postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);

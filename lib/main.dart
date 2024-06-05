@@ -1,7 +1,8 @@
 import 'package:direct_sourcing_agent/providers/auth_provider/DataProvider.dart';
-import 'package:direct_sourcing_agent/view/aadhaar_screen/aadhaar_screen.dart';
-import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
-import 'package:direct_sourcing_agent/view/pancard_screen/PancardScreen.dart';
+import 'package:direct_sourcing_agent/utils/constant.dart';
+import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
+import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
+import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,12 +23,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor:kPrimaryColor),
         useMaterial3: true,
       ),
-      //home: AadhaarScreen(activityId: 2, subActivityId: 2),
-      home: AadhaarScreen(activityId: 2, subActivityId: 2),
-      //home: LoginScreen(activityId: 2, subActivityId: 2,MobileNumber: "9522392801",companyID: 1,ProductID: 1,),
+      home:  Connector_signup(activityId: 2,subActivityId: 2,),
     );
   }
 }
