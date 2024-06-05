@@ -15,4 +15,5 @@ enum ScreenType {
   Rejected,
   PrepareAgreement,
   MyAccount,
+  DSATypeSelection,
 }

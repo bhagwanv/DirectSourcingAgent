@@ -139,7 +139,6 @@ ScreenType? customerSequence(
         } else if (leadCurrentActivity.activityName ==
             "Disbursement Completed") {
           Navigator.of(context).pushReplacement(
-            //MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!, pageType: pageType ,isDisbursement: true,)),
             MaterialPageRoute(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
@@ -287,6 +286,10 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
+        }else if (leadCurrentActivity.activityName == "DSATypeSelection") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => BottomNav(pageType: pageType)),);
+          return ScreenType.DSATypeSelection;
         }
       } else {
         return null;

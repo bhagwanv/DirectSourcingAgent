@@ -10,6 +10,7 @@ class ApiUrls{
   //auth
   final String generateOtp="/aggregator/LeadAgg/GenerateDSAOtp";
   final String leadMobileValidate="/aggregator/LeadAgg/DSAValidateOTP";
+  final String getUserData="/aggregator/LeadAgg/GetDSAUserProfile";
 
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";
@@ -63,6 +64,6 @@ class ApiUrls{
   final String getKarzaElectricityServiceProviderList="/services/kyc/v1/KYCDoc/GetKarzaElectricityServiceProviderList";
   final String getKarzaElectricityState="/services/kyc/v1/KYCDoc/GetKarzaElectricityState";
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
-
+  final String PostLeadDSAProfileType="/services/lead/v1/PostLeadDSAProfileType";
 
 }

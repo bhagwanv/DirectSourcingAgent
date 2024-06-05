@@ -1,4 +1,5 @@
-import 'dart:io';
+
+import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -11,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/DateTextFormatter.dart';
 import '../../utils/ImagePicker.dart';
@@ -45,7 +45,6 @@ class PancardScreen extends StatefulWidget {
 
 class _PancardScreenState extends State<PancardScreen> {
   final TextEditingController _panNumberCl = TextEditingController();
-  final TextEditingController _fatherNameAsPanCl = TextEditingController();
   var _nameAsPan="";
   var _dOBAsPan="";
   var isLoading = false;
@@ -116,9 +115,6 @@ class _PancardScreenState extends State<PancardScreen> {
                               _nameAsPan = LeadPANData.nameOnCard!;
                             }
 
-                            if( LeadPANData.fatherName!=null){
-                              _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-                            }
                             if(LeadPANData.dob!=null){
                               var formateDob =
                               Utils.dateFormate(context, LeadPANData.dob!);
@@ -267,11 +263,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 ):Container(),
                               ],
                             ),
-                            CommonTextField(
-                              controller: _fatherNameAsPanCl,
-                              hintText: "Enter Father Name",
-                              labelText: "Enter Father Name",
-                            ),
+
 
                             const SizedBox(height: 20),
                             isVerifyPanNumber? Column(
@@ -349,10 +341,7 @@ class _PancardScreenState extends State<PancardScreen> {
 
                                 if (_panNumberCl.text.isEmpty) {
                                   Utils.showToast("Please Enter Valid Pan Card Details",context);
-                                }
-                                else if (_fatherNameAsPanCl.text.isEmpty) {
-                                  Utils.showToast("Please Enter Father Name!!!",context);
-                                }else {
+                                } else {
                                   var postLeadPanRequestModel =
                                   PostLeadPanRequestModel(
                                     leadId: prefsUtil.getInt(LEADE_ID),
@@ -363,7 +352,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                     imagePath: "",
                                     documentId: documentId,
                                     companyId: companyId,
-                                    fathersName:  _fatherNameAsPanCl.text,
+                                    fathersName: "",
                                     dob: dobAsPan,
                                     name: _nameAsPan,
                                   );
@@ -464,7 +453,6 @@ class _PancardScreenState extends State<PancardScreen> {
             Utils.showToast(validPanCardResponsModel.message!,context);
             _nameAsPan="";
             _dOBAsPan="";
-            _fatherNameAsPanCl.text="";
           }
         },
         failure: (exception) {
