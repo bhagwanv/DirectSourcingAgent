@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
+import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../ProductCompanyDetailResponseModel.dart';
@@ -244,6 +246,10 @@ class DataProvider extends ChangeNotifier {
 
   Result<ElectricityAuthenticationResModel,Exception>? _getElectricityAuthenticationData;
   Result<ElectricityAuthenticationResModel,Exception>? get getElectricityAuthenticationData => _getElectricityAuthenticationData;
+
+  Result<ChooseUserTypeResponceModel,Exception>? _getChooseUserTypeData;
+  Result<ChooseUserTypeResponceModel,Exception>? get getChooseUserTypeData => _getChooseUserTypeData;
+
 
   /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
@@ -581,6 +587,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getKarzaElectricityAuthentication(ElectricityAuthenticationReqModel electricityAuthenticationReqModel) async {
     _getElectricityAuthenticationData = await apiService.getKarzaElectricityAuthentication(electricityAuthenticationReqModel) ;
+    notifyListeners();
+  }
+
+  Future<void> getChooseUserType(ChooseUserTypeRequestModel model) async {
+    _getChooseUserTypeData = await apiService.getChooseUserType(model) ;
     notifyListeners();
   }
 
