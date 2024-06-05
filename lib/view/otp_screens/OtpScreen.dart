@@ -312,9 +312,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       String? userId, int? leadId, String? token, DataProvider productProvider) async {
     Utils.onLoading(context, "");
     try {
-      var getUserProfileRequest = GetUserProfileRequest(
-          mobileNumber: userLoginMobile, userId: userId, leadId: leadId);
-      await Provider.of<DataProvider>(context, listen: false).getUserData(getUserProfileRequest);
+      await Provider.of<DataProvider>(context, listen: false).getUserData(/*getUserProfileRequest*/);
       Navigator.of(context, rootNavigator: true).pop();
       if(productProvider.getUserProfileResponse != null) {
         productProvider.getUserProfileResponse!.when(

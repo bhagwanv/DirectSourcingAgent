@@ -554,8 +554,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
     Utils.onLoading(context, "");
 
-    await Provider.of<DataProvider>(context, listen: false)
-        .leadAadharGenerateOTP(request);
+    await Provider.of<DataProvider>(context, listen: false).leadAadharGenerateOTP(request);
 
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -579,8 +578,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                         document: request,
                         requestId: reqID)));
           } else {
-            Utils.showToast(
-                leadAadhaarResponse.error!.error!.message!, context);
+            Utils.showToast(leadAadhaarResponse.error!.error!.message!, context);
           }
         },
         failure: (exception) {

@@ -113,8 +113,7 @@ class _PancardScreenState extends State<PancardScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
+          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
                 if (productProvider.getLeadPANData == null && isLoading) {
                   return Utils.onLoading(context,"");
                 } else {

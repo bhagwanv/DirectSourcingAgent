@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
+import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -213,19 +214,19 @@ class ApiService {
   }
 
   Future<Result<GetUserProfileResponse, Exception>> getUserData(
-      GetUserProfileRequest requestData) async {
+      /*GetUserProfileRequest requestData*/) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        //var base_url = prefsUtil.getString(BASE_URL);
-        var token = await prefsUtil.getString(TOKEN);
-        final response = await interceptor.post(
-            Uri.parse(apiUrls.baseUrl + apiUrls.getUserData),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token'
-            },
-            body: json.encode(requestData));
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(apiUrls.baseUrl + apiUrls.getUserData),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        );
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1774,4 +1775,40 @@ class ApiService {
       return Failure(e);
     }
   }
+
+  Future<Result<DSAPersonalInfoModel, Exception>> getDSAPersonalInfo(
+      String userId, String productCode) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.GetDSAProfileType}?UserId=$userId&productCode=$productCode'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        );
+        print(response.body); // Pr
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final DSAPersonalInfoModel responseModel =
+            DSAPersonalInfoModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
 }

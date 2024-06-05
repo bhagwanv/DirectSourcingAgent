@@ -6,6 +6,8 @@ import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/customer_sequence_logic.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
+import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/splash/model/GetLeadResponseModel.dart';
 import 'package:direct_sourcing_agent/view/splash/model/LeadCurrentRequestModel.dart';
 import 'package:direct_sourcing_agent/view/splash/model/LeadCurrentResponseModel.dart';
@@ -57,8 +59,8 @@ class _ProfileTypesState extends State<ProfileTypes> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.dsaType == "DSAPersonalInfo") {
-
+    if (widget.dsaType == "DSAPersonalInfo") {
+      dSAPersonalInfoApi(context);
     }
   }
 
@@ -68,92 +70,228 @@ class _ProfileTypesState extends State<ProfileTypes> {
 
     return Scaffold(body: SafeArea(
       child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
-            Center(
-              child: Text(
-                'Choose Profile Type',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 70),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: CheckboxTerm(
-                content: "DSA (Direct Selling Agent):",
-                isChecked: _isSelected1,
-                onChanged: (bool? value) {
-                  isTermsChecks = value!;
-                  userType = "DSA";
-                  _handleCheckboxChange(1, isTermsChecks);
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 52, right: 30),
-              child: Text(
-                "If you are representing a registered entity such as a Pvt Ltd Company, HUF, LLC, Proprietorship, or any other registered firm type, you can onboard with us as a DSA. As a DSA, you will facilitate loan applications and earn higher commissions based on successful disbursements.",
-                textAlign: TextAlign.justify,
-                style: GoogleFonts.urbanist(
-                  fontSize: 12,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: CheckboxTerm(
-                content: "Connector",
-                isChecked: _isSelected2,
-                onChanged: (bool? value) {
-                  userType = "Connector";
-                  isTermsChecks = value!;
-                  _handleCheckboxChange(2, isTermsChecks);
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 52, right: 30),
-              child: Text(
-                "If you are an individual without any formal firm registration, you can join us as a Connector. As a Connector, you can refer potential loan applicants and earn commissions based on successful disbursements.",
-                textAlign: TextAlign.justify,
-                style: GoogleFonts.urbanist(
-                  fontSize: 12,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
-              child: Column(
-                children: [
-                  CommonElevatedButton(
-                    onPressed: () async {
-                      chooseUserTypeApi(
-                          context, productProvider, isTermsChecks, userType!);
-                    },
-                    text: "Next",
-                    upperCase: true,
+        if (productProvider.getDSAPersonalInfoData == null) {
+          if(widget.dsaType == "DSAPersonalInfo") {
+            return Container();
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40),
+                Center(
+                  child: Text(
+                    'Choose Profile Type',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
-                ],
+                ),
+                const SizedBox(height: 70),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: CheckboxTerm(
+                    content: "DSA (Direct Selling Agent):",
+                    isChecked: _isSelected1,
+                    onChanged: (bool? value) {
+                      isTermsChecks = value!;
+                      userType = "DSA";
+                      _handleCheckboxChange(1, isTermsChecks);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 52, right: 30),
+                  child: Text(
+                    "If you are representing a registered entity such as a Pvt Ltd Company, HUF, LLC, Proprietorship, or any other registered firm type, you can onboard with us as a DSA. As a DSA, you will facilitate loan applications and earn higher commissions based on successful disbursements.",
+                    textAlign: TextAlign.justify,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 50),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: CheckboxTerm(
+                    content: "Connector",
+                    isChecked: _isSelected2,
+                    onChanged: (bool? value) {
+                      userType = "Connector";
+                      isTermsChecks = value!;
+                      _handleCheckboxChange(2, isTermsChecks);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 52, right: 30),
+                  child: Text(
+                    "If you are an individual without any formal firm registration, you can join us as a Connector. As a Connector, you can refer potential loan applicants and earn commissions based on successful disbursements.",
+                    textAlign: TextAlign.justify,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
+                  child: Column(
+                    children: [
+                      CommonElevatedButton(
+                        onPressed: () async {
+                          chooseUserTypeApi(
+                              context, productProvider, isTermsChecks, userType!);
+                        },
+                        text: "Next",
+                        upperCase: true,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+        } else {
+          if (productProvider.getDSAPersonalInfoData != null) {
+           // Navigator.of(context, rootNavigator: true).pop();
+            if (productProvider.getDSAPersonalInfoData != null) {
+              productProvider.getDSAPersonalInfoData!.when(
+                success: (data) {
+                  if (data.status!) {
+                    if (data.dsaType == "Connector") {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => Connector_signup(
+                              activityId: widget.activityId,
+                              subActivityId: widget.subActivityId,
+                            ),
+                          ),
+                        );
+                      });
+                    } else {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => direct_selling_agent(
+                              activityId: widget.activityId,
+                              subActivityId: widget.subActivityId,
+                            ),
+                          ),
+                        );
+                      });
+                    }
+                  } else {
+                    Utils.showToast(data.message!, context);
+                  }
+                },
+                failure: (exception) {
+                  if (exception is ApiException) {
+                    if (exception.statusCode == 401) {
+                      productProvider.disposeAllProviderData();
+                      ApiService().handle401(context);
+                    } else {
+                      Utils.showToast(exception.errorMessage, context);
+                    }
+                  }
+                },
+              );
+            }
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 40),
+              Center(
+                child: Text(
+                  'Choose Profile Type',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-          ],
-        );
+              const SizedBox(height: 70),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: CheckboxTerm(
+                  content: "DSA (Direct Selling Agent):",
+                  isChecked: _isSelected1,
+                  onChanged: (bool? value) {
+                    isTermsChecks = value!;
+                    userType = "DSA";
+                    _handleCheckboxChange(1, isTermsChecks);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 52, right: 30),
+                child: Text(
+                  "If you are representing a registered entity such as a Pvt Ltd Company, HUF, LLC, Proprietorship, or any other registered firm type, you can onboard with us as a DSA. As a DSA, you will facilitate loan applications and earn higher commissions based on successful disbursements.",
+                  textAlign: TextAlign.justify,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: CheckboxTerm(
+                  content: "Connector",
+                  isChecked: _isSelected2,
+                  onChanged: (bool? value) {
+                    userType = "Connector";
+                    isTermsChecks = value!;
+                    _handleCheckboxChange(2, isTermsChecks);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 52, right: 30),
+                child: Text(
+                  "If you are an individual without any formal firm registration, you can join us as a Connector. As a Connector, you can refer potential loan applicants and earn commissions based on successful disbursements.",
+                  textAlign: TextAlign.justify,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
+                child: Column(
+                  children: [
+                    CommonElevatedButton(
+                      onPressed: () async {
+                        chooseUserTypeApi(
+                            context, productProvider, isTermsChecks, userType!);
+                      },
+                      text: "Next",
+                      upperCase: true,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
       }),
     ));
   }
 
-  void chooseUserTypeApi(BuildContext context, DataProvider productProvider, bool isTermsChecks, String userType) async {
+  void chooseUserTypeApi(BuildContext context, DataProvider productProvider,
+      bool isTermsChecks, String userType) async {
     Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     var model = ChooseUserTypeRequestModel(
@@ -171,7 +309,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
         success: (data) {
           if (data.isSuccess!) {
             fetchData(context);
-          }else{
+          } else {
             Utils.showToast(data.message!, context);
           }
         },
@@ -205,9 +343,9 @@ class _ProfileTypesState extends State<ProfileTypes> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService()
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -216,11 +354,20 @@ class _ProfileTypesState extends State<ProfileTypes> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
       }
     }
+  }
+
+  void dSAPersonalInfoApi(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    Provider.of<DataProvider>(context, listen: false)
+        .getDSAPersonalInfo(userId!, productCode!);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/ApiService.dart';
@@ -142,26 +143,30 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                          height: 69,
-                          width: 51,
-                          alignment: Alignment.topLeft,
-                          child: Image.asset('assets/images/scale.png')),
+                       Center(
+                         child: Text(
+                          'A Selfie with your identity',
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                                               ),
+                       ),
                       const SizedBox(
-                        height: 50,
+                        height: 10,
                       ),
-                      const Text(
-                        'Take a Selfie',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 35, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        'Position your face in the center of the\nframe. Make sure your face is well-lit and nclearly visible.',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15, color: Colors.black),
+                      Center(
+                        child: Text(
+                          'Stay still and look at the camera',
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                       const SizedBox(
                         height: 50,
@@ -170,8 +175,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(0),
                           child: Container(
-                            width: 250,
-                            height: 250,
+                            width: 322,
+                            height: 322,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.rectangle,
@@ -195,7 +200,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                                             selfieImage,
                                             fit: BoxFit.cover,
                                             width: double.infinity,
-                                            height: 250,
+                                            height: 322,
                                           ),
                                         ),
                                       ),
@@ -209,7 +214,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                                           },
                                           child: Container(
                                             height: 250,
-                                            width: 250,
+                                            width: 322,
                                             padding: EdgeInsets.all(4),
                                             alignment: Alignment.topRight,
                                             child: SvgPicture.asset(
@@ -338,7 +343,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel,context)
               as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;

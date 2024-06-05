@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
+import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../ProductCompanyDetailResponseModel.dart';
@@ -245,6 +246,8 @@ class DataProvider extends ChangeNotifier {
   Result<ChooseUserTypeResponceModel,Exception>? _getChooseUserTypeData;
   Result<ChooseUserTypeResponceModel,Exception>? get getChooseUserTypeData => _getChooseUserTypeData;
 
+  Result< DSAPersonalInfoModel, Exception>? _getDSAPersonalInfoData;
+  Result< DSAPersonalInfoModel, Exception>? get getDSAPersonalInfoData => _getDSAPersonalInfoData;
 
   /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
@@ -283,8 +286,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getUserData(GetUserProfileRequest requestModel) async {
-    _getUserProfileResponse = await apiService.getUserData(requestModel);
+  Future<void> getUserData(/*GetUserProfileRequest requestModel*/) async {
+    _getUserProfileResponse = await apiService.getUserData();
     notifyListeners();
   }
 
@@ -580,6 +583,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getChooseUserType(ChooseUserTypeRequestModel model) async {
     _getChooseUserTypeData = await apiService.getChooseUserType(model) ;
+    notifyListeners();
+  }
+
+  Future<void> getDSAPersonalInfo(String userId,String productCode) async {
+    _getDSAPersonalInfoData = await apiService.getDSAPersonalInfo(userId,productCode);
     notifyListeners();
   }
 

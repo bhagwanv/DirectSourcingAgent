@@ -116,8 +116,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> getLoggedInUserData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     try {
-      var getUserProfileRequest = GetUserProfileRequest(mobileNumber:  prefsUtil.getString(LOGIN_MOBILE_NUMBER), userId:  prefsUtil.getString(USER_ID), leadId:  prefsUtil.getInt(LEADE_ID));
-      await Provider.of<DataProvider>(context, listen: false).getUserData(getUserProfileRequest);
+      //var getUserProfileRequest = GetUserProfileRequest(mobileNumber:  prefsUtil.getString(LOGIN_MOBILE_NUMBER), userId:  prefsUtil.getString(USER_ID), leadId:  prefsUtil.getInt(LEADE_ID));
+      await Provider.of<DataProvider>(context, listen: false).getUserData();
       final productProvider = Provider.of<DataProvider>(context, listen: false);
       if(productProvider.getUserProfileResponse != null) {
         productProvider.getUserProfileResponse!.when(
