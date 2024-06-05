@@ -350,8 +350,11 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
-        var token = await prefsUtil.getString(TOKEN);
+        // var base_url = prefsUtil.getString(BASE_URL);
+        // var token = await prefsUtil.getString(TOKEN);
+
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJhYjlkOWIyYi01NDZiLTQ3ZmYtYjAxMC0yZTlkZGJlYTBkMTIiLCJ1c2VybmFtZSI6Ijk1MzMzOTI4MDEiLCJsb2dnZWRvbiI6IjA2LzA0LzIwMjQgMTM6MDg6NTAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTMzMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3NTA2NTMwLCJleHAiOjE3MTc1OTI5MzAsImlhdCI6MTcxNzUwNjUzMCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.N1clSPfguoVsD9GoLiqwu_wnMi3MkVOAo80bn_ZcEWSsfFWNYOE_g21E2p5Mf45i6rX_jfanHMJVbDuuKt-L5gjb8cfS67L_TlvSSiti7gldXdRErrmDIVdu5te05ZmNLr7yVYSnStRtA_aiL75_ShEPSxyXLHwI1iAI3x57BaygwzYsjkIRf2-Vn_kHMIKedzYJqReZzW7JTQ8DMb79R1UiRkjYlCBKi7V2ySBJcadLqpDsbhBBgoShVeF7-Syl8tnph16LmwVn01-VT1pzmH2iklRA-Nym3tc1sjyWwyqM5xO-L9tAkGWyfUwm0Qep_Ij5W-m5DnP49IMSRrmtcg";
+        var base_url =ApiUrls().baseUrl;
         final response = await interceptor.post(
             Uri.parse('${base_url! + apiUrls.postLeadPAN}'),
             headers: {
@@ -489,8 +492,13 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+       /* var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
+*/
+        var base_url = ApiUrls().baseUrl;
+        //var token = await prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJhYjlkOWIyYi01NDZiLTQ3ZmYtYjAxMC0yZTlkZGJlYTBkMTIiLCJ1c2VybmFtZSI6Ijk1MzMzOTI4MDEiLCJsb2dnZWRvbiI6IjA2LzA0LzIwMjQgMTM6MDg6NTAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTMzMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3NTA2NTMwLCJleHAiOjE3MTc1OTI5MzAsImlhdCI6MTcxNzUwNjUzMCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.N1clSPfguoVsD9GoLiqwu_wnMi3MkVOAo80bn_ZcEWSsfFWNYOE_g21E2p5Mf45i6rX_jfanHMJVbDuuKt-L5gjb8cfS67L_TlvSSiti7gldXdRErrmDIVdu5te05ZmNLr7yVYSnStRtA_aiL75_ShEPSxyXLHwI1iAI3x57BaygwzYsjkIRf2-Vn_kHMIKedzYJqReZzW7JTQ8DMb79R1UiRkjYlCBKi7V2ySBJcadLqpDsbhBBgoShVeF7-Syl8tnph16LmwVn01-VT1pzmH2iklRA-Nym3tc1sjyWwyqM5xO-L9tAkGWyfUwm0Qep_Ij5W-m5DnP49IMSRrmtcg";
+
         final response = await interceptor.post(
             Uri.parse(base_url! + apiUrls.postLeadAadharVerifyOTP),
             headers: {

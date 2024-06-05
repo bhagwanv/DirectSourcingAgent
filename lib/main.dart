@@ -1,7 +1,9 @@
 import 'package:direct_sourcing_agent/providers/auth_provider/DataProvider.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
+import 'package:direct_sourcing_agent/view/aadhaar_screen/aadhaar_screen.dart';
 import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
 import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
+import 'package:direct_sourcing_agent/view/pancard_screen/PancardScreen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor:kPrimaryColor),
         useMaterial3: true,
       ),
-      home:  Connector_signup(activityId: 2,subActivityId: 2,),
+      home:  direct_selling_agent(activityId: 2,subActivityId: 2,),
     );
   }
 }
