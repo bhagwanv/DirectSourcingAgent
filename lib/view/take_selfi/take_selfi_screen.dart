@@ -13,7 +13,11 @@ import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
+import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
+import '../splash/model/GetLeadResponseModel.dart';
+import '../splash/model/LeadCurrentRequestModel.dart';
+import '../splash/model/LeadCurrentResponseModel.dart';
 import 'camera_page.dart';
 import 'model/LeadSelfieResponseModel.dart';
 import 'model/PostLeadSelfieRequestModel.dart';
@@ -320,7 +324,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
   Future<void> fetchData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     try {
-      /*LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
       var leadCurrentRequestModel = LeadCurrentRequestModel(
         companyId: prefsUtil.getInt(COMPANY_ID),
         productId: prefsUtil.getInt(PRODUCT_ID),
@@ -344,7 +348,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");*/
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
