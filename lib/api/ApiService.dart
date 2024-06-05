@@ -1696,11 +1696,11 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+        //var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
             Uri.parse(
-                '${base_url! + apiUrls.PostLeadDSAProfileType}'),
+                '${apiUrls.baseUrl! + apiUrls.PostLeadDSAProfileType}'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'

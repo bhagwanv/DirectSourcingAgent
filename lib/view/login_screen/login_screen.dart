@@ -1,6 +1,7 @@
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
@@ -63,68 +64,80 @@ class _LoginScreenState extends State<LoginScreen> {
                             Image.asset('assets/images/scaleup_logo_two.png'),
                             // Replace with your actual logo path
                             const SizedBox(height: 87),
-                            const Text(
+                             Text(
                               'Welcome',
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.normal,
-                              ),
+                               style: GoogleFonts.urbanist(
+                                 fontSize: 30,
+                                 color: Colors.black,
+                                 fontWeight: FontWeight.w400,
+                               ),
                             ),
-                            const Text(
+                             Text(
                               'Sign in or create a new account',
-                              style: TextStyle(fontSize: 16),
+                               style: GoogleFonts.urbanist(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
                             ),
                             const SizedBox(height: 92),
-                            CommonTextField(
-                              controller: _mobileNumberController,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
-                              maxLength: 10,
-                              maxLines: 1,
-                              hintText: "Enter Mobile Number",
-                              labelText: "Enter Mobile Number",
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15,left: 15),
+                              child: CommonTextField(
+                                controller: _mobileNumberController,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
+                                  LengthLimitingTextInputFormatter(10)],
+                                maxLines: 1,
+                                hintText: "Enter Mobile Number",
+                                labelText: "Enter Mobile Number",
+                              ),
                             ),
                             const SizedBox(height: 32),
-                            CommonElevatedButton(
-                              onPressed: () async {
-                                if (_mobileNumberController.text.isEmpty) {
-                                  Utils.showToast("Please Enter Mobile Number",context);
-                                } else if (!Utils.isPhoneNoValid(_mobileNumberController.text)) {
-                                  Utils.showToast("Please Enter Valid Mobile Number",context);
-                                }  else if (!isTermChecked) {
-                                  Utils.hideKeyBored(context);
-                                  Utils.showToast("Please Check Term n Condition",context);
-                                } else {
-                                  final prefsUtil = await SharedPref.getInstance();
-                                  Utils.onLoading(context, "");
-                                  await Provider.of<DataProvider>(context, listen: false).genrateOtp(context, _mobileNumberController.text);
-                                  if (dataProvider.genrateOptData != null) {
-                                    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberController.text.toString());
-                                    Navigator.of(context, rootNavigator: true).pop();
-                                    dataProvider.genrateOptData!.when(
-                                      success: (data) async {
-                                        if (!data.status!) {
-                                          Utils.showToast(data.message!,context);
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) {
-                                                return OtpScreen();
-                                              },
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      failure: (exception) {
-                                      },
-                                    );
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15,left: 15),
+                              child: CommonElevatedButton(
+                                onPressed: () async {
+                                  if (_mobileNumberController.text.isEmpty) {
+                                    Utils.showToast("Please Enter Mobile Number",context);
+                                  } else if (!Utils.isPhoneNoValid(_mobileNumberController.text)) {
+                                    Utils.showToast("Please Enter Valid Mobile Number",context);
+                                  }  else if (!isTermChecked) {
+                                    Utils.hideKeyBored(context);
+                                    Utils.showToast("Please Check Term n Condition",context);
+                                  } else {
+                                    final prefsUtil = await SharedPref.getInstance();
+                                    Utils.onLoading(context, "");
+                                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(context, _mobileNumberController.text);
+                                    if (dataProvider.genrateOptData != null) {
+                                      await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberController.text.toString());
+                                      Navigator.of(context, rootNavigator: true).pop();
+                                      dataProvider.genrateOptData!.when(
+                                        success: (data) async {
+                                          if (!data.status!) {
+                                            Utils.showToast(data.message!,context);
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return OtpScreen();
+                                                },
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        failure: (exception) {
+                                        },
+                                      );
+                                    }
+                                    dataProvider.disposeAllProviderData();
                                   }
-                                  dataProvider.disposeAllProviderData();
-                                }
-                              },
-                              text: "Continue",
-                              upperCase: true,
+                                },
+                                text: "Continue",
+                                upperCase: true,
+                              ),
                             ),
                             const SizedBox(height: 88),
                             Row(
