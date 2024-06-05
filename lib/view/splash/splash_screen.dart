@@ -3,12 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/constant.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
 import '../dashboard/bottom_navigation.dart';
+import '../otp_screens/OtpScreen.dart';
 import '../otp_screens/model/GetUserProfileRequest.dart';
 import '../pancard_screen/PancardScreen.dart';
 import 'model/GetLeadResponseModel.dart';
@@ -99,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       _isLoggedIn = prefs.getBool(IS_LOGGED_IN)?? false;
     });
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 2), () {
       if (_isLoggedIn) {
         getLoggedInUserData(context);
       } else {
@@ -137,7 +139,17 @@ class _SplashScreenState extends State<SplashScreen> {
               fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
             }
           },
-          failure: (exception) {},
+          failure: (exception) {
+            if (exception is ApiException) {
+              if(exception.statusCode==401){
+                Utils.showToast(exception.errorMessage,context);
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              }else{
+                Utils.showToast(exception.errorMessage,context);
+              }
+            }
+          },
         );
       }
     } catch (error) {
@@ -165,7 +177,7 @@ class _SplashScreenState extends State<SplashScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
       as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
