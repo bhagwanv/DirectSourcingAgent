@@ -45,6 +45,7 @@ class PancardScreen extends StatefulWidget {
 
 class _PancardScreenState extends State<PancardScreen> {
   final TextEditingController _panNumberCl = TextEditingController();
+  final TextEditingController _fatherNameAsPanCl = TextEditingController();
   var _nameAsPan="";
   var _dOBAsPan="";
   var isLoading = false;
@@ -115,6 +116,9 @@ class _PancardScreenState extends State<PancardScreen> {
                               _nameAsPan = LeadPANData.nameOnCard!;
                             }
 
+                            if( LeadPANData.fatherName!=null){
+                              _fatherNameAsPanCl.text = LeadPANData.fatherName!;
+                            }
                             if(LeadPANData.dob!=null){
                               var formateDob =
                               Utils.dateFormate(context, LeadPANData.dob!);
@@ -263,7 +267,11 @@ class _PancardScreenState extends State<PancardScreen> {
                                 ):Container(),
                               ],
                             ),
-
+                            CommonTextField(
+                              controller: _fatherNameAsPanCl,
+                              hintText: "Enter Father Name",
+                              labelText: "Enter Father Name",
+                            ),
 
                             const SizedBox(height: 20),
                             isVerifyPanNumber? Column(
@@ -341,7 +349,10 @@ class _PancardScreenState extends State<PancardScreen> {
 
                                 if (_panNumberCl.text.isEmpty) {
                                   Utils.showToast("Please Enter Valid Pan Card Details",context);
-                                } else {
+                                }
+                                else if (_fatherNameAsPanCl.text.isEmpty) {
+                                  Utils.showToast("Please Enter Father Name!!!",context);
+                                }else {
                                   var postLeadPanRequestModel =
                                   PostLeadPanRequestModel(
                                     leadId: prefsUtil.getInt(LEADE_ID),
@@ -352,7 +363,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                     imagePath: "",
                                     documentId: documentId,
                                     companyId: companyId,
-                                    fathersName: "",
+                                    fathersName:  _fatherNameAsPanCl.text,
                                     dob: dobAsPan,
                                     name: _nameAsPan,
                                   );
@@ -453,6 +464,7 @@ class _PancardScreenState extends State<PancardScreen> {
             Utils.showToast(validPanCardResponsModel.message!,context);
             _nameAsPan="";
             _dOBAsPan="";
+            _fatherNameAsPanCl.text="";
           }
         },
         failure: (exception) {
