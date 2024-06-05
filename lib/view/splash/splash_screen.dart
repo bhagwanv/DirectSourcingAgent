@@ -1,10 +1,7 @@
-import 'package:direct_sourcing_agent/view/dashboard/bottom_navigation.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/constant.dart';
-import '../dashboard/home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,49 +12,52 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isLoggedIn = true;
-
   void initState() {
     super.initState();
     _checkLoginStatus();
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
+      body:
+      Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(),
             Image.asset('assets/images/scaleup_logo.png'), // Replace with your logo image path
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Scaleup',
               style: TextStyle(
                 fontSize: 24,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
               ),
             ),
-            Spacer(),
-            SizedBox(height: 40),
+            const Spacer(),
+            const CustomCircularLoader(),
+            const Spacer(),
+            const SizedBox(height: 40),
             Image.asset('assets/images/made_in_india.png'), // Replace with your "Made in India" image path
-            SizedBox(height: 20),
-            Icon(Icons.check_circle, color: Colors.green),
-            Text(
+            const SizedBox(height: 20),
+            const Icon(Icons.check_circle, color: Colors.green),
+            const Text(
               '100% Safe & Secure',
               style: TextStyle(
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Copyright 2024 Scaleup. All rights reserved.',
               style: TextStyle(
                 fontSize: 12,
               ),
             ),
-            Row(
+            const Row(
                 mainAxisAlignment:MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ]
             ),
-            SizedBox(height: 16)
+            const SizedBox(height: 16)
           ],
         ),
       ),
@@ -93,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (_isLoggedIn) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen(activityId: 0, subActivityId: 0)),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       } else {
        /* Navigator.pushReplacement(
@@ -104,3 +104,19 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 }
+class CustomCircularLoader extends StatelessWidget {
+  const CustomCircularLoader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 36,
+      height: 36,
+      child: CircularProgressIndicator(
+        strokeWidth: 3,
+        valueColor: AlwaysStoppedAnimation(kPrimaryColor),
+      ),
+    );
+  }
+}
+

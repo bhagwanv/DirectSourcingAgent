@@ -8,7 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/common_check_box.dart';
@@ -765,7 +765,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         context,
         MaterialPageRoute<dynamic>(
           builder: (BuildContext context) =>
-              LoginScreen(activityId: 1, subActivityId: 0),
+              LoginScreen(),
         ),
         (route) => false, //if you want to disable back feature set to false
       );

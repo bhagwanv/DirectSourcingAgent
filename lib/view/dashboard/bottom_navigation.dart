@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';
 import 'home/home_screen.dart';

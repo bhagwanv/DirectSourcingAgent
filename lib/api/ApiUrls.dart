@@ -1,12 +1,16 @@
 class ApiUrls{
 
-  final String baseUrl = 'https://gateway-uat.scaleupfin.com';
-  //final String baseUrl = 'https://gateway-qa.scaleupfin.com';
+  //final String baseUrl = 'https://gateway-uat.scaleupfin.com';
+  final String baseUrl = 'https://gateway-qa.scaleupfin.com';
   final String productCompanyDetail = '/aggregator/LeadAgg/ProductCompanyDetail';
   final String getLeadCurrentActivity="/services/lead/v1/GetLeadCurrentActivity";
   final String leadCurrentActivityAsync="/aggregator/LeadAgg/LeadCurrentActivityAsync";
   final String getLeadPAN="/aggregator/LeadAgg/GetLeadPAN";
-  final String generateOtp="/aggregator/LeadAgg/GenerateOtp";
+
+  //auth
+  final String generateOtp="/aggregator/LeadAgg/GenerateDSAOtp";
+  final String leadMobileValidate="/aggregator/LeadAgg/DSAValidateOTP";
+
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";
   final String getLeadAadharGenerateOTP="/services/kyc/v1/KYCDoc/GetLeadAadharGenerateOTP";
@@ -14,7 +18,6 @@ class ApiUrls{
   final String getFathersNameByValidPanCard="/services/kyc/v1/KYCDoc/GetFathersNameByValidPanCard";
   final String postSingleFile="/services/media/v1/PostSingleFile";
   final String postLeadPAN="/services/lead/v1/PostLeadPAN";
-  final String LeadMobileValidate="/aggregator/LeadAgg/LeadMobileValidate";
   final String bankListApi="/services/lead/v1/api/eNach/BankList";
   final String GetLeadBankDetail="/services/lead/v1/api/LeadBankDetail/GetBankDetail";
   final String GetAllState="/services/location/v1/State/GetAllState";

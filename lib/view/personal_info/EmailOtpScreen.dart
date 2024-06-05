@@ -9,7 +9,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';

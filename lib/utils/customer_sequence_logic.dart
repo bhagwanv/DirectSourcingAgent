@@ -29,10 +29,7 @@ ScreenType? customerSequence(
         if (leadCurrentActivity.activityName == "MobileOtp") {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => LoginScreen(
-                    activityId: leadCurrentActivity.activityMasterId!,
-                    subActivityId: leadCurrentActivity.subActivityMasterId!,
-                    pageType: pageType)),
+                builder: (context) => LoginScreen(pageType: pageType)),
           );
           return ScreenType.login;
         } else if (leadCurrentActivity.activityName == "KYC") {
@@ -169,10 +166,7 @@ ScreenType? customerSequence(
         if (leadCurrentActivity.activityName == "MobileOtp") {
           Navigator.of(context).push(
             MaterialPageRoute(
-                builder: (context) => LoginScreen(
-                    activityId: leadCurrentActivity.activityMasterId!,
-                    subActivityId: leadCurrentActivity.subActivityMasterId!,
-                    pageType: pageType)),
+                builder: (context) => LoginScreen(pageType: pageType)),
           );
           return ScreenType.login;
         } else if (leadCurrentActivity.activityName == "KYC") {

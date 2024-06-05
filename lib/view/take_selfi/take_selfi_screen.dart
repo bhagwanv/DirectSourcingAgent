@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';

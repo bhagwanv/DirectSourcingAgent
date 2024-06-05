@@ -8,7 +8,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
@@ -20,10 +20,8 @@ import '../splash/model/LeadCurrentResponseModel.dart';
 import 'model/VarifayOtpRequest.dart';
 
 class OtpScreen extends StatefulWidget {
-  int? activityId;
-  int? subActivityId;
 
-  OtpScreen({required this.activityId, required this.subActivityId, super.key});
+  const OtpScreen({super.key});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -123,11 +121,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                      height: 69,
-                      width: 51,
-                      alignment: Alignment.topLeft,
-                      child: Image.asset('assets/images/scale.png')),
                   const SizedBox(
                     height: 50,
                   ),
@@ -178,7 +171,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 'Resend Code in ',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -243,8 +236,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                           context,
                           pinController.text,
                           productProvider,
-                          widget.activityId!,
-                          widget.subActivityId!,
                           userLoginMobile!,
                           pinController);
                     },
@@ -264,8 +255,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       BuildContext context,
       String otpText,
       DataProvider productProvider,
-      int activityId,
-      int subActivityId,
       String userLoginMobile,
       TextEditingController pinController) async {
     if (otpText.isEmpty) {
@@ -282,45 +271,59 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     } else {
       productProvider.disposeAllProviderData();
       Utils.onLoading(context, "");
-      final prefsUtil = await SharedPref.getInstance();
       await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
-        activityId: activityId,
-        companyId: prefsUtil.getInt(COMPANY_ID),
         mobileNo: userLoginMobile,
         otp: otpText,
-        productId: prefsUtil.getInt(PRODUCT_ID),
-        subActivityId: subActivityId,
-        vintageDays: 0,
-        monthlyAvgBuying: 0,
-        screen: "MobileOtp",
-        ProductCode: prefsUtil.getString(PRODUCT_CODE),
-        CompanyCode: prefsUtil.getString(COMPANY_CODE),
       ));
       Navigator.of(context, rootNavigator: true).pop();
       if (productProvider.getVerifyData != null) {
         productProvider.getVerifyData!.when(
-          success: (VerifyOtpResponce) async {
-            // Handle successful response
-            var verifyOtpResponce = VerifyOtpResponce;
-            if (!verifyOtpResponce.status!) {
+          success: (data) async {
+            if (!data.status!) {
               pinController.clear();
-              Utils.showToast(verifyOtpResponce.message!, context);
+              Utils.showToast(data.message!, context);
             } else {
-              await prefsUtil.saveString(
-                  USER_ID, verifyOtpResponce.userId.toString());
-              await prefsUtil.saveString(TOKEN, verifyOtpResponce.userTokan.toString());
-              await prefsUtil.saveInt(LEADE_ID, verifyOtpResponce.leadId!);
-              await prefsUtil.saveBool(IS_LOGGED_IN, true);
-
-              fetchData(context, userLoginMobile);
+              getLoggedInUserData(context, userLoginMobile);
             }
           },
           failure: (exception) {
-            // Handle failure
-            print("dfjsf2");
-            //print('Failure! Error: ${exception.message}');
           },
         );
+      }
+    }
+  }
+
+  Future<void> getLoggedInUserData(BuildContext context, String userLoginMobile) async {
+    final prefsUtil = await SharedPref.getInstance();
+
+    Utils.onLoading(context, "");
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        mobileNo: userLoginMobile,
+        activityId: 0,
+        subActivityId: 0,
+        userId: prefsUtil.getString(USER_ID),
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
+      Navigator.of(context, rootNavigator: true).pop();
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          userLoginMobile,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "pushReplacement");
+    } catch (error) {
+      Navigator.of(context, rootNavigator: true).pop();
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
       }
     }
   }
@@ -336,8 +339,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         productId: prefsUtil.getInt(PRODUCT_ID),
         leadId: prefsUtil.getInt(LEADE_ID),
         mobileNo: userLoginMobile,
-        activityId: widget.activityId,
-        subActivityId: widget.subActivityId,
+        activityId: 0,
+        subActivityId: 0,
         userId: prefsUtil.getString(USER_ID),
         monthlyAvgBuying: 0,
         vintageDays: 0,
@@ -362,11 +365,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
-    final prefsUtil = await SharedPref.getInstance();
-
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .genrateOtp(context, userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+        .genrateOtp(context, userLoginMobile);
     Navigator.of(context, rootNavigator: true).pop();
 
     if (productProvider.genrateOptData != null) {
