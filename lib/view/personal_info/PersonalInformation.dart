@@ -39,9 +39,9 @@ class PersonalInformation extends StatefulWidget {
 
   PersonalInformation(
       {required this.activityId,
-      required this.subActivityId,
-      this.pageType,
-      super.key});
+        required this.subActivityId,
+        this.pageType,
+        super.key});
 
   @override
   State<PersonalInformation> createState() => _PersonalInformationState();
@@ -77,20 +77,20 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _permanentStateNameCl = TextEditingController();
   final TextEditingController _permanentCityNameCl = TextEditingController();
   final TextEditingController _permanentAddressPinCodeCl =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _permanentAddresslineOneCl =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _permanentAddresslineTwoCl =
-      TextEditingController();
+  TextEditingController();
   List<CityResponce?> permanentCitylist = [];
 
   //current Address
   final TextEditingController _currentAddressLineOneCl =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _currentAddressLineTwoCl =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _currentAddressPinCodeCl =
-      TextEditingController();
+  TextEditingController();
   List<CityResponce?> citylist = [];
   ReturnObject? selectedCurrentState;
   CityResponce? selectedCurrentCity;
@@ -171,572 +171,572 @@ class _PersonalInformationState extends State<PersonalInformation> {
         body: SafeArea(
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-            if (productProvider.getPersonalDetailsData == null && isLoading) {
-              return Center(child: Utils.onLoading(context, ""));
-            } else {
-              if (productProvider.getPersonalDetailsData != null && isLoading) {
-                Navigator.of(context, rootNavigator: true).pop();
-                isLoading = false;
-              }
+                if (productProvider.getPersonalDetailsData == null && isLoading) {
+                  return Center(child: Utils.onLoading(context, ""));
+                } else {
+                  if (productProvider.getPersonalDetailsData != null && isLoading) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    isLoading = false;
+                  }
 
-              if (!updateData) {
-                _countryCl.text = "India";
+                  if (!updateData) {
+                    _countryCl.text = "India";
 
-                if (productProvider.getPersonalDetailsData != null) {
-                  productProvider.getPersonalDetailsData!.when(
-                    success: (PersonalDetailsResponce) async {
-                      personalDetailsResponce = PersonalDetailsResponce;
-                      if (personalDetailsResponce != null) {
-                        _firstNameCl.text = personalDetailsResponce!.firstName!;
-                        if (personalDetailsResponce!.middleName != null) {
-                          _middleNameCl.text =
+                    if (productProvider.getPersonalDetailsData != null) {
+                      productProvider.getPersonalDetailsData!.when(
+                        success: (PersonalDetailsResponce) async {
+                          personalDetailsResponce = PersonalDetailsResponce;
+                          if (personalDetailsResponce != null) {
+                            _firstNameCl.text = personalDetailsResponce!.firstName!;
+                            if (personalDetailsResponce!.middleName != null) {
+                              _middleNameCl.text =
                               personalDetailsResponce!.middleName!;
-                        }
-                        _lastNameCl.text = personalDetailsResponce!.lastName!;
+                            }
+                            _lastNameCl.text = personalDetailsResponce!.lastName!;
 
-                        if (personalDetailsResponce!.emailId!.isNotEmpty &&
-                            !isValidEmail &&
-                            !isEmailClear) {
-                          isValidEmail = true;
-                          _emailIDCl.text = personalDetailsResponce!.emailId!;
-                        }
+                            if (personalDetailsResponce!.emailId!.isNotEmpty &&
+                                !isValidEmail &&
+                                !isEmailClear) {
+                              isValidEmail = true;
+                              _emailIDCl.text = personalDetailsResponce!.emailId!;
+                            }
 
-                        if (personalDetailsResponce!.alternatePhoneNo != null) {
-                          _alternatePhoneNumberCl.text =
+                            if (personalDetailsResponce!.alternatePhoneNo != null) {
+                              _alternatePhoneNumberCl.text =
                               personalDetailsResponce!.alternatePhoneNo!;
-                        }
+                            }
 
-                        if (personalDetailsResponce!
-                                    .manulaElectrictyBillImage !=
+                            if (personalDetailsResponce!
+                                .manulaElectrictyBillImage !=
                                 null &&
-                            !isImageDelete) {
-                          widget.image = personalDetailsResponce!
-                              .manulaElectrictyBillImage!;
-                        }
+                                !isImageDelete) {
+                              widget.image = personalDetailsResponce!
+                                  .manulaElectrictyBillImage!;
+                            }
 
-                        if (personalDetailsResponce!.gender == "Male" ||
-                            personalDetailsResponce!.gender == "M") {
-                          _genderCl.text = "Male";
-                        } else if (personalDetailsResponce!.gender ==
+                            if (personalDetailsResponce!.gender == "Male" ||
+                                personalDetailsResponce!.gender == "M") {
+                              _genderCl.text = "Male";
+                            } else if (personalDetailsResponce!.gender ==
                                 "Female" ||
-                            personalDetailsResponce!.gender == "F") {
-                          _genderCl.text = "Female";
-                        } else {
-                          _genderCl.text = "Other";
-                        }
-
-                        if (personalDetailsResponce!.marital != null) {
-                          if (personalDetailsResponce!.marital!.isNotEmpty) {
-                            if (personalDetailsResponce!.marital == "Married") {
-                              selectedMaritalStatusValue = "Married";
-                            } else if (personalDetailsResponce!.marital ==
-                                "Single") {
-                              selectedMaritalStatusValue = "Single";
-                            } else if (personalDetailsResponce!.marital ==
-                                "Others") {
-                              selectedMaritalStatusValue = "Others";
-                            } else if (personalDetailsResponce!.marital ==
-                                "Divorced") {
-                              selectedMaritalStatusValue = "Divorced";
-                            } else if (personalDetailsResponce!.marital ==
-                                "Widow") {
-                              selectedMaritalStatusValue = "Widow";
-                            }
-                          }
-                        }
-
-                        if (personalDetailsResponce!.ownershipType != null) {
-                          if (personalDetailsResponce!
-                                  .ownershipType!.isNotEmpty &&
-                              !selectedOwnershipEditable) {
-                            if (personalDetailsResponce!.ownershipType ==
-                                "Owned") {
-                              selectedOwnershipTypeValue = "Owned";
-                            } else if (personalDetailsResponce!.ownershipType ==
-                                "Owned by parents") {
-                              selectedOwnershipTypeValue = "Owned by parents";
-                            } else if (personalDetailsResponce!.ownershipType ==
-                                "Owned by Spouse") {
-                              selectedOwnershipTypeValue = "Owned by Spouse";
+                                personalDetailsResponce!.gender == "F") {
+                              _genderCl.text = "Female";
                             } else {
-                              selectedOwnershipTypeValue = "Rented";
+                              _genderCl.text = "Other";
                             }
-                          }
-                        }
 
-                        if (personalDetailsResponce!.ownershipTypeProof !=
-                            null) {
-                          if (personalDetailsResponce!
-                                  .ownershipTypeProof!.isNotEmpty &&
-                              !isOwnerShipProofEditable) {
-                            if (personalDetailsResponce!.ownershipTypeProof ==
-                                "Electricity Manual Bill Upload") {
-                              selectOwnershipProofValue =
-                                  "Electricity Manual Bill Upload";
-                            } else {
-                              selectOwnershipProofValue =
-                                  "Digital Bill Verification";
-                            }
-                          }
-                        }
-
-                        //set permanent Address
-                        if (personalDetailsResponce!
-                            .permanentAddressLine1!.isNotEmpty) {
-                          _permanentAddresslineOneCl.text =
-                              personalDetailsResponce!.permanentAddressLine1!;
-                        }
-
-                        if (personalDetailsResponce!
-                            .permanentAddressLine2!.isNotEmpty) {
-                          _permanentAddresslineTwoCl.text =
-                              personalDetailsResponce!.permanentAddressLine2!;
-                        }
-
-                        if (personalDetailsResponce!.permanentPincode != null) {
-                          _permanentAddressPinCodeCl.text =
-                              personalDetailsResponce!.permanentPincode!
-                                  .toString();
-                        }
-
-                        if (personalDetailsResponce!.permanentAddressLine1 ==
-                                personalDetailsResponce!.resAddress1 &&
-                            personalDetailsResponce!.permanentAddressLine2 ==
-                                personalDetailsResponce!.resAddress2) {
-                          isCurrentAddSame = true;
-                        }
-
-                        //set Current Address
-                        if (personalDetailsResponce!.resAddress1!.isNotEmpty) {
-                          _currentAddressLineOneCl.text =
-                              personalDetailsResponce!.resAddress1!;
-                        }
-                        if (personalDetailsResponce!.resAddress2!.isNotEmpty) {
-                          _currentAddressLineTwoCl.text =
-                              personalDetailsResponce!.resAddress2!;
-                        }
-                        if (personalDetailsResponce!.pincode != null) {
-                          _currentAddressPinCodeCl.text =
-                              personalDetailsResponce!.pincode!.toString();
-                        }
-
-                        if (personalDetailsResponce!.state != null) {
-                          stateId = personalDetailsResponce!.state!;
-                        }
-
-                        if (personalDetailsResponce!
-                                .electricityBillDocumentId !=
-                            null) {
-                          billDocId = personalDetailsResponce!
-                              .electricityBillDocumentId!;
-                        }
-                        if (productProvider.getAllCityData != null) {
-                          permanentCitylist = productProvider.getAllCityData!;
-                        }
-
-                        if (productProvider.getCurrentAllCityData != null) {
-                          citylist = productProvider.getCurrentAllCityData!;
-                        }
-
-                        //set Digital veryFication Ivrs number
-                        if (personalDetailsResponce!.ivrsNumber != null &&
-                            !isOwnerShipProofEditable) {
-                          consumerNumber = personalDetailsResponce!.ivrsNumber;
-                          _customerIvrsCl.text =
-                              personalDetailsResponce!.ivrsNumber;
-                          if (personalDetailsResponce!
-                                      .electricityServiceProvider !=
-                                  null &&
-                              !isOwnerShipProofEditable) {
-                            electricityServiceProvider =
-                                personalDetailsResponce!
-                                    .electricityServiceProvider!;
-                            _electryCityServiceCl.text =
-                                personalDetailsResponce!
-                                    .electricityServiceProvider!;
-                            isElectriCityServiceEdit = false;
-                          }
-                          if (personalDetailsResponce!.electricityState !=
-                                  null &&
-                              !isOwnerShipProofEditable) {
-                            electricityState =
-                                personalDetailsResponce!.electricityState!;
-                            _electryDistrictCl.text =
-                                personalDetailsResponce!.electricityState!;
-                            isElectriCityDistrictEdit = false;
-                          }
-                          isOwnerShipProofEditable = true;
-                          getIvrsNumberExist(
-                            context,
-                            productProvider,
-                            _customerIvrsCl,
-                          );
-                        }
-                      } else {
-                        if (!isEmailClear && !isValidEmail) {
-                          _emailIDCl.text = personalDetailsResponce!.emailId!;
-                        } else if (!isValidEmail) {
-                          _emailIDCl.clear();
-                        }
-
-                        if (productProvider.getAllCityData != null) {
-                          permanentCitylist = productProvider.getAllCityData!;
-                        }
-
-                        if (productProvider.getCurrentAllCityData != null) {
-                          citylist = productProvider.getCurrentAllCityData!;
-                        }
-                        if (citylist.isNotEmpty) {
-                          selectedCurrentCity = citylist.first;
-                          print("dsds" + selectedCurrentCity!.name!);
-                        }
-                      }
-                    },
-                    failure: (exception) {
-                      if (exception is ApiException) {
-                        if(exception.statusCode==401){
-                          productProvider.disposeAllProviderData();
-                          ApiService().handle401(context);
-                        }else{
-                          Utils.showToast(exception.errorMessage,context);
-                        }
-                      }
-                    },
-                  );
-                }
-              }
-              if (productProvider
-                          .getpostElectricityBillDocumentSingleFileData !=
-                      null &&
-                  !isImageDelete) {
-                billDocId = productProvider
-                    .getpostElectricityBillDocumentSingleFileData!.docId!;
-                widget.image = productProvider
-                    .getpostElectricityBillDocumentSingleFileData!.filePath!;
-              }
-              return SingleChildScrollView(
-                  child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 50),
-                    const Text(
-                      'Personal Information',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 35, color: Colors.black),
-                    ),
-                    const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          basicDetailsFields(productProvider),
-                          const SizedBox(height: 20),
-                          permanentAddressField(productProvider),
-                          currentAddressFields(productProvider),
-                          const SizedBox(height: 15),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: Text(
-                              "Ownership Type",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          DropdownButtonFormField2<String>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 16),
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                            ),
-                            hint: const Text(
-                              'Ownership Type',
-                              style: TextStyle(
-                                color: blueColor,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            items: getDropDownOption(ownershipTypeList),
-                            value: selectedOwnershipTypeValue!.isNotEmpty
-                                ? selectedOwnershipTypeValue
-                                : null,
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedOwnershipEditable = true;
-                                selectedOwnershipTypeValue = value;
-                              });
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights:
-                                  _getCustomItemsHeights(ownershipTypeList),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          (selectedOwnershipTypeValue!.isNotEmpty &&
-                                  selectedOwnershipTypeValue == "Rented")
-                              ? Container()
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 4.0),
-                                      child: Text(
-                                        "Ownership Proof",
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    DropdownButtonFormField2<String>(
-                                      isExpanded: true,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 16),
-                                        fillColor: textFiledBackgroundColour,
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: const BorderSide(
-                                              color: kPrimaryColor, width: 1),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: const BorderSide(
-                                              color: kPrimaryColor, width: 1),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide(
-                                              color: kPrimaryColor, width: 1),
-                                        ),
-                                      ),
-                                      hint: const Text(
-                                        'Select Ownership Proof',
-                                        style: TextStyle(
-                                          color: blueColor,
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      items:
-                                          getDropDownOption(ownershipProofList),
-                                      value: selectOwnershipProofValue,
-                                      onChanged: (String? value) async {
-                                        setState(() {
-                                          selectOwnershipProofValue = value;
-                                          isOwnerShipProofEditable = true;
-                                          if (selectOwnershipProofValue ==
-                                              "Digital Bill Verification") {
-                                            customerName = "";
-                                            customerAddress = "";
-                                            electricityServiceProvider = "";
-                                            _customerIvrsCl.text = "";
-                                            electricityState = "";
-                                            selectDistrictList.clear();
-                                            selectServiceProviderList.clear();
-                                            isElectriCityDistrictEdit = true;
-                                            isElectriCityServiceEdit = true;
-                                          }
-                                        });
-                                      },
-                                      buttonStyleData: const ButtonStyleData(
-                                        padding: EdgeInsets.only(right: 8),
-                                      ),
-                                      dropdownStyleData:
-                                          const DropdownStyleData(
-                                        maxHeight: 200,
-                                      ),
-                                      menuItemStyleData: MenuItemStyleData(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        customHeights: _getCustomItemsHeights(
-                                            ownershipProofList),
-                                      ),
-                                      iconStyleData: const IconStyleData(
-                                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    selectOwnershipProofValue ==
-                                            "Digital Bill Verification"
-                                        ? digitalBillFields(productProvider)
-                                        : selectOwnershipProofValue ==
-                                                "Electricity Manual Bill Upload"
-                                            ? Stack(
-                                                children: [
-                                                  Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          border: Border.all(
-                                                              color: Color(
-                                                                  0xff0196CE))),
-                                                      width: double.infinity,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          bottomSheetMenu(
-                                                              context);
-                                                        },
-                                                        child: Container(
-                                                          height: 148,
-                                                          width:
-                                                              double.infinity,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0xffEFFAFF),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                          child: (widget.image
-                                                                  .isNotEmpty)
-                                                              ? ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8.0),
-                                                                  child: Image
-                                                                      .network(
-                                                                    widget
-                                                                        .image,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                    width: double
-                                                                        .infinity,
-                                                                    height: 148,
-                                                                  ),
-                                                                )
-                                                              : (widget.image
-                                                                      .isNotEmpty)
-                                                                  ? ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .network(
-                                                                        widget
-                                                                            .image,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                        width: double
-                                                                            .infinity,
-                                                                        height:
-                                                                            148,
-                                                                      ),
-                                                                    )
-                                                                  : Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        SvgPicture.asset(
-                                                                            'assets/images/gallery.svg'),
-                                                                        const Text(
-                                                                          'Upload Electry City Bill Image',
-                                                                          style: TextStyle(
-                                                                              color: Color(0xff0196CE),
-                                                                              fontSize: 12),
-                                                                        ),
-                                                                        const Text(
-                                                                            'Supports : JPEG, PNG',
-                                                                            style:
-                                                                                TextStyle(fontSize: 12, color: Color(0xffCACACA))),
-                                                                      ],
-                                                                    ),
-                                                        ),
-                                                      )),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        isImageDelete = true;
-                                                        widget.image = "";
-                                                      });
-                                                    },
-                                                    child: widget
-                                                            .image.isNotEmpty
-                                                        ? Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4),
-                                                            alignment: Alignment
-                                                                .topRight,
-                                                            child: SvgPicture.asset(
-                                                                'assets/icons/delete_icon.svg'),
-                                                          )
-                                                        : Container(),
-                                                  )
-                                                ],
-                                              )
-                                            : Container(),
-                                  ],
-                                ),
-                          const SizedBox(height: 50),
-                          CommonElevatedButton(
-                            onPressed: () async {
-                              ValidationResult result = await validateData(context, productProvider);
-                              PersonalDetailsRequestModel postData = result.postData;
-                              bool isValid = result.isValid;
-                              print("wqwwewew" + postData.toJson().toString());
-                              if (isValid) {
-                                submitPersonalInformationApi(
-                                    context, productProvider, postData);
-                              } else {
-                                print("unValid");
+                            if (personalDetailsResponce!.marital != null) {
+                              if (personalDetailsResponce!.marital!.isNotEmpty) {
+                                if (personalDetailsResponce!.marital == "Married") {
+                                  selectedMaritalStatusValue = "Married";
+                                } else if (personalDetailsResponce!.marital ==
+                                    "Single") {
+                                  selectedMaritalStatusValue = "Single";
+                                } else if (personalDetailsResponce!.marital ==
+                                    "Others") {
+                                  selectedMaritalStatusValue = "Others";
+                                } else if (personalDetailsResponce!.marital ==
+                                    "Divorced") {
+                                  selectedMaritalStatusValue = "Divorced";
+                                } else if (personalDetailsResponce!.marital ==
+                                    "Widow") {
+                                  selectedMaritalStatusValue = "Widow";
+                                }
                               }
-                            },
-                            text: "NEXT",
-                            upperCase: true,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ));
-            }
-          }),
+                            }
+
+                            if (personalDetailsResponce!.ownershipType != null) {
+                              if (personalDetailsResponce!
+                                  .ownershipType!.isNotEmpty &&
+                                  !selectedOwnershipEditable) {
+                                if (personalDetailsResponce!.ownershipType ==
+                                    "Owned") {
+                                  selectedOwnershipTypeValue = "Owned";
+                                } else if (personalDetailsResponce!.ownershipType ==
+                                    "Owned by parents") {
+                                  selectedOwnershipTypeValue = "Owned by parents";
+                                } else if (personalDetailsResponce!.ownershipType ==
+                                    "Owned by Spouse") {
+                                  selectedOwnershipTypeValue = "Owned by Spouse";
+                                } else {
+                                  selectedOwnershipTypeValue = "Rented";
+                                }
+                              }
+                            }
+
+                            if (personalDetailsResponce!.ownershipTypeProof !=
+                                null) {
+                              if (personalDetailsResponce!
+                                  .ownershipTypeProof!.isNotEmpty &&
+                                  !isOwnerShipProofEditable) {
+                                if (personalDetailsResponce!.ownershipTypeProof ==
+                                    "Electricity Manual Bill Upload") {
+                                  selectOwnershipProofValue =
+                                  "Electricity Manual Bill Upload";
+                                } else {
+                                  selectOwnershipProofValue =
+                                  "Digital Bill Verification";
+                                }
+                              }
+                            }
+
+                            //set permanent Address
+                            if (personalDetailsResponce!
+                                .permanentAddressLine1!.isNotEmpty) {
+                              _permanentAddresslineOneCl.text =
+                              personalDetailsResponce!.permanentAddressLine1!;
+                            }
+
+                            if (personalDetailsResponce!
+                                .permanentAddressLine2!.isNotEmpty) {
+                              _permanentAddresslineTwoCl.text =
+                              personalDetailsResponce!.permanentAddressLine2!;
+                            }
+
+                            if (personalDetailsResponce!.permanentPincode != null) {
+                              _permanentAddressPinCodeCl.text =
+                                  personalDetailsResponce!.permanentPincode!
+                                      .toString();
+                            }
+
+                            if (personalDetailsResponce!.permanentAddressLine1 ==
+                                personalDetailsResponce!.resAddress1 &&
+                                personalDetailsResponce!.permanentAddressLine2 ==
+                                    personalDetailsResponce!.resAddress2) {
+                              isCurrentAddSame = true;
+                            }
+
+                            //set Current Address
+                            if (personalDetailsResponce!.resAddress1!.isNotEmpty) {
+                              _currentAddressLineOneCl.text =
+                              personalDetailsResponce!.resAddress1!;
+                            }
+                            if (personalDetailsResponce!.resAddress2!.isNotEmpty) {
+                              _currentAddressLineTwoCl.text =
+                              personalDetailsResponce!.resAddress2!;
+                            }
+                            if (personalDetailsResponce!.pincode != null) {
+                              _currentAddressPinCodeCl.text =
+                                  personalDetailsResponce!.pincode!.toString();
+                            }
+
+                            if (personalDetailsResponce!.state != null) {
+                              stateId = personalDetailsResponce!.state!;
+                            }
+
+                            if (personalDetailsResponce!
+                                .electricityBillDocumentId !=
+                                null) {
+                              billDocId = personalDetailsResponce!
+                                  .electricityBillDocumentId!;
+                            }
+                            if (productProvider.getAllCityData != null) {
+                              permanentCitylist = productProvider.getAllCityData!;
+                            }
+
+                            if (productProvider.getCurrentAllCityData != null) {
+                              citylist = productProvider.getCurrentAllCityData!;
+                            }
+
+                            //set Digital veryFication Ivrs number
+                            if (personalDetailsResponce!.ivrsNumber != null &&
+                                !isOwnerShipProofEditable) {
+                              consumerNumber = personalDetailsResponce!.ivrsNumber;
+                              _customerIvrsCl.text =
+                                  personalDetailsResponce!.ivrsNumber;
+                              if (personalDetailsResponce!
+                                  .electricityServiceProvider !=
+                                  null &&
+                                  !isOwnerShipProofEditable) {
+                                electricityServiceProvider =
+                                personalDetailsResponce!
+                                    .electricityServiceProvider!;
+                                _electryCityServiceCl.text =
+                                personalDetailsResponce!
+                                    .electricityServiceProvider!;
+                                isElectriCityServiceEdit = false;
+                              }
+                              if (personalDetailsResponce!.electricityState !=
+                                  null &&
+                                  !isOwnerShipProofEditable) {
+                                electricityState =
+                                personalDetailsResponce!.electricityState!;
+                                _electryDistrictCl.text =
+                                personalDetailsResponce!.electricityState!;
+                                isElectriCityDistrictEdit = false;
+                              }
+                              isOwnerShipProofEditable = true;
+                              getIvrsNumberExist(
+                                context,
+                                productProvider,
+                                _customerIvrsCl,
+                              );
+                            }
+                          } else {
+                            if (!isEmailClear && !isValidEmail) {
+                              _emailIDCl.text = personalDetailsResponce!.emailId!;
+                            } else if (!isValidEmail) {
+                              _emailIDCl.clear();
+                            }
+
+                            if (productProvider.getAllCityData != null) {
+                              permanentCitylist = productProvider.getAllCityData!;
+                            }
+
+                            if (productProvider.getCurrentAllCityData != null) {
+                              citylist = productProvider.getCurrentAllCityData!;
+                            }
+                            if (citylist.isNotEmpty) {
+                              selectedCurrentCity = citylist.first;
+                              print("dsds" + selectedCurrentCity!.name!);
+                            }
+                          }
+                        },
+                        failure: (exception) {
+                          if (exception is ApiException) {
+                            if(exception.statusCode==401){
+                              productProvider.disposeAllProviderData();
+                              ApiService().handle401(context);
+                            }else{
+                              Utils.showToast(exception.errorMessage,context);
+                            }
+                          }
+                        },
+                      );
+                    }
+                  }
+                  if (productProvider
+                      .getpostElectricityBillDocumentSingleFileData !=
+                      null &&
+                      !isImageDelete) {
+                    billDocId = productProvider
+                        .getpostElectricityBillDocumentSingleFileData!.docId!;
+                    widget.image = productProvider
+                        .getpostElectricityBillDocumentSingleFileData!.filePath!;
+                  }
+                  return SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 50),
+                            const Text(
+                              'Personal Information',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 35, color: Colors.black),
+                            ),
+                            const SizedBox(height: 15),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  basicDetailsFields(productProvider),
+                                  const SizedBox(height: 20),
+                                  permanentAddressField(productProvider),
+                                  currentAddressFields(productProvider),
+                                  const SizedBox(height: 15),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 4.0),
+                                    child: Text(
+                                      "Ownership Type",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  DropdownButtonFormField2<String>(
+                                    isExpanded: true,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                      fillColor: textFiledBackgroundColour,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: kPrimaryColor, width: 1),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: kPrimaryColor, width: 1),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: kPrimaryColor, width: 1),
+                                      ),
+                                    ),
+                                    hint: const Text(
+                                      'Ownership Type',
+                                      style: TextStyle(
+                                        color: blueColor,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    items: getDropDownOption(ownershipTypeList),
+                                    value: selectedOwnershipTypeValue!.isNotEmpty
+                                        ? selectedOwnershipTypeValue
+                                        : null,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        selectedOwnershipEditable = true;
+                                        selectedOwnershipTypeValue = value;
+                                      });
+                                    },
+                                    buttonStyleData: const ButtonStyleData(
+                                      padding: EdgeInsets.only(right: 8),
+                                    ),
+                                    dropdownStyleData: const DropdownStyleData(
+                                      maxHeight: 200,
+                                    ),
+                                    menuItemStyleData: MenuItemStyleData(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 8.0),
+                                      customHeights:
+                                      _getCustomItemsHeights(ownershipTypeList),
+                                    ),
+                                    iconStyleData: const IconStyleData(
+                                      openMenuIcon: Icon(Icons.arrow_drop_up),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  (selectedOwnershipTypeValue!.isNotEmpty &&
+                                      selectedOwnershipTypeValue == "Rented")
+                                      ? Container()
+                                      : Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 4.0),
+                                        child: Text(
+                                          "Ownership Proof",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      DropdownButtonFormField2<String>(
+                                        isExpanded: true,
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          fillColor: textFiledBackgroundColour,
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                                color: kPrimaryColor, width: 1),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                                color: kPrimaryColor, width: 1),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: kPrimaryColor, width: 1),
+                                          ),
+                                        ),
+                                        hint: const Text(
+                                          'Select Ownership Proof',
+                                          style: TextStyle(
+                                            color: blueColor,
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        items:
+                                        getDropDownOption(ownershipProofList),
+                                        value: selectOwnershipProofValue,
+                                        onChanged: (String? value) async {
+                                          setState(() {
+                                            selectOwnershipProofValue = value;
+                                            isOwnerShipProofEditable = true;
+                                            if (selectOwnershipProofValue ==
+                                                "Digital Bill Verification") {
+                                              customerName = "";
+                                              customerAddress = "";
+                                              electricityServiceProvider = "";
+                                              _customerIvrsCl.text = "";
+                                              electricityState = "";
+                                              selectDistrictList.clear();
+                                              selectServiceProviderList.clear();
+                                              isElectriCityDistrictEdit = true;
+                                              isElectriCityServiceEdit = true;
+                                            }
+                                          });
+                                        },
+                                        buttonStyleData: const ButtonStyleData(
+                                          padding: EdgeInsets.only(right: 8),
+                                        ),
+                                        dropdownStyleData:
+                                        const DropdownStyleData(
+                                          maxHeight: 200,
+                                        ),
+                                        menuItemStyleData: MenuItemStyleData(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          customHeights: _getCustomItemsHeights(
+                                              ownershipProofList),
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 15),
+                                      selectOwnershipProofValue ==
+                                          "Digital Bill Verification"
+                                          ? digitalBillFields(productProvider)
+                                          : selectOwnershipProofValue ==
+                                          "Electricity Manual Bill Upload"
+                                          ? Stack(
+                                        children: [
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(10),
+                                                  border: Border.all(
+                                                      color: Color(
+                                                          0xff0196CE))),
+                                              width: double.infinity,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  bottomSheetMenu(
+                                                      context);
+                                                },
+                                                child: Container(
+                                                  height: 148,
+                                                  width:
+                                                  double.infinity,
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    color: Color(
+                                                        0xffEFFAFF),
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(
+                                                        10),
+                                                  ),
+                                                  child: (widget.image
+                                                      .isNotEmpty)
+                                                      ? ClipRRect(
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(
+                                                        8.0),
+                                                    child: Image
+                                                        .network(
+                                                      widget
+                                                          .image,
+                                                      fit: BoxFit
+                                                          .cover,
+                                                      width: double
+                                                          .infinity,
+                                                      height: 148,
+                                                    ),
+                                                  )
+                                                      : (widget.image
+                                                      .isNotEmpty)
+                                                      ? ClipRRect(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        8.0),
+                                                    child: Image
+                                                        .network(
+                                                      widget
+                                                          .image,
+                                                      fit: BoxFit
+                                                          .cover,
+                                                      width: double
+                                                          .infinity,
+                                                      height:
+                                                      148,
+                                                    ),
+                                                  )
+                                                      : Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .center,
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          'assets/images/gallery.svg'),
+                                                      const Text(
+                                                        'Upload Electry City Bill Image',
+                                                        style: TextStyle(
+                                                            color: Color(0xff0196CE),
+                                                            fontSize: 12),
+                                                      ),
+                                                      const Text(
+                                                          'Supports : JPEG, PNG',
+                                                          style:
+                                                          TextStyle(fontSize: 12, color: Color(0xffCACACA))),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isImageDelete = true;
+                                                widget.image = "";
+                                              });
+                                            },
+                                            child: widget
+                                                .image.isNotEmpty
+                                                ? Container(
+                                              padding:
+                                              EdgeInsets.all(
+                                                  4),
+                                              alignment: Alignment
+                                                  .topRight,
+                                              child: SvgPicture.asset(
+                                                  'assets/icons/delete_icon.svg'),
+                                            )
+                                                : Container(),
+                                          )
+                                        ],
+                                      )
+                                          : Container(),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 50),
+                                  CommonElevatedButton(
+                                    onPressed: () async {
+                                      ValidationResult result = await validateData(context, productProvider);
+                                      PersonalDetailsRequestModel postData = result.postData;
+                                      bool isValid = result.isValid;
+                                      print("wqwwewew" + postData.toJson().toString());
+                                      if (isValid) {
+                                        submitPersonalInformationApi(
+                                            context, productProvider, postData);
+                                      } else {
+                                        print("unValid");
+                                      }
+                                    },
+                                    text: "NEXT",
+                                    upperCase: true,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ));
+                }
+              }),
         ),
       ),
     );
@@ -767,7 +767,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           builder: (BuildContext context) =>
               LoginScreen(),
         ),
-        (route) => false, //if you want to disable back feature set to false
+            (route) => false, //if you want to disable back feature set to false
       );
     }
   }
@@ -789,8 +789,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -818,8 +818,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
-                    emailID: emailID,
-                  )));
+                emailID: emailID,
+              )));
 
       if (result != null &&
           result.containsKey('isValid') &&
@@ -879,10 +879,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   List<DropdownMenuItem<ElectricityServiceProviderListResModel>>
-      getDropDownOptionServiceList(
-          List<ElectricityServiceProviderListResModel?> items) {
+  getDropDownOptionServiceList(
+      List<ElectricityServiceProviderListResModel?> items) {
     final List<DropdownMenuItem<ElectricityServiceProviderListResModel>>
-        menuItems = [];
+    menuItems = [];
     for (final ElectricityServiceProviderListResModel? item in items) {
       menuItems.addAll(
         [
@@ -1102,8 +1102,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
         if (productProvider.getAllStateData != null) {
           var allStates = productProvider.getAllStateData!.returnObject!;
           var initialData = allStates.firstWhere(
-              (element) =>
-                  element?.id == personalDetailsResponce!.permanentState,
+                  (element) =>
+              element?.id == personalDetailsResponce!.permanentState,
               orElse: () => null);
           _permanentStateNameCl.text = initialData!.name!;
         }
@@ -1150,7 +1150,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget buildCityField(DataProvider productProvider) {
     if (personalDetailsResponce!.permanentCity != null) {
       var initialData = productProvider.getAllCityData!.firstWhere(
-          (element) => element?.id == personalDetailsResponce!.permanentCity,
+              (element) => element?.id == personalDetailsResponce!.permanentCity,
           orElse: () => CityResponce());
       _permanentCityNameCl.text = initialData!.name!;
 
@@ -1494,65 +1494,65 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
             _emailIDCl.text.isNotEmpty
                 ? Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: Container(
-                      child: IconButton(
-                        onPressed: () => setState(() {
-                          isEmailClear = false;
-                          isValidEmail = false;
-                          _emailIDCl.clear();
-                        }),
-                        icon: SvgPicture.asset(
-                          'assets/icons/email_cross.svg',
-                          semanticsLabel: 'My SVG Image',
-                        ),
-                      ),
-                    ),
-                  )
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: Container(
+                child: IconButton(
+                  onPressed: () => setState(() {
+                    isEmailClear = false;
+                    isValidEmail = false;
+                    _emailIDCl.clear();
+                  }),
+                  icon: SvgPicture.asset(
+                    'assets/icons/email_cross.svg',
+                    semanticsLabel: 'My SVG Image',
+                  ),
+                ),
+              ),
+            )
                 : Container(),
           ],
         ),
         SizedBox(height: 15),
         (!isEmailClear && _emailIDCl.text.isNotEmpty)
             ? Container(
-                child: Row(
-                  children: [
-                    Text(
-                      'VERIFIED',
-                      style: TextStyle(
-                          fontSize: 16,
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    SvgPicture.asset('assets/icons/tick_square.svg'),
-                  ],
-                ),
-              )
+          child: Row(
+            children: [
+              Text(
+                'VERIFIED',
+                style: TextStyle(
+                    fontSize: 16,
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              SvgPicture.asset('assets/icons/tick_square.svg'),
+            ],
+          ),
+        )
             : Align(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  onTap: () async {
-                    if (_emailIDCl.text.isEmpty) {
-                      Utils.showToast("Please Enter Email ID", context);
-                    } else if (!Utils.validateEmail(_emailIDCl.text)) {
-                      Utils.showToast("Please Enter Valid Email ID", context);
-                    } else {
-                      callEmailIDExist(context, _emailIDCl.text);
-                    }
-                  },
-                  child: Text(
-                    'Click here to Verify',
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  ),
-                )),
+            alignment: Alignment.centerLeft,
+            child: InkWell(
+              onTap: () async {
+                if (_emailIDCl.text.isEmpty) {
+                  Utils.showToast("Please Enter Email ID", context);
+                } else if (!Utils.validateEmail(_emailIDCl.text)) {
+                  Utils.showToast("Please Enter Valid Email ID", context);
+                } else {
+                  callEmailIDExist(context, _emailIDCl.text);
+                }
+              },
+              child: Text(
+                'Click here to Verify',
+                style: TextStyle(
+                    fontSize: 16,
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue),
+              ),
+            )),
         SizedBox(height: 24),
         TextField(
           keyboardType: TextInputType.number,
@@ -1603,9 +1603,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 print("Check${isChecked}");
                 ischeckCurrentAdress = false;
                 _currentAddressLineOneCl.text =
-                    personalDetailsResponce!.permanentAddressLine1!;
+                personalDetailsResponce!.permanentAddressLine1!;
                 _currentAddressLineTwoCl.text =
-                    personalDetailsResponce!.permanentAddressLine2!;
+                personalDetailsResponce!.permanentAddressLine2!;
                 _currentAddressPinCodeCl.text =
                     personalDetailsResponce!.permanentPincode!.toString();
               } else {
@@ -1694,136 +1694,136 @@ class _PersonalInformationState extends State<PersonalInformation> {
         const SizedBox(height: 15),
         isCurrentAddSame
             ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildStateField(productProvider),
-                  const SizedBox(height: 15),
-                  permanentCitylist.isNotEmpty
-                      ? buildCityField(productProvider)
-                      : Container(),
-                  const SizedBox(height: 15),
-                ],
-              )
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildStateField(productProvider),
+            const SizedBox(height: 15),
+            permanentCitylist.isNotEmpty
+                ? buildCityField(productProvider)
+                : Container(),
+            const SizedBox(height: 15),
+          ],
+        )
             : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  productProvider.getAllStateData != null
-                      ? DropdownButtonFormField2<ReturnObject>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 16),
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1),
-                            ),
-                          ),
-                          hint: const Text(
-                            'State',
-                            style: TextStyle(
-                              color: blueColor,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          items: getAllState(
-                              productProvider.getAllStateData!.returnObject!),
-                          onChanged: (ReturnObject? value) {
-                            setState(() {
-                              selectedCurrentCity = null;
-                              selectedCurrentState = value;
-                              citylist.clear();
-                              Provider.of<DataProvider>(context, listen: false)
-                                  .getCurrentAllCity(value!.id!);
-                            });
-                          },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights: _getCustomItemsHeights2(
-                                productProvider.getAllStateData!.returnObject!),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
-                        )
-                      : Container(),
-                  const SizedBox(height: 15),
-                  citylist.isNotEmpty
-                      ? DropdownButtonFormField2<CityResponce>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 16),
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1),
-                            ),
-                          ),
-                          hint: const Text(
-                            'City',
-                            style: TextStyle(
-                              color: blueColor,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          items: getCurrentAllCity(citylist),
-                          onChanged: (CityResponce? value) {
-                            setState(() {
-                              selectedCurrentCity = value;
-                            });
-                          },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights: _getCustomItemsHeights3(citylist),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
-                        )
-                      : Container(),
-                ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            productProvider.getAllStateData != null
+                ? DropdownButtonFormField2<ReturnObject>(
+              isExpanded: true,
+              decoration: InputDecoration(
+                contentPadding:
+                const EdgeInsets.symmetric(vertical: 16),
+                fillColor: textFiledBackgroundColour,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                      color: kPrimaryColor, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                      color: kPrimaryColor, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                  BorderSide(color: kPrimaryColor, width: 1),
+                ),
               ),
+              hint: const Text(
+                'State',
+                style: TextStyle(
+                  color: blueColor,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              items: getAllState(
+                  productProvider.getAllStateData!.returnObject!),
+              onChanged: (ReturnObject? value) {
+                setState(() {
+                  selectedCurrentCity = null;
+                  selectedCurrentState = value;
+                  citylist.clear();
+                  Provider.of<DataProvider>(context, listen: false)
+                      .getCurrentAllCity(value!.id!);
+                });
+              },
+              buttonStyleData: const ButtonStyleData(
+                padding: EdgeInsets.only(right: 8),
+              ),
+              dropdownStyleData: const DropdownStyleData(
+                maxHeight: 200,
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 8.0),
+                customHeights: _getCustomItemsHeights2(
+                    productProvider.getAllStateData!.returnObject!),
+              ),
+              iconStyleData: const IconStyleData(
+                openMenuIcon: Icon(Icons.arrow_drop_up),
+              ),
+            )
+                : Container(),
+            const SizedBox(height: 15),
+            citylist.isNotEmpty
+                ? DropdownButtonFormField2<CityResponce>(
+              isExpanded: true,
+              decoration: InputDecoration(
+                contentPadding:
+                const EdgeInsets.symmetric(vertical: 16),
+                fillColor: textFiledBackgroundColour,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                      color: kPrimaryColor, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                      color: kPrimaryColor, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                  BorderSide(color: kPrimaryColor, width: 1),
+                ),
+              ),
+              hint: const Text(
+                'City',
+                style: TextStyle(
+                  color: blueColor,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              items: getCurrentAllCity(citylist),
+              onChanged: (CityResponce? value) {
+                setState(() {
+                  selectedCurrentCity = value;
+                });
+              },
+              buttonStyleData: const ButtonStyleData(
+                padding: EdgeInsets.only(right: 8),
+              ),
+              dropdownStyleData: const DropdownStyleData(
+                maxHeight: 200,
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 8.0),
+                customHeights: _getCustomItemsHeights3(citylist),
+              ),
+              iconStyleData: const IconStyleData(
+                openMenuIcon: Icon(Icons.arrow_drop_up),
+              ),
+            )
+                : Container(),
+          ],
+        ),
         const SizedBox(height: 15),
         TextField(
           enabled: false,
@@ -1879,7 +1879,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     //bill
     if (productProvider.getpostElectricityBillDocumentSingleFileData != null) {
       billDocId =
-          productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
+      productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
     }
 
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
@@ -1917,21 +1917,21 @@ class _PersonalInformationState extends State<PersonalInformation> {
         resAddress2: _currentAddressLineTwoCl.text.toString(),
         ownershipTypeProof: selectOwnershipProofValue,
         electricityBillDocumentId:
-            selectOwnershipProofValue == "Electricity Manual Bill Upload"
-                ? billDocId
-                : null,
+        selectOwnershipProofValue == "Electricity Manual Bill Upload"
+            ? billDocId
+            : null,
         ivrsNumber:
-            selectOwnershipProofValue != "Electricity Manual Bill Upload"
-                ? _customerIvrsCl.text.toString()
-                : null,
+        selectOwnershipProofValue != "Electricity Manual Bill Upload"
+            ? _customerIvrsCl.text.toString()
+            : null,
         electricityServiceProvider:
-            selectOwnershipProofValue != "Electricity Manual Bill Upload"
-                ? electricityServiceProvider
-                : null,
+        selectOwnershipProofValue != "Electricity Manual Bill Upload"
+            ? electricityServiceProvider
+            : null,
         electricityState:
-            selectOwnershipProofValue != "Electricity Manual Bill Upload"
-                ? electricityState
-                : null);
+        selectOwnershipProofValue != "Electricity Manual Bill Upload"
+            ? electricityState
+            : null);
 
     bool isValid = false;
     String errorMessage = "";
@@ -1995,7 +1995,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }
 
     print("postData::: " + postData.toJson().toString());
-   return ValidationResult(postData, isValid);
+    return ValidationResult(postData, isValid);
   }
 
   void bottomSheetMenu(BuildContext context) {
@@ -2017,10 +2017,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Future<void> getIvrsNumberExist(
-    BuildContext context,
-    DataProvider productProvider,
-    TextEditingController customerIvrsCl,
-  ) async {
+      BuildContext context,
+      DataProvider productProvider,
+      TextEditingController customerIvrsCl,
+      ) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
 
@@ -2224,7 +2224,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       filled: true,
                       border: OutlineInputBorder(
                         borderSide:
-                            BorderSide(color: kPrimaryColor, width: 1.0),
+                        BorderSide(color: kPrimaryColor, width: 1.0),
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       )),
                   onChanged: (text) async {
@@ -2267,287 +2267,287 @@ class _PersonalInformationState extends State<PersonalInformation> {
               children: [
                 isOwnerShipProofEditable && isElectriCityServiceEdit
                     ? selectServiceProviderList.isNotEmpty
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 15),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: Text(
-                                  "Select Service Provider",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              DropdownButtonFormField2<
-                                  ElectricityServiceProviderListResModel>(
-                                isExpanded: true,
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  fillColor: textFiledBackgroundColour,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: kPrimaryColor, width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: kPrimaryColor, width: 1),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                        color: kPrimaryColor, width: 1),
-                                  ),
-                                ),
-                                hint: const Text(
-                                  'Select service provider',
-                                  style: TextStyle(
-                                    color: blueColor,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                items: getDropDownOptionServiceList(
-                                    selectServiceProviderList),
-                                onChanged:
-                                    (ElectricityServiceProviderListResModel?
-                                        value) {
-                                  setState(() {
-                                    selectServiceProviderValue = value;
-                                    selectServiceProviderCode = value!.code;
-                                    selectedStateValue = value.state.toString();
-                                    selectDistrictList.clear();
-                                    electricityServiceProvider =
-                                        value!.serviceProvider!.toString();
-                                    customerName = "";
-                                    customerAddress = "";
-                                    consumerNumber = "";
-                                    isCustomerName = false;
-                                  });
-                                  getKarzaElectricityState(
-                                      context, productProvider);
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
-                                ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeightsService(
-                                      selectServiceProviderList),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container()
-                    : Column(
-                        children: [
-                          const SizedBox(height: 15),
-                          TextField(
-                            showCursor: false,
-                            readOnly: true,
-                            enabled: true,
-                            controller: _electryCityServiceCl,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Select Service Provider",
-                                labelText: "Service Provider",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                            onTap: () {
-                              setState(() {
-                                isOwnerShipProofEditable = true;
-                                isElectriCityServiceEdit = true;
-                                isElectriCityDistrictEdit = true;
-                                selectDistrictList.clear();
-                              });
-                            },
-                          ),
-                        ],
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Text(
+                        "Select Service Provider",
+                        style: TextStyle(color: Colors.grey),
                       ),
+                    ),
+                    SizedBox(height: 8),
+                    DropdownButtonFormField2<
+                        ElectricityServiceProviderListResModel>(
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        contentPadding:
+                        const EdgeInsets.symmetric(vertical: 16),
+                        fillColor: textFiledBackgroundColour,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                              color: kPrimaryColor, width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                              color: kPrimaryColor, width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                              color: kPrimaryColor, width: 1),
+                        ),
+                      ),
+                      hint: const Text(
+                        'Select service provider',
+                        style: TextStyle(
+                          color: blueColor,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      items: getDropDownOptionServiceList(
+                          selectServiceProviderList),
+                      onChanged:
+                          (ElectricityServiceProviderListResModel?
+                      value) {
+                        setState(() {
+                          selectServiceProviderValue = value;
+                          selectServiceProviderCode = value!.code;
+                          selectedStateValue = value.state.toString();
+                          selectDistrictList.clear();
+                          electricityServiceProvider =
+                              value!.serviceProvider!.toString();
+                          customerName = "";
+                          customerAddress = "";
+                          consumerNumber = "";
+                          isCustomerName = false;
+                        });
+                        getKarzaElectricityState(
+                            context, productProvider);
+                      },
+                      buttonStyleData: const ButtonStyleData(
+                        padding: EdgeInsets.only(right: 8),
+                      ),
+                      dropdownStyleData: const DropdownStyleData(
+                        maxHeight: 200,
+                      ),
+                      menuItemStyleData: MenuItemStyleData(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0),
+                        customHeights: _getCustomItemsHeightsService(
+                            selectServiceProviderList),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        openMenuIcon: Icon(Icons.arrow_drop_up),
+                      ),
+                    ),
+                  ],
+                )
+                    : Container()
+                    : Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    TextField(
+                      showCursor: false,
+                      readOnly: true,
+                      enabled: true,
+                      controller: _electryCityServiceCl,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      maxLines: 1,
+                      cursorColor: Colors.black,
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: kPrimaryColor,
+                            ),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          hintText: "Select Service Provider",
+                          labelText: "Service Provider",
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: kPrimaryColor, width: 1.0),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10.0)),
+                          )),
+                      onTap: () {
+                        setState(() {
+                          isOwnerShipProofEditable = true;
+                          isElectriCityServiceEdit = true;
+                          isElectriCityDistrictEdit = true;
+                          selectDistrictList.clear();
+                        });
+                      },
+                    ),
+                  ],
+                ),
                 isOwnerShipProofEditable && isElectriCityDistrictEdit
                     ? selectDistrictList.isNotEmpty
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 15),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: Text(
-                                  "Select District",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              DropdownButtonFormField2<
-                                  ElectricityStateResModel>(
-                                // value: selectDistrictValue != null ? selectDistrictValue : null,
-                                isExpanded: true,
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  fillColor: textFiledBackgroundColour,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: kPrimaryColor, width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: kPrimaryColor, width: 1),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                        color: kPrimaryColor, width: 1),
-                                  ),
-                                ),
-                                hint: const Text(
-                                  'Select District',
-                                  style: TextStyle(
-                                    color: blueColor,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                items: getDropDownOptionDisticList(
-                                    selectDistrictList),
-                                onChanged: (ElectricityStateResModel? value) {
-                                  setState(() {
-                                    selectDistrictValue = value;
-                                    customerName = "";
-                                    customerAddress = "";
-                                    consumerNumber = "";
-                                    electricityState =
-                                        value!.districtName!.toString();
-                                    isCustomerName = false;
-                                  });
-                                  getKarzaElectricityAuthentication(
-                                      context,
-                                      productProvider,
-                                      selectDistrictValue!.districtName
-                                          .toString());
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
-                                ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeightsDistic(
-                                      selectDistrictList),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container()
-                    : Column(
-                        children: [
-                          SizedBox(height: 20),
-                          TextField(
-                            showCursor: false,
-                            readOnly: true,
-                            enabled: true,
-                            controller: _electryDistrictCl,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Select District",
-                                labelText: "Select District",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                            onTap: () {
-                              setState(() {
-                                isOwnerShipProofEditable = true;
-                                isElectriCityDistrictEdit = true;
-                                getKarzaElectricityState(
-                                    context, productProvider);
-                              });
-                            },
-                          ),
-                        ],
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Text(
+                        "Select District",
+                        style: TextStyle(color: Colors.grey),
                       ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField2<
+                        ElectricityStateResModel>(
+                      // value: selectDistrictValue != null ? selectDistrictValue : null,
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        contentPadding:
+                        const EdgeInsets.symmetric(vertical: 16),
+                        fillColor: textFiledBackgroundColour,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                              color: kPrimaryColor, width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                              color: kPrimaryColor, width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                              color: kPrimaryColor, width: 1),
+                        ),
+                      ),
+                      hint: const Text(
+                        'Select District',
+                        style: TextStyle(
+                          color: blueColor,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      items: getDropDownOptionDisticList(
+                          selectDistrictList),
+                      onChanged: (ElectricityStateResModel? value) {
+                        setState(() {
+                          selectDistrictValue = value;
+                          customerName = "";
+                          customerAddress = "";
+                          consumerNumber = "";
+                          electricityState =
+                              value!.districtName!.toString();
+                          isCustomerName = false;
+                        });
+                        getKarzaElectricityAuthentication(
+                            context,
+                            productProvider,
+                            selectDistrictValue!.districtName
+                                .toString());
+                      },
+                      buttonStyleData: const ButtonStyleData(
+                        padding: EdgeInsets.only(right: 8),
+                      ),
+                      dropdownStyleData: const DropdownStyleData(
+                        maxHeight: 200,
+                      ),
+                      menuItemStyleData: MenuItemStyleData(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0),
+                        customHeights: _getCustomItemsHeightsDistic(
+                            selectDistrictList),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        openMenuIcon: Icon(Icons.arrow_drop_up),
+                      ),
+                    ),
+                  ],
+                )
+                    : Container()
+                    : Column(
+                  children: [
+                    SizedBox(height: 20),
+                    TextField(
+                      showCursor: false,
+                      readOnly: true,
+                      enabled: true,
+                      controller: _electryDistrictCl,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      maxLines: 1,
+                      cursorColor: Colors.black,
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: kPrimaryColor,
+                            ),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          hintText: "Select District",
+                          labelText: "Select District",
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: kPrimaryColor, width: 1.0),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10.0)),
+                          )),
+                      onTap: () {
+                        setState(() {
+                          isOwnerShipProofEditable = true;
+                          isElectriCityDistrictEdit = true;
+                          getKarzaElectricityState(
+                              context, productProvider);
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             isCustomerName
                 ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          "Name (As per IVRS No.)",
-                          style: TextStyle(color: Colors.grey, fontSize: 15),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          "$customerName",
-                          style: TextStyle(color: Colors.black, fontSize: 15),
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          "Address : $customerAddress",
-                          style: TextStyle(color: Colors.black, fontSize: 15),
-                        ),
-                      ),
-                    ],
-                  )
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "Name (As per IVRS No.)",
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "$customerName",
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                ),
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "Address : $customerAddress",
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                ),
+              ],
+            )
                 : Container(),
           ],
         ),

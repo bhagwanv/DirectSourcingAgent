@@ -79,7 +79,7 @@ ScreenType? customerSequence(
           );
           return ScreenType.personalInfo;
         } else if (leadCurrentActivity.activityName == "BusinessInfo") {
-         /* Navigator.of(context).pushReplacement(
+          /* Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => BusinessDetailsScreen(
                     activityId: leadCurrentActivity.activityMasterId!,
@@ -257,7 +257,7 @@ ScreenType? customerSequence(
             return ScreenType.AgreementEsign;
           } else if (leadCurrentActivity.subActivityName ==
               "PrepareAgreement") {
-           /* Navigator.of(context).push(
+            /* Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (context) => ProfileReview(pageType: pageType)),
             );*/

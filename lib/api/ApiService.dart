@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../ProductCompanyDetailResponseModel.dart';
 import '../shared_preferences/shared_pref.dart';
 import '../utils/InternetConnectivity.dart';
 import '../utils/constant.dart';
@@ -15,10 +16,9 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
-import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
-import '../view/otp_screens/model/VerifyOtpResponce.dart';
+import '../view/otp_screens/model/VerifyOtpResponse.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/PostLeadPANRequestModel.dart';
@@ -66,28 +66,27 @@ class ApiService {
     );
   }
 
-/*  Future<ProductCompanyDetailResponseModel> productCompanyDetail(
+  Future<ProductCompanyDetailResponseModel> productCompanyDetail(
       String product, String company) async {
     if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      //  var base_url = apiUrls.baseUrl;
+      /*  final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);*/
+
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.productCompanyDetail}?product=$product&company=$company'));
+          '${apiUrls.baseUrl! + apiUrls.productCompanyDetail}?product=$product&company=$company'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
-        // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final ProductCompanyDetailResponseModel responseModel =
-            ProductCompanyDetailResponseModel.fromJson(jsonData);
+        ProductCompanyDetailResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
-        throw Exception('Failed to load products');
+        throw Exception('Failed to load Data');
       }
     } else {
       throw Exception('No internet connection');
     }
-  }*/
+  }
 
   Future<GetLeadResponseModel> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -101,7 +100,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final GetLeadResponseModel responseModel =
-            GetLeadResponseModel.fromJson(jsonData);
+        GetLeadResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -128,7 +127,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final LeadCurrentResponseModel responseModel =
-            LeadCurrentResponseModel.fromJson(jsonData);
+        LeadCurrentResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -139,29 +138,27 @@ class ApiService {
   }
 
   Future<Result<GenrateOptResponceModel, Exception>> genrateOtp(
-      BuildContext context, String mobileNumber, int CompanyID) async {
+      BuildContext context, String mobileNumber) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
-        final prefsUtil = await SharedPref.getInstance();
-        //var base_url = prefsUtil.getString(BASE_URL);
-        var base_url = ApiUrls().baseUrl;
+        // final prefsUtil = await SharedPref.getInstance();
+        // var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
+            '${apiUrls.baseUrl + apiUrls.generateOtp}?MobileNo=$mobileNumber'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final GenrateOptResponceModel responseModel =
-                GenrateOptResponceModel.fromJson(jsonData);
+            GenrateOptResponceModel.fromJson(jsonData);
             return Success(responseModel);
 
           case 401:
-            // Handle 401 unauthorized error
+          // Handle 401 unauthorized error
             await handle401(context);
             return Failure(ApiException(response.statusCode, "Unauthorized"));
           default:
-            // 3. return Failure with the desired exception
+          // 3. return Failure with the desired exception
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
@@ -174,15 +171,14 @@ class ApiService {
   }
 
   Future<PostSingleFileResponseModel> postSingleFile(
-    File file,
-    bool isValidForLifeTime,
-    String? validityInDays,
-    String? subFolderName,
-  ) async {
+      File file,
+      bool isValidForLifeTime,
+      String? validityInDays,
+      String? subFolderName,
+      ) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      //var base_url = prefsUtil.getString(BASE_URL);
-      var base_url = ApiUrls().baseUrl;
+      var base_url = prefsUtil.getString(BASE_URL);
       try {
         var request = http.MultipartRequest(
           'POST',
@@ -231,33 +227,27 @@ class ApiService {
     }
   }
 
-  Future<Result<VerifyOtpResponce, Exception>> verifyOtp(
+  Future<Result<VerifyOtpResponse, Exception>> verifyOtp(
       VarifayOtpRequest verifayOtp) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
-        final prefsUtil = await SharedPref.getInstance();
-       // var base_url = prefsUtil.getString(BASE_URL);
-        var base_url = ApiUrls().baseUrl;
-
+        // final prefsUtil = await SharedPref.getInstance();
+        // var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.post(
-            Uri.parse('${base_url! + apiUrls.LeadMobileValidate}'),
+            Uri.parse(apiUrls.baseUrl + apiUrls.leadMobileValidate),
             headers: {
               'Content-Type': 'application/json',
-              // Set the content type as JSON
             },
             body: json.encode(verifayOtp));
-        //print(json.encode(leadCurrentRequestModel));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
-            final VerifyOtpResponce responseModel =
-                VerifyOtpResponce.fromJson(jsonData);
+            final VerifyOtpResponse responseModel =
+            VerifyOtpResponse.fromJson(jsonData);
             return Success(responseModel);
 
           default:
-            // 3. return Failure with the desired exception
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
@@ -274,10 +264,8 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        //var base_url = prefsUtil.getString(BASE_URL);
-        //var token = await prefsUtil.getString(TOKEN);
-        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJhYjlkOWIyYi01NDZiLTQ3ZmYtYjAxMC0yZTlkZGJlYTBkMTIiLCJ1c2VybmFtZSI6Ijk1MzMzOTI4MDEiLCJsb2dnZWRvbiI6IjA2LzA0LzIwMjQgMTM6MDg6NTAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTMzMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3NTA2NTMwLCJleHAiOjE3MTc1OTI5MzAsImlhdCI6MTcxNzUwNjUzMCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.N1clSPfguoVsD9GoLiqwu_wnMi3MkVOAo80bn_ZcEWSsfFWNYOE_g21E2p5Mf45i6rX_jfanHMJVbDuuKt-L5gjb8cfS67L_TlvSSiti7gldXdRErrmDIVdu5te05ZmNLr7yVYSnStRtA_aiL75_ShEPSxyXLHwI1iAI3x57BaygwzYsjkIRf2-Vn_kHMIKedzYJqReZzW7JTQ8DMb79R1UiRkjYlCBKi7V2ySBJcadLqpDsbhBBgoShVeF7-Syl8tnph16LmwVn01-VT1pzmH2iklRA-Nym3tc1sjyWwyqM5xO-L9tAkGWyfUwm0Qep_Ij5W-m5DnP49IMSRrmtcg";
-        var base_url =ApiUrls().baseUrl;
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
               '${base_url! + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
@@ -290,14 +278,14 @@ class ApiService {
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
-          // Parse the JSON response
+        // Parse the JSON response
           case 200:
             final dynamic jsonData = json.decode(response.body);
             final ValidPanCardResponsModel responseModel =
-                ValidPanCardResponsModel.fromJson(jsonData);
+            ValidPanCardResponsModel.fromJson(jsonData);
             return Success(responseModel);
           default:
-            // 3. return Failure with the desired exception
+          // 3. return Failure with the desired exception
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
@@ -309,13 +297,11 @@ class ApiService {
   }
 
   Future<Result<FathersNameByValidPanCardResponseModel, Exception>>
-      getFathersNameByValidPanCard(String panNumber) async {
+  getFathersNameByValidPanCard(String panNumber) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-       // var base_url = prefsUtil.getString(BASE_URL);
-        var base_url = ApiUrls().baseUrl;
-
+        var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
@@ -329,10 +315,10 @@ class ApiService {
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final FathersNameByValidPanCardResponseModel responseModel =
-                FathersNameByValidPanCardResponseModel.fromJson(jsonData);
+            FathersNameByValidPanCardResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));
@@ -364,10 +350,10 @@ class ApiService {
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final PostLeadPanResponseModel responseModel =
-                PostLeadPanResponseModel.fromJson(jsonData);
+            PostLeadPanResponseModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -386,18 +372,16 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        //var base_url = prefsUtil.getString(BASE_URL);
-        var base_url = ApiUrls().baseUrl;
-
+        var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
             '${base_url! + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final LeadPanResponseModel responseModel =
-                LeadPanResponseModel.fromJson(jsonData);
+            LeadPanResponseModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -417,8 +401,7 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        //var base_url = prefsUtil.getString(BASE_URL);
-        var base_url = ApiUrls().baseUrl;
+        var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
@@ -431,10 +414,10 @@ class ApiService {
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final LeadAadhaarResponse responseModel =
-                LeadAadhaarResponse.fromJson(jsonData);
+            LeadAadhaarResponse.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -449,16 +432,13 @@ class ApiService {
   }
 
   Future<Result<AadhaarGenerateOTPResponseModel, Exception>>
-      getLeadAadharGenerateOTP(
-          AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
+  getLeadAadharGenerateOTP(
+      AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        //var base_url = prefsUtil.getString(BASE_URL);
-        var base_url = ApiUrls().baseUrl;
-        //var token = await prefsUtil.getString(TOKEN);
-        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJhYjlkOWIyYi01NDZiLTQ3ZmYtYjAxMC0yZTlkZGJlYTBkMTIiLCJ1c2VybmFtZSI6Ijk1MzMzOTI4MDEiLCJsb2dnZWRvbiI6IjA2LzA0LzIwMjQgMTM6MDg6NTAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTMzMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3NTA2NTMwLCJleHAiOjE3MTc1OTI5MzAsImlhdCI6MTcxNzUwNjUzMCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.N1clSPfguoVsD9GoLiqwu_wnMi3MkVOAo80bn_ZcEWSsfFWNYOE_g21E2p5Mf45i6rX_jfanHMJVbDuuKt-L5gjb8cfS67L_TlvSSiti7gldXdRErrmDIVdu5te05ZmNLr7yVYSnStRtA_aiL75_ShEPSxyXLHwI1iAI3x57BaygwzYsjkIRf2-Vn_kHMIKedzYJqReZzW7JTQ8DMb79R1UiRkjYlCBKi7V2ySBJcadLqpDsbhBBgoShVeF7-Syl8tnph16LmwVn01-VT1pzmH2iklRA-Nym3tc1sjyWwyqM5xO-L9tAkGWyfUwm0Qep_Ij5W-m5DnP49IMSRrmtcg";
-
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
             Uri.parse('${base_url! + apiUrls.getLeadAadharGenerateOTP}'),
             headers: {
@@ -471,7 +451,7 @@ class ApiService {
           case 200:
             final dynamic jsonData = json.decode(response.body);
             final AadhaarGenerateOTPResponseModel responseModel =
-                AadhaarGenerateOTPResponseModel.fromJson(jsonData);
+            AadhaarGenerateOTPResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));
@@ -503,7 +483,7 @@ class ApiService {
           case 200:
             final dynamic jsonData = json.decode(response.body);
             final ValidateAadhaarOTPResponseModel responseModel =
-                ValidateAadhaarOTPResponseModel.fromJson(jsonData);
+            ValidateAadhaarOTPResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));
@@ -535,10 +515,10 @@ class ApiService {
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final LeadSelfieResponseModel responseModel =
-                LeadSelfieResponseModel.fromJson(jsonData);
+            LeadSelfieResponseModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -571,7 +551,7 @@ class ApiService {
           case 200:
             final dynamic jsonData = json.decode(response.body);
             final PostLeadSelfieResponseModel responseModel =
-                PostLeadSelfieResponseModel.fromJson(jsonData);
+            PostLeadSelfieResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));
@@ -603,10 +583,10 @@ class ApiService {
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final PersonalDetailsResponce responseModel =
-                PersonalDetailsResponce.fromJson(jsonData);
+            PersonalDetailsResponce.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -639,7 +619,7 @@ class ApiService {
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
         final PostPersonalDetailsResponseModel responseModel =
-            PostPersonalDetailsResponseModel.fromJson(jsonData);
+        PostPersonalDetailsResponseModel.fromJson(jsonData);
         return responseModel;
       }
       if (response.statusCode == 401) {
@@ -671,7 +651,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final ValidEmResponce responseModel =
-            ValidEmResponce.fromJson(jsonData);
+        ValidEmResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -698,7 +678,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final EmailExistRespoce responseModel =
-            EmailExistRespoce.fromJson(jsonData);
+        EmailExistRespoce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -724,7 +704,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final SendOtpOnEmailResponce responseModel =
-            SendOtpOnEmailResponce.fromJson(jsonData);
+        SendOtpOnEmailResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -857,29 +837,6 @@ class ApiService {
     }
   }
 
-  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
-      String GSTNumber) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-
-        final CustomerDetailUsingGstResponseModel responseModel =
-        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
   //Business Detail Module
 /*  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
       String userId, String productCode) async {
@@ -904,7 +861,28 @@ class ApiService {
     }
   }
 
+  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
+      String GSTNumber) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(Uri.parse(
+          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
 
+        final CustomerDetailUsingGstResponseModel responseModel =
+            CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
 
   Future<Result<PostLeadBuisnessDetailResponsModel,Exception>> postLeadBuisnessDetail(
       PostLeadBuisnessDetailRequestModel
@@ -957,7 +935,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final BankListResponceModel responseModel =
-            BankListResponceModel.fromJson(jsonData);
+        BankListResponceModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -983,10 +961,10 @@ class ApiService {
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
-            // Parse the JSON response
+          // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final BankDetailsResponceModel responseModel =
-                BankDetailsResponceModel.fromJson(jsonData);
+            BankDetailsResponceModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -1020,7 +998,7 @@ class ApiService {
           case 200:
             final dynamic jsonData = json.decode(response.body);
             final SaveBankDetailResponce responseModel =
-                SaveBankDetailResponce.fromJson(jsonData);
+            SaveBankDetailResponce.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));
@@ -1049,7 +1027,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final AllStateResponce responseModel =
-            AllStateResponce.fromJson(jsonData);
+        AllStateResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -1085,8 +1063,8 @@ class ApiService {
     }
   }
 
-  //other module
-  /*Future<Result<OfferResponceModel, Exception>> GetLeadOffer(
+//other module
+/*Future<Result<OfferResponceModel, Exception>> GetLeadOffer(
       int leadId, int companyID) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {

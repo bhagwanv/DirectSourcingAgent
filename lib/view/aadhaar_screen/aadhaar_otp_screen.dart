@@ -28,10 +28,10 @@ class AadhaarOtpScreen extends StatefulWidget {
 
   AadhaarOtpScreen(
       {super.key,
-      required this.activityId,
-      required this.subActivityId,
-      required this.document,
-      required this.requestId});
+        required this.activityId,
+        required this.subActivityId,
+        required this.document,
+        required this.requestId});
 
   @override
   State<AadhaarOtpScreen> createState() => _AadhaarOtpScreenState();
@@ -82,91 +82,91 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
     final pinController = TextEditingController();
 
     return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding:
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding:
               const EdgeInsets.only(left: 30, top: 50, right: 30, bottom: 30),
-                    child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  height: 69,
-                  width: 51,
-                  alignment: Alignment.topLeft,
-                  child: Image.asset('assets/images/scale.png')),
-              const SizedBox(
-                height: 50,
-              ),
-              const Text(
-                'Enter \nVerification Code',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 35, color: Colors.black),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'Enter the verification code sent on Aadhaar registered mobile number',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-              const SizedBox(
-                height: 55,
-              ),
-              Center(
-                child: Pinput(
-                  length: 6,
-                  controller: pinController,
-                  showCursor: true,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\]")),],
-                  defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme: defaultPinTheme.copyWith(
-                    decoration: defaultPinTheme.decoration!.copyWith(
-                      border: Border.all(color: kPrimaryColor),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: 69,
+                      width: 51,
+                      alignment: Alignment.topLeft,
+                      child: Image.asset('assets/images/scale.png')),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const Text(
+                    'Enter \nVerification Code',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 35, color: Colors.black),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    'Enter the verification code sent on Aadhaar registered mobile number',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                  ),
+                  const SizedBox(
+                    height: 55,
+                  ),
+                  Center(
+                    child: Pinput(
+                      length: 6,
+                      controller: pinController,
+                      showCursor: true,
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\]")),],
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration!.copyWith(
+                          border: Border.all(color: kPrimaryColor),
+                        ),
+                      ),
+                      onCompleted: (pin) => debugPrint(pin),
                     ),
                   ),
-                  onCompleted: (pin) => debugPrint(pin),
-                ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              isReSendDisable?SizedBox(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Resend Code in ',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    buildCountdown(),
-                  ],
-                ),
-              ) : Container(),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                  padding: EdgeInsets.all(10),
-                  child: Center(
-                    child: RichText(
-                      text: TextSpan(
-                          text: 'If you didn’t received a code!',
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  isReSendDisable?SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Resend Code in ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: kPrimaryColor,
                               fontWeight: FontWeight.normal),
-                          children: <TextSpan>[
-                            isReSendDisable
-                                ? TextSpan(
+                        ),
+                        buildCountdown(),
+                      ],
+                    ),
+                  ) : Container(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                              text: 'If you didn’t received a code!',
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal),
+                              children: <TextSpan>[
+                                isReSendDisable
+                                    ? TextSpan(
                                     text: '  Resend',
                                     style: const TextStyle(
                                         color: Colors.grey,
@@ -174,7 +174,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                                         fontWeight: FontWeight.normal),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {})
-                                : TextSpan(
+                                    : TextSpan(
                                     text: '  Resend',
                                     style: const TextStyle(
                                         color: Colors.blueAccent,
@@ -186,34 +186,34 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                                         generateAadhaarOTPAPI(
                                             context, productProvider);
                                       })
-                          ]),
-                    ),
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
-              CommonElevatedButton(
-                onPressed: () {
-                  validateAadhaar(
-                      context, pinController.text, productProvider);
-                },
-                text: "Verify Code",
-                upperCase: true,
-              )
-            ],
-                    ),
+                              ]),
+                        ),
+                      )),
+                  const SizedBox(
+                    height: 10,
                   ),
-                );
-            }),
-          ),
-        );
+                  CommonElevatedButton(
+                    onPressed: () {
+                      validateAadhaar(
+                          context, pinController.text, productProvider);
+                    },
+                    text: "Verify Code",
+                    upperCase: true,
+                  )
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
+    );
   }
 
   void validateAadhaar(
-    BuildContext context,
-    String otpText,
-    DataProvider productProvider,
-  ) async {
+      BuildContext context,
+      String otpText,
+      DataProvider productProvider,
+      ) async {
     if (otpText.isEmpty) {
       Utils.showToast("Please Enter OTP",context);
     } else if (otpText.length < 6) {
@@ -285,8 +285,8 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -304,9 +304,9 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
   }
 
   void generateAadhaarOTPAPI(
-    BuildContext context,
-    DataProvider productProvider,
-  ) async {
+      BuildContext context,
+      DataProvider productProvider,
+      ) async {
     var request = AadhaarGenerateOTPRequestModel(
         DocumentNumber: widget.document?.DocumentNumber!,
         FrontFileUrl: widget.document?.FrontFileUrl!,

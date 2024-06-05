@@ -6,11 +6,11 @@ class VerifyOtpResponse {
   String? token;
 
   VerifyOtpResponse({
-      this.status, 
-      this.message, 
-      this.leadId,
-      this.userId, 
-      this.token});
+    this.status,
+    this.message,
+    this.leadId,
+    this.userId,
+    this.token});
 
   VerifyOtpResponse.fromJson(dynamic json) {
     status = json['status'];
@@ -29,5 +29,4 @@ class VerifyOtpResponse {
     map['token'] = token;
     return map;
   }
-
 }

@@ -134,10 +134,10 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   ),
                   userLoginMobile != null
                       ? Text(
-                          'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length - 4)}',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 15, color: Colors.black),
-                        )
+                    'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length - 4)}',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                  )
                       : Container(),
                   const SizedBox(
                     height: 55,
@@ -147,7 +147,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       controller: pinController,
                       length: 6,
                       androidSmsAutofillMethod:
-                          AndroidSmsAutofillMethod.smsRetrieverApi,
+                      AndroidSmsAutofillMethod.smsRetrieverApi,
                       showCursor: true,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp("[0-9\]")),
@@ -169,19 +169,19 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                     width: double.infinity,
                     child: isReSendDisable
                         ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Resend Code in ',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: kPrimaryColor,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              buildCountdown(),
-                            ],
-                          )
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Resend Code in ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        buildCountdown(),
+                      ],
+                    )
                         : Container(),
                   ),
                   const SizedBox(
@@ -200,30 +200,30 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                               children: <TextSpan>[
                                 isReSendDisable
                                     ? TextSpan(
-                                        text: '  Resend',
-                                        style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {})
+                                    text: '  Resend',
+                                    style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {})
                                     : TextSpan(
-                                        text: '  Resend',
-                                        style: const TextStyle(
-                                            color: Colors.blueAccent,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {
-                                            listenOtp();
-                                            pinController.clear();
-                                            await reSendOpt(
-                                                context,
-                                                productProvider,
-                                                userLoginMobile!,
-                                                _controller);
-                                            isReSendDisable = true;
-                                          })
+                                    text: '  Resend',
+                                    style: const TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        listenOtp();
+                                        pinController.clear();
+                                        await reSendOpt(
+                                            context,
+                                            productProvider,
+                                            userLoginMobile!,
+                                            _controller);
+                                        isReSendDisable = true;
+                                      })
                               ]),
                         ),
                       )),

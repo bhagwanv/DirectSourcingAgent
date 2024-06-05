@@ -50,8 +50,8 @@ class _BottomNavState extends State<BottomNav> {
             onPressed: () {
               setState(() {
                 selectedIndex = 2;
-               // productProvider.disposegetCustomerOrderSummaryData();
-               // productProvider.disposegetCustomerTransactionList();
+                // productProvider.disposegetCustomerOrderSummaryData();
+                // productProvider.disposegetCustomerTransactionList();
               });
             },
             child: SvgPicture.asset(
@@ -82,8 +82,8 @@ class _BottomNavState extends State<BottomNav> {
                   onTap: () {
                     setState(() {
                       selectedIndex = 0;
-                     // productProvider.disposegetCustomerOrderSummaryData();
-                     // productProvider.disposegetCustomerTransactionList();
+                      // productProvider.disposegetCustomerOrderSummaryData();
+                      // productProvider.disposegetCustomerTransactionList();
                     });
                   },
                   child: Padding(
@@ -112,8 +112,8 @@ class _BottomNavState extends State<BottomNav> {
                   onTap: () {
                     setState(() {
                       selectedIndex = 1;
-                    //  productProvider.disposegetCustomerOrderSummaryData();
-                    //  productProvider.disposegetCustomerTransactionList();
+                      //  productProvider.disposegetCustomerOrderSummaryData();
+                      //  productProvider.disposegetCustomerTransactionList();
                     });
                   },
                   child: Padding(
@@ -141,7 +141,7 @@ class _BottomNavState extends State<BottomNav> {
                 // Print item
                 GestureDetector(
                   onTap: () {
-                   /* setState(() {
+                    /* setState(() {
                       selectedIndex = 3;
                     });*/
                     Utils.showBottomToast("Service Not Available");

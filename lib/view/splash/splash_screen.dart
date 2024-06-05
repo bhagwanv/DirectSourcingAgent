@@ -59,22 +59,22 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const Row(
                 mainAxisAlignment:MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-              Text(
-                'Powered by ',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
-              ),
-              Text(
-                'ShopGirana E-Trading Pvt. Ltd.',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 12,
-                ),
-              ),
-            ]
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Powered by ',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    'ShopGirana E-Trading Pvt. Ltd.',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                    ),
+                  ),
+                ]
             ),
             const SizedBox(height: 16)
           ],
@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _checkLoginStatus() async {
     final prefs = await SharedPref.getInstance();
-  //  final isLoggedIn = prefs.getBool(IS_LOGGED_IN)?? false;
+    //  final isLoggedIn = prefs.getBool(IS_LOGGED_IN)?? false;
     setState(() {
       _isLoggedIn = true;
     });
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       } else {
-       /* Navigator.pushReplacement(
+        /* Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LoginScreen()),
         );*/
@@ -119,4 +119,3 @@ class CustomCircularLoader extends StatelessWidget {
     );
   }
 }
-

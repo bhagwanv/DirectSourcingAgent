@@ -46,7 +46,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-          time.toStringAsFixed(0)+" S",
+        time.toStringAsFixed(0)+" S",
         style: TextStyle(
           fontSize: 15,
           color: Colors.blue,
@@ -190,16 +190,16 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                     height: 20,
                   ),
                   Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: Text(
-                        'Back',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ),
-                    )
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text(
+                          'Back',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 15, color: Colors.blue),
+                        ),
+                      )
                   ),
                   const SizedBox(
                     height: 20,
