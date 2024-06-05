@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
-      home:  ProfileTypes(activityId: 42, subActivityId: 2),
+      home:  ProfileTypes(activityId: 2,subActivityId: 15,),
     );
   }
 }

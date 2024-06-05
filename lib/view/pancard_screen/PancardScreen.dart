@@ -1,4 +1,5 @@
-import 'dart:io';
+
+import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -11,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../providers/auth_provider/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/DateTextFormatter.dart';
 import '../../utils/ImagePicker.dart';

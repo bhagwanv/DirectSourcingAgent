@@ -286,6 +286,10 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
+        }else if (leadCurrentActivity.activityName == "DSATypeSelection") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => BottomNav(pageType: pageType)),);
+          return ScreenType.DSATypeSelection;
         }
       } else {
         return null;

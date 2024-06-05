@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (_isLoggedIn) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => PancardScreen(activityId: 2, subActivityId: 15,)),
+          MaterialPageRoute(builder: (context) => LoginScreen()),
         );
       } else {
         /* Navigator.pushReplacement(
