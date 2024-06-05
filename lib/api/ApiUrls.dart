@@ -65,5 +65,6 @@ class ApiUrls{
   final String getKarzaElectricityState="/services/kyc/v1/KYCDoc/GetKarzaElectricityState";
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
   final String PostLeadDSAProfileType="/services/lead/v1/PostLeadDSAProfileType";
+  final String postLeadDSAPersonalDetail="/services/lead/v1/PostLeadDSAPersonalDetail";
 
 }

@@ -18,6 +18,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
+import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/GetUserProfileRequest.dart';
 import '../view/otp_screens/model/GetUserProfileResponse.dart';
@@ -1757,6 +1759,42 @@ class ApiService {
             final dynamic jsonData = json.decode(response.body);
             final ChooseUserTypeResponceModel responseModel =
             ChooseUserTypeResponceModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<PostLeadDsaPersonalDetailResModel, Exception>> postLeadDSAPersonalDetail(PostLeadDsaPersonalDetailReqModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(
+                '${apiUrls.baseUrl + apiUrls.postLeadDSAPersonalDetail}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadDsaPersonalDetailResModel responseModel =
+            PostLeadDsaPersonalDetailResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -10,11 +11,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
+import '../../utils/ImagePicker.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/common_text_field.dart';
 import '../../utils/constant.dart';
+import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
 import '../personal_info/EmailOtpScreen.dart';
@@ -22,6 +26,10 @@ import '../personal_info/model/CityResponce.dart';
 import '../personal_info/model/EmailExistRespoce.dart';
 import '../personal_info/model/ReturnObject.dart';
 import '../personal_info/model/SendOtpOnEmailResponce.dart';
+import '../splash/model/GetLeadResponseModel.dart';
+import '../splash/model/LeadCurrentRequestModel.dart';
+import '../splash/model/LeadCurrentResponseModel.dart';
+import 'model/PostLeadDSAPersonalDetailReqModel.dart';
 
 class direct_selling_agent extends StatefulWidget {
   int? activityId;
@@ -40,6 +48,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
 
   bool _isSelected1 = false;
   bool _isSelected2 = false;
+
   void _handleCheckboxChange(int index, bool? value) {
     setState(() {
       if (index == 1) {
@@ -51,18 +60,37 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       }
     });
   }
+
   var isValidEmail = false;
   var isEmailClear = false;
 
 
-
   var isLoading = false;
   final TextEditingController _gstController = TextEditingController();
-  final TextEditingController _businessNameController = TextEditingController();
-  final TextEditingController _addressLineController = TextEditingController();
-  final TextEditingController _addressLine2Controller = TextEditingController();
-  final TextEditingController _pinCodeController = TextEditingController();
+  final TextEditingController _fullNameCl = TextEditingController();
+  final TextEditingController _fatherOrHusbandNameCl = TextEditingController();
+  final TextEditingController _ageCl = TextEditingController();
+  final TextEditingController _addressCl = TextEditingController();
+  final TextEditingController _pinCodeCl = TextEditingController();
+  final TextEditingController _cityCl = TextEditingController();
+  final TextEditingController _stateCl = TextEditingController();
+  final TextEditingController _alternetMobileNumberCl = TextEditingController();
+  final TextEditingController _currentEmploymentCl = TextEditingController();
   final TextEditingController _emailIDCl = TextEditingController();
+  final TextEditingController _qualificationCl = TextEditingController();
+  final TextEditingController _languagesKnownCl = TextEditingController();
+  final TextEditingController _locationCl = TextEditingController();
+  final TextEditingController _contactNoCl = TextEditingController();
+  final TextEditingController _referenceContactNoCl = TextEditingController();
+  final TextEditingController _referenceNames = TextEditingController();
+  final TextEditingController _referenceAddressCl = TextEditingController();
+  final TextEditingController _refrenceCompanyNameCl = TextEditingController();
+  final TextEditingController _referencePINCodeCl = TextEditingController();
+  final TextEditingController _referenceStateCl = TextEditingController();
+  final TextEditingController _referenceCityCl = TextEditingController();
+  final TextEditingController _presentOccupationCl = TextEditingController();
+
+
   final TextEditingController _businessDocumentNumberController =
   TextEditingController();
   String? selectedStateValue;
@@ -80,6 +108,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
+
 
   List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject?> items) {
     final List<DropdownMenuItem<ReturnObject>> menuItems = [];
@@ -136,16 +165,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     return itemsHeights;
   }
 
-  void _onImageSelected(File imageFile) async {
-    isImageDelete = false;
-    Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .postBusineesDoumentSingleFile(imageFile, true, "", "");
-
-    setState(() {
-      Navigator.pop(context);
-    });
-  }
 
   final List<String> businessTypeList = [
     'Proprietorship',
@@ -155,6 +174,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     'LLP'
   ];
   String? selectedBusinessTypeValue;
+
+
+  String? selectedFirmTypeValue;
 
   final List<String> monthlySalesTurnoverList = [
     'Upto 3 Lacs',
@@ -227,14 +249,25 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   String initDateTime = '2021-08-31';
 
   final bool _showTitle = true;
-  //final DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
+  final DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
   final String _format = 'yyyy-MMMM-dd';
 
   DateTime? _dateTime;
   String? slectedDate = "";
 
+  void _onImageSelected(File imageFile) async {
+    // Handle the selected image here
+    // For example, you can setState to update UI with the selected image
+    isImageDelete = false;
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .postDSABusineesDoumentSingleFile(imageFile, true, "", "");
+    // Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
   /// Display date picker.
-  /*void _showDatePicker(BuildContext context) {
+  void _showDatePicker(BuildContext context) {
     DatePicker.showDatePicker(
       context,
       pickerTheme: DateTimePickerTheme(
@@ -266,19 +299,20 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         setState(() {
           _dateTime = dateTime;
           slectedDate = Utils.dateFormate(context, _dateTime.toString());
+          print("errere$slectedDate");
           if (kDebugMode) {
             print("$_dateTime");
           }
         });
       },
     );
-  }*/
+  }
 
   @override
   void initState() {
     super.initState();
     //Api Call
-   // getPersonalDetailAndStateApi(context);
+    // getPersonalDetailAndStateApi(context);
   }
 
   @override
@@ -290,7 +324,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         if (didPop) {
           return;
         }
-        if(widget.pageType == "pushReplacement" ) {
+        if (widget.pageType == "pushReplacement") {
           final bool shouldPop = await Utils().onback(context);
           if (shouldPop) {
             SystemNavigator.pop();
@@ -307,9 +341,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           child:
           Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getLeadPANData == null && isLoading) {
-              return  Utils.onLoading(context, "");
+              return Utils.onLoading(context, "");
             } else {
-             /* if (productProvider.getLeadBusinessDetailData != null &&
+              /* if (productProvider.getLeadBusinessDetailData != null &&
                   isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
@@ -413,13 +447,24 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                 citylist = productProvider.getAllCityData!;
               }
 
-              if (productProvider.getpostBusineesDoumentSingleFileData != null &&
-                  !isImageDelete) {
-                if (productProvider.getpostBusineesDoumentSingleFileData!.filePath != null) {
-                  image = productProvider.getpostBusineesDoumentSingleFileData!.filePath!;
-                  businessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
+*/
+
+
+
+
+              if (productProvider.getpostDSABusineesDoumentSingleFileData != null) {
+                print("image1${productProvider.getpostDSABusineesDoumentSingleFileData!.filePath!}");
+                print("sdjfa");
+                if (productProvider.getpostDSABusineesDoumentSingleFileData!.filePath != null) {
+                  image = productProvider.getpostDSABusineesDoumentSingleFileData!.filePath!;
+                  print("atul$image");
+                 // businessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
                 }
-              }*/
+
+
+              }else{
+                print("sdjfa22");
+              }
 
 
               return Padding(
@@ -455,6 +500,353 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       const SizedBox(
                         height: 16.0,
                       ),
+
+                      CommonTextField(
+                        controller: _fullNameCl,
+                        enabled: updateData,
+                        hintText: "Full Name",
+                        labelText: "Full Name",
+
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _fatherOrHusbandNameCl,
+                        enabled: updateData,
+                        hintText: "Father’s / Husband’s Name",
+                        labelText: "Father’s / Husband’s Name",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      InkWell(
+                        onTap: updateData
+                            ? () {
+                          _showDatePicker(context);
+                        }
+                            : null,
+                        // Set onTap to null when field is disabled
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: textFiledBackgroundColour,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: kPrimaryColor),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  slectedDate!.isEmpty?"Date of Birth":"$slectedDate",
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,),
+                                ),
+                                const Icon(
+                                  Icons.date_range, color: kPrimaryColor,),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _ageCl,
+                        enabled: updateData,
+                        keyboardType: TextInputType.number,
+                        hintText: "Age",
+                        labelText: "Age",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _addressCl,
+                        enabled: updateData,
+                        hintText: "Address",
+                        labelText: "Address",
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+
+                      CommonTextField(
+                        controller: _pinCodeCl,
+                        enabled: updateData,
+                        hintText: "PIN Code",
+                        labelText: "PIN Code",
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        controller: _cityCl,
+                        enabled: updateData,
+                        hintText: "City",
+                        labelText: "City",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _stateCl,
+                        enabled: updateData,
+                        hintText: "State",
+                        labelText: "State",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        controller: _alternetMobileNumberCl,
+                        enabled: updateData,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
+                          LengthLimitingTextInputFormatter(10)
+                        ],
+                        keyboardType: TextInputType.number,
+                        hintText: "Alternate Contact Number",
+                        labelText: "Alternate Contact Number",
+                      ),
+
+                      SizedBox(height: 16),
+                      Stack(
+                        children: [
+                          TextField(
+                            enabled: !isValidEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            controller: _emailIDCl,
+                            maxLines: 1,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0)),
+                              ),
+                              hintText: "E Mail id",
+                              labelText: "E Mail id",
+                              fillColor: textFiledBackgroundColour,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: kPrimaryColor, width: 1.0),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0)),
+                              ),
+                            ),
+                          ),
+                          _emailIDCl.text.isNotEmpty
+                              ? Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              child: IconButton(
+                                onPressed: () =>
+                                    setState(() {
+                                      isEmailClear = false;
+                                      isValidEmail = false;
+                                      _emailIDCl.clear();
+                                    }),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/email_cross.svg',
+                                  semanticsLabel: 'My SVG Image',
+                                ),
+                              ),
+                            ),
+                          )
+                              : Container(),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
+                          ? Container(
+                        child: Row(
+                          children: [
+                            Text(
+                              'VERIFIED',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            SvgPicture.asset('assets/icons/tick_square.svg'),
+                          ],
+                        ),
+                      )
+                          : Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () async {
+                              if (_emailIDCl.text.isEmpty) {
+                                Utils.showToast(
+                                    "Please Enter Email ID", context);
+                              } else
+                              if (!Utils.validateEmail(_emailIDCl.text)) {
+                                Utils.showToast(
+                                    "Please Enter Valid Email ID", context);
+                              } else {
+                                callEmailIDExist(context, _emailIDCl.text);
+                              }
+                            },
+                            child: Text(
+                              'Click here to Verify',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue),
+                            ),
+                          )),
+                      SizedBox(height: 16),
+
+
+                      CommonTextField(
+                        controller: _presentOccupationCl,
+                        enabled: updateData,
+                        hintText: "Present Occupation",
+                        labelText: "Present Occupation",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _currentEmploymentCl,
+                        enabled: updateData,
+                        hintText: "No of years in current employment",
+                        labelText: "No of years in current employment",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _qualificationCl,
+                        enabled: updateData,
+                        hintText: "Qualification",
+                        labelText: "Qualification",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      CommonTextField(
+                        controller: _languagesKnownCl,
+                        enabled: updateData,
+                        hintText: "Languages Known",
+                        labelText: "Languages Known",
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        controller: _locationCl,
+                        enabled: updateData,
+                        hintText: "Location",
+                        labelText: "Location",
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      Text(
+                          'Presently working with other Party/bank/NBFC /Financial Institute? ',
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          )),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: CheckboxTerm(
+                              content: "Yes",
+                              isChecked: _isSelected1,
+                              onChanged: (bool? value) {
+                                _handleCheckboxChange(1, value);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: CheckboxTerm(
+                              content: "No",
+                              isChecked: _isSelected2,
+                              onChanged: (bool? value) {
+                                _handleCheckboxChange(2, value);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Text('Reference ',
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          )),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        controller: _referenceNames,
+                        enabled: updateData,
+                        hintText: "Names",
+                        labelText: "Names",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        controller: _contactNoCl,
+                        enabled: updateData,
+                        hintText: "Contact No. ",
+                        labelText: "Contact No.",
+                      ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+
                       Text('GST Registration Status ',
                           textAlign: TextAlign.left,
                           style: GoogleFonts.urbanist(
@@ -508,7 +900,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                                   try {
                                     Utils.hideKeyBored(context);
                                     //await getCustomerDetailUsingGST(context, _gstController.text);
-                                   /* if (productProvider.getCustomerDetailUsingGSTData != null) {
+                                    /* if (productProvider.getCustomerDetailUsingGSTData != null) {
                                       if (productProvider
                                           .getCustomerDetailUsingGSTData!
                                           .busGSTNO !=
@@ -568,14 +960,10 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                                   gstUpdate = true;
                                   setCityListFirstTime = false;
                                   _gstController.text = "";
-                                  _businessNameController.text = "";
-                                  _addressLineController.text = "";
-                                  _addressLine2Controller.text = "";
-                                  _pinCodeController.text = "";
                                   _businessDocumentNumberController.text = "";
                                   slectedDate = "";
                                   businessProofDocId = null;
-                                  selectedBusinessTypeValue = null;
+                                  selectedFirmTypeValue = null;
                                   selectedStateValue = null;
                                   selectedCityValue = null;
                                   selectedMonthlySalesTurnoverValue = null;
@@ -584,7 +972,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                                   gstNumber = "";
                                   image = "";
                                   businessProofDocId = null;
-                                  isGstFilled=false;
+                                  isGstFilled = false;
                                 });
                               },
                               child: Container(
@@ -635,9 +1023,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                           ),
                         ),
                         items: _addDividersAfterItems(businessTypeList),
-                        value: selectedBusinessTypeValue,
+                        value: selectedFirmTypeValue,
                         onChanged: (String? value) {
-                          selectedBusinessTypeValue = value;
+                          selectedFirmTypeValue = value;
                         },
                         buttonStyleData: const ButtonStyleData(
                           padding: EdgeInsets.only(right: 8),
@@ -647,7 +1035,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                         ),
                         menuItemStyleData: MenuItemStyleData(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights: _getCustomItemsHeights(businessTypeList),
+                          customHeights: _getCustomItemsHeights(
+                              businessTypeList),
                         ),
                         iconStyleData: const IconStyleData(
                           openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -701,7 +1090,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                         ),
                         menuItemStyleData: MenuItemStyleData(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights: _getCustomItemsHeights(businessTypeList),
+                          customHeights: _getCustomItemsHeights(
+                              businessTypeList),
                         ),
                         iconStyleData: const IconStyleData(
                           openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -715,12 +1105,11 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                           Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  border:
-                                  Border.all(color: const Color(0xff0196CE))),
+                                  border: Border.all(color: Color(0xff0196CE))),
                               width: double.infinity,
                               child: GestureDetector(
                                 onTap: () {
-                                  // bottomSheetMenu(context);
+                                  bottomSheetMenu(context);
                                 },
                                 child: Container(
                                   height: 148,
@@ -729,61 +1118,50 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Container(
-                                    child: (image.isNotEmpty)
-                                        ? image.contains(".pdf")
-                                        ? Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.picture_as_pdf),
-                                      ],
-                                    )
-                                        : ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(8.0),
-                                      child: Image.network(
-                                        image,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: 148,
-                                      ),
-                                    )
-                                        : (image.isNotEmpty)
-                                        ? ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(8.0),
-                                      child: Image.network(
-                                        image,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: 148,
-                                      ),
-                                    )
-                                        : Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/gallery.svg'),
-                                        const Text(
-                                          'Upload Document',
-                                          style: TextStyle(
-                                              color: Color(0xff0196CE),
-                                              fontSize: 12),
-                                        ),
-                                        const Text(
-                                            'supports : PDF, JPG, JPEG',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color:
-                                                Color(0xffCACACA))),
-                                      ],
+                                  child: (!image.isEmpty)
+                                      ? ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(8.0),
+                                    child: Image.network(
+                                      image,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 148,
                                     ),
+                                  )
+                                      : (image.isNotEmpty)
+                                      ? ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(8.0),
+                                    child: Image.network(
+                                      image,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 148,
+                                    ),
+                                  )
+                                      : Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/images/gallery.svg'),
+                                      const Text(
+                                        'Upload Document',
+                                        style: TextStyle(
+                                            color:
+                                            Color(0xff0196CE),
+                                            fontSize: 12),
+                                      ),
+                                      const Text(
+                                          'Supports : JPEG, PNG',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(
+                                                  0xffCACACA))),
+                                    ],
                                   ),
                                 ),
                               )),
@@ -794,15 +1172,15 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                                 image = "";
                               });
                             },
-                            child: image.isNotEmpty
+                            child: !image.isEmpty
                                 ? Container(
-                              padding: const EdgeInsets.all(4),
+                              padding: EdgeInsets.all(4),
                               alignment: Alignment.topRight,
                               child: SvgPicture.asset(
                                   'assets/icons/delete_icon.svg'),
                             )
                                 : Container(),
-                          ),
+                          )
                         ],
                       ),
                       const SizedBox(
@@ -810,83 +1188,18 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       ),
 
                       CommonTextField(
-                        controller: _addressLineController,
+                        controller: _refrenceCompanyNameCl,
                         enabled: updateData,
                         hintText: "Company Name",
                         labelText: "Company Name",
                       ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      CommonTextField(
-                        controller: _addressLine2Controller,
-                        enabled: updateData,
-                        hintText: "Full Name",
-                        labelText: "Full Name",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Father’s / Husband’s Name",
-                        labelText: "Father’s / Husband’s Name",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      InkWell(
-                        onTap: updateData
-                            ? () {
-                          //_showDatePicker(context);
-                        }
-                            : null,
-                        // Set onTap to null when field is disabled
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: textFiledBackgroundColour,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: kPrimaryColor),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  slectedDate!.isNotEmpty ? '$slectedDate' : 'Date of Birth',
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                                const Icon(Icons.date_range),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Age",
-                        labelText: "Age",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
 
                       const SizedBox(
                         height: 16.0,
                       ),
 
                       CommonTextField(
-                        controller: _pinCodeController,
+                        controller: _referenceAddressCl,
                         enabled: updateData,
                         hintText: "Address",
                         labelText: "Address",
@@ -894,27 +1207,18 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       const SizedBox(
                         height: 16.0,
                       ),
-
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
                       CommonTextField(
-                        controller: _pinCodeController,
+                        controller: _referencePINCodeCl,
                         enabled: updateData,
-                        hintText: "State",
-                        labelText: "State",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
+                        hintText: "PIN Code",
+                        labelText: "PIN Code",
                       ),
 
                       const SizedBox(
                         height: 16.0,
                       ),
-
                       CommonTextField(
-                        controller: _pinCodeController,
+                        controller: _referenceCityCl,
                         enabled: updateData,
                         hintText: "City",
                         labelText: "City",
@@ -924,253 +1228,103 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       ),
 
                       CommonTextField(
-                        controller: _pinCodeController,
+                        controller: _referenceStateCl,
                         enabled: updateData,
-                        hintText: "Alternate Contact Number",
-                        labelText: "Alternate Contact Number",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      SizedBox(height: 16),
-                      Stack(
-                        children: [
-                          TextField(
-                            enabled: !isValidEmail,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            controller: _emailIDCl,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: kPrimaryColor,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              ),
-                              hintText: "E-mail ID",
-                              labelText: "E-mail ID",
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              ),
-                            ),
-                          ),
-                          _emailIDCl.text.isNotEmpty
-                              ? Positioned(
-                            right: 0,
-                            top: 0,
-                            bottom: 0,
-                            child: Container(
-                              child: IconButton(
-                                onPressed: () => setState(() {
-                                  isEmailClear = false;
-                                  isValidEmail = false;
-                                  _emailIDCl.clear();
-                                }),
-                                icon: SvgPicture.asset(
-                                  'assets/icons/email_cross.svg',
-                                  semanticsLabel: 'My SVG Image',
-                                ),
-                              ),
-                            ),
-                          )
-                              : Container(),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
-                          ? Container(
-                        child: Row(
-                          children: [
-                            Text(
-                              'VERIFIED',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.blue),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            SvgPicture.asset('assets/icons/tick_square.svg'),
-                          ],
-                        ),
-                      )
-                          : Align(
-                          alignment: Alignment.centerLeft,
-                          child: InkWell(
-                            onTap: () async {
-                              if (_emailIDCl.text.isEmpty) {
-                                Utils.showToast("Please Enter Email ID", context);
-                              } else if (!Utils.validateEmail(_emailIDCl.text)) {
-                                Utils.showToast("Please Enter Valid Email ID", context);
-                              } else {
-                                callEmailIDExist(context, _emailIDCl.text);
-                              }
-                            },
-                            child: Text(
-                              'Click here to Verify',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.blue),
-                            ),
-                          )),
-                      SizedBox(height: 16),
-
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Present Occupation",
-                        labelText: "Present Occupation",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      SizedBox(height: 16),
-
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "No of years in current employment",
-                        labelText: "No of years in current employment",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Qualification",
-                        labelText: "Qualification",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Languages Known",
-                        labelText: "Languages Known",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
+                        hintText: "State",
+                        labelText: "State",
                       ),
 
 
-                      Text('Presently working with other Party/bank/NBFC /Financial Institute? ',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          )),
-
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "Yes",
-                              isChecked: _isSelected1,
-                              onChanged: (bool? value) {
-                                _handleCheckboxChange(1, value);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "No",
-                              isChecked: _isSelected2,
-                              onChanged: (bool? value) {
-                                _handleCheckboxChange(2, value);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text('Reference ',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          )),
-
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Names",
-                        labelText: "Names",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Contact No. ",
-                        labelText: "Contact No.",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _pinCodeController,
-                        enabled: updateData,
-                        hintText: "Location",
-                        labelText: "Location",
-                      ),
                       const SizedBox(height: 54.0),
 
                       CommonElevatedButton(
                         onPressed: () async {
-                          if (_businessNameController.text.isEmpty) {
+                          if (_fullNameCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Business Name (As Per Doc)",
+                                "Please Enter Full Name",
                                 context);
-                          } else if (_addressLineController.text.isEmpty) {
+                          } else if (_fatherOrHusbandNameCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Address Line 1", context);
-                          } else if (_addressLine2Controller.text.isEmpty) {
+                                "Please Enter Father  Name", context);
+                          } else if (slectedDate!.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Address Line 2", context);
-                          } else if (_pinCodeController.text.isEmpty) {
-                            Utils.showToast("Please Enter Pin Code", context);
+                                "Please Select Date ", context);
+                          } else if (_ageCl.text.isEmpty) {
+                            Utils.showToast("Please Enter Age ", context);
+                          } else if (_addressCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Address", context);
+                          } else if (_pinCodeCl.text.isEmpty) {
+                            Utils.showToast("Please Enter Pin Code ", context);
+                          } else if (_cityCl
+                              .text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter City", context);
+                          } else if (_stateCl.text.isEmpty) {
+                            Utils.showToast("Please Enter State", context);
+                          } else if (_alternetMobileNumberCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter AlterNet Mobile Number ",
+                                context);
+                          } else if (_emailIDCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Email ", context);
+                          }
+                          else if (_presentOccupationCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Present Occupation ", context);
+                          } else if (_currentEmploymentCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter No of years in current employment",
+                                context);
+                          } else if (_qualificationCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Qualification", context);
+                          } else if (_languagesKnownCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Languages Known", context);
+                          } else if (_locationCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Location", context);
+                          }
+                          else if (_referenceNames.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Refrence Name", context);
+                          }
+                          else if (_contactNoCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter  Contact Number",
+                                context);
+                          }  else if (_gstController.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter GST Number ", context);
+                          } else if (selectedFirmTypeValue == null) {
+                            Utils.showToast(
+                                "Please Select Firm Type", context);
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
                                 "Please Select Business Type", context);
-                          } else if (selectedMonthlySalesTurnoverValue == null) {
-                            Utils.showToast("Please Select Income Slab", context);
-                          } else if (_businessDocumentNumberController
-                              .text.isEmpty) {
+                          } else if (image.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Business Document Number", context);
-                          } else if (businessProofDocId == null) {
-                            Utils.showToast("Please Select Proof", context);
-                          } else if (slectedDate!.isEmpty) {
+                                "Please Upload Document", context);
+                          } else if (_refrenceCompanyNameCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Select Incorporation Date", context);
-                          } else {
-                            //await postLeadBuisnessDetail(context,productProvider);
+                                "Please Enter Refrence Company Name", context);
+                          } else if (_referenceAddressCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Refrence Address", context);
+                          } else if (_referencePINCodeCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Refrence  PIN Code", context);
+                          } else if (_referenceCityCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Refrence City", context);
+                          } else if (_referenceStateCl.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Refrence State", context);
+                          }
+                          else {
+                            await postLeadDSAPersonalDetail(context,productProvider);
 
                             /* if (productProvider.getPostLeadBuisnessDetailData !=
                                 null) {
@@ -1201,6 +1355,14 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     );
   }
 
+  void bottomSheetMenu(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return ImagePickerWidgets(onImageSelected: _onImageSelected);
+        });
+  }
+
   void callSendOptEmail(BuildContext context, String emailID) async {
     updateData = true;
     SendOtpOnEmailResponce data;
@@ -1210,9 +1372,10 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       final result = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => EmailOtpScreen(
-                emailID: emailID,
-              )));
+              builder: (context) =>
+                  EmailOtpScreen(
+                    emailID: emailID,
+                  )));
 
       if (result != null &&
           result.containsKey('isValid') &&
@@ -1356,175 +1519,56 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       return Container();
     }
   }
-
-/*  Widget buildCityField(DataProvider productProvider) {
-    if (productProvider.getAllCityData != null) {
-      CityResponce? initialData;
-      if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
-        if (productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
-            productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
-          setCityListFirstTime = true;
-          if (setCityListFirstTime) {
-            initialData = citylist.firstWhere(
-                    (element) =>
-                element?.id ==
-                    productProvider.getCustomerDetailUsingGSTData!.cityId,
-                orElse: () => CityResponce());
-            selectedCityValue = productProvider
-                .getCustomerDetailUsingGSTData!.cityId!
-                .toString();
-          }
-        }
-      } else {
-        if (productProvider.getLeadBusinessDetailData!.cityId != 0) {
-          if (setCityListFirstTime) {
-            initialData = citylist.firstWhere(
-                    (element) =>
-                element?.id ==
-                    productProvider.getLeadBusinessDetailData!.cityId,
-                orElse: () => CityResponce());
-            selectedCityValue =
-                productProvider.getLeadBusinessDetailData!.cityId!.toString();
-          }
-        } else {
-          setCityListFirstTime = false;
-        }
-      }
-
-      return DropdownButtonFormField2<CityResponce>(
-        isExpanded: true,
-        value: initialData,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          fillColor: textFiledBackgroundColour,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-        ),
-        hint: const Text(
-          'City',
-          style: TextStyle(
-            color: blueColor,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        items: getAllCity(citylist),
-        onChanged: setCityListFirstTime
-            ? null
-            : (CityResponce? value) {
-          selectedCityValue = value!.id.toString();
-          setState(() {
-            setCityListFirstTime = false;
-          });
-        },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
-        ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights3(citylist),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce?> list) {
-    final List<DropdownMenuItem<CityResponce>> menuItems = [];
-    for (final CityResponce? item in list) {
-      menuItems.addAll(
-        [
-          DropdownMenuItem<CityResponce>(
-            value: item,
-            child: Text(
-              item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
-              ),
-            ),
-          ),
-          // If it's not the last item, add Divider after it.
-          if (item != list.last)
-            const DropdownMenuItem<CityResponce>(
-              enabled: false,
-              child: Divider(
-                height: 0.1,
-              ),
-            ),
-        ],
-      );
-    }
-    return menuItems;
-  }
-
-  Future<void> getCustomerDetailUsingGST(
-      BuildContext context, String gstNumber) async {
-    Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .getCustomerDetailUsingGST(gstNumber);
-    Navigator.of(context, rootNavigator: true).pop();
-  }
-
-  Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
+  Future<void> postLeadDSAPersonalDetail(BuildContext context, DataProvider productProvider,) async {
     final prefsUtil = await SharedPref.getInstance();
-    Utils.onLoading(context, "");
+    final String? userId = prefsUtil.getString(USER_ID);
+    final int? companyId = prefsUtil.getInt(COMPANY_ID);
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    var postLeadDsaPersonalDetailReqModel=PostLeadDsaPersonalDetailReqModel(
+      leadId:leadId,
+      activityId:widget.activityId,
+      subActivityId:widget.activityId,
+        userId:userId,
+      companyId: companyId,
+      leadMasterId: leadId,
+      gstRegistrationStatus: "",
+      gstNumber: _gstController.text,
+      firmType: selectedFirmTypeValue,
+      buisnessDocument: selectedBusinessTypeValue,
+      documentId: "",
+      companyName: _refrenceCompanyNameCl.text,
+      fullName: _fullNameCl.text,
+      fatherOrHusbandName: _fatherOrHusbandNameCl.text,
+      alternatePhoneNo: _alternetMobileNumberCl.text,
+      emailId: _emailIDCl.text,
+      presentOccupation: _presentOccupationCl.text,
+      noOfYearsInCurrentEmployment: _currentEmploymentCl.text,
+      qualification: _qualificationCl.text,
+      languagesKnown: _languagesKnownCl.text,
+      workingWithOther: "",
+      referneceName: _referenceNames.text,
+      referneceContact: _referenceContactNoCl.text,
+      referneceLocation: _locationCl.text,
+      currentAddressId: 0,
+      mobileNo: _contactNoCl.text,
 
-    var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
-      leadId: prefsUtil.getInt(LEADE_ID),
-      userId: prefsUtil.getString(USER_ID),
-      activityId: widget.activityId,
-      subActivityId: widget.subActivityId,
-      busName: _businessNameController.text.toString(),
-      doi: slectedDate.toString(),
-      busGSTNO: gstNumber,
-      busEntityType: selectedBusinessTypeValue,
-      busAddCorrLine1: _addressLineController.text.toString(),
-      busAddCorrLine2: _addressLine2Controller.text.toString(),
-      busAddCorrCity: selectedCityValue,
-      busAddCorrState: selectedStateValue,
-      busAddCorrPincode: _pinCodeController.text.toString(),
-      buisnessMonthlySalary: 0,
-      incomeSlab: selectedMonthlySalesTurnoverValue,
-      companyId: prefsUtil.getInt(COMPANY_ID),
-      buisnessDocumentNo: _businessDocumentNumberController.text.toString(),
-      buisnessProofDocId: businessProofDocId,
-      buisnessProof: selectedChooseBusinessProofValue,
+
     );
-    debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
-    await Provider.of<DataProvider>(context, listen: false)
-        .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
-    Navigator.of(context, rootNavigator: true).pop();
 
-    if (productProvider.getPostLeadBuisnessDetailData != null) {
-      productProvider.getPostLeadBuisnessDetailData!.when(
+    print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
+
+    Utils.onLoading(context, "Loading...");
+    await Provider.of<DataProvider>(context, listen: false)
+        .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getpostLeadDSAPersonalDetailData != null) {
+      productProvider.getpostLeadDSAPersonalDetailData!.when(
         success: (data) {
           // Handle successful response
-          if (data.isSuccess != null) {
-            if (data.isSuccess!) {
-              fetchData(context);
-            } else {
-              Utils.showToast(
-                  data.message!,
-                  context);
-            }
+         var getpostLeadDSAPersonalDetailData =data;
+          Utils.showToast(getpostLeadDSAPersonalDetailData.message!,context);
+          if (getpostLeadDSAPersonalDetailData.isSuccess!) {
+            fetchData(context);
           }
         },
         failure: (exception) {
@@ -1540,26 +1584,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         },
       );
     }
-
-  }
-
-  void bottomSheetMenu(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (builder) {
-          return ImagePickerFileWidgets(onImageSelected: _onImageSelected);
-        });
-  }
-
-  Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
-    final prefsUtil = await SharedPref.getInstance();
-    final String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-
-    await Provider.of<DataProvider>(context, listen: false)
-        .getLeadBusinessDetail(userId!,productCode!);
-
-    await Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -1599,103 +1623,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       }
     }
 
-  }*/
+  }
+
 }
-
-/*class DirectSellingAgent extends State<direct_selling_agent> {
-  bool _isSelected1 = false;
-  bool _isSelected2 = false;
-
-  final TextEditingController _gstController = TextEditingController();
-  var updateData = false;
-
-  void _handleCheckboxChange(int index, bool? value) {
-    setState(() {
-      if (index == 1) {
-        _isSelected1 = value!;
-        _isSelected2 = !value;
-      } else if (index == 2) {
-        _isSelected2 = value!;
-        _isSelected1 = !value;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    bool isTermsChecks = false;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 30),
-                Center(
-                  child: Text('Sign Up',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.urbanist(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      )),
-                ),
-                SizedBox(height: 30),
-                Center(
-                  child: Text('Please enter below details',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.urbanist(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      )),
-                ),
-                SizedBox(height: 30),
-                Text('GST Registration Status ',
-                    textAlign: TextAlign.left,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                    )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: CheckboxTerm(
-                        content: "GST Registered",
-                        isChecked: _isSelected1,
-                        onChanged: (bool? value) {
-                          _handleCheckboxChange(1, value);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: CheckboxTerm(
-                        content: "Not GST Registered",
-                        isChecked: _isSelected2,
-                        onChanged: (bool? value) {
-                          _handleCheckboxChange(2, value);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-
-
-
-
-
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  }*/
 
