@@ -15,6 +15,7 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
@@ -842,6 +843,29 @@ class ApiService {
     }
   }
 
+  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
+      String GSTNumber) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(Uri.parse(
+          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final CustomerDetailUsingGstResponseModel responseModel =
+        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
   //Business Detail Module
 /*  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
       String userId, String productCode) async {
@@ -866,28 +890,7 @@ class ApiService {
     }
   }
 
-  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
-      String GSTNumber) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
 
-        final CustomerDetailUsingGstResponseModel responseModel =
-            CustomerDetailUsingGstResponseModel.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
 
   Future<Result<PostLeadBuisnessDetailResponsModel,Exception>> postLeadBuisnessDetail(
       PostLeadBuisnessDetailRequestModel
