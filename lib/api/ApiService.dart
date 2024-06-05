@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
+import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -1697,4 +1699,40 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }*/
+
+  Future<Result<ChooseUserTypeResponceModel, Exception>> getChooseUserType(ChooseUserTypeRequestModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(
+                '${base_url! + apiUrls.PostLeadDSAProfileType}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final ChooseUserTypeResponceModel responseModel =
+            ChooseUserTypeResponceModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }

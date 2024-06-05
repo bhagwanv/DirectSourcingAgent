@@ -155,7 +155,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                         height: 20,
                       ),
                       const Text(
-                        'Position your face in the center of the\nframe. Make sure your face is well-lit and nclearly visible.',
+                        'Position your face in the center of the\nframe. Make sure your face is well-lit and clearly visible.',
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 15, color: Colors.black),
                       ),
@@ -171,8 +171,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.rectangle,
-                                border:
-                                    Border.all(color: kPrimaryColor, width: 1),
+                                border: Border.all(color: kPrimaryColor, width: 1),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10),

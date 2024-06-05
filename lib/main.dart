@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor:kPrimaryColor),
         useMaterial3: true,
       ),
-      home:  Connector_signup(activityId: 2,subActivityId: 2,),
+      home:  ProfileTypes(activityId: 2,subActivityId: 2,),
     );
   }
 }
