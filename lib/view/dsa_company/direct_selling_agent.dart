@@ -5,8 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/auth_provider/DataProvider.dart';
 import '../../utils/common_text_field.dart';
 import '../../utils/utils_class.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';

@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
@@ -85,7 +85,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         backgroundColor: textFiledBackgroundColour,
         body: SafeArea(
           child:
-              Consumer<DataProvider>(builder: (context, productProvider, child) {
+          Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getLeadSelfieData == null && isLoading) {
               return CircularProgressIndicator();
             } else {
@@ -101,7 +101,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                       if (leadSelfieResponseModel!.frontImageUrl != null && leadSelfieResponseModel!.frontDocumentId != null && !isSelfieDelete) {
                         selfieImage = leadSelfieResponseModel!.frontImageUrl!;
                         frontDocumentId =
-                            leadSelfieResponseModel!.frontDocumentId!;
+                        leadSelfieResponseModel!.frontDocumentId!;
                       }
                     }
                   },
@@ -118,15 +118,15 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                 );
                 if (productProvider.getPostSelfieImageSingleFileData != null) {
                   if (productProvider
-                              .getPostSelfieImageSingleFileData!.filePath !=
-                          null &&
+                      .getPostSelfieImageSingleFileData!.filePath !=
+                      null &&
                       productProvider.getPostSelfieImageSingleFileData!.docId !=
                           null &&
                       !isAgenSelfieDelete) {
                     selfieImage = productProvider
                         .getPostSelfieImageSingleFileData!.filePath!;
                     frontDocumentId =
-                        productProvider.getPostSelfieImageSingleFileData!.docId!;
+                    productProvider.getPostSelfieImageSingleFileData!.docId!;
                   }
                 }
               }
@@ -155,7 +155,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                         height: 20,
                       ),
                       const Text(
-                        'Position your face in the center of the\nframe. Make sure your face is well-lit and clearly visible.',
+                        'Position your face in the center of the\nframe. Make sure your face is well-lit and nclearly visible.',
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 15, color: Colors.black),
                       ),
@@ -171,7 +171,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.rectangle,
-                                border: Border.all(color: kPrimaryColor, width: 1),
+                                border:
+                                Border.all(color: kPrimaryColor, width: 1),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10),
@@ -181,41 +182,41 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                               child: Container(
                                   child: (!selfieImage.isEmpty)
                                       ? Stack(
-                                          children: [
-                                            Container(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.network(
-                                                  selfieImage,
-                                                  fit: BoxFit.cover,
-                                                  width: double.infinity,
-                                                  height: 250,
-                                                ),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    isSelfieDelete = true;
-                                                    isAgenSelfieDelete = true;
-                                                    selfieImage = "";
-                                                  });
-                                                },
-                                                child: Container(
-                                                  height: 250,
-                                                  width: 250,
-                                                  padding: EdgeInsets.all(4),
-                                                  alignment: Alignment.topRight,
-                                                  child: SvgPicture.asset(
-                                                      'assets/icons/delete_icon.svg'),
-                                                ))
-                                          ],
-                                        )
+                                    children: [
+                                      Container(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                          BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            selfieImage,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 250,
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isSelfieDelete = true;
+                                              isAgenSelfieDelete = true;
+                                              selfieImage = "";
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 250,
+                                            width: 250,
+                                            padding: EdgeInsets.all(4),
+                                            alignment: Alignment.topRight,
+                                            child: SvgPicture.asset(
+                                                'assets/icons/delete_icon.svg'),
+                                          ))
+                                    ],
+                                  )
                                       : Container(
-                                          child: SvgPicture.asset(
-                                              'assets/images/take_selfie.svg'),
-                                        )),
+                                    child: SvgPicture.asset(
+                                        'assets/images/take_selfie.svg'),
+                                  )),
                             ),
                           ),
                         ),
@@ -223,31 +224,31 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                       const SizedBox(height: 50),
                       (selfieImage.isEmpty)
                           ? CommonElevatedButton(
-                              onPressed: () async {
-                                isAgenSelfieDelete = false;
-                                final result = await availableCameras().then(
-                                    (value) => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                CameraPage(cameras: value))));
+                        onPressed: () async {
+                          isAgenSelfieDelete = false;
+                          final result = await availableCameras().then(
+                                  (value) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          CameraPage(cameras: value))));
 
-                                // Handle the result from Screen B using the callback function
-                                _handlePermissionsAccepted(result ?? "");
-                              },
-                              text: "Take a Selfie",
-                              upperCase: true,
-                            )
+                          // Handle the result from Screen B using the callback function
+                          _handlePermissionsAccepted(result ?? "");
+                        },
+                        text: "Take a Selfie",
+                        upperCase: true,
+                      )
                           : CommonElevatedButton(
-                              onPressed: () async {
-                                if (!selfieImage.isEmpty) {
-                                  await postLeadSelfie(selfieImage,
-                                      frontDocumentId, productProvider);
-                                }
-                              },
-                              text: "Next",
-                              upperCase: true,
-                            ),
+                        onPressed: () async {
+                          if (!selfieImage.isEmpty) {
+                            await postLeadSelfie(selfieImage,
+                                frontDocumentId, productProvider);
+                          }
+                        },
+                        text: "Next",
+                        upperCase: true,
+                      ),
                     ]),
               ),
             );

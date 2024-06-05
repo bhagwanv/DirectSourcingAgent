@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../providers/auth_provider/DataProvider.dart';
+import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/DateTextFormatter.dart';
 import '../../utils/ImagePicker.dart';
@@ -481,7 +481,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             ),
                             SizedBox(height: 20),
 
-                           /* CheckboxTerm(
+                            /* CheckboxTerm(
                               content:
                               "By proceeding, I provide consent on the following",
                               onChanged: (bool isChecked) async {
@@ -689,31 +689,31 @@ class _PancardScreenState extends State<PancardScreen> {
 
     if (productProvider.getLeadValidPanCardData != null) {
       productProvider.getLeadValidPanCardData!.when(
-        success: (ValidPanCardResponsModel) async {
-          validPanCardResponsModel = ValidPanCardResponsModel;
-          if (validPanCardResponsModel.nameOnPancard != null) {
-            _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
-            isVerifyPanNumber = true;
-            isEnabledPanNumber = false;
-          //  Utils.showToast(validPanCardResponsModel.message!,context);
-            await getFathersNameByValidPanCard(
-                context, pancardNumber, productProvider);
-          } else {
-            Utils.showToast(validPanCardResponsModel.message!,context);
-            _nameAsPanCl.clear();
-            _dOBAsPanCl.clear();
-            _fatherNameAsPanCl.clear();
-          }
-        },
-        failure: (exception) {
-          if (exception is ApiException) {
-            if(exception.statusCode==401){
-              productProvider.disposeAllProviderData();
-              ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+          success: (ValidPanCardResponsModel) async {
+            validPanCardResponsModel = ValidPanCardResponsModel;
+            if (validPanCardResponsModel.nameOnPancard != null) {
+              _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
+              isVerifyPanNumber = true;
+              isEnabledPanNumber = false;
+              //  Utils.showToast(validPanCardResponsModel.message!,context);
+              await getFathersNameByValidPanCard(
+                  context, pancardNumber, productProvider);
+            } else {
+              Utils.showToast(validPanCardResponsModel.message!,context);
+              _nameAsPanCl.clear();
+              _dOBAsPanCl.clear();
+              _fatherNameAsPanCl.clear();
             }
-          }
+          },
+          failure: (exception) {
+            if (exception is ApiException) {
+              if(exception.statusCode==401){
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              }else{
+                Utils.showToast(exception.errorMessage,context);
+              }
+            }
           }
       );
     }

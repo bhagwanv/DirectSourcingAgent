@@ -3,6 +3,7 @@ import 'dart:ui';
 const kPrimaryColor = Color(0xFF0196CE);
 const kPrimaryLightColor = Color(0xFFF1E6FF);
 const textFiledBackgroundColour = whiteColor;
+//const textFiledBackgroundColour = Color(0xffEFFAFF);
 const gryColor = Color(0xff858585);
 const blackSmall = Color(0xff1E1E1E);
 const redColor = Color(0xffE8505B);
@@ -17,6 +18,8 @@ const text_orange_color = Color(0xFFF56B3B);
 const text_light_whit_color = Color(0xFFF7FBFC);
 const text_light_blue_color = Color(0xFFA3AED0);
 const gry = Color(0xFFEFEEFC);
+const light_gry = Color(0xFFE0E0E0);
+const dark_gry = Color(0xFF7F7F7F);
 
 const double defaultPadding = 16.0;
 
