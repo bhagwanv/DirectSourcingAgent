@@ -206,7 +206,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
               as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;

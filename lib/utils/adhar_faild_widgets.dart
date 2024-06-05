@@ -118,7 +118,7 @@ class AdharFailedWidgets extends StatelessWidget {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel,context)
       as LeadCurrentResponseModel?;
       Navigator.of(context, rootNavigator: true).pop();
       GetLeadResponseModel? getLeadData;

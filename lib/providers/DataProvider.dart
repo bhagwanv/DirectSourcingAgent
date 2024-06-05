@@ -59,11 +59,6 @@ class DataProvider extends ChangeNotifier {
 
   GetLeadResponseModel? get getLeadData => _getLeadData;
 
-  LeadCurrentResponseModel? _leadCurrentActivityAsyncData;
-
-  LeadCurrentResponseModel? get leadCurrentActivityAsyncData =>
-      _leadCurrentActivityAsyncData;
-
   ProductCompanyDetailResponseModel? _ProductCompanyDetailResponseModel;
 
   ProductCompanyDetailResponseModel? get productCompanyDetailResponseModel => _ProductCompanyDetailResponseModel;
@@ -289,13 +284,6 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getLeadValidPanCard(String panNumber) async {
     _getLeadValidPanCardData = await apiService.getLeadValidPanCard(panNumber);
-    notifyListeners();
-  }
-
-  Future<void> leadCurrentActivityAsync(
-      LeadCurrentRequestModel leadCurrentRequestModel) async {
-    _leadCurrentActivityAsyncData =
-    await apiService.leadCurrentActivityAsync(leadCurrentRequestModel);
     notifyListeners();
   }
 

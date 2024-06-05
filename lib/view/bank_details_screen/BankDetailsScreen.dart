@@ -852,7 +852,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
       as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -120,30 +121,43 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 30, top: 50, right: 30, bottom: 30),
+                  left: 30, top: 30, right: 30, bottom: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 50,
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: SvgPicture.asset(
+                          "assets/icons/back_arrow_icon.svg",
+                          colorFilter: const ColorFilter.mode(
+                              Colors.black, BlendMode.srcIn), // Replace blackSmall with Colors.black
+                        ),
+                      ),
+                      Spacer(),
+                      const Text(
+                        'Verification Code',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Spacer()
+                    ],
                   ),
-                  const Text(
-                    'Enter \nVerification Code',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 35, color: Colors.black),
-                  ),
                   const SizedBox(
-                    height: 20,
+                    height: 125,
                   ),
                   userLoginMobile != null
                       ? Text(
-                          'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length - 4)}',
+                          'Please enter the OTP Send to your Number +91 ${userLoginMobile}',
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 15, color: Colors.black),
                         )
                       : Container(),
                   const SizedBox(
-                    height: 55,
+                    height: 43,
                   ),
                   Center(
                     child: Pinput(
@@ -350,9 +364,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context) as LeadCurrentResponseModel?;
       Navigator.of(context, rootNavigator: true).pop();
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(

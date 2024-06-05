@@ -142,18 +142,10 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                          height: 69,
-                          width: 51,
-                          alignment: Alignment.topLeft,
-                          child: Image.asset('assets/images/scale.png')),
-                      const SizedBox(
-                        height: 50,
-                      ),
                       const Text(
-                        'Take a Selfie',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 35, color: Colors.black),
+                        'A Selfie with your identity \nStay still and look at the camera',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       const SizedBox(
                         height: 20,
@@ -338,7 +330,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
               as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
