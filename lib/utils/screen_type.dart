@@ -16,4 +16,5 @@ enum ScreenType {
   PrepareAgreement,
   MyAccount,
   DSATypeSelection,
+  DSAPersonalInfo,
 }

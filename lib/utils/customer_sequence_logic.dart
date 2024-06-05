@@ -151,6 +151,19 @@ ScreenType? customerSequence(
           );
           return ScreenType.MyAccount;
         }
+        else if (leadCurrentActivity.activityName == "DSATypeSelection") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
+          return ScreenType.DSATypeSelection;
+        }else if (leadCurrentActivity.activityName == "DSAPersonalInfo") {
+
+
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
+          return ScreenType.DSAPersonalInfo;
+        }
       } else {
         return null;
       }

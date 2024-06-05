@@ -205,7 +205,21 @@ class _ProfileTypesState extends State<ProfileTypes> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      if ((getLeadData != null) && (leadCurrentActivityAsyncData != null)) {
+        if (leadCurrentActivityAsyncData.currentSequence! != 0) {
+          var currentSequence = leadCurrentActivityAsyncData.currentSequence!;
+          debugPrint("sequence no.  $currentSequence");
+          var leadCurrentActivity = leadCurrentActivityAsyncData
+              .leadProductActivity!
+              .firstWhere((product) => product.sequence == currentSequence);
+
+          if (leadCurrentActivity.activityName == "DSAPersonalInfo") {
+
+          }
+        }
+      }
+
+     // customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
