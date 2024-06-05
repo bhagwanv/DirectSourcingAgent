@@ -6,8 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/auth_provider/DataProvider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
 

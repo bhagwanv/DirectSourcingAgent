@@ -29,10 +29,7 @@ ScreenType? customerSequence(
         if (leadCurrentActivity.activityName == "MobileOtp") {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => LoginScreen(
-                    activityId: leadCurrentActivity.activityMasterId!,
-                    subActivityId: leadCurrentActivity.subActivityMasterId!,
-                    pageType: pageType)),
+                builder: (context) => LoginScreen(pageType: pageType)),
           );
           return ScreenType.login;
         } else if (leadCurrentActivity.activityName == "KYC") {
@@ -82,7 +79,7 @@ ScreenType? customerSequence(
           );
           return ScreenType.personalInfo;
         } else if (leadCurrentActivity.activityName == "BusinessInfo") {
-         /* Navigator.of(context).pushReplacement(
+          /* Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => BusinessDetailsScreen(
                     activityId: leadCurrentActivity.activityMasterId!,
@@ -169,10 +166,7 @@ ScreenType? customerSequence(
         if (leadCurrentActivity.activityName == "MobileOtp") {
           Navigator.of(context).push(
             MaterialPageRoute(
-                builder: (context) => LoginScreen(
-                    activityId: leadCurrentActivity.activityMasterId!,
-                    subActivityId: leadCurrentActivity.subActivityMasterId!,
-                    pageType: pageType)),
+                builder: (context) => LoginScreen(pageType: pageType)),
           );
           return ScreenType.login;
         } else if (leadCurrentActivity.activityName == "KYC") {
@@ -263,7 +257,7 @@ ScreenType? customerSequence(
             return ScreenType.AgreementEsign;
           } else if (leadCurrentActivity.subActivityName ==
               "PrepareAgreement") {
-           /* Navigator.of(context).push(
+            /* Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (context) => ProfileReview(pageType: pageType)),
             );*/
