@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class ApiService {
     prefsUtil.saveBool(IS_LOGGED_IN, false);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => SplashScreen(),
+        builder: (context) => LoginScreen(),
       ),
     );
   }
@@ -115,27 +116,30 @@ class ApiService {
   }
 
   Future<LeadCurrentResponseModel> leadCurrentActivityAsync(
-      LeadCurrentRequestModel leadCurrentRequestModel) async {
+      LeadCurrentRequestModel leadCurrentRequestModel, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
-     // final prefsUtil = await SharedPref.getInstance();
-     // var base_url = prefsUtil.getString(BASE_URL);
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
           Uri.parse('${apiUrls.baseUrl! + apiUrls.leadCurrentActivityAsync}'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
+            'Authorization': 'Bearer $token' // Set the content type as JSON
           },
           body: json.encode(leadCurrentRequestModel));
       //print(json.encode(leadCurrentRequestModel));
-      print(response.body);
+      print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final LeadCurrentResponseModel responseModel =
         LeadCurrentResponseModel.fromJson(jsonData);
         return responseModel;
-      } else {
-
-        throw Exception('Failed to load products');
+      } else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Un');
+      }else {
+        throw Exception('Failed to load Data');
       }
     } else {
       throw Exception('No internet connection');
