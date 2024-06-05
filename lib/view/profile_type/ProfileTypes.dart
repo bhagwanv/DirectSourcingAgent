@@ -144,16 +144,16 @@ class _ProfileTypesState extends State<ProfileTypes> {
 
   void chooseUserTypeApi(BuildContext context, DataProvider productProvider, bool isTermsChecks, String userType) async {
     Utils.onLoading(context, "");
+    final prefsUtil = await SharedPref.getInstance();
     var model = ChooseUserTypeRequestModel(
-        leadId: 310,
+        leadId: prefsUtil.getInt(LEADE_ID),
         activityId: widget.activityId,
         subActivityId: widget.subActivityId,
-        userId: "89491c5b-a9db-45e9-beab-ce39bd1eb72a",
-        companyId: 1,
+        userId: prefsUtil.getString(USER_ID),
+        companyId: prefsUtil.getInt(COMPANY_ID),
         dsaType: userType);
     print(model.toJson().toString());
     await productProvider.getChooseUserType(model);
-
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getChooseUserTypeData != null) {
       productProvider.getChooseUserTypeData!.when(
