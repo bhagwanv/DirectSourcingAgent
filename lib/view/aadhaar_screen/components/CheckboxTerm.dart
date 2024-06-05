@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../utils/constant.dart';
 
@@ -49,10 +50,17 @@ class _CheckboxTermState extends State<CheckboxTerm> {
           ),
 
           Expanded(
-            child: Text(
-              widget.content ?? "",
-              textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 14.0,),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Text(
+                widget.content ?? "",
+                textAlign: TextAlign.justify,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  )
+              ),
             ),),
         ]),onTap: () {
       // Toggle checkbox state when the row is tapped

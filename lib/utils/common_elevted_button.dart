@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'constant.dart';
 
@@ -30,7 +31,9 @@ class CommonElevatedButton extends StatelessWidget {
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
       ),
       onPressed: onPressed,
-      child: upperCase ? Text(text.toUpperCase()) : Text(text),
+      child: upperCase ? Text(text.toUpperCase()) : Text(text,style: GoogleFonts.urbanist(
+        fontWeight: FontWeight.w700,
+      ),),
     );
   }
 }

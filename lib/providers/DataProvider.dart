@@ -2,47 +2,47 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 
-import '../ProductCompanyDetailResponseModel.dart';
-import '../api/ApiService.dart';
-import '../api/ExceptionHandling.dart';
-import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
-import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
-import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
-import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
-import '../view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
-import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
-import '../view/bank_details_screen/model/BankListResponceModel.dart';
-import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
-import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
-import '../view/login_screen/model/GenrateOptResponceModel.dart';
-import '../view/otp_screens/model/VarifayOtpRequest.dart';
-import '../view/otp_screens/model/VerifyOtpResponse.dart';
-import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
-import '../view/pancard_screen/model/LeadPanResponseModel.dart';
-import '../view/pancard_screen/model/PostLeadPANRequestModel.dart';
-import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
-import '../view/pancard_screen/model/PostSingleFileResponseModel.dart';
-import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
-import '../view/personal_info/model/AllStateResponce.dart';
-import '../view/personal_info/model/CityResponce.dart';
-import '../view/personal_info/model/ElectricityAuthenticationReqModel.dart';
-import '../view/personal_info/model/ElectricityAuthenticationResModel.dart';
-import '../view/personal_info/model/ElectricityServiceProviderListResModel.dart';
-import '../view/personal_info/model/ElectricityStateResModel.dart';
-import '../view/personal_info/model/EmailExistRespoce.dart';
-import '../view/personal_info/model/IvrsResModel.dart';
-import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
-import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
-import '../view/personal_info/model/PersonalDetailsResponce.dart';
-import '../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
-import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
-import '../view/personal_info/model/ValidEmResponce.dart';
-import '../view/splash/model/GetLeadResponseModel.dart';
-import '../view/splash/model/LeadCurrentRequestModel.dart';
-import '../view/splash/model/LeadCurrentResponseModel.dart';
-import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
-import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
-import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
+import '../../api/ApiService.dart';
+import '../../api/ExceptionHandling.dart';
+import '../../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
+import '../../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
+import '../../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
+import '../../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
+import '../../view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
+import '../../view/bank_details_screen/model/BankDetailsResponceModel.dart';
+import '../../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../../view/bank_details_screen/model/SaveBankDetailResponce.dart';
+import '../../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../../view/otp_screens/model/VarifayOtpRequest.dart';
+import '../../view/otp_screens/model/VerifyOtpResponce.dart';
+import '../../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
+import '../../view/pancard_screen/model/LeadPanResponseModel.dart';
+import '../../view/pancard_screen/model/PostLeadPANRequestModel.dart';
+import '../../view/pancard_screen/model/PostLeadPANResponseModel.dart';
+import '../../view/pancard_screen/model/PostSingleFileResponseModel.dart';
+import '../../view/pancard_screen/model/ValidPanCardResponsModel.dart';
+import '../../view/personal_info/model/AllStateResponce.dart';
+import '../../view/personal_info/model/CityResponce.dart';
+import '../../view/personal_info/model/ElectricityAuthenticationReqModel.dart';
+import '../../view/personal_info/model/ElectricityAuthenticationResModel.dart';
+import '../../view/personal_info/model/ElectricityServiceProviderListResModel.dart';
+import '../../view/personal_info/model/ElectricityStateResModel.dart';
+import '../../view/personal_info/model/EmailExistRespoce.dart';
+import '../../view/personal_info/model/IvrsResModel.dart';
+import '../../view/personal_info/model/OTPValidateForEmailRequest.dart';
+import '../../view/personal_info/model/PersonalDetailsRequestModel.dart';
+import '../../view/personal_info/model/PersonalDetailsResponce.dart';
+import '../../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
+import '../../view/personal_info/model/SendOtpOnEmailResponce.dart';
+import '../../view/personal_info/model/ValidEmResponce.dart';
+import '../../view/splash/model/GetLeadResponseModel.dart';
+import '../../view/splash/model/LeadCurrentRequestModel.dart';
+import '../../view/splash/model/LeadCurrentResponseModel.dart';
+import '../../view/take_selfi/model/LeadSelfieResponseModel.dart';
+import '../../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
+import '../../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 
 
 class DataProvider extends ChangeNotifier {
@@ -58,9 +58,14 @@ class DataProvider extends ChangeNotifier {
   LeadCurrentResponseModel? get leadCurrentActivityAsyncData =>
       _leadCurrentActivityAsyncData;
 
-   ProductCompanyDetailResponseModel? _ProductCompanyDetailResponseModel;
+  /* ProductCompanyDetailResponseModel? _ProductCompanyDetailResponseModel;
 
   ProductCompanyDetailResponseModel? get productCompanyDetailResponseModel => _ProductCompanyDetailResponseModel;
+*/
+/*  ProductCompanyDetailResponseModel? _ProductCompanyDetailResponseModel;
+
+  ProductCompanyDetailResponseModel? get productCompanyDetailResponseModel =>
+      _ProductCompanyDetailResponseModel;*/
 
   Result< GenrateOptResponceModel, Exception>? _genrateOptData;
   Result< GenrateOptResponceModel, Exception>? get genrateOptData => _genrateOptData;
@@ -129,8 +134,8 @@ class DataProvider extends ChangeNotifier {
   Result<DisbursementCompletedResponse,Exception>? get getDisbursementData => _getDisbursementData;*/
 
 
-  Result<VerifyOtpResponse,Exception>? _getVerifyData;
-  Result<VerifyOtpResponse,Exception>? get getVerifyData => _getVerifyData;
+  Result<VerifyOtpResponce,Exception>? _getVerifyData;
+  Result<VerifyOtpResponce,Exception>? get getVerifyData => _getVerifyData;
 
   BankListResponceModel? _getBankListData;
 
@@ -166,11 +171,13 @@ class DataProvider extends ChangeNotifier {
   PostPersonalDetailsResponseModel? get getPostPersonalDetailsResponseModel =>
       _getPostPersonalDetailsResponseModel;
 
+  CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
+  CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
+
   /*LeadBusinessDetailResponseModel? _getLeadBusinessDetailData;
   LeadBusinessDetailResponseModel? get getLeadBusinessDetailData => _getLeadBusinessDetailData;
 
-  CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
-  CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
+
 
   Result<PostLeadBuisnessDetailResponsModel,Exception>? _getPostLeadBuisnessDetailData;
   Result<PostLeadBuisnessDetailResponsModel,Exception>? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
@@ -243,12 +250,12 @@ class DataProvider extends ChangeNotifier {
   /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
 
-  Future<void> productCompanyDetail(
+  /*Future<void> productCompanyDetail(
       String product, String company) async {
     _ProductCompanyDetailResponseModel =
     await apiService.productCompanyDetail(product, company);
     notifyListeners();
-  }
+  }*/
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -262,8 +269,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> genrateOtp(BuildContext context, String mobileNumber) async {
-    _genrateOptData = await apiService.genrateOtp(context, mobileNumber);
+  Future<void> genrateOtp(BuildContext context, String mobileNumber, int CompanyID, ) async {
+    _genrateOptData = await apiService.genrateOtp(context, mobileNumber, CompanyID);
     notifyListeners();
   }
 
@@ -430,15 +437,18 @@ class DataProvider extends ChangeNotifier {
 
   }
 
-  /*Future<void> getLeadBusinessDetail(String userId,String productCode) async {
-    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
-    notifyListeners();
-  }
 
   Future<void> getCustomerDetailUsingGST(String GSTNumber) async {
     _getCustomerDetailUsingGSTData = await apiService.getCustomerDetailUsingGST(GSTNumber);
     notifyListeners();
   }
+
+  /*Future<void> getLeadBusinessDetail(String userId,String productCode) async {
+    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
+    notifyListeners();
+  }
+
+
 
   Future<void> postLeadBuisnessDetail(PostLeadBuisnessDetailRequestModel postLeadBuisnessDetailRequestModel) async {
     _getPostLeadBuisnessDetailData = await apiService.postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);

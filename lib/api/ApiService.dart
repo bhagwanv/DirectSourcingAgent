@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../ProductCompanyDetailResponseModel.dart';
 import '../shared_preferences/shared_pref.dart';
 import '../utils/InternetConnectivity.dart';
 import '../utils/constant.dart';
@@ -16,9 +15,10 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
-import '../view/otp_screens/model/VerifyOtpResponse.dart';
+import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/PostLeadPANRequestModel.dart';
@@ -66,27 +66,28 @@ class ApiService {
     );
   }
 
-  Future<ProductCompanyDetailResponseModel> productCompanyDetail(
+/*  Future<ProductCompanyDetailResponseModel> productCompanyDetail(
       String product, String company) async {
     if (await internetConnectivity.networkConnectivity()) {
-    /*  final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);*/
-
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      //  var base_url = apiUrls.baseUrl;
       final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl! + apiUrls.productCompanyDetail}?product=$product&company=$company'));
+          '${base_url! + apiUrls.productCompanyDetail}?product=$product&company=$company'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
+        // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final ProductCompanyDetailResponseModel responseModel =
             ProductCompanyDetailResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
-        throw Exception('Failed to load Data');
+        throw Exception('Failed to load products');
       }
     } else {
       throw Exception('No internet connection');
     }
-  }
+  }*/
 
   Future<GetLeadResponseModel> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -138,16 +139,18 @@ class ApiService {
   }
 
   Future<Result<GenrateOptResponceModel, Exception>> genrateOtp(
-      BuildContext context, String mobileNumber) async {
+      BuildContext context, String mobileNumber, int CompanyID) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
-       // final prefsUtil = await SharedPref.getInstance();
-       // var base_url = prefsUtil.getString(BASE_URL);
+        final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
         final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.generateOtp}?MobileNo=$mobileNumber'));
+            '${base_url! + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
+            // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
             final GenrateOptResponceModel responseModel =
                 GenrateOptResponceModel.fromJson(jsonData);
@@ -178,7 +181,8 @@ class ApiService {
   ) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+      //var base_url = prefsUtil.getString(BASE_URL);
+      var base_url = ApiUrls().baseUrl;
       try {
         var request = http.MultipartRequest(
           'POST',
@@ -227,27 +231,33 @@ class ApiService {
     }
   }
 
-  Future<Result<VerifyOtpResponse, Exception>> verifyOtp(
+  Future<Result<VerifyOtpResponce, Exception>> verifyOtp(
       VarifayOtpRequest verifayOtp) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
-       // final prefsUtil = await SharedPref.getInstance();
+        final prefsUtil = await SharedPref.getInstance();
        // var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
+
         final response = await interceptor.post(
-            Uri.parse(apiUrls.baseUrl + apiUrls.leadMobileValidate),
+            Uri.parse('${base_url! + apiUrls.LeadMobileValidate}'),
             headers: {
               'Content-Type': 'application/json',
+              // Set the content type as JSON
             },
             body: json.encode(verifayOtp));
+        //print(json.encode(leadCurrentRequestModel));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
+            // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
-            final VerifyOtpResponse responseModel =
-            VerifyOtpResponse.fromJson(jsonData);
+            final VerifyOtpResponce responseModel =
+                VerifyOtpResponce.fromJson(jsonData);
             return Success(responseModel);
 
           default:
+            // 3. return Failure with the desired exception
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
@@ -264,8 +274,10 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
-        var token = await prefsUtil.getString(TOKEN);
+        //var base_url = prefsUtil.getString(BASE_URL);
+        //var token = await prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJhYjlkOWIyYi01NDZiLTQ3ZmYtYjAxMC0yZTlkZGJlYTBkMTIiLCJ1c2VybmFtZSI6Ijk1MzMzOTI4MDEiLCJsb2dnZWRvbiI6IjA2LzA0LzIwMjQgMTM6MDg6NTAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTMzMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3NTA2NTMwLCJleHAiOjE3MTc1OTI5MzAsImlhdCI6MTcxNzUwNjUzMCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.N1clSPfguoVsD9GoLiqwu_wnMi3MkVOAo80bn_ZcEWSsfFWNYOE_g21E2p5Mf45i6rX_jfanHMJVbDuuKt-L5gjb8cfS67L_TlvSSiti7gldXdRErrmDIVdu5te05ZmNLr7yVYSnStRtA_aiL75_ShEPSxyXLHwI1iAI3x57BaygwzYsjkIRf2-Vn_kHMIKedzYJqReZzW7JTQ8DMb79R1UiRkjYlCBKi7V2ySBJcadLqpDsbhBBgoShVeF7-Syl8tnph16LmwVn01-VT1pzmH2iklRA-Nym3tc1sjyWwyqM5xO-L9tAkGWyfUwm0Qep_Ij5W-m5DnP49IMSRrmtcg";
+        var base_url =ApiUrls().baseUrl;
         final response = await interceptor.get(
           Uri.parse(
               '${base_url! + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
@@ -301,7 +313,9 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+       // var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
+
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
@@ -372,7 +386,9 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
+
         final response = await interceptor.get(Uri.parse(
             '${base_url! + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
         print(response.body); // Print the response body once here
@@ -401,7 +417,8 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
@@ -437,8 +454,11 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
-        var token = await prefsUtil.getString(TOKEN);
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
+        //var token = await prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJhYjlkOWIyYi01NDZiLTQ3ZmYtYjAxMC0yZTlkZGJlYTBkMTIiLCJ1c2VybmFtZSI6Ijk1MzMzOTI4MDEiLCJsb2dnZWRvbiI6IjA2LzA0LzIwMjQgMTM6MDg6NTAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTMzMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3NTA2NTMwLCJleHAiOjE3MTc1OTI5MzAsImlhdCI6MTcxNzUwNjUzMCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.N1clSPfguoVsD9GoLiqwu_wnMi3MkVOAo80bn_ZcEWSsfFWNYOE_g21E2p5Mf45i6rX_jfanHMJVbDuuKt-L5gjb8cfS67L_TlvSSiti7gldXdRErrmDIVdu5te05ZmNLr7yVYSnStRtA_aiL75_ShEPSxyXLHwI1iAI3x57BaygwzYsjkIRf2-Vn_kHMIKedzYJqReZzW7JTQ8DMb79R1UiRkjYlCBKi7V2ySBJcadLqpDsbhBBgoShVeF7-Syl8tnph16LmwVn01-VT1pzmH2iklRA-Nym3tc1sjyWwyqM5xO-L9tAkGWyfUwm0Qep_Ij5W-m5DnP49IMSRrmtcg";
+
         final response = await interceptor.post(
             Uri.parse('${base_url! + apiUrls.getLeadAadharGenerateOTP}'),
             headers: {
@@ -837,6 +857,29 @@ class ApiService {
     }
   }
 
+  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
+      String GSTNumber) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(Uri.parse(
+          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final CustomerDetailUsingGstResponseModel responseModel =
+        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
   //Business Detail Module
 /*  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
       String userId, String productCode) async {
@@ -861,28 +904,7 @@ class ApiService {
     }
   }
 
-  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
-      String GSTNumber) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
 
-        final CustomerDetailUsingGstResponseModel responseModel =
-            CustomerDetailUsingGstResponseModel.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
 
   Future<Result<PostLeadBuisnessDetailResponsModel,Exception>> postLeadBuisnessDetail(
       PostLeadBuisnessDetailRequestModel
