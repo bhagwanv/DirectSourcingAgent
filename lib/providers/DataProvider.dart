@@ -15,6 +15,8 @@ import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../view/otp_screens/model/GetUserProfileRequest.dart';
+import '../view/otp_screens/model/GetUserProfileResponse.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponse.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
@@ -131,6 +133,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<VerifyOtpResponse,Exception>? _getVerifyData;
   Result<VerifyOtpResponse,Exception>? get getVerifyData => _getVerifyData;
+
+  Result<GetUserProfileResponse,Exception>? _getUserProfileResponse;
+  Result<GetUserProfileResponse,Exception>? get getUserProfileResponse => _getUserProfileResponse;
 
   BankListResponceModel? _getBankListData;
 
@@ -281,6 +286,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> verifyOtp(VarifayOtpRequest verifayOtp) async {
     _getVerifyData = await apiService.verifyOtp(verifayOtp);
+    notifyListeners();
+  }
+
+  Future<void> getUserData(GetUserProfileRequest requestModel) async {
+    _getUserProfileResponse = await apiService.getUserData(requestModel);
     notifyListeners();
   }
 

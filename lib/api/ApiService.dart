@@ -17,6 +17,8 @@ import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../view/otp_screens/model/GetUserProfileRequest.dart';
+import '../view/otp_screens/model/GetUserProfileResponse.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponse.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
@@ -91,10 +93,10 @@ class ApiService {
   Future<GetLeadResponseModel> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
     if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+    //  final prefsUtil = await SharedPref.getInstance();
+    //  var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getLeadCurrentActivity}?MobileNo=$mobile&ProductId=$productId&CompanyId=$companyId&LeadId=$leadId'));
+          '${apiUrls.baseUrl! + apiUrls.getLeadCurrentActivity}?MobileNo=$mobile&ProductId=$productId&CompanyId=$companyId&LeadId=$leadId'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -113,10 +115,10 @@ class ApiService {
   Future<LeadCurrentResponseModel> leadCurrentActivityAsync(
       LeadCurrentRequestModel leadCurrentRequestModel) async {
     if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+     // final prefsUtil = await SharedPref.getInstance();
+     // var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.post(
-          Uri.parse('${base_url! + apiUrls.leadCurrentActivityAsync}'),
+          Uri.parse('${apiUrls.baseUrl! + apiUrls.leadCurrentActivityAsync}'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
           },
@@ -136,6 +138,8 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
+
+  //auth
 
   Future<Result<GenrateOptResponceModel, Exception>> genrateOtp(
       BuildContext context, String mobileNumber) async {
@@ -169,6 +173,71 @@ class ApiService {
       return Failure(e);
     }
   }
+
+  Future<Result<VerifyOtpResponse, Exception>> verifyOtp(
+      VarifayOtpRequest verifayOtp) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        // final prefsUtil = await SharedPref.getInstance();
+        // var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.leadMobileValidate),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: json.encode(verifayOtp));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final VerifyOtpResponse responseModel =
+            VerifyOtpResponse.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<GetUserProfileResponse, Exception>> getUserData(
+      GetUserProfileRequest requestData) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.getUserData),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(requestData));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final GetUserProfileResponse responseModel =
+            GetUserProfileResponse.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+
 
   Future<PostSingleFileResponseModel> postSingleFile(
       File file,
@@ -224,37 +293,6 @@ class ApiService {
       }
     } else {
       throw Exception('No internet connection');
-    }
-  }
-
-  Future<Result<VerifyOtpResponse, Exception>> verifyOtp(
-      VarifayOtpRequest verifayOtp) async {
-    try {
-      if (await internetConnectivity.networkConnectivity()) {
-        // final prefsUtil = await SharedPref.getInstance();
-        // var base_url = prefsUtil.getString(BASE_URL);
-        final response = await interceptor.post(
-            Uri.parse(apiUrls.baseUrl + apiUrls.leadMobileValidate),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: json.encode(verifayOtp));
-        print(response.body); // Print the response body once here
-        switch (response.statusCode) {
-          case 200:
-            final dynamic jsonData = json.decode(response.body);
-            final VerifyOtpResponse responseModel =
-            VerifyOtpResponse.fromJson(jsonData);
-            return Success(responseModel);
-
-          default:
-            return Failure(ApiException(response.statusCode, ""));
-        }
-      } else {
-        return Failure(Exception("No Internet connection"));
-      }
-    } on Exception catch (e) {
-      return Failure(e);
     }
   }
 
@@ -371,10 +409,10 @@ class ApiService {
       String userId, String productCode) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
-        final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+       /* final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);*/
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
+            '${apiUrls.baseUrl + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:

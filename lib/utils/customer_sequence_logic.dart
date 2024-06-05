@@ -139,7 +139,6 @@ ScreenType? customerSequence(
         } else if (leadCurrentActivity.activityName ==
             "Disbursement Completed") {
           Navigator.of(context).pushReplacement(
-            //MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!, pageType: pageType ,isDisbursement: true,)),
             MaterialPageRoute(
                 builder: (context) => BottomNav(pageType: pageType)),
           );

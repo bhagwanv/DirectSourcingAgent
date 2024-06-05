@@ -2,6 +2,7 @@ import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/constant.dart';
+import '../pancard_screen/PancardScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -93,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (_isLoggedIn) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          MaterialPageRoute(builder: (context) => PancardScreen(activityId: 2, subActivityId: 15,)),
         );
       } else {
         /* Navigator.pushReplacement(
