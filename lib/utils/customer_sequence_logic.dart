@@ -1,4 +1,5 @@
 import 'package:direct_sourcing_agent/utils/screen_type.dart';
+import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:flutter/material.dart';
 import '../view/aadhaar_screen/aadhaar_screen.dart';
 import '../view/bank_details_screen/BankDetailsScreen.dart';
@@ -150,6 +151,12 @@ ScreenType? customerSequence(
           );
           return ScreenType.MyAccount;
         }
+        else if (leadCurrentActivity.activityName == "DSATypeSelection" || leadCurrentActivity.activityName == "DSAPersonalInfo") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType, dsaType: leadCurrentActivity.activityName)),);
+          return ScreenType.DSATypeSelection;
+        }
       } else {
         return null;
       }
@@ -288,7 +295,8 @@ ScreenType? customerSequence(
           return ScreenType.MyAccount;
         }else if (leadCurrentActivity.activityName == "DSATypeSelection") {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => BottomNav(pageType: pageType)),);
+            MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType,dsaType: leadCurrentActivity.activityName)),);
           return ScreenType.DSATypeSelection;
         }
       } else {
