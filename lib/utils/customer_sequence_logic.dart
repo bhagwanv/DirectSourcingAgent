@@ -296,7 +296,7 @@ ScreenType? customerSequence(
         }else if (leadCurrentActivity.activityName == "DSATypeSelection") {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
-                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType,dsaType: leadCurrentActivity.activityName)),);
           return ScreenType.DSATypeSelection;
         }
       } else {
