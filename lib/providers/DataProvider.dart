@@ -17,6 +17,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
+import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/GetUserProfileRequest.dart';
 import '../view/otp_screens/model/GetUserProfileResponse.dart';
@@ -121,6 +123,10 @@ class DataProvider extends ChangeNotifier {
   //Buisness details
   PostSingleFileResponseModel? _getpostBusineesDoumentSingleFileData;
   PostSingleFileResponseModel? get getpostBusineesDoumentSingleFileData => _getpostBusineesDoumentSingleFileData;
+
+  PostSingleFileResponseModel? _getpostDSABusineesDoumentSingleFileData;
+  PostSingleFileResponseModel? get getpostDSABusineesDoumentSingleFileData => _getpostDSABusineesDoumentSingleFileData;
+
 
 /*  Result<DisbursementResponce,Exception>? _getDisbursementProposalData;
   Result<DisbursementResponce,Exception>? get getDisbursementProposalData => _getDisbursementProposalData;
@@ -248,6 +254,9 @@ class DataProvider extends ChangeNotifier {
 
   Result< DSAPersonalInfoModel, Exception>? _getDSAPersonalInfoData;
   Result< DSAPersonalInfoModel, Exception>? get getDSAPersonalInfoData => _getDSAPersonalInfoData;
+  Result<PostLeadDsaPersonalDetailResModel,Exception>? _getpostLeadDSAPersonalDetailData;
+  Result<PostLeadDsaPersonalDetailResModel,Exception>? get getpostLeadDSAPersonalDetailData => _getpostLeadDSAPersonalDetailData;
+
 
   /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
@@ -349,6 +358,13 @@ class DataProvider extends ChangeNotifier {
   Future<void> postBusineesDoumentSingleFile(File imageFile, bool isValidForLifeTime,
       String validityInDays, String subFolderName) async {
     _getpostBusineesDoumentSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> postDSABusineesDoumentSingleFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getpostDSABusineesDoumentSingleFileData = await apiService.postSingleFile(
         imageFile, isValidForLifeTime, validityInDays, subFolderName);
     notifyListeners();
   }
@@ -583,6 +599,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getChooseUserType(ChooseUserTypeRequestModel model) async {
     _getChooseUserTypeData = await apiService.getChooseUserType(model) ;
+    notifyListeners();
+  }
+
+  Future<void> postLeadDSAPersonalDetail(PostLeadDsaPersonalDetailReqModel model) async {
+    _getpostLeadDSAPersonalDetailData = await apiService.postLeadDSAPersonalDetail(model) ;
     notifyListeners();
   }
 
