@@ -178,12 +178,12 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 }
                 return SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Text(
-                            'Adhar Verification',
+                            'Aadhaar Verification',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 fontSize: 16,
