@@ -151,18 +151,11 @@ ScreenType? customerSequence(
           );
           return ScreenType.MyAccount;
         }
-        else if (leadCurrentActivity.activityName == "DSATypeSelection") {
+        else if (leadCurrentActivity.activityName == "DSATypeSelection" || leadCurrentActivity.activityName == "DSAPersonalInfo") {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
-                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType, dsaType: leadCurrentActivity.activityName)),);
           return ScreenType.DSATypeSelection;
-        }else if (leadCurrentActivity.activityName == "DSAPersonalInfo") {
-
-
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
-                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
-          return ScreenType.DSAPersonalInfo;
         }
       } else {
         return null;

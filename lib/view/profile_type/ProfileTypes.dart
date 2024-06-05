@@ -23,12 +23,14 @@ class ProfileTypes extends StatefulWidget {
   final int activityId;
   final int subActivityId;
   final String? pageType;
+  final String? dsaType;
 
   ProfileTypes(
       {super.key,
       required this.activityId,
       required this.subActivityId,
-      this.pageType});
+      this.pageType,
+      required this.dsaType});
 
   @override
   State<ProfileTypes> createState() => _ProfileTypesState();
@@ -49,6 +51,15 @@ class _ProfileTypesState extends State<ProfileTypes> {
         _isSelected1 = !value;
       }
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.dsaType == "DSAPersonalInfo") {
+
+    }
   }
 
   @override
@@ -205,21 +216,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      if ((getLeadData != null) && (leadCurrentActivityAsyncData != null)) {
-        if (leadCurrentActivityAsyncData.currentSequence! != 0) {
-          var currentSequence = leadCurrentActivityAsyncData.currentSequence!;
-          debugPrint("sequence no.  $currentSequence");
-          var leadCurrentActivity = leadCurrentActivityAsyncData
-              .leadProductActivity!
-              .firstWhere((product) => product.sequence == currentSequence);
-
-          if (leadCurrentActivity.activityName == "DSAPersonalInfo") {
-
-          }
-        }
-      }
-
-     // customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
