@@ -645,6 +645,7 @@ class DataProvider extends ChangeNotifier {
     _getElectricityServiceProviderListData = null;
     _getElectricityStateListData = null;
     _getElectricityAuthenticationData = null;
+    _getUserProfileResponse = null;
     /*_InProgressScreen = null;*/
     notifyListeners();
   }

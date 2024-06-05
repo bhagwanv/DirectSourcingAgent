@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/constant.dart';
@@ -137,7 +138,16 @@ class _SplashScreenState extends State<SplashScreen> {
               fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
             }
           },
-          failure: (exception) {},
+          failure: (exception) {
+            if (exception is ApiException) {
+              if(exception.statusCode==401){
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              }else{
+                Utils.showToast(exception.errorMessage,context);
+              }
+            }
+          },
         );
       }
     } catch (error) {
@@ -173,9 +183,11 @@ class _SplashScreenState extends State<SplashScreen> {
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData,
-          "pushReplacement");
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "pushReplacement");
     } catch (error) {
+
+
+      print("Demoooooooooooo");
       Navigator.of(context, rootNavigator: true).pop();
       if (kDebugMode) {
         print('Error occurred during API call: $error');

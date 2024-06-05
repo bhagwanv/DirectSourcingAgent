@@ -126,7 +126,7 @@ class ApiService {
           },
           body: json.encode(leadCurrentRequestModel));
       //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
+      print(response.body);
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
@@ -134,6 +134,7 @@ class ApiService {
         LeadCurrentResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
+
         throw Exception('Failed to load products');
       }
     } else {
