@@ -12,6 +12,7 @@ import '../../shared_preferences/shared_pref.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/aadhaar_number_formatter.dart';
 import '../../utils/common_elevted_button.dart';
+import '../../utils/common_text_field.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';
 import 'aadhaar_otp_screen.dart';
@@ -22,10 +23,13 @@ import 'models/LeadAadhaarResponse.dart';
 class AadhaarScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
-  final String?  pageType;
+  final String? pageType;
 
   const AadhaarScreen(
-      {super.key, required this.activityId, required this.subActivityId, this.pageType});
+      {super.key,
+        required this.activityId,
+        required this.subActivityId,
+        this.pageType});
 
   @override
   State<AadhaarScreen> createState() => _AadhaarScreenState();
@@ -41,12 +45,16 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   var isFrontImageDelete = false;
   var isBackImageDelete = false;
   bool tcChecked = false;
+  var isPanProgressDilog = false;
+  var isVerifyAdharNumber = false;
+  var isEnabledAdharNumber = true;
 
   void _onFontImageSelected(File imageFile) async {
     Utils.onLoading(context, "");
     isFrontImageDelete = false;
     // Perform asynchronous work first
-    await Provider.of<DataProvider>(context, listen: false).PostFrontAadhaarSingleFileData(imageFile, true, "", "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .PostFrontAadhaarSingleFileData(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
     // Update the widget state synchronously inside setState
   }
@@ -86,7 +94,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
         if (didPop) {
           return;
         }
-        if(widget.pageType == "pushReplacement" ) {
+        if (widget.pageType == "pushReplacement") {
           final bool shouldPop = await Utils().onback(context);
           if (shouldPop) {
             SystemNavigator.pop();
@@ -96,17 +104,20 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
         }
       },
       child: Scaffold(
+          backgroundColor: Colors.white,
           body: SafeArea(
             top: true,
             bottom: true,
-            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+            child:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
               if (productProvider.getLeadAadhaar != null) {
                 productProvider.getLeadAadhaar!.when(
                   success: (LeadAadhaarResponse) async {
                     leadAadhaarResponse = LeadAadhaarResponse;
-                    if(leadAadhaarResponse != null) {
+                    if (leadAadhaarResponse != null) {
                       if (leadAadhaarResponse!.documentNumber != null) {
-                        _aadhaarController.text = leadAadhaarResponse!.documentNumber!;
+                        _aadhaarController.text =
+                        leadAadhaarResponse!.documentNumber!;
                       }
 
                       if (leadAadhaarResponse!.frontDocumentId != null) {
@@ -121,7 +132,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
                       if (leadAadhaarResponse!.frontImageUrl != null &&
                           !isFrontImageDelete) {
-                        frontFileUrl = leadAadhaarResponse!.frontImageUrl!.toString();
+                        frontFileUrl =
+                            leadAadhaarResponse!.frontImageUrl!.toString();
                       }
 
                       if (leadAadhaarResponse!.backImageUrl != null &&
@@ -132,11 +144,11 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                   },
                   failure: (exception) {
                     if (exception is ApiException) {
-                      if(exception.statusCode==401){
+                      if (exception.statusCode == 401) {
                         productProvider.disposeAllProviderData();
                         ApiService().handle401(context);
-                      }else{
-                        Utils.showToast(exception.errorMessage,context);
+                      } else {
+                        Utils.showToast(exception.errorMessage, context);
                       }
                     }
                   },
@@ -146,8 +158,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     !isFrontImageDelete) {
                   if (productProvider.getPostFrontAadhaarSingleFileData!.filePath !=
                       null) {
-                    frontFileUrl =
-                    productProvider.getPostFrontAadhaarSingleFileData!.filePath!;
+                    frontFileUrl = productProvider
+                        .getPostFrontAadhaarSingleFileData!.filePath!;
                     frontDocumentId = productProvider
                         .getPostFrontAadhaarSingleFileData!.docId!
                         .toString();
@@ -165,86 +177,109 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                   }
                 }
                 return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 30, top: 50),
-                            child: SizedBox(
-                              height: 70,
-                              width: 52,
-                              child: Image.asset(
-                                'assets/images/scale.png',
-                                fit: BoxFit.fill,
-                              ),
-                            )),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 30, right: 30, top: 50),
-                          child: Text(
-                            "Verify Aadhaar",
-                            style: TextStyle(
-                              fontSize: 40.0,
-                              color: blackSmall,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding:
-                          EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 44),
-                          child: Text(
-                            "Please validate your Aadhaar number",
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: blackSmall,
-                              fontWeight: FontWeight.w500,
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Adhar Verification',
                             textAlign: TextAlign.start,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: TextFormField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              AadhaarNumberFormatter(),
+                          const SizedBox(height: 20),
+                          isVerifyAdharNumber
+                              ? Container(
+                            height: 100,
+                            width: 100,
+                            alignment: Alignment.center,
+                            child: SvgPicture.asset(
+                              'assets/images/ic_verified_pancard.svg',
+                              semanticsLabel: 'Verify PAN SVG',
+                            ),
+                          )
+                              : Container(
+                            height: 100,
+                            width: 100,
+                            alignment: Alignment.center,
+                            child: SvgPicture.asset(
+                              'assets/images/ic_verify_pancard.svg',
+                              semanticsLabel: 'Verify PAN SVG',
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Provide your Adhar details to verify registered name and active status',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15, color: Colors.black),
+                          ),
+                          const SizedBox(height: 30),
+                          Stack(
+                            children: [
+                              CommonTextField(
+                                  controller: _aadhaarController,
+                                  hintText: "XXXX XXXX XXXX",
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.number,
+                                  labelText: "Aadhaar Card Number",
+                                  textCapitalization: TextCapitalization.characters,
+                                  inputFormatter: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    AadhaarNumberFormatter(),
+                                  ],
+                                  onChanged: (text) async {
+                                    if (text.length == 10) {
+                                      // Make API Call to validate PAN card
+                                      isPanProgressDilog = true;
+                                    } else {
+                                      isPanProgressDilog = false;
+                                    }
+                                  }),
+                              isVerifyAdharNumber
+                                  ? Positioned(
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // print('Edit icon tapped');
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    child: SvgPicture.asset(
+                                      'assets/images/verify_pan.svg',
+                                      semanticsLabel: 'Verify PAN SVG',
+                                    ),
+                                  ),
+                                ),
+                              )
+                                  : isPanProgressDilog
+                                  ? Positioned(
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  // Adjusted to be slightly larger than the indicator
+                                  width: 50,
+                                  // Adjusted to be slightly larger than the indicator
+                                  child: Transform.scale(
+                                    scale: 0.4,
+                                    // Scale down the CircularProgressIndicator
+                                    child: CircularProgressIndicator(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              )
+                                  : Container(),
                             ],
-                            controller: _aadhaarController,
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.number,
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              color: blackSmall,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            decoration: const InputDecoration(
-                              contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(8)),
-                                borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(8)),
-                                borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(8)),
-                                borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                              ),
-                              hintText: 'XXXX XXXX XXXX',
-                              labelText: 'Aadhaar Card Number',
-                              labelStyle: TextStyle(color: blackSmall),
-                            ),
-                            onChanged: (value) {},
                           ),
-                        ),
-                        const SizedBox(height: 26),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: Container(
+                          const SizedBox(height: 26),
+                          Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
                                 colors: [kPrimaryColor, kPrimaryColor],
@@ -275,7 +310,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                           : Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
                                         children: [
                                           Center(
                                               child: SvgPicture.asset(
@@ -328,11 +364,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                               ],
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: Stack(
+                          const SizedBox(height: 16),
+                          Stack(
                             children: [
                               Container(
                                 decoration: BoxDecoration(
@@ -363,7 +396,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                           : Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
                                         children: [
                                           Center(
                                               child: SvgPicture.asset(
@@ -416,23 +450,9 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                               )
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 30),
-                          child:
-                          CheckboxTerm(
-                            content:
-                            "I hereby agree to provide my Aadhaar Number and One Time Password (OTP) data for Aadhaar based authentication for KYC purpose in establishing my identity with Scaleupfincap Private Limited.",
-                            onChanged: (bool? value) {
-                              tcChecked = value!;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 46),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: CommonElevatedButton(
+
+                          const SizedBox(height: 46),
+                          CommonElevatedButton(
                             onPressed: () {
                               //validate data
                               if (productProvider.getPostFrontAadhaarSingleFileData !=
@@ -462,14 +482,14 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
                               //call api
                               if (_aadhaarController.text == "") {
-                                Utils.showToast("Please Enter Aadhaar Number",context);
+                                Utils.showToast("Please Enter Aadhaar Number", context);
                               } else if (frontFileUrl == "" || frontDocumentId == "") {
-                                Utils.showToast("Please select Aadhaar Front Image",context);
+                                Utils.showToast(
+                                    "Please select Aadhaar Front Image", context);
                               } else if (backFileUrl == "" || backDocumentId == "") {
-                                Utils.showToast("Please select Aadhaar Back Image",context);
-                              } else if (!tcChecked) {
-                                Utils.showToast("Please Check Terms and Conditions",context);
-                              } else {
+                                Utils.showToast(
+                                    "Please select Aadhaar Back Image", context);
+                              }  else {
                                 String stringWithSpaces = _aadhaarController.text;
                                 print("normal" + stringWithSpaces);
                                 String stringWithoutSpaces =
@@ -485,12 +505,12 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                     backDocumentId);
                               }
                             },
-                            text: 'Proceed to E-Aadhaar',
+                            text: 'NEXTr',
                             upperCase: true,
                           ),
-                        ),
-                        const SizedBox(height: 50),
-                      ],
+                          const SizedBox(height: 50),
+                        ],
+                      ),
                     ));
               } else {
                 return const Center(
@@ -523,7 +543,6 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
       String fDocumentId,
       String bFileUrl,
       String bDocumentId) async {
-
     var request = AadhaarGenerateOTPRequestModel(
         DocumentNumber: documentNumber,
         FrontFileUrl: fFileUrl,
@@ -535,7 +554,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
     Utils.onLoading(context, "");
 
-    await Provider.of<DataProvider>(context, listen: false).leadAadharGenerateOTP(request);
+    await Provider.of<DataProvider>(context, listen: false)
+        .leadAadharGenerateOTP(request);
 
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -543,7 +563,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
       productProvider.getLeadAadharGenerateOTP!.when(
         success: (AadhaarGenerateOTPResponseModel) async {
           var leadAadhaarResponse = AadhaarGenerateOTPResponseModel;
-          if(leadAadhaarResponse != null&&leadAadhaarResponse.data!=null) {
+          if (leadAadhaarResponse != null && leadAadhaarResponse.data != null) {
             String reqID = "";
             if (leadAadhaarResponse.data!.message != null) {
               print(leadAadhaarResponse.data!.message!);
@@ -558,17 +578,18 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                         subActivityId: widget.subActivityId,
                         document: request,
                         requestId: reqID)));
-          }else{
-            Utils.showToast(leadAadhaarResponse.error!.error!.message!, context);
+          } else {
+            Utils.showToast(
+                leadAadhaarResponse.error!.error!.message!, context);
           }
         },
         failure: (exception) {
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
@@ -578,9 +599,12 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   Future<void> getAadhaarData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    //final String? userId = prefsUtil.getString(USER_ID);
+    // final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    final String? userId = "ab9d9b2b-546b-47ff-b010-2e9ddbea0d12";
+    final String? productCode = "1";
 
-    Provider.of<DataProvider>(context, listen: false).getLeadAadhar(userId!,productCode!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadAadhar(userId!, productCode!);
   }
 }
