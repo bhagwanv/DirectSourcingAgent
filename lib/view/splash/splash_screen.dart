@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: 12,
               ),
             ),
-            const Row(
+            /*const Row(
                 mainAxisAlignment:MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -88,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ),
                 ]
-            ),
+            ),*/
             const SizedBox(height: 16)
           ],
         ),
