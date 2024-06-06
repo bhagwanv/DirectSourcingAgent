@@ -1,4 +1,32 @@
 class GetDsaPersonalDetailResModel {
+
+  String? gstStatus;
+  String? gstNumber;
+  String? firmType;
+  String? buisnessDocument;
+  String? documentId;
+  String? companyName;
+  String? fullName;
+  String? fatherOrHusbandName;
+  String? dob;
+  int? age;
+  String? address;
+  String? pinCode;
+  String? city;
+  String? state;
+  dynamic alternatePhoneNo;
+  dynamic emailId;
+  dynamic presentOccupation;
+  dynamic noOfYearsInCurrentEmployment;
+  dynamic qualification;
+  dynamic languagesKnown;
+  dynamic workingWithOther;
+  dynamic referneceName;
+  dynamic referneceContact;
+  dynamic workingLocation;
+  String? cityId;
+  String? stateId;
+
   GetDsaPersonalDetailResModel({
       this.gstStatus, 
       this.gstNumber, 
@@ -55,32 +83,6 @@ class GetDsaPersonalDetailResModel {
     cityId = json['cityId'];
     stateId = json['stateId'];
   }
-  dynamic gstStatus;
-  dynamic gstNumber;
-  dynamic firmType;
-  dynamic buisnessDocument;
-  dynamic documentId;
-  dynamic companyName;
-  String? fullName;
-  String? fatherOrHusbandName;
-  String? dob;
-  int? age;
-  String? address;
-  int? pinCode;
-  String? city;
-  String? state;
-  dynamic alternatePhoneNo;
-  dynamic emailId;
-  dynamic presentOccupation;
-  dynamic noOfYearsInCurrentEmployment;
-  dynamic qualification;
-  dynamic languagesKnown;
-  dynamic workingWithOther;
-  dynamic referneceName;
-  dynamic referneceContact;
-  dynamic workingLocation;
-  String? cityId;
-  String? stateId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
