@@ -21,6 +21,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -179,6 +181,9 @@ class DataProvider extends ChangeNotifier {
   PostPersonalDetailsResponseModel? get getPostPersonalDetailsResponseModel =>
       _getPostPersonalDetailsResponseModel;
 
+  Result<CustomerDetailUsingGstResponseModel,Exception>? _getCustomerDetailUsingGSTData;
+  Result<CustomerDetailUsingGstResponseModel,Exception>? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
+
   /*LeadBusinessDetailResponseModel? _getLeadBusinessDetailData;
   LeadBusinessDetailResponseModel? get getLeadBusinessDetailData => _getLeadBusinessDetailData;
 
@@ -258,6 +263,7 @@ class DataProvider extends ChangeNotifier {
 
   Result< DSAPersonalInfoModel, Exception>? _getDSAPersonalInfoData;
   Result< DSAPersonalInfoModel, Exception>? get getDSAPersonalInfoData => _getDSAPersonalInfoData;
+
   Result<PostLeadDsaPersonalDetailResModel,Exception>? _getpostLeadDSAPersonalDetailData;
   Result<PostLeadDsaPersonalDetailResModel,Exception>? get getpostLeadDSAPersonalDetailData => _getpostLeadDSAPersonalDetailData;
 
@@ -266,6 +272,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<ConnectorInfoResponce,Exception>? _getConnectorInfoData;
   Result<ConnectorInfoResponce,Exception>? get getConnectorInfoData => _getConnectorInfoData;
+  Result< GetDsaPersonalDetailResModel, Exception>? _getDsaPersonalDetailData;
+  Result< GetDsaPersonalDetailResModel, Exception>? get getDsaPersonalDetailData => _getDsaPersonalDetailData;
+
 
   /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
@@ -462,6 +471,11 @@ class DataProvider extends ChangeNotifier {
 
   }
 
+  Future<void> getCustomerDetailUsingGST(String GSTNumber) async {
+    _getCustomerDetailUsingGSTData = await apiService.getCustomerDetailUsingGST(GSTNumber);
+    notifyListeners();
+  }
+
   /*Future<void> getLeadBusinessDetail(String userId,String productCode) async {
     _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
     notifyListeners();
@@ -633,6 +647,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getConnectorInfo(String userId,String productCode) async {
     _getConnectorInfoData = await apiService.getConnectorInfo(userId,productCode);
+    notifyListeners();
+  }
+
+  Future<void> getDsaPersonalDetail(String userId,String productCode) async {
+    _getDsaPersonalDetailData = await apiService.getDsaPersonalDetail(userId,productCode);
     notifyListeners();
   }
 
