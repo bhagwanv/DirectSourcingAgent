@@ -1,6 +1,7 @@
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/providers/ThemeProvider.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
+import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
-      home:  SplashScreen(),
+      home:  direct_selling_agent(activityId: 1,subActivityId: 1,),
     );
   }
 }

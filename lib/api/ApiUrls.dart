@@ -68,5 +68,6 @@ class ApiUrls{
   final String GetDSAProfileType="/aggregator/LeadAgg/GetDSAProfileType";
 
   final String postLeadDSAPersonalDetail="/services/lead/v1/PostLeadDSAPersonalDetail";
+  final String getDSAPersonalDetail="/aggregator/LeadAgg/GetDSAPersonalDetail";
 
 }
