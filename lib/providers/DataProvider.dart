@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.dart';
+import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
+import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
@@ -257,6 +260,11 @@ class DataProvider extends ChangeNotifier {
   Result<PostLeadDsaPersonalDetailResModel,Exception>? _getpostLeadDSAPersonalDetailData;
   Result<PostLeadDsaPersonalDetailResModel,Exception>? get getpostLeadDSAPersonalDetailData => _getpostLeadDSAPersonalDetailData;
 
+  Result<CommanResponceModel,Exception>? _getConnectorSubmitData;
+  Result<CommanResponceModel,Exception>? get getConnectorSubmitData => _getConnectorSubmitData;
+
+  Result<ConnectorInfoResponce,Exception>? _getConnectorInfoData;
+  Result<ConnectorInfoResponce,Exception>? get getConnectorInfoData => _getConnectorInfoData;
 
   /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
@@ -612,6 +620,16 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> submitConnectorData(ConnectorInfoReqModel model) async {
+    _getConnectorSubmitData = await apiService.submitConnectorData(model);
+    notifyListeners();
+  }
+
+  Future<void> getConnectorInfo(String userId,String productCode) async {
+    _getConnectorInfoData = await apiService.getConnectorInfo(userId,productCode);
+    notifyListeners();
+  }
+
   Future<void> disposeAllProviderData() async {
     /*_getCustomerOrderSummaryData = null;
     _getCustomerTransactionListTwoData = null;
@@ -663,6 +681,8 @@ class DataProvider extends ChangeNotifier {
     _getElectricityStateListData = null;
     _getElectricityAuthenticationData = null;
     _getUserProfileResponse = null;
+    _getConnectorSubmitData = null;
+    _getConnectorInfoData = null;
     /*_InProgressScreen = null;*/
     notifyListeners();
   }

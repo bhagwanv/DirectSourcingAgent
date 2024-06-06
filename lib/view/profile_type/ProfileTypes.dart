@@ -367,7 +367,6 @@ class _ProfileTypesState extends State<ProfileTypes> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
-        .getDSAPersonalInfo(userId!, productCode!);
+    Provider.of<DataProvider>(context, listen: false).getDSAPersonalInfo(userId!, productCode!);
   }
 }

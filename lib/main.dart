@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   runApp( MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => DataProvider()),
@@ -20,6 +20,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -30,4 +31,6 @@ class MyApp extends StatelessWidget {
       home:  SplashScreen(),
     );
   }
+
+
 }
