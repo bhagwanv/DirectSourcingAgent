@@ -43,7 +43,6 @@ class direct_selling_agent extends StatefulWidget {
   State<direct_selling_agent> createState() => DirectSellingAgent();
 }
 
-
 class DirectSellingAgent extends State<direct_selling_agent> {
 
   bool _isSelected1 = false;
@@ -1519,6 +1518,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       return Container();
     }
   }
+
   Future<void> postLeadDSAPersonalDetail(BuildContext context, DataProvider productProvider,) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
@@ -1626,4 +1626,3 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   }
 
 }
-
