@@ -10,9 +10,9 @@ enum ValueType {
   integer,
   unknown,
 }
-class Utils {
-  static void showToast(String msg,BuildContext context) {
 
+class Utils {
+  static void showToast(String msg, BuildContext context) {
     Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () {
@@ -22,8 +22,10 @@ class Utils {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Alert",
-        style: TextStyle(),),
+      title: Text(
+        "Alert",
+        style: TextStyle(),
+      ),
       content: Text(msg, textAlign: TextAlign.justify),
       actions: [
         okButton,
@@ -46,15 +48,15 @@ class Utils {
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
 
   static removeTrailingZeros(String n) {
     return n.replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "");
   }
 
-  static void showBottomSheet(BuildContext context,String msg,String imagePath) {
+  static void showBottomSheet(
+      BuildContext context, String msg, String imagePath) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
@@ -62,12 +64,19 @@ class Utils {
               child: KycFailedWidgets(message: msg, imagePath: imagePath));
         });
   }
-  static void showBottomSheetKeyFailed(BuildContext context,String msg,String imagePath,int activityId,int subActivityId) {
+
+  static void showBottomSheetKeyFailed(BuildContext context, String msg,
+      String imagePath, int activityId, int subActivityId) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
           return Container(
-              child: AdharFailedWidgets(message: msg, imagePath: imagePath,activityId: activityId,subActivityId: subActivityId,));
+              child: AdharFailedWidgets(
+            message: msg,
+            imagePath: imagePath,
+            activityId: activityId,
+            subActivityId: subActivityId,
+          ));
         });
   }
 
@@ -78,9 +87,10 @@ class Utils {
   }
 
   static bool validateEmail(String value) {
-    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value);
   }
-
 
   static bool isValidIFSCCode(String? ifscCode) {
     if (ifscCode == null) return false;
@@ -88,7 +98,11 @@ class Utils {
     return regExp.hasMatch(ifscCode);
   }
 
-  static void showMsgDialog(BuildContext context, String title, String msg,) {
+  static void showMsgDialog(
+    BuildContext context,
+    String title,
+    String msg,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -155,12 +169,11 @@ class Utils {
     );
   }
 
-
-  static void hideKeyBored(BuildContext context){
+  static void hideKeyBored(BuildContext context) {
     FocusScope.of(context).requestFocus(new FocusNode());
   }
 
-  static String dateFormate(BuildContext context,String date){
+  static String dateFormate(BuildContext context, String date) {
     String inputString = date;
     DateTime dateTime = DateTime.parse(inputString);
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
@@ -179,7 +192,7 @@ class Utils {
     return '$date | $time';
   }
 
-  static String dateMonthFormate(String date){
+  static String dateMonthFormate(String date) {
     String inputString = date;
 
     // Parse the input string into a DateTime object
@@ -189,7 +202,6 @@ class Utils {
     String formattedDate = DateFormat('dd MMM').format(dateTime);
 
     return formattedDate;
-
   }
 
   static String dateMonthAndYearFormat(String date) {

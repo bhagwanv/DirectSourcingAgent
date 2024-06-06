@@ -154,10 +154,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           body: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
                 if (productProvider.getBankDetailsData == null && isLoading) {
-                  return Center(child: Utils.onLoading(context, ""));
+                  return Container();
                 } else {
                   if (productProvider.getBankDetailsData != null && isLoading) {
-                    Navigator.of(context, rootNavigator: true).pop();
+                   // Navigator.of(context, rootNavigator: true).pop();
                     isLoading = false;
                   }
 
@@ -438,9 +438,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
-    Utils.onLoading(context, "");
+    //Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).getBankList();
-    Navigator.of(context, rootNavigator: true).pop();
+    //Navigator.of(context, rootNavigator: true).pop();
   }
 
   Widget bankListWidget(DataProvider productProvider) {

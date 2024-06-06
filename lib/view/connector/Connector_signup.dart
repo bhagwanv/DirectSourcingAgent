@@ -1,8 +1,24 @@
+import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
+import 'package:direct_sourcing_agent/api/ApiService.dart';
+import 'package:direct_sourcing_agent/api/FailureException.dart';
+import 'package:direct_sourcing_agent/providers/DataProvider.dart';
+import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
+import 'package:direct_sourcing_agent/utils/CustomGifLoader.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
+import 'package:direct_sourcing_agent/utils/customer_sequence_logic.dart';
+import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
+import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
+import 'package:direct_sourcing_agent/view/splash/model/GetLeadResponseModel.dart';
+import 'package:direct_sourcing_agent/view/splash/model/LeadCurrentRequestModel.dart';
+import 'package:direct_sourcing_agent/view/splash/model/LeadCurrentResponseModel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/constant.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
@@ -16,25 +32,44 @@ class Connector_signup extends StatefulWidget {
 
   @override
   State<Connector_signup> createState() => ConnectorSignup();
-
 }
 
 class ConnectorSignup extends State<Connector_signup> {
-
   var updateData = true;
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _fatherNameController = TextEditingController();
   final TextEditingController _dateoFBirthController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addreshController = TextEditingController();
-  final TextEditingController _alternetMobileNumberController = TextEditingController();
+  final TextEditingController _alternetMobileNumberController =
+      TextEditingController();
   final TextEditingController _emailIDController = TextEditingController();
-  final TextEditingController _presentEmpolymentController = TextEditingController();
+  final TextEditingController _presentEmpolymentController =
+      TextEditingController();
+  final TextEditingController _LanguagesController = TextEditingController();
   final TextEditingController _refranceNameController = TextEditingController();
-  final TextEditingController _refranceContectController = TextEditingController();
-  final TextEditingController _refranceLocationController = TextEditingController();
+  final TextEditingController _refranceContectController =
+      TextEditingController();
+  final TextEditingController _refranceLocationController =
+      TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _satateController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
   bool _isSelected1 = false;
   bool _isSelected2 = false;
+
+  String minDateTime = '2010-05-12';
+  String maxDateTime = '2030-11-25';
+  String initDateTime = '2021-08-31';
+
+  final bool _showTitle = true;
+  final DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
+  final String _format = 'yyyy-MMMM-dd';
+  String workingWithParty = "";
+
+  DateTime? _dateTime;
+  String? slectedDate = "";
+  ConnectorInfoResponce? connectorInfoResponceModel;
 
   void _handleCheckboxChange(int index, bool? value) {
     setState(() {
@@ -48,221 +83,504 @@ class ConnectorSignup extends State<Connector_signup> {
     });
   }
 
+  void _showDatePicker(BuildContext context) {
+    DatePicker.showDatePicker(
+      context,
+      pickerTheme: DateTimePickerTheme(
+        cancel: const Icon(
+          Icons.close,
+          color: Colors.black38,
+        ),
+        title: 'Date of Birth',
+        titleTextStyle: const TextStyle(fontSize: 14),
+        showTitle: _showTitle,
+        selectionOverlayColor: Colors.blue,
+        // showTitle: false,
+        // titleHeight: 80,
+        // confirm: const Text('确定', style: TextStyle(color: Colors.blue)),
+      ),
+      minDateTime: DateTime.parse(minDateTime),
+      maxDateTime: DateTime.parse(maxDateTime),
+      initialDateTime: _dateTime,
+      dateFormat: _format,
+      locale: _locale,
+      onClose: () => debugPrint("----- onClose -----"),
+      onCancel: () => debugPrint('onCancel'),
+      onChange: (dateTime, List<int> index) {
+        setState(() {
+          _dateTime = dateTime;
+        });
+      },
+      onConfirm: (dateTime, List<int> index) {
+        setState(() {
+          _dateTime = dateTime;
+          slectedDate = Utils.dateFormate(context, _dateTime.toString());
+          if (kDebugMode) {
+            print("$_dateTime");
+          }
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   getConnectorInfoApi();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     bool isTermsChecks = false;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 22),
-                Center(
-                  child: Text('Sign Up',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.urbanist(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      )),
-                ),
-                SizedBox(height: 27),
-                Center(
-                  child: Text('Please enter below details',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.urbanist(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      )),
-                ),
-                SizedBox(height: 30),
-        
-                CommonTextField(
-                  controller: _firstNameController,
-                  enabled: updateData,
-                  hintText: "Full Name",
-                  labelText: "Full Name",
-                ),
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _fatherNameController,
-                  enabled: updateData,
-                  hintText: "Father Name ",
-                  labelText: "Father Name",
-                ),
-                SizedBox(height: 20),
-                InkWell(
-                  onTap: updateData
-                      ? () {
-                    //_showDatePicker(context);
-                  }
-                      : null,
-                  // Set onTap to null when field is disabled
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: textFiledBackgroundColour,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: kPrimaryColor),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                           'Date of Birth',
-                            style: const TextStyle(fontSize: 16.0),
-                          ),
-                          const Icon(Icons.date_range,color: kPrimaryColor,),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _ageController,
-                  enabled: updateData,
-                  keyboardType: TextInputType.number,
-                  hintText: "Age",
-                  labelText: "Age",
-                ),
-                SizedBox(height: 20),
-        
-                CommonTextField(
-                  controller: _addreshController,
-                  enabled: updateData,
-                  hintText: "Address",
-                  labelText: "Address",
-                ),
-        
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _alternetMobileNumberController,
-                  enabled: updateData,
-                  inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
-                    LengthLimitingTextInputFormatter(10)],
-                  keyboardType: TextInputType.number,
-                  hintText: "Alternate Contact Number",
-                  labelText: "Alternate Contact Number",
-                ),
-        
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _emailIDController,
-                  enabled: updateData,
-                  keyboardType: TextInputType.emailAddress,
-                  hintText: "E Mail id",
-                  labelText: "E Mail id",
-                ),
-        
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _presentEmpolymentController,
-                  enabled: updateData,
-                  hintText: "Present Employment",
-                  labelText: "Present Employment",
-                ),
-        
-                SizedBox(height: 20),
-        
-                Text("Presently working with other Party/bank/NBFC \nFinancial Institute?",
-                  style: GoogleFonts.urbanist(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                )),
-                SizedBox(height: 10),
-        
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+            if (productProvider.getConnectorInfoData == null) {
+              return Container();
+            } else {
+              if (productProvider.getConnectorInfoData != null) {
+               //Navigator.of(context, rootNavigator: true).pop();
+                if (productProvider.getConnectorInfoData != null) {
+                  productProvider.getConnectorInfoData!.when(
+                    success: (data) {
+                      connectorInfoResponceModel =data;
+                      _firstNameController.text=connectorInfoResponceModel!.fullName!;
+                      _fatherNameController.text= connectorInfoResponceModel!.fatherName!;
+                      slectedDate= Utils.dateFormate(context,connectorInfoResponceModel!.dob!);
+                      _ageController.text=connectorInfoResponceModel!.age.toString();
+                     _addreshController.text=connectorInfoResponceModel!.address!;
+
+                      if(connectorInfoResponceModel?.referenceName!=null) {
+                        _refranceNameController.text = connectorInfoResponceModel!.referenceName!;
+                      }
+
+                      if(connectorInfoResponceModel!.referneceContact!=null) {
+                        _refranceNameController.text = connectorInfoResponceModel!.referneceContact!;
+                      }
+
+                      if(connectorInfoResponceModel!.languagesKnown!=null) {
+                        _LanguagesController.text = connectorInfoResponceModel!.languagesKnown!;
+                      }
+
+                      if(connectorInfoResponceModel!.referneceLocation!=null) {
+                        _refranceLocationController.text = connectorInfoResponceModel!.referneceLocation!;
+                      }
+
+                      if(connectorInfoResponceModel!.presentEmployment!=null) {
+                        _presentEmpolymentController.text = connectorInfoResponceModel!.presentEmployment!;
+                      }
+
+                     if(connectorInfoResponceModel!.emailId!=null) {
+                      _emailIDController.text = connectorInfoResponceModel!.emailId!;
+                     }
+
+                      if(connectorInfoResponceModel!.emailId!=null) {
+                        _alternetMobileNumberController.text = connectorInfoResponceModel!.alternatePhoneNo!;
+                      }
+
+                      if(connectorInfoResponceModel!.state!=null) {
+                        _satateController.text = connectorInfoResponceModel!.state!;
+                      }
+
+                      if(connectorInfoResponceModel!.city!=null) {
+                        _cityController.text = connectorInfoResponceModel!.city!;
+                      }
+
+                      if(connectorInfoResponceModel!.pincode!=null) {
+                        _pincodeController.text = connectorInfoResponceModel!.pincode!.toString();
+                      }
+
+
+                    },
+                    failure: (exception) {
+                      if (exception is ApiException) {
+                        if (exception.statusCode == 401) {
+                          productProvider.disposeAllProviderData();
+                          ApiService().handle401(context);
+                        } else {
+                          Utils.showToast(exception.errorMessage, context);
+                        }
+                      }
+                    },
+                  );
+                }
+              }
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: CheckboxTerm(
-                        content: "Yes",
-                        isChecked: _isSelected1,
-                        onChanged: (bool? value) {
-                          _handleCheckboxChange(1, value);
-                        },
+                    SizedBox(height: 30),
+                    Center(
+                      child: Text('Sign Up',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ),
+                    SizedBox(height: 30),
+                    Center(
+                      child: Text('Please enter below details',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          )),
+                    ),
+                    SizedBox(height: 30),
+                    CommonTextField(
+                      controller: _firstNameController,
+                      enabled: updateData,
+                      hintText: "Full Name",
+                      labelText: "Full Name",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _fatherNameController,
+                      enabled: updateData,
+                      hintText: "Father Name ",
+                      labelText: "Father Name",
+                    ),
+                    SizedBox(height: 20),
+                    InkWell(
+                      onTap: updateData
+                          ? () {
+                              _showDatePicker(context);
+                            }
+                          : null,
+                      // Set onTap to null when field is disabled
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: textFiledBackgroundColour,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: kPrimaryColor),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                slectedDate!.isNotEmpty
+                                    ? '$slectedDate'
+                                    : 'Date of Birth',
+                                style: const TextStyle(fontSize: 16.0),
+                              ),
+                              const Icon(
+                                Icons.date_range,
+                                color: kPrimaryColor,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: CheckboxTerm(
-                        content: "NO",
-                        isChecked: _isSelected2,
-                        onChanged: (bool? value) {
-                          _handleCheckboxChange(2, value);
-                        },
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _ageController,
+                      enabled: updateData,
+                      keyboardType: TextInputType.number,
+                      hintText: "Age",
+                      labelText: "Age",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _addreshController,
+                      enabled: updateData,
+                      hintText: "Address",
+                      labelText: "Address",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _pincodeController,
+                      enabled: updateData,
+                      keyboardType: TextInputType.number,
+                      hintText: "Pin Code",
+                      labelText: "Pin Code",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _satateController,
+                      enabled: updateData,
+                      hintText: "State",
+                      labelText: "State",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _cityController,
+                      enabled: updateData,
+                      hintText: "City",
+                      labelText: "City",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _alternetMobileNumberController,
+                      enabled: updateData,
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[A-Z0-9]'))),
+                        LengthLimitingTextInputFormatter(10)
+                      ],
+                      keyboardType: TextInputType.number,
+                      hintText: "Alternate Contact Number",
+                      labelText: "Alternate Contact Number",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _emailIDController,
+                      enabled: updateData,
+                      keyboardType: TextInputType.emailAddress,
+                      hintText: "E Mail id",
+                      labelText: "E Mail id",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _presentEmpolymentController,
+                      enabled: updateData,
+                      hintText: "Present Employment",
+                      labelText: "Present Employment",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _LanguagesController,
+                      enabled: updateData,
+                      hintText: "Languages Known",
+                      labelText: "Languages Known",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _refranceLocationController,
+                      enabled: updateData,
+                      hintText: "Location",
+                      labelText: "Location",
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                        "Presently working with other Party/bank/NBFC \nFinancial Institute?",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: CheckboxTerm(
+                            content: "Yes",
+                            isChecked: _isSelected1,
+                            onChanged: (bool? value) {
+                              workingWithParty = "Yes";
+                              _handleCheckboxChange(1, value);
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: CheckboxTerm(
+                            content: "NO",
+                            isChecked: _isSelected2,
+                            onChanged: (bool? value) {
+                              workingWithParty = "NO";
+                              _handleCheckboxChange(2, value);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Text("Reference",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _refranceNameController,
+                      enabled: updateData,
+                      hintText: "Name",
+                      labelText: "Name",
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextField(
+                      controller: _refranceContectController,
+                      enabled: updateData,
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[A-Z0-9]'))),
+                        LengthLimitingTextInputFormatter(10)
+                      ],
+                      keyboardType: TextInputType.number,
+                      hintText: "Contact No",
+                      labelText: "Contact No",
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: Column(
+                        children: [
+                          CommonElevatedButton(
+                            onPressed: () async {
+                              submitConnectorApi(context, productProvider);
+                            },
+                            text: "Next",
+                            upperCase: true,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-        
-                Text("Reference",
-                    style: GoogleFonts.urbanist(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                    )),
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _refranceNameController,
-                  enabled: updateData,
-                  hintText: "Name",
-                  labelText: "Name",
-                ),
-        
-                SizedBox(height: 20),
-                CommonTextField(
-                  controller: _refranceContectController,
-                  enabled: updateData,
-                  inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
-                    LengthLimitingTextInputFormatter(10)],
-                  keyboardType: TextInputType.number,
-                  hintText: "Contact No",
-                  labelText: "Contact No",
-                ),
-        
-                SizedBox(height: 20),
-        
-                CommonTextField(
-                  controller: _refranceLocationController,
-                  enabled: updateData,
-                  hintText: "Location",
-                  labelText: "Location",
-                ),
-        
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(left:10,right:10,top: 20),
-                  child: Column(
-                    children: [
-                      CommonElevatedButton(
-                        onPressed: () async {
-        
-                        },
-                        text: "Next",
-                        upperCase: true,
-                      ),
-                    ],
-                  ),
-                ),
-        
-              ],
-            ),
-          ),
+              );
+            }
+          }),
         ),
       ),
     );
   }
-  
+
+  void submitConnectorApi(
+      BuildContext context, DataProvider productProvider) async {
+    if (_firstNameController.text.isEmpty) {
+      Utils.showToast("Please Enter Full Name", context);
+    } else if (_fatherNameController.text.isEmpty) {
+      Utils.showToast("Please Enter Father Name", context);
+    } else if (slectedDate!.isEmpty) {
+      Utils.showToast("Please Select Date Of Birth", context);
+    } else if (_ageController.text.isEmpty) {
+      Utils.showToast("Please Enter age", context);
+    } else if (_addreshController.text.isEmpty) {
+      Utils.showToast("Please Enter Address", context);
+    } else if (_pincodeController.text.isEmpty) {
+      Utils.showToast("Please Enter Pin Code", context);
+    } else if (_satateController.text.isEmpty) {
+      Utils.showToast("Please Enter State", context);
+    } else if (_cityController.text.isEmpty) {
+      Utils.showToast("Please Enter City", context);
+    } else if (_alternetMobileNumberController.text.isEmpty) {
+      Utils.showToast("Please Enter Alternate Mobile Number", context);
+    } else if (!Utils.isPhoneNoValid(_alternetMobileNumberController.text)) {
+      Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
+    } else if (_emailIDController.text.isEmpty) {
+      Utils.showToast("Please Enter Email ID", context);
+    } else if (_presentEmpolymentController.text.isEmpty) {
+      Utils.showToast("Please Enter present Employment", context);
+    } else if (_LanguagesController.text.isEmpty) {
+      Utils.showToast("Please Enter Languages", context);
+    } else if (workingWithParty.isEmpty) {
+      Utils.showToast("Please Select Party", context);
+    } else if (_refranceNameController.text.isEmpty) {
+      Utils.showToast("Please Enter Reference Name ", context);
+    } else if (_refranceContectController.text.isEmpty) {
+      Utils.showToast("Please Enter Reference Contact No ", context);
+    } else if (_refranceLocationController.text.isEmpty) {
+      Utils.showToast("Please Enter Reference Location", context);
+    } else {
+      Utils.onLoading(context, "");
+      final prefsUtil = await SharedPref.getInstance();
+      int? leadID = prefsUtil.getInt(LEADE_ID);
+      String? userID = prefsUtil.getString(USER_ID);
+      int? companyID = prefsUtil.getInt(COMPANY_ID);
+      final String? loginMobilNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+      var submitModel = ConnectorInfoReqModel(
+          leadId: leadID,
+          activityId: widget.activityId,
+          subActivityId: widget.subActivityId,
+          userId: userID,
+          companyId: companyID,
+          leadMasterId: leadID,
+          fullName: _firstNameController.text.toString(),
+          fatherName: _fatherNameController.text.toString(),
+          alternatePhoneNo: _alternetMobileNumberController.text.toString(),
+          emailId: _emailIDController.text.toString(),
+          presentEmployment: _presentEmpolymentController.text.toString(),
+          languagesKnown: _LanguagesController.text.toString(),
+          workingWithOther: workingWithParty,
+          referenceName: _refranceNameController.text.toString(),
+          referneceContact: _refranceContectController.text.toString(),
+          WorkingLocation: _refranceLocationController.text.toString(),
+          currentAddressId: 0,
+          mobileNo: loginMobilNumber,City: connectorInfoResponceModel!.cityId.toString(),State: connectorInfoResponceModel!.stateId!.toString(),Pincode:connectorInfoResponceModel!.pincode!.toString() ,Address: connectorInfoResponceModel!.address!);
+      print(submitModel.toJson().toString());
+      await productProvider.submitConnectorData(submitModel);
+      Navigator.of(context, rootNavigator: true).pop();
+      if (productProvider.getConnectorSubmitData != null) {
+        productProvider.getConnectorSubmitData!.when(
+          success: (data) {
+            if (data.isSuccess!) {
+              fetchData(context);
+            } else {
+              Utils.showToast(data.message!, context);
+            }
+          },
+          failure: (exception) {
+            if (exception is ApiException) {
+              if (exception.statusCode == 401) {
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              } else {
+                Utils.showToast(exception.errorMessage, context);
+              }
+            }
+          },
+        );
+      }
+    }
+  }
+
+  Future<void> fetchData(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
+        activityId: widget.activityId,
+        subActivityId: widget.subActivityId,
+        userId: prefsUtil.getString(USER_ID),
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData = await ApiService()
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
+
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
+
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
+    }
+  }
+
+  void getConnectorInfoApi() async {
+    final prefsUtil = await SharedPref.getInstance();
+    String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    Provider.of<DataProvider>(context, listen: false)
+        .getConnectorInfo(userId!, productCode!);
+  }
 }

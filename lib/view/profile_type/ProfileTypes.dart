@@ -69,6 +69,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
   @override
   Widget build(BuildContext context) {
     bool isTermsChecks = false;
+
     return Scaffold(body: SafeArea(
       child: Consumer<DataProvider>(builder: (context, productProvider, child) {
         if (productProvider.getDSAPersonalInfoData == null) {
@@ -159,6 +160,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
           }
         } else {
           if (productProvider.getDSAPersonalInfoData != null) {
+           // Navigator.of(context, rootNavigator: true).pop();
             if (productProvider.getDSAPersonalInfoData != null) {
               productProvider.getDSAPersonalInfoData!.when(
                 success: (data) {

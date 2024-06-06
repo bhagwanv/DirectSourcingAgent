@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.dart';
+import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
+import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
@@ -20,6 +23,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -888,6 +893,62 @@ class ApiService {
       return Failure(e);
     }
   }
+
+
+
+
+  Future<Result<CustomerDetailUsingGstResponseModel,Exception>> getCustomerDetailUsingGST(String GSTNumber) async {
+
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'),headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final CustomerDetailUsingGstResponseModel responseModel = CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+
+
+
+    /*if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final CustomerDetailUsingGstResponseModel responseModel =
+        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }*/
+  }
+
 
   //Business Detail Module
 /*  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
@@ -1847,6 +1908,129 @@ class ApiService {
     } on Exception catch (e) {
       return Failure(e);
     }
+  }
+
+  Future<Result<CommanResponceModel, Exception>> submitConnectorData(ConnectorInfoReqModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(
+                '${apiUrls.baseUrl + apiUrls.postLeadDSAPersonalDetail}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final CommanResponceModel responseModel =
+            CommanResponceModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<ConnectorInfoResponce, Exception>> getConnectorInfo(
+      String userId, String productCode) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.GetConnectorPersonalDetail}?UserId=$userId&productCode=$productCode'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        );
+        print(response.body); // Pr
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final ConnectorInfoResponce responseModel =
+            ConnectorInfoResponce.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<GetDsaPersonalDetailResModel,Exception>> getDsaPersonalDetail(String UserId,String productCode) async {
+
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getDSAPersonalDetail}?UserId=$UserId&productCode=$productCode'),headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final GetDsaPersonalDetailResModel responseModel = GetDsaPersonalDetailResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+
+
+
+    /*if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final CustomerDetailUsingGstResponseModel responseModel =
+        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }*/
   }
 
 }
