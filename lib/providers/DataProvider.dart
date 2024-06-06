@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
@@ -54,7 +55,7 @@ import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 
 class DataProvider extends ChangeNotifier {
   final ApiService apiService = ApiService();
-
+  bool _isLoading = false;
 
   GetLeadResponseModel? _getLeadData;
 
@@ -607,9 +608,14 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDSAPersonalInfo(String userId,String productCode) async {
-    _getDSAPersonalInfoData = await apiService.getDSAPersonalInfo(userId,productCode);
+  Future<void> getDSAPersonalInfo(BuildContext context, String userId,String productCode) async {
+    _isLoading = true;
     notifyListeners();
+    Utils.onLoading(context, "");
+    _getDSAPersonalInfoData = await apiService.getDSAPersonalInfo(userId,productCode);
+    _isLoading = false;
+    notifyListeners();
+    Navigator.of(context).pop();
   }
 
   Future<void> disposeAllProviderData() async {

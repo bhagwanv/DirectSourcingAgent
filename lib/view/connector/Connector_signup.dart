@@ -52,16 +52,16 @@ class ConnectorSignup extends State<Connector_signup> {
   @override
   Widget build(BuildContext context) {
     bool isTermsChecks = false;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 22),
                 Center(
                   child: Text('Sign Up',
                       textAlign: TextAlign.center,
@@ -71,7 +71,7 @@ class ConnectorSignup extends State<Connector_signup> {
                         fontWeight: FontWeight.w600,
                       )),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 27),
                 Center(
                   child: Text('Please enter below details',
                       textAlign: TextAlign.center,
@@ -82,7 +82,7 @@ class ConnectorSignup extends State<Connector_signup> {
                       )),
                 ),
                 SizedBox(height: 30),
-
+        
                 CommonTextField(
                   controller: _firstNameController,
                   enabled: updateData,
@@ -136,14 +136,14 @@ class ConnectorSignup extends State<Connector_signup> {
                   labelText: "Age",
                 ),
                 SizedBox(height: 20),
-
+        
                 CommonTextField(
                   controller: _addreshController,
                   enabled: updateData,
                   hintText: "Address",
                   labelText: "Address",
                 ),
-
+        
                 SizedBox(height: 20),
                 CommonTextField(
                   controller: _alternetMobileNumberController,
@@ -154,7 +154,7 @@ class ConnectorSignup extends State<Connector_signup> {
                   hintText: "Alternate Contact Number",
                   labelText: "Alternate Contact Number",
                 ),
-
+        
                 SizedBox(height: 20),
                 CommonTextField(
                   controller: _emailIDController,
@@ -163,7 +163,7 @@ class ConnectorSignup extends State<Connector_signup> {
                   hintText: "E Mail id",
                   labelText: "E Mail id",
                 ),
-
+        
                 SizedBox(height: 20),
                 CommonTextField(
                   controller: _presentEmpolymentController,
@@ -171,9 +171,9 @@ class ConnectorSignup extends State<Connector_signup> {
                   hintText: "Present Employment",
                   labelText: "Present Employment",
                 ),
-
+        
                 SizedBox(height: 20),
-                
+        
                 Text("Presently working with other Party/bank/NBFC \nFinancial Institute?",
                   style: GoogleFonts.urbanist(
                   fontSize: 14,
@@ -181,7 +181,7 @@ class ConnectorSignup extends State<Connector_signup> {
                   fontWeight: FontWeight.w400,
                 )),
                 SizedBox(height: 10),
-
+        
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -206,7 +206,7 @@ class ConnectorSignup extends State<Connector_signup> {
                   ],
                 ),
                 SizedBox(height: 10),
-
+        
                 Text("Reference",
                     style: GoogleFonts.urbanist(
                       fontSize: 14,
@@ -220,7 +220,7 @@ class ConnectorSignup extends State<Connector_signup> {
                   hintText: "Name",
                   labelText: "Name",
                 ),
-
+        
                 SizedBox(height: 20),
                 CommonTextField(
                   controller: _refranceContectController,
@@ -231,16 +231,16 @@ class ConnectorSignup extends State<Connector_signup> {
                   hintText: "Contact No",
                   labelText: "Contact No",
                 ),
-
+        
                 SizedBox(height: 20),
-
+        
                 CommonTextField(
                   controller: _refranceLocationController,
                   enabled: updateData,
                   hintText: "Location",
                   labelText: "Location",
                 ),
-
+        
                 SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left:10,right:10,top: 20),
@@ -248,7 +248,7 @@ class ConnectorSignup extends State<Connector_signup> {
                     children: [
                       CommonElevatedButton(
                         onPressed: () async {
-
+        
                         },
                         text: "Next",
                         upperCase: true,
@@ -256,7 +256,7 @@ class ConnectorSignup extends State<Connector_signup> {
                     ],
                   ),
                 ),
-
+        
               ],
             ),
           ),

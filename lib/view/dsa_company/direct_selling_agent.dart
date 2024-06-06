@@ -1606,7 +1606,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       );
 
       final leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
       as LeadCurrentResponseModel?;
 
       final getLeadData = await ApiService().getLeads(
