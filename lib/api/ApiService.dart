@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:direct_sourcing_agent/inprogress/model/InProgressScreenModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
@@ -391,7 +392,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         // var base_url = prefsUtil.getString(BASE_URL);
          var token = await prefsUtil.getString(TOKEN);
-        
+
         final response = await interceptor.post(
             Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadPAN}'),
             headers: {
@@ -527,7 +528,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
 */
         var token = await prefsUtil.getString(TOKEN);
-      
+
         final response = await interceptor.post(
             Uri.parse(apiUrls.baseUrl + apiUrls.postLeadAadharVerifyOTP),
             headers: {
@@ -1772,6 +1773,9 @@ class ApiService {
     }
   }
 
+
+  }*/
+
   Future<Result<InProgressScreenModel, Exception>> leadDataOnInProgressScreen(
       int leadId) async {
     if (await internetConnectivity.networkConnectivity()) {
@@ -1780,7 +1784,8 @@ class ApiService {
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'),
+            '${apiUrls.baseUrl +
+                apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -1790,7 +1795,7 @@ class ApiService {
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
         final InProgressScreenModel responseModel =
-            InProgressScreenModel.fromJson(jsonData);
+        InProgressScreenModel.fromJson(jsonData);
         return Success(responseModel);
       }
       if (response.statusCode == 401) {
@@ -1801,7 +1806,7 @@ class ApiService {
     } else {
       throw Exception('No internet connection');
     }
-  }*/
+  }
 
   Future<Result<ChooseUserTypeResponceModel, Exception>> getChooseUserType(ChooseUserTypeRequestModel model) async {
     try {
@@ -1918,7 +1923,7 @@ class ApiService {
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
             Uri.parse(
-                '${apiUrls.baseUrl + apiUrls.postLeadDSAPersonalDetail}'),
+                '${apiUrls.baseUrl + apiUrls.PostLeadConnectorPersonalDetail}'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'

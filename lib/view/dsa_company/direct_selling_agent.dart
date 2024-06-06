@@ -1390,11 +1390,12 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         failure: (exception) {
           // Handle failure
           if (exception is ApiException) {
-            if (exception.statusCode == 401) {
+            if(exception.statusCode==401){
+              Utils.showToast(exception.errorMessage,context);
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            } else {
-              Utils.showToast(exception.errorMessage, context);
+            }else{
+              Utils.showToast("Something went Wrong",context);
             }
           }
         },
@@ -1576,11 +1577,12 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         failure: (exception) {
           // Handle failure
           if (exception is ApiException) {
-            if (exception.statusCode == 401) {
+            if(exception.statusCode==401){
+              Utils.showToast(exception.errorMessage,context);
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            } else {
-              Utils.showToast(exception.errorMessage, context);
+            }else{
+              Utils.showToast("Something went Wrong",context);
             }
           }
         },

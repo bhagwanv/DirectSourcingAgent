@@ -1,3 +1,4 @@
+import 'package:direct_sourcing_agent/inprogress/ProfileReview.dart';
 import 'package:direct_sourcing_agent/utils/screen_type.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:flutter/material.dart';
@@ -89,10 +90,10 @@ ScreenType? customerSequence(
           );*/
           return ScreenType.businessInfo;
         } else if (leadCurrentActivity.activityName == "Inprogress") {
-          /*Navigator.of(context).pushReplacement(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => ProfileReview(pageType: pageType)),
-          );*/
+          );
           return ScreenType.Inprogress;
         } else if (leadCurrentActivity.activityName == "Show Offer") {
           /*Navigator.of(context).pushReplacement(
@@ -230,10 +231,10 @@ ScreenType? customerSequence(
           );*/
           return ScreenType.businessInfo;
         } else if (leadCurrentActivity.activityName == "Inprogress") {
-          /*Navigator.of(context).push(
+          Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => ProfileReview(pageType: pageType)),
-          );*/
+          );
           return ScreenType.Inprogress;
         } else if (leadCurrentActivity.activityName == "Show Offer") {
           /*Navigator.of(context).pushReplacement(
