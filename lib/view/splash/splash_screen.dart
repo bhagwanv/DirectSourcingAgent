@@ -146,7 +146,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
               }else{
-                Utils.showToast(exception.errorMessage,context);
+                Utils.showToast("Something went Wrong",context);
               }
             }
           },

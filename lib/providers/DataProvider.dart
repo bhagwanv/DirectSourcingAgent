@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:direct_sourcing_agent/inprogress/model/InProgressScreenModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
@@ -276,8 +277,8 @@ class DataProvider extends ChangeNotifier {
   Result< GetDsaPersonalDetailResModel, Exception>? get getDsaPersonalDetailData => _getDsaPersonalDetailData;
 
 
-  /*Result<InProgressScreenModel,Exception>? _InProgressScreen;
-  Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;*/
+  Result<InProgressScreenModel,Exception>? _InProgressScreen;
+  Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -593,10 +594,17 @@ class DataProvider extends ChangeNotifier {
   }
 
 
-  Future<void> leadDataOnInProgressScreen(int leadId) async {
-    _InProgressScreen = await apiService.leadDataOnInProgressScreen(leadId);
+  */
+
+  Future<void> leadDataOnInProgressScreen(BuildContext context, int leadId) async {
+    _isLoading = true;
     notifyListeners();
-  }*/
+    Utils.onLoading(context, "");
+    _InProgressScreen = await apiService.leadDataOnInProgressScreen(leadId);
+    _isLoading = false;
+    notifyListeners();
+    Navigator.of(context).pop();
+  }
 
   Future<void> getIvrsNumberExist(String UserId,String IvrsNumber) async {
     _getIvrsData = await apiService.getIvrsNumberExist(UserId,IvrsNumber);

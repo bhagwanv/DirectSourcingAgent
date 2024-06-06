@@ -159,15 +159,15 @@ class ConnectorSignup extends State<Connector_signup> {
                       }
 
                       if(connectorInfoResponceModel!.referneceContact!=null) {
-                        _refranceNameController.text = connectorInfoResponceModel!.referneceContact!;
+                        _refranceContectController.text = connectorInfoResponceModel!.referneceContact!;
                       }
 
                       if(connectorInfoResponceModel!.languagesKnown!=null) {
                         _LanguagesController.text = connectorInfoResponceModel!.languagesKnown!;
                       }
 
-                      if(connectorInfoResponceModel!.referneceLocation!=null) {
-                        _refranceLocationController.text = connectorInfoResponceModel!.referneceLocation!;
+                      if(connectorInfoResponceModel!.workingLocation!=null) {
+                        _refranceLocationController.text = connectorInfoResponceModel!.workingLocation!;
                       }
 
                       if(connectorInfoResponceModel!.presentEmployment!=null) {
@@ -527,11 +527,12 @@ class ConnectorSignup extends State<Connector_signup> {
           },
           failure: (exception) {
             if (exception is ApiException) {
-              if (exception.statusCode == 401) {
+              if(exception.statusCode==401){
+                Utils.showToast(exception.errorMessage,context);
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
-              } else {
-                Utils.showToast(exception.errorMessage, context);
+              }else{
+                Utils.showToast("Something went Wrong",context);
               }
             }
           },

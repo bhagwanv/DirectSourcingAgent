@@ -11,10 +11,10 @@ class ConnectorInfoResponce {
   String? workingWithOther;
   String? referenceName;
   String? referneceContact;
-  String? referneceLocation;
-  int? pincode;
-  int? cityId;
-  int? stateId;
+  String? workingLocation;
+  String? pincode;
+  String? cityId;
+  String? stateId;
   String? city;
   String? state;
 
@@ -31,7 +31,7 @@ class ConnectorInfoResponce {
         this.workingWithOther,
         this.referenceName,
         this.referneceContact,
-        this.referneceLocation,
+        this.workingLocation,
         this.pincode,
         this.cityId,
         this.stateId,
@@ -51,7 +51,7 @@ class ConnectorInfoResponce {
     workingWithOther = json['workingWithOther'];
     referenceName = json['referenceName'];
     referneceContact = json['referneceContact'];
-    referneceLocation = json['referneceLocation'];
+    workingLocation = json['workingLocation'];
     pincode = json['pincode'];
     cityId = json['cityId'];
     stateId = json['stateId'];
@@ -73,7 +73,7 @@ class ConnectorInfoResponce {
     data['workingWithOther'] = this.workingWithOther;
     data['referenceName'] = this.referenceName;
     data['referneceContact'] = this.referneceContact;
-    data['referneceLocation'] = this.referneceLocation;
+    data['workingLocation'] = this.workingLocation;
     data['pincode'] = this.pincode;
     data['cityId'] = this.cityId;
     data['stateId'] = this.stateId;
