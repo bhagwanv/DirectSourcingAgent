@@ -70,8 +70,7 @@ class Utils {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return Container(
-              child: AdharFailedWidgets(
+          return Container(child: AdharFailedWidgets(
             message: msg,
             imagePath: imagePath,
             activityId: activityId,

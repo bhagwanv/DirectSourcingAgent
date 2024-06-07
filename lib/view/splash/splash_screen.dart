@@ -129,7 +129,11 @@ class _SplashScreenState extends State<SplashScreen> {
             prefsUtil.saveInt(COMPANY_ID, data.companyId!);
             prefsUtil.saveInt(PRODUCT_ID, data.productId!);
             prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-            prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+            prefsUtil.saveString(ROLE, data.role!);
+            prefsUtil.saveString(TYPE, data.type!);
+            if( data.companyCode!=null) {
+              prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+            }
             prefsUtil.saveBool(IS_LOGGED_IN, true);
             if (data.isActivated!) {
               Navigator.of(context).pushReplacement(
