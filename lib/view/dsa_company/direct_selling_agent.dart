@@ -424,87 +424,123 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     if (dataProvider.getDsaPersonalDetailData != null) {
       dataProvider.getDsaPersonalDetailData!.when(
         success: (data) {
-          var getDsaPersonalDetailData = data;
-
-          if (getDsaPersonalDetailData.fullName != null) {
-            _fullNameCl.text = getDsaPersonalDetailData.fullName!;
+          if (data.fullName != null) {
+            _fullNameCl.text = data.fullName!;
           }
-          if (getDsaPersonalDetailData.fatherOrHusbandName != null) {
+          if (data.fatherOrHusbandName != null) {
             _fatherOrHusbandNameCl.text =
-                getDsaPersonalDetailData.fatherOrHusbandName!;
+                data.fatherOrHusbandName!;
           }
-          if (getDsaPersonalDetailData.dob != null) {
-            selectedDate = getDsaPersonalDetailData.dob!;
+          if (data.dob != null) {
+            selectedDate = data.dob!;
           }
-          if (getDsaPersonalDetailData.age != null) {
-            _ageCl.text = getDsaPersonalDetailData.age!.toString();
+          if (data.age != null) {
+            _ageCl.text = data.age!.toString();
           }
-          if (getDsaPersonalDetailData.address != null) {
-            _addressCl.text = getDsaPersonalDetailData.address!;
+          if (data.address != null) {
+            _addressCl.text = data.address!;
           }
-          if (getDsaPersonalDetailData.pinCode != null) {
-            _pinCodeCl.text = getDsaPersonalDetailData.pinCode!.toString();
+          if (data.pinCode != null) {
+            _pinCodeCl.text = data.pinCode!.toString();
           }
-          if (getDsaPersonalDetailData.city != null) {
-            _cityCl.text = getDsaPersonalDetailData.city!;
+          if (data.city != null) {
+            _cityCl.text = data.city!;
           }
 
-          if (getDsaPersonalDetailData.state != null) {
-            _stateCl.text = getDsaPersonalDetailData.state!;
+          if (data.state != null) {
+            _stateCl.text = data.state!;
           }
-          if (getDsaPersonalDetailData.alternatePhoneNo != null) {
+          if (data.alternatePhoneNo != null) {
             _alternetMobileNumberCl.text =
-                getDsaPersonalDetailData.alternatePhoneNo!;
+                data.alternatePhoneNo!;
           }
-          if (getDsaPersonalDetailData.emailId != null) {
-            _emailIDCl.text = getDsaPersonalDetailData.emailId!;
+          if (data.emailId != null) {
+            _emailIDCl.text = data.emailId!;
           }
-          if (getDsaPersonalDetailData.presentOccupation != null) {
+          if (data.presentOccupation != null) {
             _presentOccupationCl.text =
-                getDsaPersonalDetailData.presentOccupation!;
+                data.presentOccupation!;
           }
-          if (getDsaPersonalDetailData.noOfYearsInCurrentEmployment != null) {
+          if (data.noOfYearsInCurrentEmployment != null) {
             _currentEmploymentCl.text =
-                getDsaPersonalDetailData.noOfYearsInCurrentEmployment!;
+                data.noOfYearsInCurrentEmployment!;
           }
-          if (getDsaPersonalDetailData.qualification != null) {
-            _qualificationCl.text = getDsaPersonalDetailData.qualification!;
+          if (data.qualification != null) {
+            _qualificationCl.text = data.qualification!;
           }
-          if (getDsaPersonalDetailData.languagesKnown != null) {
-            _languagesKnownCl.text = getDsaPersonalDetailData.languagesKnown!;
+          if (data.languagesKnown != null) {
+            _languagesKnownCl.text = data.languagesKnown!;
           }
-          if (getDsaPersonalDetailData.workingLocation != null) {
-            _locationCl.text = getDsaPersonalDetailData.workingLocation!;
+          if (data.workingLocation != null) {
+            _locationCl.text = data.workingLocation!;
           }
-          if (getDsaPersonalDetailData.referneceName != null) {
-            _referenceNames.text = getDsaPersonalDetailData.referneceName!;
+          if (data.referneceName != null) {
+            _referenceNames.text = data.referneceName!;
           }
-          if (getDsaPersonalDetailData.referneceContact != null) {
+          if (data.referneceContact != null) {
             _referenceContactNoCl.text =
-                getDsaPersonalDetailData.referneceContact!;
+                data.referneceContact!;
           }
-          if (getDsaPersonalDetailData.gstNumber != null) {
-            _gstController.text = getDsaPersonalDetailData.gstNumber!;
-            gstNumber = getDsaPersonalDetailData.gstNumber!;
+          if (data.gstNumber != null) {
+            _gstController.text = data.gstNumber!;
+            gstNumber = data.gstNumber!;
           }
-          if (getDsaPersonalDetailData.firmType != null) {
-            selectedFirmTypeValue = getDsaPersonalDetailData.firmType!;
+          if (data.firmType != null) {
+            selectedFirmTypeValue = data.firmType!;
           }
-          if (getDsaPersonalDetailData.buisnessDocument != null) {
+          if (data.buisnessDocument != null) {
             selectedBusinessTypeValue =
-                getDsaPersonalDetailData.buisnessDocument!;
+                data.buisnessDocument!;
           }
 
-          if (getDsaPersonalDetailData.companyName != null) {
-            _companyNameCl.text = getDsaPersonalDetailData.companyName!;
+          if (data.companyName != null) {
+            _companyNameCl.text = data.companyName!;
           }
 
-          if (getDsaPersonalDetailData.cityId != null) {
-            cityId = getDsaPersonalDetailData.cityId!;
+          if (data.cityId != null) {
+            cityId = data.cityId!;
           }
 
-          if (getDsaPersonalDetailData.stateId != null) {
-            stateId = getDsaPersonalDetailData.stateId!;
+          if (data.stateId != null) {
+            stateId = data.stateId!;
+          }
+
+          if (data.workingWithOther != null) {
+            if(!_isSelected1 && !_isSelected2) {
+              if(data.workingWithOther == "No") {
+                _handleCheckboxChange(2, true);
+              } else {
+                _handleCheckboxChange(1, true);
+              }
+            }
+          }
+          if (data.gstStatus != null) {
+            if(!_isGstSelected1 && !_isGstSelected2) {
+              if(data.gstStatus == "No") {
+                _handleGstCheckboxChange(2, true);
+              } else {
+                _handleGstCheckboxChange(1, true);
+              }
+            }
+          }
+
+          if (data.buisnessDocImg != null &&
+              !isImageDelete) {
+            image = data.buisnessDocImg!;
+          }
+
+          if (data.companyAddress != null) {
+            _companyAddressCl.text = data.companyAddress!;
+          }
+          if (data.companyPinCode != null) {
+            _companyPinCodeCodeCl.text = data.companyPinCode!;
+          }
+          if (data.companyCity != null) {
+            _companyCityCl.text = data.companyCity!;
+          }
+
+          if (data.companyState != null) {
+            _companyStateCl.text = data.companyState!;
           }
         },
         failure: (exception) {
@@ -551,7 +587,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-            /*if (productProvider.getDsaPersonalDetailData == null && isLoading) {
+            /*if (productProvider.data == null && isLoading) {
               return Utils.onLoading(context, "");
             } else {
                if (productProvider.getDsaPersonalDetailData != null &&
@@ -1305,6 +1341,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                     const SizedBox(
                       height: 16.0,
                     ),
+                    buildStateField(productProvider),
                     CommonTextField(
                       controller: _companyStateCl,
                       enabled: updateData,
@@ -1457,9 +1494,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-
     await Provider.of<DataProvider>(context, listen: false)
         .getDsaPersonalDetail(context, userId!, productCode!);
+    Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 
   Future<void> getCustomerDetailUsingGST(BuildContext context, String gstNumber,

@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-    //  home:  AgreementScreen(activityId: 0, subActivityId: 0),
+     // home:  AgreementScreen(activityId: 0, subActivityId: 0),
 
     );
   }

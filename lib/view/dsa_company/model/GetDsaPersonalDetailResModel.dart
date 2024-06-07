@@ -1,7 +1,6 @@
 class GetDsaPersonalDetailResModel {
-
   String? gstStatus;
-  String? gstNumber;
+  Null? gstNumber;
   String? firmType;
   String? buisnessDocument;
   String? documentId;
@@ -14,48 +13,58 @@ class GetDsaPersonalDetailResModel {
   String? pinCode;
   String? city;
   String? state;
-  dynamic alternatePhoneNo;
-  dynamic emailId;
-  dynamic presentOccupation;
-  dynamic noOfYearsInCurrentEmployment;
-  dynamic qualification;
-  dynamic languagesKnown;
-  dynamic workingWithOther;
-  dynamic referneceName;
-  dynamic referneceContact;
-  dynamic workingLocation;
+  String? alternatePhoneNo;
+  String? emailId;
+  String? presentOccupation;
+  String? noOfYearsInCurrentEmployment;
+  String? qualification;
+  String? languagesKnown;
+  String? workingWithOther;
+  String? referneceName;
+  String? referneceContact;
+  String? workingLocation;
   String? cityId;
   String? stateId;
+  String? companyAddress;
+  String? companyPinCode;
+  String? companyCity;
+  String? companyState;
+  String? buisnessDocImg;
 
-  GetDsaPersonalDetailResModel({
-      this.gstStatus, 
-      this.gstNumber, 
-      this.firmType, 
-      this.buisnessDocument, 
-      this.documentId, 
-      this.companyName, 
-      this.fullName, 
-      this.fatherOrHusbandName, 
-      this.dob, 
-      this.age, 
-      this.address, 
-      this.pinCode, 
-      this.city, 
-      this.state, 
-      this.alternatePhoneNo, 
-      this.emailId, 
-      this.presentOccupation, 
-      this.noOfYearsInCurrentEmployment, 
-      this.qualification, 
-      this.languagesKnown, 
-      this.workingWithOther, 
-      this.referneceName, 
-      this.referneceContact, 
-      this.workingLocation,
-      this.cityId, 
-      this.stateId,});
+  GetDsaPersonalDetailResModel(
+      {this.gstStatus,
+        this.gstNumber,
+        this.firmType,
+        this.buisnessDocument,
+        this.documentId,
+        this.companyName,
+        this.fullName,
+        this.fatherOrHusbandName,
+        this.dob,
+        this.age,
+        this.address,
+        this.pinCode,
+        this.city,
+        this.state,
+        this.alternatePhoneNo,
+        this.emailId,
+        this.presentOccupation,
+        this.noOfYearsInCurrentEmployment,
+        this.qualification,
+        this.languagesKnown,
+        this.workingWithOther,
+        this.referneceName,
+        this.referneceContact,
+        this.workingLocation,
+        this.cityId,
+        this.stateId,
+        this.companyAddress,
+        this.companyPinCode,
+        this.companyCity,
+        this.companyState,
+        this.buisnessDocImg});
 
-  GetDsaPersonalDetailResModel.fromJson(dynamic json) {
+  GetDsaPersonalDetailResModel.fromJson(Map<String, dynamic> json) {
     gstStatus = json['gstStatus'];
     gstNumber = json['gstNumber'];
     firmType = json['firmType'];
@@ -79,40 +88,49 @@ class GetDsaPersonalDetailResModel {
     workingWithOther = json['workingWithOther'];
     referneceName = json['referneceName'];
     referneceContact = json['referneceContact'];
-    workingLocation = json['WorkingLocation'];
+    workingLocation = json['workingLocation'];
     cityId = json['cityId'];
     stateId = json['stateId'];
+    companyAddress = json['companyAddress'];
+    companyPinCode = json['companyPinCode'];
+    companyCity = json['companyCity'];
+    companyState = json['companyState'];
+    buisnessDocImg = json['buisnessDocImg'];
   }
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['gstStatus'] = gstStatus;
-    map['gstNumber'] = gstNumber;
-    map['firmType'] = firmType;
-    map['buisnessDocument'] = buisnessDocument;
-    map['documentId'] = documentId;
-    map['companyName'] = companyName;
-    map['fullName'] = fullName;
-    map['fatherOrHusbandName'] = fatherOrHusbandName;
-    map['dob'] = dob;
-    map['age'] = age;
-    map['address'] = address;
-    map['pinCode'] = pinCode;
-    map['city'] = city;
-    map['state'] = state;
-    map['alternatePhoneNo'] = alternatePhoneNo;
-    map['emailId'] = emailId;
-    map['presentOccupation'] = presentOccupation;
-    map['noOfYearsInCurrentEmployment'] = noOfYearsInCurrentEmployment;
-    map['qualification'] = qualification;
-    map['languagesKnown'] = languagesKnown;
-    map['workingWithOther'] = workingWithOther;
-    map['referneceName'] = referneceName;
-    map['referneceContact'] = referneceContact;
-    map['WorkingLocation'] = workingLocation;
-    map['cityId'] = cityId;
-    map['stateId'] = stateId;
-    return map;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['gstStatus'] = this.gstStatus;
+    data['gstNumber'] = this.gstNumber;
+    data['firmType'] = this.firmType;
+    data['buisnessDocument'] = this.buisnessDocument;
+    data['documentId'] = this.documentId;
+    data['companyName'] = this.companyName;
+    data['fullName'] = this.fullName;
+    data['fatherOrHusbandName'] = this.fatherOrHusbandName;
+    data['dob'] = this.dob;
+    data['age'] = this.age;
+    data['address'] = this.address;
+    data['pinCode'] = this.pinCode;
+    data['city'] = this.city;
+    data['state'] = this.state;
+    data['alternatePhoneNo'] = this.alternatePhoneNo;
+    data['emailId'] = this.emailId;
+    data['presentOccupation'] = this.presentOccupation;
+    data['noOfYearsInCurrentEmployment'] = this.noOfYearsInCurrentEmployment;
+    data['qualification'] = this.qualification;
+    data['languagesKnown'] = this.languagesKnown;
+    data['workingWithOther'] = this.workingWithOther;
+    data['referneceName'] = this.referneceName;
+    data['referneceContact'] = this.referneceContact;
+    data['workingLocation'] = this.workingLocation;
+    data['cityId'] = this.cityId;
+    data['stateId'] = this.stateId;
+    data['companyAddress'] = this.companyAddress;
+    data['companyPinCode'] = this.companyPinCode;
+    data['companyCity'] = this.companyCity;
+    data['companyState'] = this.companyState;
+    data['buisnessDocImg'] = this.buisnessDocImg;
+    return data;
   }
-
 }

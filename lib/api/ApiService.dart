@@ -20,6 +20,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
+import '../view/agreement_screen/model/GetAgreementResModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
@@ -2038,14 +2039,13 @@ class ApiService {
     }*/
   }
 
-  Future<Result<GetDsaPersonalDetailResModel,Exception>> dSAGenerateAgreement(String leadId,String ProductId, bool IsSubmit) async {
-   // DSAGenerateAgreement?leadId=304&ProductId=8&type=DSA&IsSubmit=true
+  Future<Result<GetAgreementResModel,Exception>> dSAGenerateAgreement(String leadId,String ProductId, bool IsSubmit) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.dSAGenerateAgreement}?leadId=$leadId&ProductId=$ProductId&IsSubmit=$IsSubmit'),headers: {
+            '${apiUrls.baseUrl + apiUrls.dSAGenerateAgreement}?leadId=304&ProductId=8&IsSubmit=$IsSubmit&type=DSA'),headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
         },);
@@ -2054,7 +2054,7 @@ class ApiService {
           case 200:
           // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
-            final GetDsaPersonalDetailResModel responseModel = GetDsaPersonalDetailResModel.fromJson(jsonData);
+            final GetAgreementResModel responseModel = GetAgreementResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:

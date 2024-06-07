@@ -59,9 +59,10 @@ dependencies:
   flutter_widget_from_html: ^0.14.11
 
   image_cropper: ^4.0.1
-  webview_flutter: ^4.7.0
+  webview_flutter: ^4.8.0
   convex_bottom_bar: ^3.0.0
   google_fonts: ^4.0.4
+  flutter_widget_from_html_core: ^0.14.12
 
 
 

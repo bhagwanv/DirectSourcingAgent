@@ -10,7 +10,7 @@ class ApiUrls{
   //auth
   final String generateOtp="/aggregator/LeadAgg/GenerateDSAOtp";
   final String leadMobileValidate="/aggregator/LeadAgg/DSAValidateOTP";
-  final String getUserData="/aggregator/LeadAgg/GetDSAUserProfile";
+  final String getUserData="/aggregator/DSAAgg/GetDSAUserProfile";
 
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";
@@ -65,12 +65,12 @@ class ApiUrls{
   final String getKarzaElectricityState="/services/kyc/v1/KYCDoc/GetKarzaElectricityState";
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
   final String PostLeadDSAProfileType="/services/lead/v1/PostLeadDSAProfileType";
-  final String GetDSAProfileType="/aggregator/LeadAgg/GetDSAProfileType";
+  final String GetDSAProfileType="/aggregator/DSAAgg/GetDSAProfileType";
 
   final String postLeadDSAPersonalDetail="/services/lead/v1/PostLeadDSAPersonalDetail";
   final String PostLeadConnectorPersonalDetail="/services/lead/v1/PostLeadConnectorPersonalDetail";
   final String GetConnectorPersonalDetail="/aggregator/LeadAgg/GetConnectorPersonalDetail";
-  final String getDSAPersonalDetail="/aggregator/LeadAgg/GetDSAPersonalDetail";
-  final String dSAGenerateAgreement="/aggregator/LeadAgg/DSAGenerateAgreement";
+  final String getDSAPersonalDetail="/aggregator/DSAAgg/GetDSAPersonalDetail";
+  final String dSAGenerateAgreement="/aggregator/DSAAgg/DSAGenerateAgreement";
 
 }

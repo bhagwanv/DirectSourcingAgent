@@ -18,6 +18,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
+import '../view/agreement_screen/model/GetAgreementResModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
@@ -275,6 +276,9 @@ class DataProvider extends ChangeNotifier {
   Result<ConnectorInfoResponce,Exception>? get getConnectorInfoData => _getConnectorInfoData;
   Result< GetDsaPersonalDetailResModel, Exception>? _getDsaPersonalDetailData;
   Result< GetDsaPersonalDetailResModel, Exception>? get getDsaPersonalDetailData => _getDsaPersonalDetailData;
+
+  Result< GetAgreementResModel, Exception>? _dSAGenerateAgreementData;
+  Result< GetAgreementResModel, Exception>? get dSAGenerateAgreementData => _dSAGenerateAgreementData;
 
 
   Result<InProgressScreenModel,Exception>? _InProgressScreen;
@@ -672,7 +676,7 @@ class DataProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     Utils.onLoading(context, "");
-    _getDsaPersonalDetailData = await apiService.dSAGenerateAgreement(leadId,ProductId, IsSubmit);
+    _dSAGenerateAgreementData = await apiService.dSAGenerateAgreement(leadId,ProductId, IsSubmit);
     _isLoading = false;
     notifyListeners();
     Navigator.of(context).pop();

@@ -377,7 +377,7 @@ packages:
     source: hosted
     version: "0.14.11"
   flutter_widget_from_html_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_widget_from_html_core
       sha256: cc1d9be3d187ce668ee02091cd5442dfb050cdaf98e0ab9a4d12ad008f966979

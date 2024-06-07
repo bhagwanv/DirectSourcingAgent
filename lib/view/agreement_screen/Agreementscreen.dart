@@ -1,20 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
-import '../../utils/customer_sequence_logic.dart';
-import '../splash/model/GetLeadResponseModel.dart';
-import '../splash/model/LeadCurrentRequestModel.dart';
-import '../splash/model/LeadCurrentResponseModel.dart';
-import 'model/AggrementDetailsResponce.dart';
+import '../../utils/utils_class.dart';
 
 class AgreementScreen extends StatefulWidget {
   final int activityId;
@@ -32,35 +27,55 @@ class AgreementScreen extends StatefulWidget {
 }
 
 class _AgreementScreenState extends State<AgreementScreen> {
-  AggrementDetailsResponce? aggrementDetails;
   bool ischeckBoxCheck = false;
   var isLoading = true;
+  var content = "";
+  var isSubmit = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      callApi(context, false);
+      callApi(context, isSubmit);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final dataProvider = Provider.of<DataProvider>(context);
+    if (dataProvider.dSAGenerateAgreementData != null) {
+      dataProvider.dSAGenerateAgreementData!.when(
+        success: (data) {
+          content = data.response.toString();
+        },
+        failure: (exception) {
+          if (exception is ApiException) {
+            if (exception.statusCode == 401) {
+              ApiService().handle401(context);
+            } else {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Utils.showToast(exception.errorMessage, context);
+              });
+            }
+          }
+        },
+      );
+    }
     return Scaffold(
         body: SafeArea(
       top: true,
       bottom: true,
       child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        return Padding(
+        return isSubmit ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
-                Center(
+                const Center(
                   child: Text(
                     "Agreement",
                     style: TextStyle(
@@ -71,53 +86,107 @@ class _AgreementScreenState extends State<AgreementScreen> {
                     textAlign: TextAlign.start,
                   ),
                 ),
-                SizedBox(
-                  height: 30.0,
+                const SizedBox(
+                  height: 8.0,
                 ),
-                aggrementDetails != null
-                    ? Container(
-                        height: 500,
-                        width: MediaQuery.of(context).size.width,
-                        child: WebViewWidget(
-                            controller: WebViewController()
-                              ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                              ..setBackgroundColor(const Color(0x00000000))
-                              ..setNavigationDelegate(
-                                NavigationDelegate(
-                                  onProgress: (int progress) {
-                                    // Update loading bar.
-                                  },
-                                  onPageStarted: (String url) {},
-                                  onPageFinished: (String url) {},
-                                  onWebResourceError:
-                                      (WebResourceError error) {},
-                                ),
-                              )
-                              ..loadRequest(
-                                  Uri.parse(aggrementDetails!.response!))))
-                    : Container(child: const Text("")),
                 SizedBox(
-                  height: 30.0,
+                  height: 500,
+                  width: MediaQuery.of(context).size.width,
+                  child: WebViewWidget(
+                      controller: WebViewController()
+                        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                        ..setBackgroundColor(const Color(0x00000000))
+
+                        ..setNavigationDelegate(
+                          NavigationDelegate(
+                            onProgress: (int progress) {
+                              CircularProgressIndicator();
+                            },
+                            onPageStarted: (String url) {
+                            },
+                            onPageFinished: (String url) {
+                            },
+                            onWebResourceError:
+                                (WebResourceError error) {},
+                          ),
+                        )
+                        ..loadRequest(
+                            Uri.parse(content))),
+                ),
+                const SizedBox(
+                  height: 16.0,
                 ),
                 CommonElevatedButton(
-                  onPressed: () async {},
-                  text: 'Proceed to E-sign',
+                  onPressed: () async {
+
+                  },
+                  text: 'Next',
                   upperCase: true,
+                ),
+                const SizedBox(
+                  height: 16.0,
                 ),
               ],
             ),
+          ),
+        ) : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 16.0,
+              ),
+              const Center(
+                child: Text(
+                  "Agreement",
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w100,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: HtmlWidget(
+                    content, // If HtmlWidget supports webView
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 16.0,
+              ),
+              CommonElevatedButton(
+                onPressed: () async {
+                  isSubmit = true;
+                  callApi(context, isSubmit);
+                 // content = "https://app.karza.in/test/esign/initial-consent/9b03ed73-6064-42f7-a74f-cbbbb57f3827";
+                },
+                text: 'Proceed to E-sign',
+                upperCase: true,
+              ),
+              const SizedBox(
+                height: 16.0,
+              ),
+            ],
           ),
         );
       }),
     ));
   }
 
-void callApi(BuildContext context, bool isSubmit) async {
+  void callApi(BuildContext context, bool isSubmit) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? productId = prefsUtil.getInt(PRODUCT_ID);
     final String? userMobileNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
-    Provider.of<DataProvider>(context, listen: false).dSAGenerateAgreement(context, leadId!.toString(), productId.toString(), isSubmit);
+    Provider.of<DataProvider>(context, listen: false).dSAGenerateAgreement(
+        context, leadId!.toString(), productId.toString(), isSubmit);
   }
 
 /*  Future<void> fetchData(BuildContext context) async {
