@@ -22,6 +22,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
+import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
@@ -279,6 +281,10 @@ class DataProvider extends ChangeNotifier {
 
   Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;
+
+  Result<GetDsaDashboardDetailsResModel,Exception>? _getDSADashboardDetailsData;
+  Result<GetDsaDashboardDetailsResModel,Exception>? get getDSADashboardDetailsData => _getDSADashboardDetailsData;
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -666,6 +672,10 @@ class DataProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
     Navigator.of(context).pop();
+  }
+  Future<void> getDSADashboardDetails(GetDsaDashboardDetailsReqModel model) async {
+    _getDSADashboardDetailsData = await apiService.getDSADashboardDetails(model);
+    notifyListeners();
   }
 
   Future<void> disposeAllProviderData() async {

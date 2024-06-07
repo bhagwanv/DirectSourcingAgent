@@ -20,6 +20,7 @@ const text_light_blue_color = Color(0xFFA3AED0);
 const gry = Color(0xFFEFEEFC);
 const light_gry = Color(0xFFE0E0E0);
 const dark_gry = Color(0xFF7F7F7F);
+const light_dark_gry = Color(0xFFD9D9D9);
 
 
 const double defaultPadding = 16.0;
