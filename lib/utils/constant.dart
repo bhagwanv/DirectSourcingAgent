@@ -44,3 +44,12 @@ const String KYC_FAild_PATH = 'assets/images/kyc_faild.png';
 const String CUSTOMERNAME = "CUSTOMER_NAME";
 const String CUSTOMER_IMAGE = "CUSTOMER_Image";
 
+const String USER_NAME = "name";
+const String USER_PAN_NUMBER = "panNumber";
+const String USER_ADHAR_NO = "aadharNumber";
+const String USER_MOBILE_NO = "mobile";
+const String USER_ADDRESS = "address";
+const String USER_WORKING_LOCTION = "workingLocation";
+const String USER_SELFI = "selfie";
+const String USER_PAY_OUT = "payout";
+

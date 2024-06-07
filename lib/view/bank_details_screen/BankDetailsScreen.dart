@@ -157,8 +157,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         bottom: true,
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
+          body: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getBankDetailsData == null && isLoading) {
               return Loader();
             } else {

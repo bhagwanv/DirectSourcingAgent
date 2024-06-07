@@ -65,11 +65,12 @@ class ApiUrls{
   final String getKarzaElectricityState="/services/kyc/v1/KYCDoc/GetKarzaElectricityState";
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
   final String PostLeadDSAProfileType="/services/lead/v1/PostLeadDSAProfileType";
-  final String GetDSAProfileType="/aggregator/LeadAgg/GetDSAProfileType";
+  final String GetDSAProfileType="/aggregator/DSAAgg/GetDSAProfileType";
 
   final String postLeadDSAPersonalDetail="/services/lead/v1/PostLeadDSAPersonalDetail";
   final String PostLeadConnectorPersonalDetail="/services/lead/v1/PostLeadConnectorPersonalDetail";
-  final String GetConnectorPersonalDetail="/aggregator/LeadAgg/GetConnectorPersonalDetail";
-  final String getDSAPersonalDetail="/aggregator/LeadAgg/GetDSAPersonalDetail";
+  final String GetConnectorPersonalDetail="/aggregator/DSAAgg/GetConnectorPersonalDetail";
+  final String getDSAPersonalDetail="/aggregator/DSAAgg/GetDSAPersonalDetail";
+  final String CreateDSAUser="/aggregator/DSAAgg/CreateDSAUser";
 
 }

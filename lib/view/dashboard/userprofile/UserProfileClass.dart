@@ -11,13 +11,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileClass extends StatefulWidget {
-  final int activityId;
+  /*final int activityId;
   final int subActivityId;
-
+*/
   UserProfileClass({
     super.key,
-    required this.activityId,
-    required this.subActivityId,
+   /* required this.activityId,
+    required this.subActivityId,*/
   });
 
   @override
@@ -33,12 +33,21 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   final TextEditingController _WorkingLocationController = TextEditingController();
    String? role;
    String? type;
+   String? user_name;
+   String? user_panNumber;
+   String? user_aadharNumber;
+   String? user_mobile;
+   String? user_address;
+   String? user_workingLocation;
+   String? user_selfie;
+   int? user_payout;
+
 
   @override
   void initState() {
     super.initState();
 
-    getUserData();
+    getUserData(_MobileNoController,_PanCardNoController,_AdharcardNOController,_AddreshController,_PayOutController,_WorkingLocationController);
   }
 
   @override
@@ -76,23 +85,24 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                        ),
                      ),
                      Spacer(),
-                     role=="DSA"?type=="DSA"?
-                     Container(
-                       width: 100,
-                       height: 40,
-                       child:  CommonElevatedButton(
-                         onPressed: () async {
-                           showModalBottomSheet(
-                               context: context,
-                               builder: (builder) {
-                                 return Container(child: CreateUserWidgets());
-                               });
-                         },
-                         text: "Create",
-                         upperCase: true,
-                       ),
-                     ):Container():Container()
 
+               (role == "Connector" && type == "Connector")
+                   ? Container()
+                   : Container(
+                     height: 40,
+                     width: 100,
+                     child: CommonElevatedButton(
+                      onPressed: () async {
+                     showModalBottomSheet(
+                         context: context,
+                         builder: (builder) {
+                           return Container(child: CreateUserWidgets());
+                         });
+                                      },
+                                      text: "Create",
+                                      upperCase: true,
+                                    ),
+                   ) ,
                    ],
                  ),
                  SizedBox(
@@ -108,8 +118,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                          borderRadius: BorderRadius.circular(10),
 
                          image: DecorationImage(
-                             //image: NetworkImage(widget.imageUrl),
-                             image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
+                             image: NetworkImage(user_selfie!),
+                           //  image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
                              fit: BoxFit.fill),
                        ),
                      ),
@@ -119,7 +129,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                          Padding(
                            padding: const EdgeInsets.only(left: 10),
                            child: Text(
-                             "Deepak Yadav",
+                             user_name!,
                              style: GoogleFonts.urbanist(
                                fontSize: 20,
                                color: Colors.black,
@@ -137,6 +147,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                  ),
                  CommonTextField(
                    controller: _MobileNoController,
+                   enabled: false,
                    inputFormatter: [
                      FilteringTextInputFormatter.allow(
                          RegExp((r'[A-Z0-9]'))),
@@ -154,6 +165,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                    controller: _PanCardNoController,
                    hintText: "PAN number",
                    labelText: "PAN number ",
+                   enabled: false,
                    textCapitalization: TextCapitalization.characters,
                    inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
                      LengthLimitingTextInputFormatter(10)],
@@ -171,6 +183,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                    maxLines: 1,
                    hintText: "Aadhaar ",
                    labelText: "Aadhaar",
+                   enabled: false,
                  ),
                  SizedBox(
                    height: 16.0,
@@ -179,6 +192,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                    controller: _AddreshController,
                    hintText: "Address",
                    labelText: "Address",
+                   enabled: false,
                    textCapitalization: TextCapitalization.characters,
                  ),
                  SizedBox(
@@ -188,6 +202,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                    controller: _PayOutController,
                    hintText: "Payout %",
                    labelText: "Payout %",
+                   enabled: false,
                  ),
 
                  SizedBox(
@@ -197,6 +212,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                    controller: _WorkingLocationController,
                    hintText: "Working Location",
                    labelText: "Working Location",
+                   enabled: false,
                  ),
 
                  SizedBox(
@@ -239,10 +255,30 @@ class _UserProfileScreenState extends State<UserProfileClass> {
        ));
   }
 
-  Future<void>  getUserData()async {
+  Future<void>  getUserData(TextEditingController mobileNoController, TextEditingController panCardNoController, TextEditingController adharcardNOController, TextEditingController addreshController, TextEditingController payOutController, TextEditingController workingLocationController)async {
     final prefsUtil = await SharedPref.getInstance();
     role = prefsUtil.getString(ROLE);
     type = prefsUtil.getString(TYPE);
+    user_name = prefsUtil.getString(USER_NAME);
+    user_panNumber = prefsUtil.getString(USER_PAN_NUMBER);
+    user_aadharNumber = prefsUtil.getString(USER_ADHAR_NO);
+    user_mobile = prefsUtil.getString(USER_MOBILE_NO);
+    user_address = prefsUtil.getString(USER_ADDRESS);
+    user_workingLocation = prefsUtil.getString(USER_WORKING_LOCTION);
+    user_selfie = prefsUtil.getString(USER_SELFI);
+    user_payout = prefsUtil.getInt(USER_PAY_OUT);
+
+    mobileNoController.text=user_mobile!;
+    panCardNoController.text=user_panNumber!;
+    adharcardNOController.text="XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
+    addreshController.text=user_address!;
+    payOutController.text=user_payout!.toString();
+    workingLocationController.text=user_workingLocation!;
+
+    setState(() {
+
+    });
+
 
   }
 

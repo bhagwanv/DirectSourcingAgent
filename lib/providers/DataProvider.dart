@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.d
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
@@ -206,6 +207,10 @@ class DataProvider extends ChangeNotifier {
 
   Result<SaveBankDetailResponce,Exception>? _getSaveLeadBankDetailData;
   Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
+
+
+  Result<CommanResponceModel,Exception>? _getCreatDSAUserData;
+  Result<CommanResponceModel,Exception>? get getCreatDSAUserData => _getCreatDSAUserData;
 
 
   /*Result< CheckOutOtpModel, Exception>? _genrateOptPaymentData;
@@ -510,6 +515,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> createDSAUser(CreateDSAUserReqModel model) async {
+    _getCreatDSAUserData = await apiService.createDSAUser(model);
+    notifyListeners();
+  }
+
   /* Future<void> getDisbursementProposal(int leadId) async {
     _getDisbursementProposalData = await apiService.GetDisbursementProposal(leadId);
     notifyListeners();
@@ -721,6 +731,7 @@ class DataProvider extends ChangeNotifier {
     _getUserProfileResponse = null;
     _getConnectorSubmitData = null;
     _getConnectorInfoData = null;
+    _getCreatDSAUserData = null;
     /*_InProgressScreen = null;*/
     notifyListeners();
   }
