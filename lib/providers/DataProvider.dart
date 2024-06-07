@@ -668,6 +668,16 @@ class DataProvider extends ChangeNotifier {
     Navigator.of(context).pop();
   }
 
+  Future<void> dSAGenerateAgreement(BuildContext context, String leadId,String ProductId, bool IsSubmit) async {
+    _isLoading = true;
+    notifyListeners();
+    Utils.onLoading(context, "");
+    _getDsaPersonalDetailData = await apiService.dSAGenerateAgreement(leadId,ProductId, IsSubmit);
+    _isLoading = false;
+    notifyListeners();
+    Navigator.of(context).pop();
+  }
+
   Future<void> disposeAllProviderData() async {
     /*_getCustomerOrderSummaryData = null;
     _getCustomerTransactionListTwoData = null;

@@ -2038,4 +2038,56 @@ class ApiService {
     }*/
   }
 
+  Future<Result<GetDsaPersonalDetailResModel,Exception>> dSAGenerateAgreement(String leadId,String ProductId, bool IsSubmit) async {
+   // DSAGenerateAgreement?leadId=304&ProductId=8&type=DSA&IsSubmit=true
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.dSAGenerateAgreement}?leadId=$leadId&ProductId=$ProductId&IsSubmit=$IsSubmit'),headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final GetDsaPersonalDetailResModel responseModel = GetDsaPersonalDetailResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+
+
+
+    /*if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final CustomerDetailUsingGstResponseModel responseModel =
+        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }*/
+  }
+
 }

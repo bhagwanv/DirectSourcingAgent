@@ -1,70 +1,4 @@
 class PostLeadDsaPersonalDetailReqModel {
-  PostLeadDsaPersonalDetailReqModel({
-      this.leadId, 
-      this.activityId, 
-      this.subActivityId, 
-      this.userId, 
-      this.companyId, 
-      this.leadMasterId, 
-      this.gstRegistrationStatus, 
-      this.gstNumber, 
-      this.firmType, 
-      this.buisnessDocument, 
-      this.documentId, 
-      this.companyName, 
-      this.fullName, 
-      this.fatherOrHusbandName, 
-      this.alternatePhoneNo, 
-      this.emailId, 
-      this.presentOccupation, 
-      this.noOfYearsInCurrentEmployment, 
-      this.qualification, 
-      this.languagesKnown, 
-      this.workingWithOther, 
-      this.referneceName, 
-      this.referneceContact, 
-      this.workingLocation,
-      this.currentAddressId, 
-      this.mobileNo,
-      this.address ,
-      this.city ,
-      this.state ,
-      this.pincode ,
-
-  });
-
-  PostLeadDsaPersonalDetailReqModel.fromJson(dynamic json) {
-    leadId = json['leadId'];
-    activityId = json['activityId'];
-    subActivityId = json['subActivityId'];
-    userId = json['userId'];
-    companyId = json['companyId'];
-    leadMasterId = json['leadMasterId'];
-    gstRegistrationStatus = json['gstRegistrationStatus'];
-    gstNumber = json['gstNumber'];
-    firmType = json['firmType'];
-    buisnessDocument = json['buisnessDocument'];
-    documentId = json['documentId'];
-    companyName = json['companyName'];
-    fullName = json['fullName'];
-    fatherOrHusbandName = json['fatherOrHusbandName'];
-    alternatePhoneNo = json['alternatePhoneNo'];
-    emailId = json['emailId'];
-    presentOccupation = json['presentOccupation'];
-    noOfYearsInCurrentEmployment = json['noOfYearsInCurrentEmployment'];
-    qualification = json['qualification'];
-    languagesKnown = json['languagesKnown'];
-    workingWithOther = json['workingWithOther'];
-    referneceName = json['referneceName'];
-    referneceContact = json['referneceContact'];
-    workingLocation = json['WorkingLocation'];
-    currentAddressId = json['currentAddressId'];
-    mobileNo = json['mobileNo'];
-    address = json['Address'];
-    city = json['City'];
-    state = json['State'];
-    pincode = json['Pincode'];
-  }
   int? leadId;
   int? activityId;
   int? subActivityId;
@@ -89,46 +23,122 @@ class PostLeadDsaPersonalDetailReqModel {
   String? referneceName;
   String? referneceContact;
   String? workingLocation;
-  int? currentAddressId;
-  String? mobileNo;
   String? address;
   String? city;
   String? state;
   String? pincode;
+  String? mobileNo;
+  String? companyAddress;
+  String? companyCity;
+  String? companyState;
+  String? companyPincode;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['leadId'] = leadId;
-    map['activityId'] = activityId;
-    map['subActivityId'] = subActivityId;
-    map['userId'] = userId;
-    map['companyId'] = companyId;
-    map['leadMasterId'] = leadMasterId;
-    map['gstRegistrationStatus'] = gstRegistrationStatus;
-    map['gstNumber'] = gstNumber;
-    map['firmType'] = firmType;
-    map['buisnessDocument'] = buisnessDocument;
-    map['documentId'] = documentId;
-    map['companyName'] = companyName;
-    map['fullName'] = fullName;
-    map['fatherOrHusbandName'] = fatherOrHusbandName;
-    map['alternatePhoneNo'] = alternatePhoneNo;
-    map['emailId'] = emailId;
-    map['presentOccupation'] = presentOccupation;
-    map['noOfYearsInCurrentEmployment'] = noOfYearsInCurrentEmployment;
-    map['qualification'] = qualification;
-    map['languagesKnown'] = languagesKnown;
-    map['workingWithOther'] = workingWithOther;
-    map['referneceName'] = referneceName;
-    map['referneceContact'] = referneceContact;
-    map['WorkingLocation'] = workingLocation;
-    map['currentAddressId'] = currentAddressId;
-    map['mobileNo'] = mobileNo;
-    map['Address'] = address;
-    map['City'] = city;
-    map['State'] = state;
-    map['Pincode'] = pincode;
-    return map;
+  PostLeadDsaPersonalDetailReqModel(
+      {this.leadId,
+        this.activityId,
+        this.subActivityId,
+        this.userId,
+        this.companyId,
+        this.leadMasterId,
+        this.gstRegistrationStatus,
+        this.gstNumber,
+        this.firmType,
+        this.buisnessDocument,
+        this.documentId,
+        this.companyName,
+        this.fullName,
+        this.fatherOrHusbandName,
+        this.alternatePhoneNo,
+        this.emailId,
+        this.presentOccupation,
+        this.noOfYearsInCurrentEmployment,
+        this.qualification,
+        this.languagesKnown,
+        this.workingWithOther,
+        this.referneceName,
+        this.referneceContact,
+        this.workingLocation,
+        this.address,
+        this.city,
+        this.state,
+        this.pincode,
+        this.mobileNo,
+        this.companyAddress,
+        this.companyCity,
+        this.companyState,
+        this.companyPincode});
+
+  PostLeadDsaPersonalDetailReqModel.fromJson(Map<String, dynamic> json) {
+    leadId = json['leadId'];
+    activityId = json['activityId'];
+    subActivityId = json['subActivityId'];
+    userId = json['userId'];
+    companyId = json['companyId'];
+    leadMasterId = json['leadMasterId'];
+    gstRegistrationStatus = json['gstRegistrationStatus'];
+    gstNumber = json['gstNumber'];
+    firmType = json['firmType'];
+    buisnessDocument = json['buisnessDocument'];
+    documentId = json['documentId'];
+    companyName = json['companyName'];
+    fullName = json['fullName'];
+    fatherOrHusbandName = json['fatherOrHusbandName'];
+    alternatePhoneNo = json['alternatePhoneNo'];
+    emailId = json['emailId'];
+    presentOccupation = json['presentOccupation'];
+    noOfYearsInCurrentEmployment = json['noOfYearsInCurrentEmployment'];
+    qualification = json['qualification'];
+    languagesKnown = json['languagesKnown'];
+    workingWithOther = json['workingWithOther'];
+    referneceName = json['referneceName'];
+    referneceContact = json['referneceContact'];
+    workingLocation = json['workingLocation'];
+    address = json['address'];
+    city = json['city'];
+    state = json['state'];
+    pincode = json['pincode'];
+    mobileNo = json['mobileNo'];
+    companyAddress = json['companyAddress'];
+    companyCity = json['companyCity'];
+    companyState = json['companyState'];
+    companyPincode = json['companyPincode'];
   }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['leadId'] = this.leadId;
+    data['activityId'] = this.activityId;
+    data['subActivityId'] = this.subActivityId;
+    data['userId'] = this.userId;
+    data['companyId'] = this.companyId;
+    data['leadMasterId'] = this.leadMasterId;
+    data['gstRegistrationStatus'] = this.gstRegistrationStatus;
+    data['gstNumber'] = this.gstNumber;
+    data['firmType'] = this.firmType;
+    data['buisnessDocument'] = this.buisnessDocument;
+    data['documentId'] = this.documentId;
+    data['companyName'] = this.companyName;
+    data['fullName'] = this.fullName;
+    data['fatherOrHusbandName'] = this.fatherOrHusbandName;
+    data['alternatePhoneNo'] = this.alternatePhoneNo;
+    data['emailId'] = this.emailId;
+    data['presentOccupation'] = this.presentOccupation;
+    data['noOfYearsInCurrentEmployment'] = this.noOfYearsInCurrentEmployment;
+    data['qualification'] = this.qualification;
+    data['languagesKnown'] = this.languagesKnown;
+    data['workingWithOther'] = this.workingWithOther;
+    data['referneceName'] = this.referneceName;
+    data['referneceContact'] = this.referneceContact;
+    data['workingLocation'] = this.workingLocation;
+    data['address'] = this.address;
+    data['city'] = this.city;
+    data['state'] = this.state;
+    data['pincode'] = this.pincode;
+    data['mobileNo'] = this.mobileNo;
+    data['companyAddress'] = this.companyAddress;
+    data['companyCity'] = this.companyCity;
+    data['companyState'] = this.companyState;
+    data['companyPincode'] = this.companyPincode;
+    return data;
+  }
 }

@@ -39,7 +39,9 @@ class _AgreementScreenState extends State<AgreementScreen> {
   @override
   void initState() {
     super.initState();
-    //  callApi(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      callApi(context, false);
+    });
   }
 
   @override
@@ -99,7 +101,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                 ),
                 CommonElevatedButton(
                   onPressed: () async {},
-                  text: 'Next',
+                  text: 'Proceed to E-sign',
                   upperCase: true,
                 ),
               ],
@@ -110,13 +112,15 @@ class _AgreementScreenState extends State<AgreementScreen> {
     ));
   }
 
-/*void callApi(BuildContext context) async {
+void callApi(BuildContext context, bool isSubmit) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).checkEsignStatus(leadId!);
+    final int? productId = prefsUtil.getInt(PRODUCT_ID);
+    final String? userMobileNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+    Provider.of<DataProvider>(context, listen: false).dSAGenerateAgreement(context, leadId!.toString(), productId.toString(), isSubmit);
   }
 
-  Future<void> fetchData(BuildContext context) async {
+/*  Future<void> fetchData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     try {
       LeadCurrentResponseModel? leadCurrentActivityAsyncData;
