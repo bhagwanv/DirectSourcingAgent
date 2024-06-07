@@ -11,22 +11,24 @@ class GetUserProfileResponse {
   int? leadId;
   String? role;
   String? type;
+  UserData? userData;
 
   GetUserProfileResponse(
       {this.status,
-      this.message,
-      this.userId,
-      this.userToken,
-      this.isActivated,
-      this.companyCode,
-      this.companyId,
-      this.productCode,
-      this.productId,
-      this.leadId,
-      this.role,
-      this.type});
+        this.message,
+        this.userId,
+        this.userToken,
+        this.isActivated,
+        this.companyCode,
+        this.companyId,
+        this.productCode,
+        this.productId,
+        this.leadId,
+        this.role,
+        this.type,
+        this.userData});
 
-  GetUserProfileResponse.fromJson(dynamic json) {
+  GetUserProfileResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     userId = json['userId'];
@@ -39,22 +41,73 @@ class GetUserProfileResponse {
     leadId = json['leadId'];
     role = json['role'];
     type = json['type'];
+    userData = json['userData'] != null
+        ? new UserData.fromJson(json['userData'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
-    data['userId'] = userId;
-    data['userToken'] = userToken;
-    data['isActivated'] = isActivated;
-    data['companyCode'] = companyCode;
-    data['companyId'] = companyId;
-    data['productCode'] = productCode;
-    data['productId'] = productId;
-    data['leadId'] = leadId;
-    data['role'] = role;
-    data['type'] = type;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['userId'] = this.userId;
+    data['userToken'] = this.userToken;
+    data['isActivated'] = this.isActivated;
+    data['companyCode'] = this.companyCode;
+    data['companyId'] = this.companyId;
+    data['productCode'] = this.productCode;
+    data['productId'] = this.productId;
+    data['leadId'] = this.leadId;
+    data['role'] = this.role;
+    data['type'] = this.type;
+    if (this.userData != null) {
+      data['userData'] = this.userData!.toJson();
+    }
+    return data;
+  }
+}
+
+class UserData {
+  String? name;
+  String? panNumber;
+  String? aadharNumber;
+  String? mobile;
+  String? address;
+  String? workingLocation;
+  String? selfie;
+  int? payout;
+
+  UserData(
+      {this.name,
+        this.panNumber,
+        this.aadharNumber,
+        this.mobile,
+        this.address,
+        this.workingLocation,
+        this.selfie,
+        this.payout});
+
+  UserData.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    panNumber = json['panNumber'];
+    aadharNumber = json['aadharNumber'];
+    mobile = json['mobile'];
+    address = json['address'];
+    workingLocation = json['workingLocation'];
+    selfie = json['selfie'];
+    payout = json['payout'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['panNumber'] = this.panNumber;
+    data['aadharNumber'] = this.aadharNumber;
+    data['mobile'] = this.mobile;
+    data['address'] = this.address;
+    data['workingLocation'] = this.workingLocation;
+    data['selfie'] = this.selfie;
+    data['payout'] = this.payout;
     return data;
   }
 }

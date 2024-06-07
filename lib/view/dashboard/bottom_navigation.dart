@@ -1,3 +1,4 @@
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +10,7 @@ import '../../utils/utils_class.dart';
 import 'home/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
+
   final String? pageType;
   const BottomNav({super.key, this.pageType});
 
@@ -21,6 +23,7 @@ class _BottomNavState extends State<BottomNav> {
     const HomeScreen(),
     const HomeScreen(),
     const HomeScreen(),
+     UserProfileClass(),
   ];
   var selectedIndex = 2;
   late DataProvider productProvider;
@@ -156,13 +159,13 @@ class _BottomNavState extends State<BottomNav> {
                           SvgPicture.asset(
                             'assets/icons/ic_task_square.svg',
                             semanticsLabel: 'ic_task_square',
-                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                            color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
                           ),
                           const SizedBox(height: 3), // Add space between icon and text
                           Text(
                             'Payout',
                             style: TextStyle(
-                              color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
                               fontSize: 10,
                             ),
                           ),
@@ -170,10 +173,14 @@ class _BottomNavState extends State<BottomNav> {
                       ),
                     ),
                   ),
-                  // People item
+
                   GestureDetector(
                     onTap: () {
-                      Utils.showBottomToast("Service Not Available");
+                      setState(() {
+                        selectedIndex = 3;
+                        //productProvider.disposegetCustomerOrderSummaryData();
+                        // productProvider.disposegetCustomerTransactionList();
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -182,13 +189,13 @@ class _BottomNavState extends State<BottomNav> {
                           SvgPicture.asset(
                             'assets/icons/ic_user_square.svg',
                             semanticsLabel: 'ic_user_squaree',
-                            color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
                           ),
                           const SizedBox(height: 3), // Add space between icon and text
                           Text(
-                            'Profile',
+                            'Home',
                             style: TextStyle(
-                              color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
                               fontSize: 10,
                             ),
                           ),
@@ -196,6 +203,8 @@ class _BottomNavState extends State<BottomNav> {
                       ),
                     ),
                   ),
+                  // People item
+
                 ],
               ),
             ),
