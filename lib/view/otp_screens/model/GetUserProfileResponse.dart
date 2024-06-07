@@ -9,19 +9,22 @@ class GetUserProfileResponse {
   String? productCode;
   int? productId;
   int? leadId;
+  String? role;
+  String? type;
 
-  GetUserProfileResponse({
-    this.status,
-    this.message,
-    this.userId,
-    this.userToken,
-    this.isActivated,
-    this.companyCode,
-    this.companyId,
-    this.productCode,
-    this.productId,
-    this.leadId
-  });
+  GetUserProfileResponse(
+      {this.status,
+      this.message,
+      this.userId,
+      this.userToken,
+      this.isActivated,
+      this.companyCode,
+      this.companyId,
+      this.productCode,
+      this.productId,
+      this.leadId,
+      this.role,
+      this.type});
 
   GetUserProfileResponse.fromJson(dynamic json) {
     status = json['status'];
@@ -34,20 +37,24 @@ class GetUserProfileResponse {
     productCode = json['productCode'];
     productId = json['productId'];
     leadId = json['leadId'];
+    role = json['role'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    data['userId'] = this.userId;
-    data['userToken'] = this.userToken;
-    data['isActivated'] = this.isActivated;
-    data['companyCode'] = this.companyCode;
-    data['companyId'] = this.companyId;
-    data['productCode'] = this.productCode;
-    data['productId'] = this.productId;
-    data['leadId'] = this.leadId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    data['userId'] = userId;
+    data['userToken'] = userToken;
+    data['isActivated'] = isActivated;
+    data['companyCode'] = companyCode;
+    data['companyId'] = companyId;
+    data['productCode'] = productCode;
+    data['productId'] = productId;
+    data['leadId'] = leadId;
+    data['role'] = role;
+    data['type'] = type;
     return data;
   }
 }

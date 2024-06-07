@@ -71,8 +71,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   final TextEditingController _referenceStateCl = TextEditingController();
   final TextEditingController _referenceCityCl = TextEditingController();
   final TextEditingController _presentOccupationCl = TextEditingController();
-  final TextEditingController _businessDocumentNumberController =
-      TextEditingController();
+  final TextEditingController _businessDocumentNumberController = TextEditingController();
 
   bool _isSelected1 = false;
   bool _isSelected2 = false;
@@ -89,7 +88,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   var isClearData = false;
   var isImageDelete = false;
   var isGstFilled = false;
-
   var updateData = true;
 
   void _handleCheckboxChange(int index, bool? value) {
@@ -121,9 +119,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       }
     });
   }
-
-
-
 
   String? selectedStateValue;
   String? selectedCityValue;
@@ -251,13 +246,10 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   String? selectedDate = "";
 
   void _onImageSelected(File imageFile) async {
-    // Handle the selected image here
-    // For example, you can setState to update UI with the selected image
     isImageDelete = false;
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postDSABusineesDoumentSingleFile(imageFile, true, "", "");
-    // Navigator.pop(context);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -302,12 +294,128 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       },
     );
   }
+
+  Widget buildStateField(DataProvider productProvider) {
+    ReturnObject? initialData;
+
+    /*if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
+      if (productProvider.getCustomerDetailUsingGSTData!.stateId != null &&
+          productProvider.getCustomerDetailUsingGSTData!.stateId != 0 &&
+          productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
+          productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
+        setStateListFirstTime = true;
+        if (productProvider.getAllStateData != null) {
+          var allStates = productProvider.getAllStateData!.returnObject!;
+          if (setStateListFirstTime) {
+            initialData = allStates.firstWhere(
+                    (element) =>
+                element?.id ==
+                    productProvider.getCustomerDetailUsingGSTData!.stateId,
+                orElse: () => null);
+            selectedStateValue = productProvider
+                .getCustomerDetailUsingGSTData!.stateId!
+                .toString();
+          }
+
+          if (cityCallInitial) {
+            citylist.clear();
+            Provider.of<DataProvider>(context, listen: false).getAllCity(
+                productProvider.getCustomerDetailUsingGSTData!.stateId!);
+            cityCallInitial = false;
+          }
+        }
+      }
+    } else {
+      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
+          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
+        if (productProvider.getAllStateData != null) {
+          var allStates = productProvider.getAllStateData!.returnObject!;
+          if (setStateListFirstTime) {
+            initialData = allStates.firstWhere(
+                    (element) =>
+                element?.id ==
+                    productProvider.getLeadBusinessDetailData!.stateId,
+                orElse: () => null);
+            selectedStateValue =
+                productProvider.getLeadBusinessDetailData!.stateId!.toString();
+          }
+        }
+        if (cityCallInitial) {
+          citylist.clear();
+          Provider.of<DataProvider>(context, listen: false)
+              .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
+          cityCallInitial = false;
+        }
+      } else {
+        setStateListFirstTime = false;
+      }
+    }*/
+    if (productProvider.getAllStateData != null) {
+      return DropdownButtonFormField2<ReturnObject?>(
+        isExpanded: true,
+        value: initialData,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: const Text(
+          'State',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        items: getAllState(productProvider.getAllStateData!.returnObject!),
+        onChanged: setStateListFirstTime
+            ? null
+            : (ReturnObject? value) {
+          citylist.clear();
+          setStateListFirstTime = false;
+          Provider.of<DataProvider>(context, listen: false)
+              .getAllCity(value!.id!);
+          selectedStateValue = value.id!.toString();
+        },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights2(
+              productProvider.getAllStateData!.returnObject!),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    //Api Call
-    getDSAPersonalDetail(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getDSAPersonalDetail(context);
+    });
   }
 
   @override
@@ -652,76 +760,12 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                         children: [
                           CommonTextField(
                             controller: _emailIDCl,
-                            enabled: !isValidEmail,
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.emailAddress,
                             hintText: "E Mail id",
                             labelText: "E Mail id",
                           ),
-                          _emailIDCl.text.isNotEmpty
-                              ? Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    child: IconButton(
-                                      onPressed: () => setState(() {
-                                        isEmailClear = false;
-                                        isValidEmail = false;
-                                        _emailIDCl.clear();
-                                      }),
-                                      icon: SvgPicture.asset(
-                                        'assets/icons/email_cross.svg',
-                                        semanticsLabel: 'My SVG Image',
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(),
                         ],
                       ),
-                      SizedBox(height: 16),
-                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
-                          ? Container(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'VERIFIED',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        decoration: TextDecoration.underline,
-                                        color: Colors.blue),
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  SvgPicture.asset(
-                                      'assets/icons/tick_square.svg'),
-                                ],
-                              ),
-                            )
-                          : Align(
-                              alignment: Alignment.centerLeft,
-                              child: InkWell(
-                                onTap: () async {
-                                  if (_emailIDCl.text.isEmpty) {
-                                    Utils.showToast(
-                                        "Please Enter Email ID", context);
-                                  } else if (!Utils.validateEmail(
-                                      _emailIDCl.text)) {
-                                    Utils.showToast(
-                                        "Please Enter Valid Email ID", context);
-                                  } else {
-                                    callEmailIDExist(context, _emailIDCl.text);
-                                  }
-                                },
-                                child: Text(
-                                  'Click here to Verify',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      decoration: TextDecoration.underline,
-                                      color: Colors.blue),
-                                ),
-                              )),
                       SizedBox(height: 16),
                       CommonTextField(
                         controller: _presentOccupationCl,
@@ -903,7 +947,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             bottom: 0,
                             child: GestureDetector(
                               onTap: () {
-                                // print('Edit icon tapped');
                                 setState(() {
                                   updateData = true;
                                   isImageDelete = true;
@@ -1197,9 +1240,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             Utils.showToast(
                                 "Please Enter AlterNet Mobile Number ",
                                 context);
-                          } else if (!isValidEmail) {
+                          } else if (_emailIDCl.text.isEmpty) {
                             Utils.showToast(
-                                "Verify Email",
+                                "Enter Email",
                                 context);
                           }  else if (_presentOccupationCl.text.isEmpty) {
                             Utils.showToast(
@@ -1263,18 +1306,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             await postLeadDSAPersonalDetail(
                                 context, productProvider);
 
-                            /* if (productProvider.getPostLeadBuisnessDetailData !=
-                                null) {
-                              if (productProvider
-                                  .getPostLeadBuisnessDetailData!.isSuccess!) {
-                                fetchData(context);
-                              } else {
-                                Utils.showToast(
-                                    productProvider
-                                        .getPostLeadBuisnessDetailData!.message!,
-                                    context);
-                              }
-                            }*/
                           }
                         },
                         text: 'Next',
@@ -1343,13 +1374,12 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   }
 
   void getDSAPersonalDetail(BuildContext) async {
-   // Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     await Provider.of<DataProvider>(context, listen: false)
-        .getDsaPersonalDetail(userId!,productCode!);
+        .getDsaPersonalDetail(context, userId!,productCode!);
 
 
 
@@ -1375,16 +1405,17 @@ class DirectSellingAgent extends State<direct_selling_agent> {
               cityCallInitial = true;
               _gstController.text = getCustomerDetailUsingGSTData.busGSTNO!;
               gstNumber = getCustomerDetailUsingGSTData.busGSTNO!;
-              /*_businessNameController.text = getCustomerDetailUsingGSTData!.businessName!;
-              _addressLineController.text =getCustomerDetailUsingGSTData!.addressLineOne!;
-              _addressLine2Controller.text = getCustomerDetailUsingGSTData!.addressLineTwo!;
-              _pinCodeController.text = getCustomerDetailUsingGSTData!.zipCode.toString();*/
+              _refrenceCompanyNameCl.text = getCustomerDetailUsingGSTData.businessName!;
+              _referenceAddressCl.text =getCustomerDetailUsingGSTData.addressLineOne!;
+              _referencePINCodeCl.text = getCustomerDetailUsingGSTData.zipCode!.toString();
+              _referenceCityCl.text = getCustomerDetailUsingGSTData.cityId.toString();
+              _referenceStateCl.text = getCustomerDetailUsingGSTData.stateId.toString();
               //chooseBusinessProofList!.first;
               isGstFilled = true;
               selectedChooseBusinessProofValue = "GST Certificate";
-              _businessDocumentNumberController.text = getCustomerDetailUsingGSTData!.busGSTNO!;
+              _businessDocumentNumberController.text = getCustomerDetailUsingGSTData.busGSTNO!;
             } else {
-              Utils.showToast(getCustomerDetailUsingGSTData!.message!, context);
+              Utils.showToast(getCustomerDetailUsingGSTData.message!, context);
             }
         },
         failure: (exception) {
@@ -1400,120 +1431,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           }
         },
       );
-    }
-  }
-
-  Widget buildStateField(DataProvider productProvider) {
-    ReturnObject? initialData;
-
-    /*if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
-      if (productProvider.getCustomerDetailUsingGSTData!.stateId != null &&
-          productProvider.getCustomerDetailUsingGSTData!.stateId != 0 &&
-          productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
-          productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
-        setStateListFirstTime = true;
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                    (element) =>
-                element?.id ==
-                    productProvider.getCustomerDetailUsingGSTData!.stateId,
-                orElse: () => null);
-            selectedStateValue = productProvider
-                .getCustomerDetailUsingGSTData!.stateId!
-                .toString();
-          }
-
-          if (cityCallInitial) {
-            citylist.clear();
-            Provider.of<DataProvider>(context, listen: false).getAllCity(
-                productProvider.getCustomerDetailUsingGSTData!.stateId!);
-            cityCallInitial = false;
-          }
-        }
-      }
-    } else {
-      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
-          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                    (element) =>
-                element?.id ==
-                    productProvider.getLeadBusinessDetailData!.stateId,
-                orElse: () => null);
-            selectedStateValue =
-                productProvider.getLeadBusinessDetailData!.stateId!.toString();
-          }
-        }
-        if (cityCallInitial) {
-          citylist.clear();
-          Provider.of<DataProvider>(context, listen: false)
-              .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
-          cityCallInitial = false;
-        }
-      } else {
-        setStateListFirstTime = false;
-      }
-    }*/
-    if (productProvider.getAllStateData != null) {
-      return DropdownButtonFormField2<ReturnObject?>(
-        isExpanded: true,
-        value: initialData,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          fillColor: textFiledBackgroundColour,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-        ),
-        hint: const Text(
-          'State',
-          style: TextStyle(
-            color: blueColor,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: setStateListFirstTime
-            ? null
-            : (ReturnObject? value) {
-                citylist.clear();
-                setStateListFirstTime = false;
-                Provider.of<DataProvider>(context, listen: false)
-                    .getAllCity(value!.id!);
-                selectedStateValue = value.id!.toString();
-              },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
-        ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights2(
-              productProvider.getAllStateData!.returnObject!),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
-        ),
-      );
-    } else {
-      return Container();
     }
   }
 
@@ -1560,7 +1477,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-    Utils.onLoading(context, "Loading...");
+   /* Utils.onLoading(context, "Loading...");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -1587,7 +1504,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           }
         },
       );
-    }
+    }*/
   }
 
   Future<void> fetchData(BuildContext context) async {

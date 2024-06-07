@@ -658,9 +658,14 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDsaPersonalDetail(String userId,String productCode) async {
-    _getDsaPersonalDetailData = await apiService.getDsaPersonalDetail(userId,productCode);
+  Future<void> getDsaPersonalDetail(BuildContext context, String userId,String productCode) async {
+    _isLoading = true;
     notifyListeners();
+    Utils.onLoading(context, "");
+    _getDsaPersonalDetailData = await apiService.getDsaPersonalDetail(userId,productCode);
+    _isLoading = false;
+    notifyListeners();
+    Navigator.of(context).pop();
   }
 
   Future<void> disposeAllProviderData() async {
