@@ -48,6 +48,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   var isPanProgressDilog = false;
   var isVerifyAdharNumber = false;
   var isEnabledAdharNumber = true;
+  var isFillData = false;
 
   void _onFontImageSelected(File imageFile) async {
     Utils.onLoading(context, "");
@@ -114,10 +115,11 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 productProvider.getLeadAadhaar!.when(
                   success: (LeadAadhaarResponse) async {
                     leadAadhaarResponse = LeadAadhaarResponse;
-                    if (leadAadhaarResponse != null) {
+                    if (leadAadhaarResponse != null &&!isFillData) {
                       if (leadAadhaarResponse!.documentNumber != null) {
                         _aadhaarController.text =
                         leadAadhaarResponse!.documentNumber!;
+                        isVerifyAdharNumber=true;
                       }
 
                       if (leadAadhaarResponse!.frontDocumentId != null) {
@@ -231,11 +233,19 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                     AadhaarNumberFormatter(),
                                   ],
                                   onChanged: (text) async {
-                                    if (text.length == 10) {
-                                      // Make API Call to validate PAN card
-                                      isPanProgressDilog = true;
+                                    print("Text${text.length}");
+                                    if (text.length == 14) {
+                                      setState(() {
+                                        isVerifyAdharNumber=true;
+                                        //isFillData=false;
+                                      });
+
                                     } else {
-                                      isPanProgressDilog = false;
+                                      setState(() {
+                                        print("Text${text.length}");
+                                        isVerifyAdharNumber=false;
+                                        isFillData=true;
+                                      });
                                     }
                                   }),
                               isVerifyAdharNumber
@@ -505,7 +515,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                     backDocumentId);
                               }
                             },
-                            text: 'NEXTr',
+                            text: 'NEXT',
                             upperCase: true,
                           ),
                           const SizedBox(height: 50),
@@ -597,10 +607,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   Future<void> getAadhaarData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    //final String? userId = prefsUtil.getString(USER_ID);
-    // final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    final String? userId = "ab9d9b2b-546b-47ff-b010-2e9ddbea0d12";
-    final String? productCode = "1";
+    final String? userId = prefsUtil.getString(USER_ID);
+     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     Provider.of<DataProvider>(context, listen: false)
         .getLeadAadhar(userId!, productCode!);

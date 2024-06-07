@@ -63,6 +63,8 @@ dependencies:
   convex_bottom_bar: ^3.0.0
   google_fonts: ^4.0.4
   flutter_widget_from_html_core: ^0.14.12
+  getwidget: ^ 4.0.0
+  percent_indicator: ^4.2.3
 
 
 

@@ -247,7 +247,8 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                 if(leadAadhaarResponse.isSuccess!) {
                   fetchData(context);
                 }else{
-                  Utils.showBottomSheetKeyFailed(context,"${leadAadhaarResponse.message!}",KYC_FAild_PATH,widget.activityId,widget.subActivityId);
+                  Utils.showToast(leadAadhaarResponse.message!, context);
+                  //Utils.showBottomSheetKeyFailed(context,"${leadAadhaarResponse.message!}",KYC_FAild_PATH,widget.activityId,widget.subActivityId);
 
                 }
               }

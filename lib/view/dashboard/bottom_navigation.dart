@@ -1,3 +1,4 @@
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +10,7 @@ import '../../utils/utils_class.dart';
 import 'home/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
+
   final String? pageType;
   const BottomNav({super.key, this.pageType});
 
@@ -21,6 +23,7 @@ class _BottomNavState extends State<BottomNav> {
     const HomeScreen(),
     const HomeScreen(),
     const HomeScreen(),
+     UserProfileClass(),
   ];
   var selectedIndex = 2;
   late DataProvider productProvider;
@@ -44,6 +47,7 @@ class _BottomNavState extends State<BottomNav> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
           body: _pages[selectedIndex],
           extendBody: true,
           floatingActionButton: FloatingActionButton(
@@ -55,7 +59,7 @@ class _BottomNavState extends State<BottomNav> {
               });
             },
             child: SvgPicture.asset(
-              'assets/icons/ic_home.svg',
+              'assets/icons/ic_plush_button.svg',
               semanticsLabel: 'home',
             ),
             shape: RoundedRectangleBorder(
@@ -67,133 +71,142 @@ class _BottomNavState extends State<BottomNav> {
 
           bottomNavigationBar: BottomAppBar(
             surfaceTintColor: Colors.white,
-            shadowColor: textFiledBackgroundColour,
+            shadowColor: Colors.black,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            height: 70,
+            height: 75,
             shape: const CircularNotchedRectangle(),
-            notchMargin: 10,
-            elevation: 30,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                // Menu item
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 0;
-                      // productProvider.disposegetCustomerOrderSummaryData();
-                      // productProvider.disposegetCustomerTransactionList();
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/ic_vendors.svg',
-                          semanticsLabel: 'vendors',
-                          color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        ),
-                        const SizedBox(height: 3), // Add space between icon and text
-                        Text(
-                          'Vendors',
-                          style: TextStyle(
+            notchMargin: 0,
+            elevation: 100,
+            child: Container(
+              color: Colors.white,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // Menu item
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 0;
+                        // productProvider.disposegetCustomerOrderSummaryData();
+                        // productProvider.disposegetCustomerTransactionList();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/ic_home_icon.svg',
+                            semanticsLabel: 'ic_home_icon',
                             color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 3), // Add space between icon and text
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Search item
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 1;
-                      //  productProvider.disposegetCustomerOrderSummaryData();
-                      //  productProvider.disposegetCustomerTransactionList();
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/ic_transactions.svg',
-                          semanticsLabel: 'transactionsG',
-                          color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        ),
-                        const SizedBox(height: 3), // Add space between icon and text
-                        Text(
-                          'Transactions',
-                          style: TextStyle(
+                  // Search item
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 1;
+                        //  productProvider.disposegetCustomerOrderSummaryData();
+                        //  productProvider.disposegetCustomerTransactionList();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/ic_personal_card.svg',
+                            semanticsLabel: 'ic_personal_card',
                             color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 3), // Add space between icon and text
+                          Text(
+                            'Lead',
+                            style: TextStyle(
+                              color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 24.0),
-                // Print item
-                GestureDetector(
-                  onTap: () {
-                    /* setState(() {
-                      selectedIndex = 3;
-                    });*/
-                    Utils.showBottomToast("Service Not Available");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/ic_services.svg',
-                          semanticsLabel: 'ic_services',
-                          color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        ),
-                        const SizedBox(height: 3), // Add space between icon and text
-                        Text(
-                          'Services',
-                          style: TextStyle(
+                  SizedBox(width: 24.0),
+                  // Print item
+                  GestureDetector(
+                    onTap: () {
+                      /* setState(() {
+                        selectedIndex = 3;
+                      });*/
+                      Utils.showBottomToast("Service Not Available");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/ic_task_square.svg',
+                            semanticsLabel: 'ic_task_square',
+                            color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          ),
+                          const SizedBox(height: 3), // Add space between icon and text
+                          Text(
+                            'Payout',
+                            style: TextStyle(
+                              color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 3;
+                        //productProvider.disposegetCustomerOrderSummaryData();
+                        // productProvider.disposegetCustomerTransactionList();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/ic_user_square.svg',
+                            semanticsLabel: 'ic_user_squaree',
                             color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 3), // Add space between icon and text
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // People item
-                GestureDetector(
-                  onTap: () {
-                    Utils.showBottomToast("Service Not Available");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/ic_setting.svg',
-                          semanticsLabel: 'Verify PAN SVG',
-                          color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        ),
-                        const SizedBox(height: 3), // Add space between icon and text
-                        Text(
-                          'Setting',
-                          style: TextStyle(
-                            color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                  // People item
+
+                ],
+              ),
             ),
           )
 

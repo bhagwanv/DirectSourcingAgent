@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.d
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
@@ -23,6 +24,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
+import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
@@ -209,6 +212,10 @@ class DataProvider extends ChangeNotifier {
   Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
 
 
+  Result<CommanResponceModel,Exception>? _getCreatDSAUserData;
+  Result<CommanResponceModel,Exception>? get getCreatDSAUserData => _getCreatDSAUserData;
+
+
   /*Result< CheckOutOtpModel, Exception>? _genrateOptPaymentData;
   Result< CheckOutOtpModel, Exception>? get genrateOptPaymentData => _genrateOptPaymentData;
 
@@ -283,6 +290,10 @@ class DataProvider extends ChangeNotifier {
 
   Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;
+
+  Result<GetDsaDashboardDetailsResModel,Exception>? _getDSADashboardDetailsData;
+  Result<GetDsaDashboardDetailsResModel,Exception>? get getDSADashboardDetailsData => _getDSADashboardDetailsData;
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -514,6 +525,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> createDSAUser(CreateDSAUserReqModel model) async {
+    _getCreatDSAUserData = await apiService.createDSAUser(model);
+    notifyListeners();
+  }
+
   /* Future<void> getDisbursementProposal(int leadId) async {
     _getDisbursementProposalData = await apiService.GetDisbursementProposal(leadId);
     notifyListeners();
@@ -671,6 +687,10 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
     Navigator.of(context).pop();
   }
+  Future<void> getDSADashboardDetails(GetDsaDashboardDetailsReqModel model) async {
+    _getDSADashboardDetailsData = await apiService.getDSADashboardDetails(model);
+    notifyListeners();
+  }
 
   Future<void> dSAGenerateAgreement(BuildContext context, String leadId,String ProductId, bool IsSubmit) async {
     _isLoading = true;
@@ -735,6 +755,7 @@ class DataProvider extends ChangeNotifier {
     _getUserProfileResponse = null;
     _getConnectorSubmitData = null;
     _getConnectorInfoData = null;
+    _getCreatDSAUserData = null;
     /*_InProgressScreen = null;*/
     notifyListeners();
   }

@@ -4,6 +4,7 @@ import 'package:direct_sourcing_agent/inprogress/model/InProgressScreenModel.dar
 import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
@@ -25,6 +26,8 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
+import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
@@ -2016,27 +2019,76 @@ class ApiService {
       return Failure(e);
     }
 
+  }
 
+  Future<Result<GetDsaDashboardDetailsResModel, Exception>> getDSADashboardDetails(GetDsaDashboardDetailsReqModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
+       // var token = prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwYmZiOWU4Yi01ZDUyLTQ2YjgtYjQzZS0zNjQ3NGFmOGMwNzIiLCJ1c2VybmFtZSI6Ijg4NzE4OTkwODQiLCJsb2dnZWRvbiI6IjA2LzA3LzIwMjQgMTM6MDU6NTUiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4ODcxODk5MDg0IiwiZW1haWwiOiIiLCJyb2xlcyI6IkNvbm5lY3RvciIsImNvbXBhbnlpZCI6IjEwNCIsInByb2R1Y3RpZCI6IjkiLCJuYmYiOjE3MTc3NjU1NTUsImV4cCI6MTcxNzg1MTk1NSwiaWF0IjoxNzE3NzY1NTU1LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXFhLnNjYWxldXBmaW4uY29tIiwiYXVkIjoiY3JtQXBpIn0.Nyknz73nQRZ7RDDbPUoWt7f5s6d5Ds2p2h_2xoK-LAt5n_XkxQvcihW4pAl79F8v1wnB-NrIGbjkygLNgp6dJY9zuJ4F_EqOCcCn9Zc8lYwqgRBGWn1yqoEDX8sTrjFwJMFzEX_p3U311jpo-nq_lAtSMAl4EM4Iu0_7C-vtrNYOuSsG6PhG3ExZWqxG0R5zpDyClf8Rnjv-2mMZN6u503hT8btogo09jB8TECWOYq77K5gcFWMmsn3_3RneosVkLToGprK2d0J9Cjsye4H5845O_UTGPBCV6atBXqSmenbYNui-5MKf26vzsHIF3DcO9ZKCwbNFpKd01F-i2f6Dcg";
+        final response = await interceptor.post(
+            Uri.parse(
+                '${apiUrls.baseUrl + apiUrls.getDSADashboardDetails}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final GetDsaDashboardDetailsResModel responseModel =
+            GetDsaDashboardDetailsResModel.fromJson(jsonData);
+            return Success(responseModel);
 
-    /*if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-
-        final CustomerDetailUsingGstResponseModel responseModel =
-        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
-        return responseModel;
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
-    }*/
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<CommanResponceModel, Exception>> createDSAUser(
+      CreateDSAUserReqModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.CreateDSAUser),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final CommanResponceModel responseModel =
+            CommanResponceModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
   }
 
   Future<Result<GetAgreementResModel,Exception>> dSAGenerateAgreement(String leadId,String ProductId, bool IsSubmit) async {
