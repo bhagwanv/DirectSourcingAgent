@@ -2025,7 +2025,8 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         //var base_url = prefsUtil.getString(BASE_URL);
-        var token = prefsUtil.getString(TOKEN);
+       // var token = prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwYmZiOWU4Yi01ZDUyLTQ2YjgtYjQzZS0zNjQ3NGFmOGMwNzIiLCJ1c2VybmFtZSI6Ijg4NzE4OTkwODQiLCJsb2dnZWRvbiI6IjA2LzA3LzIwMjQgMTM6MDU6NTUiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4ODcxODk5MDg0IiwiZW1haWwiOiIiLCJyb2xlcyI6IkNvbm5lY3RvciIsImNvbXBhbnlpZCI6IjEwNCIsInByb2R1Y3RpZCI6IjkiLCJuYmYiOjE3MTc3NjU1NTUsImV4cCI6MTcxNzg1MTk1NSwiaWF0IjoxNzE3NzY1NTU1LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXFhLnNjYWxldXBmaW4uY29tIiwiYXVkIjoiY3JtQXBpIn0.Nyknz73nQRZ7RDDbPUoWt7f5s6d5Ds2p2h_2xoK-LAt5n_XkxQvcihW4pAl79F8v1wnB-NrIGbjkygLNgp6dJY9zuJ4F_EqOCcCn9Zc8lYwqgRBGWn1yqoEDX8sTrjFwJMFzEX_p3U311jpo-nq_lAtSMAl4EM4Iu0_7C-vtrNYOuSsG6PhG3ExZWqxG0R5zpDyClf8Rnjv-2mMZN6u503hT8btogo09jB8TECWOYq77K5gcFWMmsn3_3RneosVkLToGprK2d0J9Cjsye4H5845O_UTGPBCV6atBXqSmenbYNui-5MKf26vzsHIF3DcO9ZKCwbNFpKd01F-i2f6Dcg";
         final response = await interceptor.post(
             Uri.parse(
                 '${apiUrls.baseUrl + apiUrls.getDSADashboardDetails}'),

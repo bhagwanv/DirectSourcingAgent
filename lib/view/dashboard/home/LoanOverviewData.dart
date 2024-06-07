@@ -17,7 +17,7 @@ class LoanOverviewData {
   int? pending;
   int? approved;
   int? rejected;
-  int? successRate;
+  dynamic successRate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

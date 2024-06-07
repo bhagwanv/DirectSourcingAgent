@@ -17,7 +17,7 @@ class LeadOverviewData {
   int? pending;
   int? rejected;
   int? submitted;
-  int? successRate;
+  dynamic successRate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

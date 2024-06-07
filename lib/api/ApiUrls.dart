@@ -10,7 +10,7 @@ class ApiUrls{
   //auth
   final String generateOtp="/aggregator/LeadAgg/GenerateDSAOtp";
   final String leadMobileValidate="/aggregator/LeadAgg/DSAValidateOTP";
-  final String getUserData="/aggregator/LeadAgg/GetDSAUserProfile";
+  final String getUserData="/aggregator/DSAAgg/GetDSAUserProfile";
 
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";
@@ -72,8 +72,7 @@ class ApiUrls{
   final String GetConnectorPersonalDetail="/aggregator/DSAAgg/GetConnectorPersonalDetail";
   final String getDSAPersonalDetail="/aggregator/DSAAgg/GetDSAPersonalDetail";
   final String CreateDSAUser="/aggregator/DSAAgg/CreateDSAUser";
-  final String GetConnectorPersonalDetail="/aggregator/LeadAgg/GetConnectorPersonalDetail";
-  final String getDSAPersonalDetail="/aggregator/LeadAgg/GetDSAPersonalDetail";
   final String getDSADashboardDetails="/aggregator/DSAAgg/GetDSADashboardDetails";
+  final String getDSASalesAgentList="/aggregator/DSAAgg/GetDSASalesAgentList";
 
 }
