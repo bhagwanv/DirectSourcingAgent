@@ -505,7 +505,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                     backDocumentId);
                               }
                             },
-                            text: 'NEXTr',
+                            text: 'NEXT',
                             upperCase: true,
                           ),
                           const SizedBox(height: 50),
