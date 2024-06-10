@@ -2224,4 +2224,38 @@ class ApiService {
     } else {
       throw Exception('No internet connection');
     }*/
+
+  Future<Result<DsaSalesAgentListResModel,Exception>> getDSASalesAgentList() async {
+
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        //    var token = prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIyOWE2OTFiMy0wNWJlLTQ5OTItYmVjYS03ZDg2YzY4YWUzZTQiLCJ1c2VybmFtZSI6Ijg5NTkzMTE0MzciLCJsb2dnZWRvbiI6IjA2LzEwLzIwMjQgMDU6MzU6NTYiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4OTU5MzExNDM3IiwiZW1haWwiOiIiLCJyb2xlcyI6IkNvbm5lY3RvciIsImNvbXBhbnlpZCI6IjEwNCIsInByb2R1Y3RpZCI6IjgiLCJuYmYiOjE3MTc5OTc3NTYsImV4cCI6MTcxODA4NDE1NiwiaWF0IjoxNzE3OTk3NzU2LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXFhLnNjYWxldXBmaW4uY29tIiwiYXVkIjoiY3JtQXBpIn0.YrPPZyYwAKyd88yAWNnLSb2A-gBM2-Ibm5uIskeN3WgHZIL8VnaX6sGLXtV-ik43sWvagYAHDS19w5Rg2QtLdlC0nHG8d7mIPHGiPMFieEPbxEyUXRnPX5On1CZNkdI5-Mham9f6bXQPH11B1TZzFiz5_ehpUMG3hL5vHqUFnqfk9G4NcFjusq5SVfLiPzf8LbePKpXTklzrQPUcQF5DpHvQh1O-SDfaGhf2-B75Ybj0s91e4XnXsH12I0FqJaTlRj8XLL-9EWcp4z7vOnuUAVcyJxcLKD9Oxkfm2QIW0dyAbZcMKeeq_G0_GOAXpwB4ao3pSPlqHTyY-VkikX_klg";
+
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getDSASalesAgentList}'),headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final DsaSalesAgentListResModel responseModel = DsaSalesAgentListResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+
+  }
+
 }

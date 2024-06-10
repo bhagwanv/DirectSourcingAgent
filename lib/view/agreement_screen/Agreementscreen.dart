@@ -247,7 +247,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel,context)
       as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
