@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,11 @@ import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
+import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
+import '../splash/model/GetLeadResponseModel.dart';
+import '../splash/model/LeadCurrentRequestModel.dart';
+import '../splash/model/LeadCurrentResponseModel.dart';
 
 class AgreementScreen extends StatefulWidget {
   final int activityId;
@@ -197,7 +202,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
       productProvider.checkESignResponseModelData!.when(
         success: (data) {
           if (data.status!) {
-           // fetchData(context);
+            fetchData(context);
           }
         },
         failure: (exception) {
@@ -225,7 +230,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         context, leadId!.toString(), productId.toString(), companyId.toString(), isSubmit);
   }
 
-/*  Future<void> fetchData(BuildContext context) async {
+  Future<void> fetchData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     try {
       LeadCurrentResponseModel? leadCurrentActivityAsyncData;
@@ -258,7 +263,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         print('Error occurred during API call: $error');
       }
     }
-  }*/
+  }
 
 /* Future<void> callAggrementDetailsApi(
       bool accept,
