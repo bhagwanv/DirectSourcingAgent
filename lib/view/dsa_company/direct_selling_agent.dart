@@ -29,6 +29,8 @@ import '../personal_info/model/SendOtpOnEmailResponce.dart';
 import '../splash/model/GetLeadResponseModel.dart';
 import '../splash/model/LeadCurrentRequestModel.dart';
 import '../splash/model/LeadCurrentResponseModel.dart';
+import 'model/CustomerDetailUsingGSTResponseModel.dart';
+import 'model/GetDsaPersonalDetailResModel.dart';
 import 'model/PostLeadDSAPersonalDetailReqModel.dart';
 
 class direct_selling_agent extends StatefulWidget {
@@ -38,9 +40,9 @@ class direct_selling_agent extends StatefulWidget {
 
   direct_selling_agent(
       {required this.activityId,
-      required this.subActivityId,
-      super.key,
-      this.pageType});
+        required this.subActivityId,
+        super.key,
+        this.pageType});
 
   @override
   State<direct_selling_agent> createState() => DirectSellingAgent();
@@ -70,7 +72,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   final TextEditingController _companyCityCl = TextEditingController();
   final TextEditingController _presentOccupationCl = TextEditingController();
   final TextEditingController _businessDocumentNumberController =
-      TextEditingController();
+  TextEditingController();
 
   bool _isSelected1 = false;
   bool _isSelected2 = false;
@@ -122,6 +124,11 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   String? selectedCityValue;
   String? cityId;
   String? stateId;
+
+  String? selectedCompanyStateValue;
+  String? selectedCompanyCityValue;
+  String? companyCityId;
+  String? companyStateId;
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
@@ -189,6 +196,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   var gstUpdate = false;
   var setStateListFirstTime = true;
   var setCityListFirstTime = true;
+  CustomerDetailUsingGstResponseModel? getCustomerDetailUsingGSTData;
+  GetDsaPersonalDetailResModel? getDsaPersonalDetailData;
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
     final List<DropdownMenuItem<String>> menuItems = [];
@@ -253,6 +262,48 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     Navigator.of(context, rootNavigator: true).pop();
   }
 
+  List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce?> list) {
+    final List<DropdownMenuItem<CityResponce>> menuItems = [];
+    for (final CityResponce? item in list) {
+      menuItems.addAll(
+        [
+          DropdownMenuItem<CityResponce>(
+            value: item,
+            child: Text(
+              item!.name!, // Assuming 'name' is the property to display
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          // If it's not the last item, add Divider after it.
+          if (item != list.last)
+            const DropdownMenuItem<CityResponce>(
+              enabled: false,
+              child: Divider(
+                height: 0.1,
+              ),
+            ),
+        ],
+      );
+    }
+    return menuItems;
+  }
+
+  List<double> _getCustomItemsHeights3(List<CityResponce?> items) {
+    final List<double> itemsHeights = [];
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      if (i.isEven) {
+        itemsHeights.add(40);
+      }
+      //Dividers indexes will be the odd indexes
+      if (i.isOdd) {
+        itemsHeights.add(4);
+      }
+    }
+    return itemsHeights;
+  }
+
   /// Display date picker.
   void _showDatePicker(BuildContext context) {
     DatePicker.showDatePicker(
@@ -297,60 +348,24 @@ class DirectSellingAgent extends State<direct_selling_agent> {
 
   Widget buildStateField(DataProvider productProvider) {
     ReturnObject? initialData;
-
-    /*if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
-      if (productProvider.getCustomerDetailUsingGSTData!.stateId != null &&
-          productProvider.getCustomerDetailUsingGSTData!.stateId != 0 &&
-          productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
-          productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
-        setStateListFirstTime = true;
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                    (element) =>
-                element?.id ==
-                    productProvider.getCustomerDetailUsingGSTData!.stateId,
-                orElse: () => null);
-            selectedStateValue = productProvider
-                .getCustomerDetailUsingGSTData!.stateId!
-                .toString();
-          }
+    if (productProvider.getAllStateData != null) {
+      if (productProvider.getAllStateData != null) {
+        var allStates = productProvider.getAllStateData!.returnObject!;
+        if (companyStateId != null) {
+          initialData = allStates.firstWhere(
+                  (element) =>
+              element?.id == int.parse(companyStateId!),
+              orElse: () => null);
 
           if (cityCallInitial) {
             citylist.clear();
-            Provider.of<DataProvider>(context, listen: false).getAllCity(
-                productProvider.getCustomerDetailUsingGSTData!.stateId!);
+            Provider.of<DataProvider>(context, listen: false).getAllCity(int.parse(companyStateId!));
             cityCallInitial = false;
           }
+        } else {
+          initialData = null;
         }
       }
-    } else {
-      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
-          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                    (element) =>
-                element?.id ==
-                    productProvider.getLeadBusinessDetailData!.stateId,
-                orElse: () => null);
-            selectedStateValue =
-                productProvider.getLeadBusinessDetailData!.stateId!.toString();
-          }
-        }
-        if (cityCallInitial) {
-          citylist.clear();
-          Provider.of<DataProvider>(context, listen: false)
-              .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
-          cityCallInitial = false;
-        }
-      } else {
-        setStateListFirstTime = false;
-      }
-    }*/
-    if (productProvider.getAllStateData != null) {
       return DropdownButtonFormField2<ReturnObject?>(
         isExpanded: true,
         value: initialData,
@@ -380,15 +395,13 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           ),
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: setStateListFirstTime
-            ? null
-            : (ReturnObject? value) {
-                citylist.clear();
-                setStateListFirstTime = false;
-                Provider.of<DataProvider>(context, listen: false)
-                    .getAllCity(value!.id!);
-                selectedStateValue = value.id!.toString();
-              },
+        onChanged: (ReturnObject? value) {
+          citylist.clear();
+          setStateListFirstTime = false;
+          Provider.of<DataProvider>(context, listen: false)
+              .getAllCity(value!.id!);
+          selectedStateValue = value.id!.toString();
+        },
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.only(right: 8),
         ),
@@ -399,6 +412,95 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           customHeights: _getCustomItemsHeights2(
               productProvider.getAllStateData!.returnObject!),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildCityField(DataProvider productProvider) {
+    if (productProvider.getAllCityData != null) {
+      citylist.clear();
+      citylist = productProvider.getAllCityData!;
+      CityResponce? initialData;
+      if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
+        if (getCustomerDetailUsingGSTData!.cityId != null &&
+            getCustomerDetailUsingGSTData!.cityId != 0) {
+          setCityListFirstTime = true;
+          if (setCityListFirstTime) {
+            initialData = citylist.firstWhere(
+                    (element) =>
+                element?.id ==
+                    getCustomerDetailUsingGSTData!.cityId,
+                orElse: () => CityResponce());
+          }
+        }
+      } else {
+        if(getDsaPersonalDetailData!.companyCityId != null) {
+          if (int.parse(getDsaPersonalDetailData!.companyCityId!) != 0) {
+            if (setCityListFirstTime) {
+              initialData = citylist.firstWhere(
+                      (element) =>
+                  element?.id ==
+                      int.parse(getDsaPersonalDetailData!.companyCityId!),
+                  orElse: () => CityResponce());
+            }
+          } else {
+            setCityListFirstTime = false;
+          }
+        } else {
+          setCityListFirstTime = false;
+        }
+      }
+
+      return DropdownButtonFormField2<CityResponce>(
+        isExpanded: true,
+        value: initialData,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: const Text(
+          'City',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        items: getAllCity(citylist),
+        onChanged: (CityResponce? value) {
+          selectedCityValue = value!.id.toString();
+          setState(() {
+            setCityListFirstTime = false;
+          });
+        },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights3(citylist),
         ),
         iconStyleData: const IconStyleData(
           openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -420,154 +522,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
 
   @override
   Widget build(BuildContext context) {
-    final dataProvider = Provider.of<DataProvider>(context);
-    if (dataProvider.getDsaPersonalDetailData != null) {
-      dataProvider.getDsaPersonalDetailData!.when(
-        success: (data) {
-          if (data.fullName != null) {
-            _fullNameCl.text = data.fullName!;
-          }
-          if (data.fatherOrHusbandName != null) {
-            _fatherOrHusbandNameCl.text =
-                data.fatherOrHusbandName!;
-          }
-          if (data.dob != null) {
-            selectedDate = data.dob!;
-          }
-          if (data.age != null) {
-            _ageCl.text = data.age!.toString();
-          }
-          if (data.address != null) {
-            _addressCl.text = data.address!;
-          }
-          if (data.pinCode != null) {
-            _pinCodeCl.text = data.pinCode!.toString();
-          }
-          if (data.city != null) {
-            _cityCl.text = data.city!;
-          }
-
-          if (data.state != null) {
-            _stateCl.text = data.state!;
-          }
-          if (data.alternatePhoneNo != null) {
-            _alternetMobileNumberCl.text =
-                data.alternatePhoneNo!;
-          }
-          if (data.emailId != null) {
-            _emailIDCl.text = data.emailId!;
-          }
-          if (data.presentOccupation != null) {
-            _presentOccupationCl.text =
-                data.presentOccupation!;
-          }
-          if (data.noOfYearsInCurrentEmployment != null) {
-            _currentEmploymentCl.text =
-                data.noOfYearsInCurrentEmployment!;
-          }
-          if (data.qualification != null) {
-            _qualificationCl.text = data.qualification!;
-          }
-          if (data.languagesKnown != null) {
-            _languagesKnownCl.text = data.languagesKnown!;
-          }
-          if (data.workingLocation != null) {
-            _locationCl.text = data.workingLocation!;
-          }
-          if (data.referneceName != null) {
-            _referenceNames.text = data.referneceName!;
-          }
-          if (data.referneceContact != null) {
-            _referenceContactNoCl.text =
-                data.referneceContact!;
-          }
-          if (data.gstNumber != null) {
-            _gstController.text = data.gstNumber!;
-            gstNumber = data.gstNumber!;
-          }
-          if (data.firmType != null) {
-            selectedFirmTypeValue = data.firmType!;
-          }
-          if (data.buisnessDocument != null) {
-            selectedBusinessTypeValue =
-                data.buisnessDocument!;
-          }
-
-          if (data.companyName != null) {
-            _companyNameCl.text = data.companyName!;
-          }
-
-          if (data.cityId != null) {
-            cityId = data.cityId!;
-          }
-
-          if (data.stateId != null) {
-            stateId = data.stateId!;
-          }
-
-          if (data.workingWithOther != null) {
-            if(!_isSelected1 && !_isSelected2) {
-              if(data.workingWithOther == "No") {
-                _handleCheckboxChange(2, true);
-              } else {
-                _handleCheckboxChange(1, true);
-              }
-            }
-          }
-          if (data.gstStatus != null) {
-            if(!_isGstSelected1 && !_isGstSelected2) {
-              if(data.gstStatus == "No") {
-                _handleGstCheckboxChange(2, true);
-              } else {
-                _handleGstCheckboxChange(1, true);
-              }
-            }
-          }
-
-          if (data.buisnessDocImg != null &&
-              !isImageDelete) {
-            image = data.buisnessDocImg!;
-          }
-
-          if (data.companyAddress != null) {
-            _companyAddressCl.text = data.companyAddress!;
-          }
-          if (data.companyPinCode != null) {
-            _companyPinCodeCodeCl.text = data.companyPinCode!;
-          }
-          if (data.companyCity != null) {
-            _companyCityCl.text = data.companyCity!;
-          }
-
-          if (data.companyState != null) {
-            _companyStateCl.text = data.companyState!;
-          }
-        },
-        failure: (exception) {
-          if (exception is ApiException) {
-            if (exception.statusCode == 401) {
-              ApiService().handle401(context);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Utils.showToast(exception.errorMessage, context);
-              });
-            }
-          }
-        },
-      );
-    }
-
-    if (dataProvider.getpostDSABusineesDoumentSingleFileData != null &&
-        !isImageDelete) {
-      if (dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath !=
-          null) {
-        image = dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath!;
-        print("atul$image");
-        businessProofDocId =
-            dataProvider.getpostDSABusineesDoumentSingleFileData!.docId!;
-      }
-    }
-
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -586,855 +540,848 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           top: true,
           bottom: true,
           child: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
-            /*if (productProvider.data == null && isLoading) {
-              return Utils.onLoading(context, "");
-            } else {
-               if (productProvider.getDsaPersonalDetailData != null &&
-                  isLoading) {
-                isLoading = false;
-              }
-
-               if (productProvider.getDsaPersonalDetailData != null) {
-                 productProvider.getDsaPersonalDetailData!.when(
-                   success: (data) {
-                     // Handle successful response
-                     var getDsaPersonalDetailData = data;
-
-                     if(getDsaPersonalDetailData.fullName!=null){
-                       _fullNameCl.text=getDsaPersonalDetailData.fullName!;
-                     }
-                     if(getDsaPersonalDetailData.fatherOrHusbandName!=null){
-                       _fatherOrHusbandNameCl.text=getDsaPersonalDetailData.fatherOrHusbandName!;
-                     }
-                     if(getDsaPersonalDetailData.dob!=null){
-                       selectedDate=getDsaPersonalDetailData.dob!;
-                     }
-                     if(getDsaPersonalDetailData.age!=null){
-                       _addressCl.text=getDsaPersonalDetailData.age!.toString();
-                     }
-                     if(getDsaPersonalDetailData.address!=null){
-                       _ageCl.text=getDsaPersonalDetailData.address!;
-                     }
-                     if(getDsaPersonalDetailData.pinCode!=null){
-                       _pinCodeCl.text=getDsaPersonalDetailData.pinCode!.toString();
-                     }
-                     if(getDsaPersonalDetailData.city!=null){
-                       _cityCl.text=getDsaPersonalDetailData.city!;
-                     }
-
-                     if(getDsaPersonalDetailData.state!=null){
-                       _stateCl.text=getDsaPersonalDetailData.state!;
-                     }
-                     if(getDsaPersonalDetailData.alternatePhoneNo!=null){
-                       _alternetMobileNumberCl.text=getDsaPersonalDetailData.alternatePhoneNo!;
-                     }
-                     if(getDsaPersonalDetailData.emailId!=null){
-                       _emailIDCl.text=getDsaPersonalDetailData.emailId!;
-                     }
-                     if(getDsaPersonalDetailData.presentOccupation!=null){
-                       _presentOccupationCl.text=getDsaPersonalDetailData.presentOccupation!;
-                     }
-                     if(getDsaPersonalDetailData.noOfYearsInCurrentEmployment!=null){
-                       _currentEmploymentCl.text=getDsaPersonalDetailData.noOfYearsInCurrentEmployment!;
-                     }
-                     if(getDsaPersonalDetailData.qualification!=null){
-                       _qualificationCl.text=getDsaPersonalDetailData.qualification!;
-                     }
-                     if(getDsaPersonalDetailData.languagesKnown!=null){
-                       _languagesKnownCl.text=getDsaPersonalDetailData.languagesKnown!;
-                     }
-                     if(getDsaPersonalDetailData.workingLocation!=null){
-                       _locationCl.text=getDsaPersonalDetailData.workingLocation!;
-                     }
-                     if(getDsaPersonalDetailData.referneceName!=null){
-                       _referenceNames.text=getDsaPersonalDetailData.referneceName!;
-                     }
-                     if(getDsaPersonalDetailData.referneceContact!=null){
-                       _referenceContactNoCl.text=getDsaPersonalDetailData.referneceContact!;
-                     }
-                     if(getDsaPersonalDetailData.gstNumber!=null){
-                       _gstController.text=getDsaPersonalDetailData.gstNumber!;
-                       gstNumber=getDsaPersonalDetailData.gstNumber!;
-                     }
-                     if(getDsaPersonalDetailData.firmType!=null){
-                       selectedFirmTypeValue=getDsaPersonalDetailData.firmType!;
-                     }
-                     if(getDsaPersonalDetailData.buisnessDocument!=null){
-                       selectedBusinessTypeValue=getDsaPersonalDetailData.buisnessDocument!;
-                     }
-
-                     if(getDsaPersonalDetailData.companyName!=null){
-                       _refrenceCompanyNameCl.text=getDsaPersonalDetailData.companyName!;
-                     }
-
-
-                   },
-                   failure: (exception) {
-                     print("Error sdsds");
-                     print(exception);
-                     if (exception is ApiException) {
-                       if (exception.statusCode == 401) {
-                         productProvider.disposeAllProviderData();
-                         ApiService().handle401(context);
-                       } else {
-                         if(exception.errorMessage != null) {
-                           Utils.showToast(exception.errorMessage, context);
-                         }else {
-                           Utils.showToast("Something went wrong", context);
-                         }
-                       }
-                     }
-                   },
-                 );
-               }
-
-             */ /* if (productProvider.getCustomerDetailUsingGSTData != null) {
-                if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO !=
-                    null &&
-                    !gstUpdate) {
-                  if (productProvider
-                      .getCustomerDetailUsingGSTData!.busGSTNO!.isNotEmpty) {
-                    selectedDate = Utils.dateFormate(context,
-                        productProvider.getCustomerDetailUsingGSTData!.doi!);
-                    if (productProvider
-                        .getCustomerDetailUsingGSTData!.buisnessProofDocId !=
-                        0) {
-                      businessProofDocId = productProvider
-                          .getCustomerDetailUsingGSTData!.buisnessProofDocId!;
-                    }
-                    if (productProvider
-                        .getCustomerDetailUsingGSTData!.buisnessProofUrl !=
-                        null) {
-                      image = productProvider
-                          .getCustomerDetailUsingGSTData!.buisnessProofUrl!;
-                    }
-
-                    if (productProvider
-                        .getCustomerDetailUsingGSTData!.buisnessProof !=
-                        null) {
-                      print("yha pr aaya ");
-                      selectedChooseBusinessProofValue = productProvider
-                          .getCustomerDetailUsingGSTData!.buisnessProof!;
-                    }
-                    if (productProvider
-                        .getCustomerDetailUsingGSTData!.buisnessProof !=
-                        null) {
-                      if (productProvider
-                          .getCustomerDetailUsingGSTData!.busEntityType !=
-                          null) {
-                        selectedBusinessTypeValue = productProvider
-                            .getCustomerDetailUsingGSTData!.busEntityType!;
+              builder: (context, dataProvider, child) {
+                if (dataProvider.getDsaPersonalDetailData != null) {
+                  dataProvider.getDsaPersonalDetailData!.when(
+                    success: (data) {
+                      getDsaPersonalDetailData = data;
+                      if (data.fullName != null) {
+                        _fullNameCl.text = data.fullName!;
                       }
-                    }
-                    updateData = false;
+                      if (data.fatherOrHusbandName != null) {
+                        _fatherOrHusbandNameCl.text =
+                        data.fatherOrHusbandName!;
+                      }
+                      if (data.dob != null) {
+                        selectedDate = data.dob!;
+                      }
+                      if (data.age != null) {
+                        _ageCl.text = data.age!.toString();
+                      }
+                      if (data.address != null) {
+                        _addressCl.text = data.address!;
+                      }
+                      if (data.pinCode != null) {
+                        _pinCodeCl.text = data.pinCode!.toString();
+                      }
+                      if (data.city != null) {
+                        _cityCl.text = data.city!;
+                      }
+
+                      if (data.state != null) {
+                        _stateCl.text = data.state!;
+                      }
+                      if (data.alternatePhoneNo != null) {
+                        _alternetMobileNumberCl.text =
+                        data.alternatePhoneNo!;
+                      }
+                      if (data.emailId != null) {
+                        _emailIDCl.text = data.emailId!;
+                      }
+                      if (data.presentOccupation != null) {
+                        _presentOccupationCl.text =
+                        data.presentOccupation!;
+                      }
+                      if (data.noOfYearsInCurrentEmployment != null) {
+                        _currentEmploymentCl.text =
+                        data.noOfYearsInCurrentEmployment!;
+                      }
+                      if (data.qualification != null) {
+                        _qualificationCl.text = data.qualification!;
+                      }
+                      if (data.languagesKnown != null) {
+                        _languagesKnownCl.text = data.languagesKnown!;
+                      }
+                      if (data.workingLocation != null) {
+                        _locationCl.text = data.workingLocation!;
+                      }
+                      if (data.referneceName != null) {
+                        _referenceNames.text = data.referneceName!;
+                      }
+                      if (data.referneceContact != null) {
+                        _referenceContactNoCl.text =
+                        data.referneceContact!;
+                      }
+                      if (data.gstNumber != null) {
+                        _gstController.text = data.gstNumber!;
+                        gstNumber = data.gstNumber!;
+                      }
+                      if (data.firmType != null) {
+                        selectedFirmTypeValue = data.firmType!;
+                      }
+                      if (data.buisnessDocument != null) {
+                        selectedBusinessTypeValue =
+                        data.buisnessDocument!;
+                      }
+
+                      if (data.companyName != null) {
+                        _companyNameCl.text = data.companyName!;
+                      }
+
+                      if (data.cityId != null) {
+                        cityId = data.cityId!;
+                      }
+
+                      if (data.stateId != null) {
+                        stateId = data.stateId!;
+                      }
+
+                     /* if (data.workingWithOther != null) {
+                        if(!_isSelected1 && !_isSelected2) {
+                          if(data.workingWithOther == "No") {
+                            _handleCheckboxChange(2, true);
+                          } else {
+                            _handleCheckboxChange(1, true);
+                          }
+                        }
+                      }
+                      if (data.gstStatus != null) {
+                        if(!_isGstSelected1 && !_isGstSelected2) {
+                          if(data.gstStatus == "No") {
+                            _handleGstCheckboxChange(2, true);
+                          } else {
+                            _handleGstCheckboxChange(1, true);
+                          }
+                        }
+                      }*/
+
+                      if (data.buisnessDocImg != null &&
+                          !isImageDelete) {
+                        image = data.buisnessDocImg!;
+                      }
+
+                      if (data.companyAddress != null) {
+                        _companyAddressCl.text = data.companyAddress!;
+                      }
+                      if (data.companyPinCode != null) {
+                        _companyPinCodeCodeCl.text = data.companyPinCode!;
+                      }
+                      if (data.companyCity != null) {
+                        _companyCityCl.text = data.companyCity!;
+                      }
+
+                      if (data.companyState != null) {
+                        _companyStateCl.text = data.companyState!;
+                      }
+                      if (data.companyCityId != null) {
+                        companyCityId = data.companyCityId!;
+                      }
+
+                      if (data.companyStateId != null) {
+                        companyStateId = data.companyStateId!;
+                      }
+
+                    },
+                    failure: (exception) {
+                      if (exception is ApiException) {
+                        if (exception.statusCode == 401) {
+                          ApiService().handle401(context);
+                        } else {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Utils.showToast(exception.errorMessage, context);
+                          });
+                        }
+                      }
+                    },
+                  );
+                }
+
+                if (dataProvider.getpostDSABusineesDoumentSingleFileData != null &&
+                    !isImageDelete) {
+                  if (dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath !=
+                      null) {
+                    image = dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath!;
+                    print("atul$image");
+                    businessProofDocId =
+                    dataProvider.getpostDSABusineesDoumentSingleFileData!.docId!;
                   }
                 }
-              }*/ /*
-
-              if (productProvider.getAllCityData != null) {
-                citylist = productProvider.getAllCityData!;
-              }
-
-
-            }*/
-            return Padding(
-              padding:
+                return Padding(
+                  padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 30),
-                    Center(
-                      child: Text('Sign Up',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Center(
-                      child: Text('Please enter below details',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _fullNameCl,
-                      enabled: updateData,
-                      hintText: "Full Name",
-                      labelText: "Full Name",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _fatherOrHusbandNameCl,
-                      enabled: updateData,
-                      hintText: "Father’s / Husband’s Name",
-                      labelText: "Father’s / Husband’s Name",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    InkWell(
-                      onTap: updateData
-                          ? () {
-                              _showDatePicker(context);
-                            }
-                          : null,
-                      // Set onTap to null when field is disabled
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: textFiledBackgroundColour,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: kPrimaryColor),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                selectedDate!.isEmpty
-                                    ? "Date of Birth"
-                                    : "$selectedDate",
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.date_range,
-                                color: kPrimaryColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _ageCl,
-                      enabled: updateData,
-                      keyboardType: TextInputType.number,
-                      hintText: "Age",
-                      labelText: "Age",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _addressCl,
-                      enabled: updateData,
-                      hintText: "Address",
-                      labelText: "Address",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _pinCodeCl,
-                      enabled: updateData,
-                      keyboardType: TextInputType.number,
-                      hintText: "PIN Code",
-                      labelText: "PIN Code",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _cityCl,
-                      enabled: updateData,
-                      hintText: "City",
-                      labelText: "City",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _stateCl,
-                      enabled: updateData,
-                      hintText: "State",
-                      labelText: "State",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _alternetMobileNumberCl,
-                      enabled: updateData,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Z0-9]'))),
-                        LengthLimitingTextInputFormatter(10)
-                      ],
-                      keyboardType: TextInputType.number,
-                      hintText: "Alternate Contact Number",
-                      labelText: "Alternate Contact Number",
-                    ),
-                    SizedBox(height: 16),
-                    Stack(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 30),
+                        Center(
+                          child: Text('Sign Up',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Center(
+                          child: Text('Please enter below details',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
                         CommonTextField(
-                          controller: _emailIDCl,
-                          keyboardType: TextInputType.emailAddress,
-                          hintText: "E Mail id",
-                          labelText: "E Mail id",
+                          controller: _fullNameCl,
+                          enabled: updateData,
+                          hintText: "Full Name",
+                          labelText: "Full Name",
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    CommonTextField(
-                      controller: _presentOccupationCl,
-                      enabled: updateData,
-                      hintText: "Present Occupation",
-                      labelText: "Present Occupation",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _currentEmploymentCl,
-                      keyboardType: TextInputType.number,
-                      enabled: updateData,
-                      hintText: "No of years in current employment",
-                      labelText: "No of years in current employment",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _qualificationCl,
-                      enabled: updateData,
-                      hintText: "Qualification",
-                      labelText: "Qualification",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _languagesKnownCl,
-                      enabled: updateData,
-                      hintText: "Languages Known",
-                      labelText: "Languages Known",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _locationCl,
-                      enabled: updateData,
-                      hintText: "Location",
-                      labelText: "Location",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                        'Presently working with other Party/bank/NBFC /Financial Institute? ',
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: CheckboxTerm(
-                            content: "Yes",
-                            isChecked: _isSelected1,
-                            onChanged: (bool? value) {
-                              _handleCheckboxChange(1, value);
-                            },
-                          ),
+                        const SizedBox(
+                          height: 16.0,
                         ),
-                        Expanded(
-                          child: CheckboxTerm(
-                            content: "No",
-                            isChecked: _isSelected2,
-                            onChanged: (bool? value) {
-                              _handleCheckboxChange(2, value);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text('Reference ',
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _referenceNames,
-                      enabled: updateData,
-                      hintText: "Names",
-                      labelText: "Names",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _referenceContactNoCl,
-                      enabled: updateData,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Z0-9]'))),
-                        LengthLimitingTextInputFormatter(10)
-                      ],
-                      hintText: "Contact No. ",
-                      labelText: "Contact No.",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text('GST Registration Status ',
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: CheckboxTerm(
-                            content: "GST Registered",
-                            isChecked: _isGstSelected1,
-                            onChanged: (bool? value) {
-                              _handleGstCheckboxChange(1, value);
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: CheckboxTerm(
-                            content: "Not GST Registered",
-                            isChecked: _isGstSelected2,
-                            onChanged: (bool? value) {
-                              _handleGstCheckboxChange(2, value);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Stack(
-                      children: [
                         CommonTextField(
-                            controller: _gstController,
-                            hintText: "GST Number",
-                            keyboardType: TextInputType.text,
-                            enabled: updateData,
-                            labelText: "GST Number",
-                            textCapitalization: TextCapitalization.characters,
-                            inputFormatter: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp((r'[A-Z0-9]'))),
-                              LengthLimitingTextInputFormatter(15)
-                            ],
-                            onChanged: (text) async {
-                              if (text.length == 15) {
-                                try {
-                                  Utils.hideKeyBored(context);
-                                  await getCustomerDetailUsingGST(context,
-                                      _gstController.text, productProvider);
-                                } catch (error) {
-                                  debugPrint('Error: $error');
-                                }
-                              }
-                            }),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                updateData = true;
-                                isImageDelete = true;
-                                gstUpdate = true;
-                                setCityListFirstTime = false;
-                                _gstController.text = "";
-                                _businessDocumentNumberController.text = "";
-                                selectedDate = "";
-                                businessProofDocId = null;
-                                selectedFirmTypeValue = null;
-                                selectedStateValue = null;
-                                selectedCityValue = null;
-                                selectedChooseBusinessProofValue = null;
-                                isClearData = true;
-                                gstNumber = "";
-                                image = "";
-                                isGstFilled = false;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: SvgPicture.asset(
-                                'assets/icons/edit_icon.svg',
-                                semanticsLabel: 'Edit Icon SVG',
+                          controller: _fatherOrHusbandNameCl,
+                          enabled: updateData,
+                          hintText: "Father’s / Husband’s Name",
+                          labelText: "Father’s / Husband’s Name",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        InkWell(
+                          onTap: updateData
+                              ? () {
+                            _showDatePicker(context);
+                          }
+                              : null,
+                          // Set onTap to null when field is disabled
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: textFiledBackgroundColour,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: kPrimaryColor),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    selectedDate!.isEmpty
+                                        ? "Date of Birth"
+                                        : "$selectedDate",
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.date_range,
+                                    color: kPrimaryColor,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 16.0,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        CommonTextField(
+                          controller: _ageCl,
+                          enabled: updateData,
+                          keyboardType: TextInputType.number,
+                          hintText: "Age",
+                          labelText: "Age",
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 16.0,
                         ),
-                      ),
-                      hint: const Text(
-                        'Firm Type',
-                        style: TextStyle(
-                          color: blueColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
+                        CommonTextField(
+                          controller: _addressCl,
+                          enabled: updateData,
+                          hintText: "Address",
+                          labelText: "Address",
                         ),
-                      ),
-                      items: _addDividersAfterItems(businessTypeList),
-                      value: selectedFirmTypeValue,
-                      onChanged: (String? value) {
-                        selectedFirmTypeValue = value;
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights: _getCustomItemsHeights(businessTypeList),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 16.0,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        CommonTextField(
+                          controller: _pinCodeCl,
+                          enabled: updateData,
+                          keyboardType: TextInputType.number,
+                          hintText: "PIN Code",
+                          labelText: "PIN Code",
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 16.0,
                         ),
-                      ),
-                      hint: const Text(
-                        'Business Document',
-                        style: TextStyle(
-                          color: blueColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
+                        CommonTextField(
+                          controller: _cityCl,
+                          enabled: updateData,
+                          hintText: "City",
+                          labelText: "City",
                         ),
-                      ),
-                      items: _addDividersAfterItems(chooseBusinessProofList),
-                      value: selectedBusinessTypeValue,
-                      onChanged: (String? value) {
-                        selectedBusinessTypeValue = value;
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights:
-                            _getCustomItemsHeights(chooseBusinessProofList),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Stack(
-                      children: [
-                        Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Color(0xff0196CE))),
-                            width: double.infinity,
-                            child: GestureDetector(
-                              onTap: () {
-                                bottomSheetMenu(context);
-                              },
-                              child: Container(
-                                height: 148,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: (!image.isEmpty)
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: 148,
-                                        ),
-                                      )
-                                    : (image.isNotEmpty)
-                                        ? ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              image,
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                              height: 148,
-                                            ),
-                                          )
-                                        : Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                  'assets/images/gallery.svg'),
-                                              const Text(
-                                                'Upload Document',
-                                                style: TextStyle(
-                                                    color: Color(0xff0196CE),
-                                                    fontSize: 12),
-                                              ),
-                                              const Text('Supports : JPEG, PNG',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color:
-                                                          Color(0xffCACACA))),
-                                            ],
-                                          ),
-                              ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _stateCl,
+                          enabled: updateData,
+                          hintText: "State",
+                          labelText: "State",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _alternetMobileNumberCl,
+                          enabled: updateData,
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp((r'[A-Z0-9]'))),
+                            LengthLimitingTextInputFormatter(10)
+                          ],
+                          keyboardType: TextInputType.number,
+                          hintText: "Alternate Contact Number",
+                          labelText: "Alternate Contact Number",
+                        ),
+                        SizedBox(height: 16),
+                        Stack(
+                          children: [
+                            CommonTextField(
+                              controller: _emailIDCl,
+                              keyboardType: TextInputType.emailAddress,
+                              hintText: "E Mail id",
+                              labelText: "E Mail id",
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        CommonTextField(
+                          controller: _presentOccupationCl,
+                          enabled: updateData,
+                          hintText: "Present Occupation",
+                          labelText: "Present Occupation",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _currentEmploymentCl,
+                          keyboardType: TextInputType.number,
+                          enabled: updateData,
+                          hintText: "No of years in current employment",
+                          labelText: "No of years in current employment",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _qualificationCl,
+                          enabled: updateData,
+                          hintText: "Qualification",
+                          labelText: "Qualification",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _languagesKnownCl,
+                          enabled: updateData,
+                          hintText: "Languages Known",
+                          labelText: "Languages Known",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _locationCl,
+                          enabled: updateData,
+                          hintText: "Location",
+                          labelText: "Location",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Text(
+                            'Presently working with other Party/bank/NBFC /Financial Institute? ',
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
                             )),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isImageDelete = true;
-                              image = "";
-                            });
-                          },
-                          child: !image.isEmpty
-                              ? Container(
-                                  padding: EdgeInsets.all(4),
-                                  alignment: Alignment.topRight,
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CheckboxTerm(
+                                content: "Yes",
+                                isChecked: _isSelected1,
+                                onChanged: (bool? value) {
+                                  _handleCheckboxChange(1, value);
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: CheckboxTerm(
+                                content: "No",
+                                isChecked: _isSelected2,
+                                onChanged: (bool? value) {
+                                  _handleCheckboxChange(2, value);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Text('Reference ',
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _referenceNames,
+                          enabled: updateData,
+                          hintText: "Names",
+                          labelText: "Names",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _referenceContactNoCl,
+                          enabled: updateData,
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp((r'[A-Z0-9]'))),
+                            LengthLimitingTextInputFormatter(10)
+                          ],
+                          hintText: "Contact No. ",
+                          labelText: "Contact No.",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Text('GST Registration Status ',
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CheckboxTerm(
+                                content: "GST Registered",
+                                isChecked: _isGstSelected1,
+                                onChanged: (bool? value) {
+                                  _handleGstCheckboxChange(1, value);
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: CheckboxTerm(
+                                content: "Not GST Registered",
+                                isChecked: _isGstSelected2,
+                                onChanged: (bool? value) {
+                                  _handleGstCheckboxChange(2, value);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Stack(
+                          children: [
+                            CommonTextField(
+                                controller: _gstController,
+                                hintText: "GST Number",
+                                keyboardType: TextInputType.text,
+                                enabled: updateData,
+                                labelText: "GST Number",
+                                textCapitalization: TextCapitalization.characters,
+                                inputFormatter: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp((r'[A-Z0-9]'))),
+                                  LengthLimitingTextInputFormatter(15)
+                                ],
+                                onChanged: (text) async {
+                                  if (text.length == 15) {
+                                    try {
+                                      Utils.hideKeyBored(context);
+                                      await getCustomerDetailUsingGST(context,
+                                          _gstController.text, dataProvider);
+                                    } catch (error) {
+                                      debugPrint('Error: $error');
+                                    }
+                                  }
+                                }),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    updateData = true;
+                                    isImageDelete = true;
+                                    gstUpdate = true;
+                                    setCityListFirstTime = false;
+                                    _gstController.text = "";
+                                    _businessDocumentNumberController.text = "";
+                                    selectedDate = "";
+                                    businessProofDocId = null;
+                                    selectedFirmTypeValue = null;
+                                    selectedStateValue = null;
+                                    selectedCityValue = null;
+                                    selectedChooseBusinessProofValue = null;
+                                    isClearData = true;
+                                    gstNumber = "";
+                                    image = "";
+                                    isGstFilled = false;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
                                   child: SvgPicture.asset(
-                                      'assets/icons/delete_icon.svg'),
-                                )
-                              : Container(),
-                        )
+                                    'assets/icons/edit_icon.svg',
+                                    semanticsLabel: 'Edit Icon SVG',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'Firm Type',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items: _addDividersAfterItems(businessTypeList),
+                          value: selectedFirmTypeValue,
+                          onChanged: (String? value) {
+                            selectedFirmTypeValue = value;
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights: _getCustomItemsHeights(businessTypeList),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                              const BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'Business Document',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items: _addDividersAfterItems(chooseBusinessProofList),
+                          value: selectedBusinessTypeValue,
+                          onChanged: (String? value) {
+                            selectedBusinessTypeValue = value;
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights:
+                            _getCustomItemsHeights(chooseBusinessProofList),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Stack(
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    bottomSheetMenu(context);
+                                  },
+                                  child: Container(
+                                    height: 148,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: (!image.isEmpty)
+                                        ? ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                        : (image.isNotEmpty)
+                                        ? ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                        : Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload Document',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE),
+                                              fontSize: 12),
+                                        ),
+                                        const Text('Supports : JPEG, PNG',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color:
+                                                Color(0xffCACACA))),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isImageDelete = true;
+                                  image = "";
+                                });
+                              },
+                              child: !image.isEmpty
+                                  ? Container(
+                                padding: EdgeInsets.all(4),
+                                alignment: Alignment.topRight,
+                                child: SvgPicture.asset(
+                                    'assets/icons/delete_icon.svg'),
+                              )
+                                  : Container(),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _companyNameCl,
+                          enabled: updateData,
+                          hintText: "Company Name",
+                          labelText: "Company Name",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _companyAddressCl,
+                          enabled: updateData,
+                          hintText: "Address",
+                          labelText: "Address",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _companyPinCodeCodeCl,
+                          enabled: updateData,
+                          hintText: "PIN Code",
+                          labelText: "PIN Code",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        buildStateField(dataProvider),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        buildCityField(dataProvider),
+                        const SizedBox(height: 54.0),
+                        CommonElevatedButton(
+                          onPressed: () async {
+                            if (_fullNameCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Full Name", context);
+                            } else if (_fatherOrHusbandNameCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Father  Name", context);
+                            } else if (selectedDate!.isEmpty) {
+                              Utils.showToast("Please Select Date ", context);
+                            } else if (_ageCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Age ", context);
+                            } else if (_addressCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Address", context);
+                            } else if (_pinCodeCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Pin Code ", context);
+                            } else if (_cityCl.text.isEmpty) {
+                              Utils.showToast("Please Enter City", context);
+                            } else if (_stateCl.text.isEmpty) {
+                              Utils.showToast("Please Enter State", context);
+                            } else if (_alternetMobileNumberCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter AlterNet Mobile Number ", context);
+                            } else if (_emailIDCl.text.isEmpty) {
+                              Utils.showToast("Enter Email", context);
+                            } else if (_presentOccupationCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Present Occupation ", context);
+                            } else if (_currentEmploymentCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter No of years in current employment",
+                                  context);
+                            } else if (_qualificationCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Qualification", context);
+                            } else if (_languagesKnownCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Languages Known", context);
+                            } else if (_locationCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Location", context);
+                            } else if (isPresentlyworking.isEmpty) {
+                              Utils.showToast(
+                                  "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
+                                  context);
+                            } else if (_referenceNames.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Reference Name", context);
+                            } else if (_referenceContactNoCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Reference Contact Number", context);
+                            } else if (isGSTRegistered.isEmpty) {
+                              Utils.showToast(
+                                  "Please select GST Registered or Non GST Registered ",
+                                  context);
+                            } else if (selectedFirmTypeValue == null) {
+                              Utils.showToast("Please Select Firm Type", context);
+                            } else if (selectedBusinessTypeValue == null) {
+                              Utils.showToast(
+                                  "Please Select Business Type", context);
+                            } else if (image.isEmpty) {
+                              Utils.showToast("Please Upload Document", context);
+                            } else if (_companyNameCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Company Name", context);
+                            } else if (_companyAddressCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Company Address", context);
+                            } else if (_companyPinCodeCodeCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Company Address PinCode", context);
+                            } else if (_companyCityCl.text.isEmpty) {
+                              Utils.showToast("Please Enter Company City", context);
+                            } else if (_companyStateCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Company State", context);
+                            } else {
+                              await postLeadDSAPersonalDetail(
+                                  context, dataProvider);
+                            }
+                          },
+                          text: 'Next',
+                          upperCase: true,
+                        ),
+                        const SizedBox(height: 16),
                       ],
                     ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _companyNameCl,
-                      enabled: updateData,
-                      hintText: "Company Name",
-                      labelText: "Company Name",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _companyAddressCl,
-                      enabled: updateData,
-                      hintText: "Address",
-                      labelText: "Address",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _companyPinCodeCodeCl,
-                      enabled: updateData,
-                      hintText: "PIN Code",
-                      labelText: "PIN Code",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _companyCityCl,
-                      enabled: updateData,
-                      hintText: "City",
-                      labelText: "City",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    buildStateField(productProvider),
-                    CommonTextField(
-                      controller: _companyStateCl,
-                      enabled: updateData,
-                      hintText: "State",
-                      labelText: "State",
-                    ),
-                    const SizedBox(height: 54.0),
-                    CommonElevatedButton(
-                      onPressed: () async {
-                        if (_fullNameCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Full Name", context);
-                        } else if (_fatherOrHusbandNameCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Father  Name", context);
-                        } else if (selectedDate!.isEmpty) {
-                          Utils.showToast("Please Select Date ", context);
-                        } else if (_ageCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Age ", context);
-                        } else if (_addressCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Address", context);
-                        } else if (_pinCodeCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Pin Code ", context);
-                        } else if (_cityCl.text.isEmpty) {
-                          Utils.showToast("Please Enter City", context);
-                        } else if (_stateCl.text.isEmpty) {
-                          Utils.showToast("Please Enter State", context);
-                        } else if (_alternetMobileNumberCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter AlterNet Mobile Number ", context);
-                        } else if (_emailIDCl.text.isEmpty) {
-                          Utils.showToast("Enter Email", context);
-                        } else if (_presentOccupationCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Present Occupation ", context);
-                        } else if (_currentEmploymentCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter No of years in current employment",
-                              context);
-                        } else if (_qualificationCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Qualification", context);
-                        } else if (_languagesKnownCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Languages Known", context);
-                        } else if (_locationCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Location", context);
-                        } else if (isPresentlyworking.isEmpty) {
-                          Utils.showToast(
-                              "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
-                              context);
-                        } else if (_referenceNames.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Reference Name", context);
-                        } else if (_referenceContactNoCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Reference Contact Number", context);
-                        } else if (isGSTRegistered.isEmpty) {
-                          Utils.showToast(
-                              "Please select GST Registered or Non GST Registered ",
-                              context);
-                        } else if (selectedFirmTypeValue == null) {
-                          Utils.showToast("Please Select Firm Type", context);
-                        } else if (selectedBusinessTypeValue == null) {
-                          Utils.showToast(
-                              "Please Select Business Type", context);
-                        } else if (image.isEmpty) {
-                          Utils.showToast("Please Upload Document", context);
-                        } else if (_companyNameCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Company Name", context);
-                        } else if (_companyAddressCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Company Address", context);
-                        } else if (_companyPinCodeCodeCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Company Address PinCode", context);
-                        } else if (_companyCityCl.text.isEmpty) {
-                          Utils.showToast("Please Enter Company City", context);
-                        } else if (_companyStateCl.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Company State", context);
-                        } else {
-                          await postLeadDSAPersonalDetail(
-                              context, productProvider);
-                        }
-                      },
-                      text: 'Next',
-                      upperCase: true,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            );
-          }),
+                  ),
+                );
+              }),
         ),
       ),
     );
@@ -1458,8 +1405,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
-                    emailID: emailID,
-                  )));
+                emailID: emailID,
+              )));
 
       if (result != null &&
           result.containsKey('isValid') &&
@@ -1509,27 +1456,28 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     if (productProvider.getCustomerDetailUsingGSTData != null) {
       productProvider.getCustomerDetailUsingGSTData!.when(
         success: (data) {
-          var getCustomerDetailUsingGSTData = data;
-          if (getCustomerDetailUsingGSTData.busGSTNO != null) {
+          getCustomerDetailUsingGSTData = data;
+          if (getCustomerDetailUsingGSTData!.busGSTNO != null) {
             gstUpdate = false;
             cityCallInitial = true;
-            _gstController.text = getCustomerDetailUsingGSTData.busGSTNO!;
-            gstNumber = getCustomerDetailUsingGSTData.busGSTNO!;
-            _companyNameCl.text = getCustomerDetailUsingGSTData.businessName!;
+            _gstController.text = getCustomerDetailUsingGSTData!.busGSTNO!;
+            gstNumber = getCustomerDetailUsingGSTData!.busGSTNO!;
+            _companyNameCl.text = getCustomerDetailUsingGSTData!.businessName!;
             _companyAddressCl.text =
-                getCustomerDetailUsingGSTData.addressLineOne!;
+            getCustomerDetailUsingGSTData!.addressLineOne!;
             _companyPinCodeCodeCl.text =
-                getCustomerDetailUsingGSTData.zipCode!.toString();
+                getCustomerDetailUsingGSTData!.zipCode!.toString();
             _companyCityCl.text =
-                getCustomerDetailUsingGSTData.cityId.toString();
+                getCustomerDetailUsingGSTData!.cityId.toString();
             _companyStateCl.text =
-                getCustomerDetailUsingGSTData.stateId.toString();
+                getCustomerDetailUsingGSTData!.stateId.toString();
             isGstFilled = true;
             selectedChooseBusinessProofValue = "GST Certificate";
             _businessDocumentNumberController.text =
-                getCustomerDetailUsingGSTData.busGSTNO!;
+            getCustomerDetailUsingGSTData!.busGSTNO!;
+            companyStateId = getCustomerDetailUsingGSTData!.stateId.toString();
           } else {
-            Utils.showToast(getCustomerDetailUsingGSTData.message!, context);
+            Utils.showToast(getCustomerDetailUsingGSTData!.message!, context);
           }
         },
         failure: (exception) {
@@ -1549,14 +1497,15 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   }
 
   Future<void> postLeadDSAPersonalDetail(
-    BuildContext context,
-    DataProvider productProvider,
-  ) async {
+      BuildContext context,
+      DataProvider productProvider,
+      ) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? userMobileNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+
 
     var postLeadDsaPersonalDetailReqModel = PostLeadDsaPersonalDetailReqModel(
       leadId: leadId,
@@ -1589,8 +1538,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       pincode: _pinCodeCl.text,
       mobileNo: userMobileNumber,
       companyAddress: _companyAddressCl.text,
-      companyCity: _companyCityCl.text,
-      companyState: _companyStateCl.text,
+      companyCity: companyCityId,
+      companyState: companyStateId,
       companyPincode: _companyPinCodeCodeCl.text,
     );
 
@@ -1644,8 +1593,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       );
 
       final leadCurrentActivityAsyncData = await ApiService()
-              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
-          as LeadCurrentResponseModel?;
+          .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+      as LeadCurrentResponseModel?;
 
       final getLeadData = await ApiService().getLeads(
         prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,

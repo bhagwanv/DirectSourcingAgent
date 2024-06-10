@@ -1209,7 +1209,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1233,7 +1233,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1257,7 +1257,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,

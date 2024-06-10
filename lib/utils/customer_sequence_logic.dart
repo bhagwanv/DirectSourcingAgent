@@ -1,7 +1,9 @@
 import 'package:direct_sourcing_agent/inprogress/ProfileReview.dart';
 import 'package:direct_sourcing_agent/utils/screen_type.dart';
+import 'package:direct_sourcing_agent/view/agreement_screen/Agreementscreen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:flutter/material.dart';
+import '../view/CongratulationScreen.dart';
 import '../view/aadhaar_screen/aadhaar_screen.dart';
 import '../view/bank_details_screen/BankDetailsScreen.dart';
 import '../view/dashboard/bottom_navigation.dart';
@@ -95,6 +97,21 @@ ScreenType? customerSequence(
                 builder: (context) => ProfileReview(pageType: pageType)),
           );
           return ScreenType.Inprogress;
+        } else if (leadCurrentActivity.activityName == "DSAAgreement") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => AgreementScreen(
+                    activityId: leadCurrentActivity.activityMasterId!,
+                    subActivityId: leadCurrentActivity.subActivityMasterId!,
+                    pageType: pageType)),
+          );
+          return ScreenType.AgreementEsign;
+        } else if (leadCurrentActivity.activityName == "DSACongratulations") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => CongratulationScreen(transactionReqNo: "", amount: "", mobileNo: "", loanAccountId: 0, creditDay: 0)),
+          );
+          return ScreenType.AgreementEsign;
         } else if (leadCurrentActivity.activityName == "Show Offer") {
           /*Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -110,24 +127,6 @@ ScreenType? customerSequence(
                 builder: (context) => RejectedScreen(pageType: pageType)),
           );
           return ScreenType.Rejected;
-        } else if (leadCurrentActivity.activityName == "Agreement") {
-          if (leadCurrentActivity.subActivityName == "AgreementEsign") {
-            /*Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => AgreementScreen(
-                      activityId: leadCurrentActivity.activityMasterId!,
-                      subActivityId: leadCurrentActivity.subActivityMasterId!,
-                      pageType: pageType)),
-            );*/
-            return ScreenType.AgreementEsign;
-          } else if (leadCurrentActivity.subActivityName ==
-              "PrepareAgreement") {
-            /*Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => ProfileReview(pageType: pageType)),
-            );*/
-            return ScreenType.PrepareAgreement;
-          }
         } else if (leadCurrentActivity.activityName == "Disbursement") {
           /*Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -236,6 +235,21 @@ ScreenType? customerSequence(
                 builder: (context) => ProfileReview(pageType: pageType)),
           );
           return ScreenType.Inprogress;
+        }  else if (leadCurrentActivity.activityName == "DSAAgreement") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => AgreementScreen(
+                    activityId: leadCurrentActivity.activityMasterId!,
+                    subActivityId: leadCurrentActivity.subActivityMasterId!,
+                    pageType: pageType)),
+          );
+          return ScreenType.AgreementEsign;
+        }else if (leadCurrentActivity.activityName == "DSACongratulations") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => CongratulationScreen(transactionReqNo: "", amount: "", mobileNo: "", loanAccountId: 0, creditDay: 0)),
+          );
+          return ScreenType.AgreementEsign;
         } else if (leadCurrentActivity.activityName == "Show Offer") {
           /*Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -251,24 +265,6 @@ ScreenType? customerSequence(
                 builder: (context) => RejectedScreen(pageType: pageType)),
           );
           return ScreenType.Rejected;
-        } else if (leadCurrentActivity.activityName == "Agreement") {
-          if (leadCurrentActivity.subActivityName == "AgreementEsign") {
-            /*Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => AgreementScreen(
-                      activityId: leadCurrentActivity.activityMasterId!,
-                      subActivityId: leadCurrentActivity.subActivityMasterId!,
-                      pageType: pageType)),
-            );*/
-            return ScreenType.AgreementEsign;
-          } else if (leadCurrentActivity.subActivityName ==
-              "PrepareAgreement") {
-            /* Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => ProfileReview(pageType: pageType)),
-            );*/
-            return ScreenType.PrepareAgreement;
-          }
         } else if (leadCurrentActivity.activityName == "Disbursement") {
           /* Navigator.of(context).push(
            MaterialPageRoute(

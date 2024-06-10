@@ -142,9 +142,9 @@ class _SplashScreenState extends State<SplashScreen> {
               prefsUtil.saveString(USER_NAME, data.userData!.name!);
               prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
               prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-              prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+              if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
               prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
-              prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+              if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
               prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
               prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
 

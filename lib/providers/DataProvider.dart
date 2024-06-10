@@ -19,6 +19,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
+import '../view/agreement_screen/model/CheckESignResponseModel.dart';
 import '../view/agreement_screen/model/GetAgreementResModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
@@ -293,6 +294,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<GetDsaDashboardDetailsResModel,Exception>? _getDSADashboardDetailsData;
   Result<GetDsaDashboardDetailsResModel,Exception>? get getDSADashboardDetailsData => _getDSADashboardDetailsData;
+
+  Result<CheckESignResponseModel,Exception>? _checkESignResponseModelData;
+  Result<CheckESignResponseModel,Exception>? get checkESignResponseModelData => _checkESignResponseModelData;
 
 
   Future<void> productCompanyDetail(
@@ -692,14 +696,19 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> dSAGenerateAgreement(BuildContext context, String leadId,String ProductId, bool IsSubmit) async {
+  Future<void> dSAGenerateAgreement(BuildContext context, String leadId,String ProductId, String ComapnyId, bool IsSubmit) async {
     _isLoading = true;
     notifyListeners();
     Utils.onLoading(context, "");
-    _dSAGenerateAgreementData = await apiService.dSAGenerateAgreement(leadId,ProductId, IsSubmit);
+    _dSAGenerateAgreementData = await apiService.dSAGenerateAgreement(leadId,ProductId, ComapnyId, IsSubmit);
     _isLoading = false;
     notifyListeners();
     Navigator.of(context).pop();
+  }
+
+  Future<void> checkESignDocumentStatus(String leadId) async {
+    _checkESignResponseModelData = await apiService.checkESignDocumentStatus(leadId) ;
+    notifyListeners();
   }
 
   Future<void> disposeAllProviderData() async {

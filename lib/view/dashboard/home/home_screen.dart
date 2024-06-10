@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     //Api Call
-    getDSADashboardDetails(context);
+  //  getDSADashboardDetails(context);
   }
 
   @override
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
-                    child: Column(
+                    child: /*Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 10),
@@ -641,7 +641,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                        ]),
+                        ])*/
+                    Text("Working on Dashboard"),
                   ),
                 ),
               );

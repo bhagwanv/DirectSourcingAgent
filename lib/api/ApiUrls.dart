@@ -8,8 +8,8 @@ class ApiUrls{
   final String getLeadPAN="/aggregator/LeadAgg/GetLeadPAN";
 
   //auth
-  final String generateOtp="/aggregator/LeadAgg/GenerateDSAOtp";
-  final String leadMobileValidate="/aggregator/LeadAgg/DSAValidateOTP";
+  final String generateOtp="/aggregator/DSAAgg/GenerateDSAOtp";
+  final String leadMobileValidate="/aggregator/DSAAgg/DSAValidateOTP";
   final String getUserData="/aggregator/DSAAgg/GetDSAUserProfile";
 
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
@@ -75,5 +75,5 @@ class ApiUrls{
   final String getDSADashboardDetails="/aggregator/DSAAgg/GetDSADashboardDetails";
   final String getDSASalesAgentList="/aggregator/DSAAgg/GetDSASalesAgentList";
   final String dSAGenerateAgreement="/aggregator/DSAAgg/DSAGenerateAgreement";
-
+  final String checkESignDocumentStatus="/aggregator/DSAAgg/CheckeSignDocumentStatus";
 }

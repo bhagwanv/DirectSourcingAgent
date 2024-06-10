@@ -118,8 +118,9 @@ class _AgreementScreenState extends State<AgreementScreen> {
                 ),
                 CommonElevatedButton(
                   onPressed: () async {
-
-                  },
+                    await checkESignDocumentStatus(
+                        context, productProvider);
+                    },
                   text: 'Next',
                   upperCase: true,
                 ),
@@ -180,13 +181,48 @@ class _AgreementScreenState extends State<AgreementScreen> {
     ));
   }
 
+  Future<void> checkESignDocumentStatus(
+      BuildContext context,
+      DataProvider productProvider,
+      ) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+
+
+    Utils.onLoading(context, "Loading...");
+    await Provider.of<DataProvider>(context, listen: false)
+        .checkESignDocumentStatus(leadId.toString());
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.checkESignResponseModelData != null) {
+      productProvider.checkESignResponseModelData!.when(
+        success: (data) {
+          if (data.status!) {
+           // fetchData(context);
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          if (exception is ApiException) {
+            if (exception.statusCode == 401) {
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            } else {
+              Utils.showToast("Something went Wrong", context);
+            }
+          }
+        },
+      );
+    }
+  }
+
   void callApi(BuildContext context, bool isSubmit) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? productId = prefsUtil.getInt(PRODUCT_ID);
+    final int? companyId = prefsUtil.getInt(COMPANY_ID);
     final String? userMobileNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
     Provider.of<DataProvider>(context, listen: false).dSAGenerateAgreement(
-        context, leadId!.toString(), productId.toString(), isSubmit);
+        context, leadId!.toString(), productId.toString(), companyId.toString(), isSubmit);
   }
 
 /*  Future<void> fetchData(BuildContext context) async {
