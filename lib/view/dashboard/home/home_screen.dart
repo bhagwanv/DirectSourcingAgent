@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     //Api Call
-   getDSADashboardDetails(context);
+    getDSADashboardDetails(context);
   }
 
   @override
@@ -76,16 +76,17 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-            if (productProvider.getDSADashboardDetailsData == null && isLoading) {
+            if (productProvider.getDSADashboardDetailsData == null &&
+                isLoading) {
               return Loader();
             } else {
-              if (productProvider.getDSADashboardDetailsData != null && isLoading) {
-                print("Return");
+              if (productProvider.getDSADashboardDetailsData != null &&
+                  isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
                 getDSASalesAgentList(context,productProvider);
-
               }
+
 
               if (productProvider.getDSADashboardDetailsData != null) {
                 productProvider.getDSADashboardDetailsData!.when(
@@ -156,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
-                    child: /*Column(
+                    child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 10),
@@ -643,8 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                        ])*/
-                    Text("Working on Dashboard"),
+                        ])
                   ),
                 ),
               );
@@ -695,7 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return itemsHeights;
   }
 
-  void getDSADashboardDetails(BuildContext) async {
+  Future<void> getDSADashboardDetails(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
@@ -710,19 +710,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getDSASalesAgentList(BuildContext context, DataProvider productProvider,) async {
-    Utils.onLoading(context, "Loading...");
+   // Loader();
+
     await Provider.of<DataProvider>(context, listen: false)
         .getDSASalesAgentList();
-    Navigator.of(context, rootNavigator: true).pop();
+    //Navigator.of(context, rootNavigator: true).pop();
 
     if (productProvider.getDSASalesAgentListData != null) {
       productProvider.getDSASalesAgentListData!.when(
         success: (data) {
           // Handle successful response
          var getDSASalesAgentListData = data;
-
           if (getDSASalesAgentListData.isSuccess!) {
 
+
+          }else{
 
           }
         },
