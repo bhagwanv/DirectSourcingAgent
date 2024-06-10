@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     //Api Call
-  //  getDSADashboardDetails(context);
+    getDSADashboardDetails(context);
   }
 
   @override
@@ -77,15 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, productProvider, child) {
             if (productProvider.getDSADashboardDetailsData == null &&
                 isLoading) {
-              return Utils.onLoading(context,"");
+              return Loader();
             } else {
               if (productProvider.getDSADashboardDetailsData != null &&
                   isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
                 getDSASalesAgentList(context,productProvider);
-
               }
+
 
               if (productProvider.getDSADashboardDetailsData != null) {
                 productProvider.getDSADashboardDetailsData!.when(
@@ -156,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
-                    child: /*Column(
+                    child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 10),
@@ -643,8 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                        ])*/
-                    Text("Working on Dashboard"),
+                        ])
                   ),
                 ),
               );
@@ -695,7 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return itemsHeights;
   }
 
-  void getDSADashboardDetails(BuildContext) async {
+  Future<void> getDSADashboardDetails(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
@@ -710,19 +710,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getDSASalesAgentList(BuildContext context, DataProvider productProvider,) async {
-    Utils.onLoading(context, "Loading...");
+   // Loader();
+
     await Provider.of<DataProvider>(context, listen: false)
         .getDSASalesAgentList();
-    Navigator.of(context, rootNavigator: true).pop();
+    //Navigator.of(context, rootNavigator: true).pop();
 
     if (productProvider.getDSASalesAgentListData != null) {
       productProvider.getDSASalesAgentListData!.when(
         success: (data) {
           // Handle successful response
          var getDSASalesAgentListData = data;
-
           if (getDSASalesAgentListData.isSuccess!) {
 
+
+          }else{
 
           }
         },
