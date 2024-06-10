@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var isLoading = false;
+  var isLoading = true;
   var leadOverviewSuccessRate = 0;
   var leadOverviewProgrssSuccessRate = null;
 
@@ -77,12 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, productProvider, child) {
             if (productProvider.getDSADashboardDetailsData == null &&
                 isLoading) {
-              return Utils.onLoading(context, "");
+              return Utils.onLoading(context,"");
             } else {
               if (productProvider.getDSADashboardDetailsData != null &&
                   isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
+                getDSASalesAgentList(context,productProvider);
+
               }
 
               if (productProvider.getDSADashboardDetailsData != null) {
@@ -704,5 +706,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await Provider.of<DataProvider>(context, listen: false)
         .getDSADashboardDetails(model);
+  }
+
+  Future<void> getDSASalesAgentList(BuildContext context, DataProvider productProvider,) async {
+    Utils.onLoading(context, "Loading...");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getDSASalesAgentList();
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getDSASalesAgentListData != null) {
+      productProvider.getDSASalesAgentListData!.when(
+        success: (data) {
+          // Handle successful response
+         var getDSASalesAgentListData = data;
+
+          if (getDSASalesAgentListData.isSuccess!) {
+
+
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
+        },
+      );
+    }
   }
 }

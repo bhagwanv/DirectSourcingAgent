@@ -26,6 +26,7 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dashboard/home/DSASalesAgentListResModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
@@ -2027,7 +2028,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         //var base_url = prefsUtil.getString(BASE_URL);
        // var token = prefsUtil.getString(TOKEN);
-        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwYmZiOWU4Yi01ZDUyLTQ2YjgtYjQzZS0zNjQ3NGFmOGMwNzIiLCJ1c2VybmFtZSI6Ijg4NzE4OTkwODQiLCJsb2dnZWRvbiI6IjA2LzA3LzIwMjQgMTM6MDU6NTUiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4ODcxODk5MDg0IiwiZW1haWwiOiIiLCJyb2xlcyI6IkNvbm5lY3RvciIsImNvbXBhbnlpZCI6IjEwNCIsInByb2R1Y3RpZCI6IjkiLCJuYmYiOjE3MTc3NjU1NTUsImV4cCI6MTcxNzg1MTk1NSwiaWF0IjoxNzE3NzY1NTU1LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXFhLnNjYWxldXBmaW4uY29tIiwiYXVkIjoiY3JtQXBpIn0.Nyknz73nQRZ7RDDbPUoWt7f5s6d5Ds2p2h_2xoK-LAt5n_XkxQvcihW4pAl79F8v1wnB-NrIGbjkygLNgp6dJY9zuJ4F_EqOCcCn9Zc8lYwqgRBGWn1yqoEDX8sTrjFwJMFzEX_p3U311jpo-nq_lAtSMAl4EM4Iu0_7C-vtrNYOuSsG6PhG3ExZWqxG0R5zpDyClf8Rnjv-2mMZN6u503hT8btogo09jB8TECWOYq77K5gcFWMmsn3_3RneosVkLToGprK2d0J9Cjsye4H5845O_UTGPBCV6atBXqSmenbYNui-5MKf26vzsHIF3DcO9ZKCwbNFpKd01F-i2f6Dcg";
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIyOWE2OTFiMy0wNWJlLTQ5OTItYmVjYS03ZDg2YzY4YWUzZTQiLCJ1c2VybmFtZSI6Ijg5NTkzMTE0MzciLCJsb2dnZWRvbiI6IjA2LzEwLzIwMjQgMDU6MzU6NTYiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4OTU5MzExNDM3IiwiZW1haWwiOiIiLCJyb2xlcyI6IkNvbm5lY3RvciIsImNvbXBhbnlpZCI6IjEwNCIsInByb2R1Y3RpZCI6IjgiLCJuYmYiOjE3MTc5OTc3NTYsImV4cCI6MTcxODA4NDE1NiwiaWF0IjoxNzE3OTk3NzU2LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXFhLnNjYWxldXBmaW4uY29tIiwiYXVkIjoiY3JtQXBpIn0.YrPPZyYwAKyd88yAWNnLSb2A-gBM2-Ibm5uIskeN3WgHZIL8VnaX6sGLXtV-ik43sWvagYAHDS19w5Rg2QtLdlC0nHG8d7mIPHGiPMFieEPbxEyUXRnPX5On1CZNkdI5-Mham9f6bXQPH11B1TZzFiz5_ehpUMG3hL5vHqUFnqfk9G4NcFjusq5SVfLiPzf8LbePKpXTklzrQPUcQF5DpHvQh1O-SDfaGhf2-B75Ybj0s91e4XnXsH12I0FqJaTlRj8XLL-9EWcp4z7vOnuUAVcyJxcLKD9Oxkfm2QIW0dyAbZcMKeeq_G0_GOAXpwB4ao3pSPlqHTyY-VkikX_klg";
         final response = await interceptor.post(
             Uri.parse(
                 '${apiUrls.baseUrl + apiUrls.getDSADashboardDetails}'),
@@ -2140,6 +2141,39 @@ class ApiService {
     } else {
       throw Exception('No internet connection');
     }*/
+  }
+
+  Future<Result<DsaSalesAgentListResModel,Exception>> getDSASalesAgentList() async {
+
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+    //    var token = prefsUtil.getString(TOKEN);
+        var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIyOWE2OTFiMy0wNWJlLTQ5OTItYmVjYS03ZDg2YzY4YWUzZTQiLCJ1c2VybmFtZSI6Ijg5NTkzMTE0MzciLCJsb2dnZWRvbiI6IjA2LzEwLzIwMjQgMDU6MzU6NTYiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4OTU5MzExNDM3IiwiZW1haWwiOiIiLCJyb2xlcyI6IkNvbm5lY3RvciIsImNvbXBhbnlpZCI6IjEwNCIsInByb2R1Y3RpZCI6IjgiLCJuYmYiOjE3MTc5OTc3NTYsImV4cCI6MTcxODA4NDE1NiwiaWF0IjoxNzE3OTk3NzU2LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXFhLnNjYWxldXBmaW4uY29tIiwiYXVkIjoiY3JtQXBpIn0.YrPPZyYwAKyd88yAWNnLSb2A-gBM2-Ibm5uIskeN3WgHZIL8VnaX6sGLXtV-ik43sWvagYAHDS19w5Rg2QtLdlC0nHG8d7mIPHGiPMFieEPbxEyUXRnPX5On1CZNkdI5-Mham9f6bXQPH11B1TZzFiz5_ehpUMG3hL5vHqUFnqfk9G4NcFjusq5SVfLiPzf8LbePKpXTklzrQPUcQF5DpHvQh1O-SDfaGhf2-B75Ybj0s91e4XnXsH12I0FqJaTlRj8XLL-9EWcp4z7vOnuUAVcyJxcLKD9Oxkfm2QIW0dyAbZcMKeeq_G0_GOAXpwB4ao3pSPlqHTyY-VkikX_klg";
+
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getDSASalesAgentList}'),headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final DsaSalesAgentListResModel responseModel = DsaSalesAgentListResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+
   }
 
 }
