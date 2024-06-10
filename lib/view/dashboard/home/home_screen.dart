@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     //Api Call
-  //  getDSADashboardDetails(context);
+   getDSADashboardDetails(context);
   }
 
   @override
@@ -75,12 +76,11 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-            if (productProvider.getDSADashboardDetailsData == null &&
-                isLoading) {
-              return Utils.onLoading(context,"");
+            if (productProvider.getDSADashboardDetailsData == null && isLoading) {
+              return Loader();
             } else {
-              if (productProvider.getDSADashboardDetailsData != null &&
-                  isLoading) {
+              if (productProvider.getDSADashboardDetailsData != null && isLoading) {
+                print("Return");
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
                 getDSASalesAgentList(context,productProvider);

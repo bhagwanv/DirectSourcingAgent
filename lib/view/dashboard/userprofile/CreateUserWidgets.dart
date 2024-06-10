@@ -157,7 +157,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
 
                         }
                       },
-                      text: "Next",
+                      text: "Add New User",
                       upperCase: true,
                     ),
                   ],
