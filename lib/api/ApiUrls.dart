@@ -73,7 +73,7 @@ class ApiUrls{
   final String getDSAPersonalDetail="/aggregator/DSAAgg/GetDSAPersonalDetail";
   final String CreateDSAUser="/aggregator/DSAAgg/CreateDSAUser";
   final String getDSADashboardDetails="/aggregator/DSAAgg/GetDSADashboardDetails";
-  final String getDSASalesAgentList="/aggregator/DSAAgg/GetDSASalesAgentList";
+  final String getDSASalesAgentList="/services/product/v1/GetDSASalesAgentList";
   final String dSAGenerateAgreement="/aggregator/DSAAgg/DSAGenerateAgreement";
   final String checkESignDocumentStatus="/aggregator/DSAAgg/CheckeSignDocumentStatus";
 }

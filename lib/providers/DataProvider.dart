@@ -25,6 +25,7 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/dashboard/home/DSASalesAgentListResModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
@@ -298,6 +299,8 @@ class DataProvider extends ChangeNotifier {
   Result<CheckESignResponseModel,Exception>? _checkESignResponseModelData;
   Result<CheckESignResponseModel,Exception>? get checkESignResponseModelData => _checkESignResponseModelData;
 
+  Result<DsaSalesAgentListResModel,Exception>? _getDSASalesAgentListData;
+  Result<DsaSalesAgentListResModel,Exception>? get getDSASalesAgentListData => _getDSASalesAgentListData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -708,6 +711,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> checkESignDocumentStatus(String leadId) async {
     _checkESignResponseModelData = await apiService.checkESignDocumentStatus(leadId) ;
+    notifyListeners();
+  }
+
+  Future<void> getDSASalesAgentList() async {
+    _getDSASalesAgentListData = await apiService.getDSASalesAgentList();
     notifyListeners();
   }
 
