@@ -15,7 +15,7 @@ class UserProfileClass extends StatefulWidget {
   /*final int activityId;
   final int subActivityId;
 */
-  UserProfileClass({
+  const UserProfileClass({
     super.key,
     /* required this.activityId,
     required this.subActivityId,*/

@@ -1,5 +1,6 @@
 import 'package:direct_sourcing_agent/view/dashboard/Lead_screen/LeadScreen.dart';
 import 'package:direct_sourcing_agent/view/dashboard/leadcreate/CreateLeadWidgets.dart';
+import 'package:direct_sourcing_agent/view/dashboard/payout_screen/payout_screen.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,10 +25,10 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const LeadScreen(),
-    const HomeScreen(),
-     UserProfileClass(),
+    const PayOutScreen(),
+    const UserProfileClass(),
   ];
-  var selectedIndex = 2;
+  var selectedIndex = 0;
   late DataProvider productProvider;
   @override
   Widget build(BuildContext context) {
@@ -91,6 +92,8 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 0;
+                        productProvider. disposeLeadScreenData();
+                        productProvider. disposePayOutScreenData();
                         // productProvider.disposegetCustomerOrderSummaryData();
                         // productProvider.disposegetCustomerTransactionList();
                       });
@@ -121,6 +124,9 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 1;
+                        productProvider.disposehomeScreenData();
+                        productProvider.disposePayOutScreenData();
+
                         //  productProvider.disposegetCustomerOrderSummaryData();
                         //  productProvider.disposegetCustomerTransactionList();
                       });
@@ -150,10 +156,12 @@ class _BottomNavState extends State<BottomNav> {
                   // Print item
                   GestureDetector(
                     onTap: () {
-                      /* setState(() {
-                        selectedIndex = 3;
-                      });*/
-                      Utils.showBottomToast("Service Not Available");
+                       setState(() {
+                        selectedIndex = 2;
+                        productProvider.disposehomeScreenData();
+                        productProvider. disposeLeadScreenData();
+                      });
+                      //Utils.showBottomToast("Service Not Available");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -196,7 +204,7 @@ class _BottomNavState extends State<BottomNav> {
                           ),
                           const SizedBox(height: 3), // Add space between icon and text
                           Text(
-                            'Home',
+                            'Profile',
                             style: TextStyle(
                               color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
                               fontSize: 10,

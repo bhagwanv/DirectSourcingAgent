@@ -15,6 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_month_year_picker/simple_month_year_picker.dart';
 
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
@@ -23,9 +24,8 @@ import '../../../shared_preferences/shared_pref.dart';
 import '../../../utils/constant.dart';
 import '../home/DsaSalesAgentList.dart';
 import '../home/GetDSADashboardDetailsReqModel.dart';
-import 'model/DSAUsersListResModel.dart';
-import 'model/DsaUsersList.dart';
-
+import 'model/DSADashboardLeadListReqModel.dart';
+import 'model/DsaDashboardLeadList.dart';
 
 class LeadScreen extends StatefulWidget {
   const LeadScreen({super.key});
@@ -38,29 +38,34 @@ class _LeadScreenState extends State<LeadScreen> {
   var isLoading = true;
   var leadOverviewSuccessRate = 0;
   var leadOverviewProgrssSuccessRate = null;
-  var agentUserId="";
+  var agentUserId = "";
 
-  var leadOverviewSubmitted="";
-  var leadOverviewrejected="";
-  var leadOverviewPending="";
-  var leadOverviewTotalLeads="";
+  var leadOverviewSubmitted = "";
+  var leadOverviewrejected = "";
+  var leadOverviewPending = "";
+  var leadOverviewTotalLeads = "";
 
-  var loanOverviewTotalLoans="";
-  var loanOverviewRejected="";
-  var loanOverviewPending="";
-  var loanOverviewApproved="";
-  var skip=0;
-  var take=10;
+  var loanOverviewTotalLoans = "";
+  var loanOverviewRejected = "";
+  var loanOverviewPending = "";
+  var loanOverviewApproved = "";
+  var skip = 0;
+  var take = 10;
+  var startDate = "";
+  var endDate = "";
+  String maxDateTime = '';
+  bool loading = false;
 
-  var payoutOverviewTotalDisbursedAmount="";
-  var payoutOverviewPayoutAmount="";
 
+  var payoutOverviewTotalDisbursedAmount = "";
+  var payoutOverviewPayoutAmount = "";
 
   var loanOverviewSuccessRate = 0;
   var loanOverviewProgrssSuccessRate = null;
 
   final List<DsaSalesAgentList> dsaSalesAgentList = [];
-  final List<DsaUsersList> dSAUsersList = [];
+  final List<DsaDashboardLeadList> dsaDashboardLead = [];
+  ScrollController _scrollController = ScrollController();
 
   String? selecteddsaSalesAgentValue;
 
@@ -68,7 +73,20 @@ class _LeadScreenState extends State<LeadScreen> {
   void initState() {
     super.initState();
     //Api Call
-    getDSAUsers(context);
+    dateTime(context);
+    getDSADashboardLead(context);
+
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // Load more data if not already loading
+        if (loading) {
+          skip += 10;
+          getDSADashboardLead(context);
+        }
+      }
+    });
   }
 
   @override
@@ -80,208 +98,239 @@ class _LeadScreenState extends State<LeadScreen> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-                if (productProvider.getDSAUsersListData == null &&
-                    isLoading) {
-                  return Loader();
-                } else {
-                  if (productProvider.getDSAUsersListData != null &&
-                      isLoading) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    isLoading = false;
-                    getDSASalesAgentList(context,productProvider);
-                  }
+            if (productProvider.getDSADashboardLeadListData == null &&
+                isLoading) {
+              return Loader();
+            } else {
+              if (productProvider.getDSADashboardLeadListData != null &&
+                  isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
+                getDSASalesAgentList(context, productProvider);
+              }
 
+              if (productProvider.getDSADashboardLeadListData != null) {
+                productProvider.getDSADashboardLeadListData!.when(
+                  success: (data) {
+                    // Handle successful response
+                    var getDSADashboardLeadListData = data;
 
-                  if (productProvider.getDSAUsersListData != null) {
-                    productProvider.getDSAUsersListData!.when(
-                      success: (data) {
-                        // Handle successful response
-                        var getDSAUsersListData = data;
+                    if (getDSADashboardLeadListData.response != null) {
+                      if(getDSADashboardLeadListData.response!.isNotEmpty){
+                        dsaDashboardLead.addAll(getDSADashboardLeadListData
+                            .response! as Iterable<DsaDashboardLeadList>);
+                        print("aaa${dsaDashboardLead.length}");
+                      }else{
+                        loading=false;
+                      }
 
-
-                        if( getDSAUsersListData.result!=null){
-                          dSAUsersList.addAll(getDSAUsersListData.result! as Iterable<DsaUsersList>);
-                          print("aaa${dSAUsersList.length}");
-                        }
-
-
-
-
-                      },
-                      failure: (exception) {
-                        // Handle failure
-                        if (exception is ApiException) {
-                          if (exception.statusCode == 401) {
-                            Utils.showToast(exception.errorMessage, context);
-                            productProvider.disposeAllProviderData();
-                            ApiService().handle401(context);
-                          } else {
-                            Utils.showToast("Something went Wrong", context);
-                          }
-                        }
-                      },
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    }
+                  },
+                  failure: (exception) {
+                    // Handle failure
+                    if (exception is ApiException) {
+                      if (exception.statusCode == 401) {
+                        Utils.showToast(exception.errorMessage, context);
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      } else {
+                        Utils.showToast("Something went Wrong", context);
+                      }
+                    }
+                  },
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      SizedBox(height: 10),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height: 10),
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Lead",
-                                            style: GoogleFonts.urbanist(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerRight,
-                                        child: SvgPicture.asset(
-                                          'assets/icons/ic_document_filter.svg',
-                                          semanticsLabel: 'Edit Icon SVG',
-                                        ),
-                                      ),
-                                    ],
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Lead",
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10.0,
+                              GestureDetector(
+                                onTap: () async {
+                                  print("date ");
+                                  setState(() {
+
+                                  });
+                                   showCustomMonthYearPicker(context);
+                                  //print('Selected date: $selectedDate');
+                                },
+
+                                child: Container(
+                                  alignment: Alignment.centerRight,
+                                  child: SvgPicture.asset(
+                                    'assets/icons/ic_document_filter.svg',
+                                    semanticsLabel: 'Edit Icon SVG',
+                                  ),
+                                ),
                               ),
-                              DropdownButtonFormField2<DsaSalesAgentList>(
-                                isExpanded: true,
-                                decoration: InputDecoration(
-                                  fillColor: light_gry,
-                                  filled: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 5),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: light_dark_gry, width: 0)),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: light_dark_gry, width: 0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: light_dark_gry, width: 0),
-                                  ),
-                                ),
-                                hint: const Text(
-                                  'All Agents ',
-                                  style: TextStyle(
-                                    color: blueColor,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                items: _addDividersAfterItems(dsaSalesAgentList),
-                                onChanged: (DsaSalesAgentList? value) {
-                                  selecteddsaSalesAgentValue = value!.fullName;
-                                  //getDSADashboardDetails(context);
-                                  /*  setState(() {
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      DropdownButtonFormField2<DsaSalesAgentList>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          fillColor: light_gry,
+                          filled: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 5),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: light_dark_gry, width: 0)),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                color: light_dark_gry, width: 0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                color: light_dark_gry, width: 0),
+                          ),
+                        ),
+                        hint: const Text(
+                          'All Agents ',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: _addDividersAfterItems(dsaSalesAgentList),
+                        onChanged: (DsaSalesAgentList? value) {
+                          selecteddsaSalesAgentValue = value!.fullName;
+                          dateTime(context);
+                          getDSADashboardLead(context);
+                          //getDSADashboardDetails(context);
+                         /*   setState(() {
 
                             });*/
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
-                                ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeights3(dsaSalesAgentList),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                              Expanded(
-                                  child: dSAUsersList != null
-                                      ? _myListView(
-                                      context, dSAUsersList, productProvider)
-                                      : Container())
-                            ])
-                    ),
-                  );
-                }
-              }),
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights:
+                              _getCustomItemsHeights3(dsaSalesAgentList),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      Expanded(
+                          child: dsaDashboardLead != null
+                              ? _myListView(
+                                  context, dsaDashboardLead, productProvider)
+                              : Container())
+                    ])),
+              );
+            }
+          }),
         ));
   }
 
-
-
-  Future<void> getDSAUsers(BuildContext) async {
+  Future<void> getDSADashboardLead(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
+    dsaSalesAgentList.forEach((agent) {
+      if (agent.fullName == selecteddsaSalesAgentValue) {
+        setState(() {
+          skip=0;
+          agentUserId = agent.userId!;
+          print("userId${agent.userId!}");
+          print("fullName${agent.fullName!}");
+        });
+      }
+    });
 
-    await Provider.of<DataProvider>(context, listen: false)
-        .getDSAUsersList(userId!,skip,take);
+    var model = DsaDashboardLeadListReqModel(
+        agentUserId: agentUserId, startDate: startDate, endDate: endDate, skip: skip, take: take);
+
+    if(isLoading){
+      await Provider.of<DataProvider>(context, listen: false)
+          .getDSADashboardLeadList(model);
+    }else{
+      await Provider.of<DataProvider>(context, listen: false)
+          .getDSADashboardLeadList(model);
+    }
+
+    setState(() {
+      loading = true;
+    });
   }
 
-  Future<void> getDSASalesAgentList(BuildContext context, DataProvider productProvider,) async {
+  Future<void> getDSASalesAgentList(
+    BuildContext context,
+    DataProvider productProvider,
+  ) async {
     // Loader();
-
     await Provider.of<DataProvider>(context, listen: false)
         .getDSASalesAgentList();
     //Navigator.of(context, rootNavigator: true).pop();
-
     if (productProvider.getDSASalesAgentListData != null) {
       productProvider.getDSASalesAgentListData!.when(
         success: (data) {
           // Handle successful response
           var getDSASalesAgentListData = data;
-          if (getDSASalesAgentListData.result!=null) {
+          if (getDSASalesAgentListData.result != null) {
             dsaSalesAgentList.clear();
-            dsaSalesAgentList.addAll(getDSASalesAgentListData.result as Iterable<DsaSalesAgentList>);
+            dsaSalesAgentList.addAll(
+                getDSASalesAgentListData.result as Iterable<DsaSalesAgentList>);
             print("list${dsaSalesAgentList.length}");
-
-          }else{
-
-          }
+          } else {}
         },
         failure: (exception) {
           // Handle failure
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
       );
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 
-  List<DropdownMenuItem<DsaSalesAgentList>> _addDividersAfterItems(List<DsaSalesAgentList?> list) {
+  List<DropdownMenuItem<DsaSalesAgentList>> _addDividersAfterItems(
+      List<DsaSalesAgentList?> list) {
     final List<DropdownMenuItem<DsaSalesAgentList>> menuItems = [];
     for (final DsaSalesAgentList? item in list) {
       menuItems.addAll(
@@ -289,7 +338,8 @@ class _LeadScreenState extends State<LeadScreen> {
           DropdownMenuItem<DsaSalesAgentList>(
             value: item,
             child: Text(
-              item!.fullName.toString(), // Assuming 'name' is the property to display
+              item!.fullName.toString(),
+              // Assuming 'name' is the property to display
               style: const TextStyle(
                 fontSize: 14,
               ),
@@ -308,6 +358,7 @@ class _LeadScreenState extends State<LeadScreen> {
     }
     return menuItems;
   }
+
   List<double> _getCustomItemsHeights3(List<DsaSalesAgentList?> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < (items.length * 2) - 1; i++) {
@@ -322,11 +373,9 @@ class _LeadScreenState extends State<LeadScreen> {
     return itemsHeights;
   }
 
-  Widget _myListView(
-      BuildContext context,
-      List<DsaUsersList> dsaUsersList,
-      DataProvider productProvider) {
-    if (dsaUsersList == null || dsaUsersList!.isEmpty) {
+  Widget _myListView(BuildContext context,
+      List<DsaDashboardLeadList> dsaDashboardLeadList, DataProvider productProvider) {
+    if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
         child: Text('No transactions available'),
@@ -334,26 +383,26 @@ class _LeadScreenState extends State<LeadScreen> {
     }
 
     return ListView.builder(
-      //controller: _scrollController,
-      itemCount: dsaUsersList!.length,
+      controller: _scrollController,
+      itemCount: dsaDashboardLead!.length,
       itemBuilder: (context, index) {
-        if (index < dsaUsersList.length) {
-          DsaUsersList dsaUsers =
-          dsaUsersList ![index];
+        if (index < dsaDashboardLeadList.length) {
+          DsaDashboardLeadList dsaDashboardLead = dsaDashboardLeadList![index];
 
           // Null check for each property before accessing it
-          String leadID = dsaUsers.userId ?? ''; // Default value if anchorName is null
-          String createdDate = dsaUsers.createdDate != null
-              ? Utils.convertDateTime(dsaUsers.createdDate.toString())
+          String leadID = dsaDashboardLead.leadId.toString() ??
+              ''; // Default value if anchorName is null
+          String createdDate = dsaDashboardLead.createdDate != null
+              ? Utils.convertDateTime(dsaDashboardLead.createdDate.toString())
               : "Not generated yet.";
-          String name = dsaUsers.fullName ?? '';
-          String status = dsaUsers.status.toString()  ?? '';
-          String? mobile =dsaUsers.mobileNo ?? '';
-
+          String name = dsaDashboardLead.fullName ?? '';
+          String status = dsaDashboardLead.status.toString() ?? '';
+          String? mobile = dsaDashboardLead.mobileNo ?? '';
+          String? profileImage = dsaDashboardLead.profileImage.toString() ?? '';
 
           return GestureDetector(
             onTap: () async {
-             // transactionList.clear();
+              // transactionList.clear();
               /*await getTransactionBreakup(context, productProvider, invoiceId);
               _showDialog(context, productProvider, transactionList);*/
             },
@@ -384,7 +433,6 @@ class _LeadScreenState extends State<LeadScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-
                                 Text(
                                   "Lead ID : $leadID",
                                   style: TextStyle(
@@ -432,11 +480,11 @@ class _LeadScreenState extends State<LeadScreen> {
                                     ),
                                   ],
                                 ),
-
                                 Card(
-                                  color: kPrimaryColor  ,
+                                  color: kPrimaryColor,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10), // Set the card radius
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Set the card radius
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -476,14 +524,18 @@ class _LeadScreenState extends State<LeadScreen> {
                                     ),
                                   ],
                                 ),
-
                                 Row(
                                   children: [
-                                    SvgPicture.asset(
+                                    profileImage.isEmpty?
+                                    Image.network(
+                                      profileImage,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 148,
+                                    ): SvgPicture.asset(
                                       'assets/icons/ic_call_calling.svg',
                                       semanticsLabel: 'Edit Icon SVG',
                                     ),
-
                                     Text(
                                       " +91 $mobile",
                                       style: TextStyle(
@@ -492,7 +544,6 @@ class _LeadScreenState extends State<LeadScreen> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ],
-
                                 ),
                               ],
                             ),
@@ -511,5 +562,96 @@ class _LeadScreenState extends State<LeadScreen> {
     );
   }
 
+  Future<void> dateTime(BuildContext) async {
+    DateTime now = DateTime.now();
 
+
+    /* DateTime startOfMonth  = DateTime(now.year, now.month - 1, now.day,
+        now.hour, now.minute, now.second, now.millisecond, now.microsecond);
+    if (startOfMonth.month == 0) {
+      startOfMonth = DateTime(now.year - 1, 12, now.day, now.hour, now.minute,
+          now.second, now.millisecond, now.microsecond);
+    }
+    startDate =
+        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
+    print("Formatted Date: $startDate");*/
+
+
+    DateTime firstDay = new DateTime(
+      DateTime
+          .now()
+          .year,
+      DateTime
+          .now()
+          .month,
+      1 + 1,
+    ); //
+
+    startDate =
+        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(firstDay.toUtc());
+    print("Formatted Date: $startDate");
+
+    endDate =
+        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
+    print("Formatted Date: $endDate");
+
+
+    String maxDateTimeFormate =
+    DateFormat("yyyy-MM-dd").format(now.toUtc());
+    print("Formatted Datesasa: $maxDateTimeFormate");
+    maxDateTime = maxDateTimeFormate;
+  }
+
+
+  Future<void> showCustomMonthYearPicker(BuildContext context) async {
+    // Current Date
+    DateTime now = DateTime.now();
+
+    // Show the month-year picker dialog
+    final selectedDate = await SimpleMonthYearPicker.showMonthYearPickerDialog(
+        context: context,
+        titleTextStyle: TextStyle(), // Customize as needed
+        monthTextStyle: TextStyle(), // Customize as needed
+        yearTextStyle: TextStyle(),  // Customize as needed
+        disableFuture: true,
+        backgroundColor: Colors.grey[200], // Set the background color
+        selectionColor: kPrimaryColor // Set the selected button color// Disable future years and months
+    );
+
+    if (selectedDate != null) {
+      // Get the selected year and month
+      int selectedYear = selectedDate.year;
+      int selectedMonth = selectedDate.month;
+
+      // Check if the selected date is in the future
+      if (selectedYear > now.year || (selectedYear == now.year && selectedMonth > now.month)) {
+        // Handle future month selection, which should not happen due to disableFuture:true
+        Utils.showToast("Future dates are disabled", context);
+      } else {
+        // Calculate the first date of the selected month
+        DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1+1);
+
+        // Calculate the end date
+        DateTime endOfMonth;
+        if (selectedYear == now.year && selectedMonth == now.month) {
+          // If the selected month is the current month, set end date to current date
+          endOfMonth = now;
+        } else {
+          // Otherwise, set it to the last day of the selected month
+          endOfMonth = (selectedMonth < 12)
+              ? DateTime(selectedYear, selectedMonth + 1, 0)
+              : DateTime(selectedYear + 1, 1, 0);
+        }
+
+        setState(() {
+          skip=0;
+          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
+          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
+          print('Start date: $startDate');
+          print('End date: $endDate');
+          getDSADashboardLead(context);
+        });
+      }
+    }
+  }
 }
