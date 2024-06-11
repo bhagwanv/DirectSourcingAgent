@@ -151,7 +151,7 @@ ScreenType? customerSequence(
           );
           return ScreenType.MyAccount;
         } else if (leadCurrentActivity.activityName == "DSATypeSelection" || leadCurrentActivity.activityName == "DSAPersonalInfo") {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
                 subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType, dsaType: leadCurrentActivity.activityName)),);
           return ScreenType.DSATypeSelection;
@@ -236,7 +236,7 @@ ScreenType? customerSequence(
           );
           return ScreenType.Inprogress;
         }  else if (leadCurrentActivity.activityName == "DSAAgreement") {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => AgreementScreen(
                     activityId: leadCurrentActivity.activityMasterId!,
@@ -245,7 +245,7 @@ ScreenType? customerSequence(
           );
           return ScreenType.AgreementEsign;
         }else if (leadCurrentActivity.activityName == "DSACongratulations") {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => CongratulationScreen(transactionReqNo: "", amount: "", mobileNo: "", loanAccountId: 0, creditDay: 0)),
           );

@@ -690,15 +690,19 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDsaPersonalDetail(BuildContext context, String userId,String productCode) async {
+  Future<void> getDsaPersonalDetail(String userId,String productCode) async {
+    _getDsaPersonalDetailData = await apiService.getDsaPersonalDetail(userId,productCode);
+    notifyListeners();
+  }
+
+  /*Future<void> getDsaPersonalDetail(BuildContext context, String userId,String productCode) async {
     _isLoading = true;
     notifyListeners();
     Utils.onLoading(context, "");
     _getDsaPersonalDetailData = await apiService.getDsaPersonalDetail(userId,productCode);
     _isLoading = false;
     notifyListeners();
-    Navigator.of(context).pop();
-  }
+  }*/
   Future<void> getDSADashboardDetails(GetDsaDashboardDetailsReqModel model) async {
     _getDSADashboardDetailsData = await apiService.getDSADashboardDetails(model);
     notifyListeners();
@@ -791,6 +795,11 @@ class DataProvider extends ChangeNotifier {
   Future<void> disposehomeScreenData() async {
     _getDSASalesAgentListData=null;
     _getDSADashboardDetailsData=null;
+    notifyListeners();
+  }
+
+  Future<void> disposegetDSAPersonalInfoData() async {
+    _getDSAPersonalInfoData=null;
     notifyListeners();
   }
 

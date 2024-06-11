@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/api/FailureException.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/customer_sequence_logic.dart';
+import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
 import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
@@ -42,6 +43,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
   bool _isSelected1 = false;
   bool _isSelected2 = false;
   String? userType;
+  bool _isNavigated = false; // State variable to track navigation
 
   void _handleCheckboxChange(int index, bool? value) {
     setState(() {
@@ -56,13 +58,19 @@ class _ProfileTypesState extends State<ProfileTypes> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    final dataProvider = Provider.of<DataProvider>(context);
+    dataProvider.disposegetDSAPersonalInfoData();
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     if (widget.dsaType == "DSAPersonalInfo") {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        dSAPersonalInfoApi(context);
-      });
+      dSAPersonalInfoApi(context);
     }
   }
 
@@ -73,14 +81,14 @@ class _ProfileTypesState extends State<ProfileTypes> {
     return Scaffold(body: SafeArea(
       child: Consumer<DataProvider>(builder: (context, productProvider, child) {
         if (productProvider.getDSAPersonalInfoData == null) {
-          if(widget.dsaType == "DSAPersonalInfo") {
-            return Container();
+          if (widget.dsaType == "DSAPersonalInfo") {
+            return Loader();
           } else {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
-                Center(
+                const Center(
                   child: Text(
                     'Choose Profile Type',
                     textAlign: TextAlign.start,
@@ -146,7 +154,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
                     children: [
                       CommonElevatedButton(
                         onPressed: () async {
-                          chooseUserTypeApi(
+                           chooseUserTypeApi(
                               context, productProvider, isTermsChecks, userType!);
                         },
                         text: "Next",
@@ -160,33 +168,35 @@ class _ProfileTypesState extends State<ProfileTypes> {
           }
         } else {
           if (productProvider.getDSAPersonalInfoData != null) {
-           // Navigator.of(context, rootNavigator: true).pop();
+            // Navigator.of(context, rootNavigator: true).pop();
             if (productProvider.getDSAPersonalInfoData != null) {
               productProvider.getDSAPersonalInfoData!.when(
                 success: (data) {
                   if (data.status!) {
-                    if (data.dsaType == "Connector") {
+                    if (!_isNavigated) {
+                      _isNavigated = true;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        print("hello page 11111");
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => Connector_signup(
-                              activityId: widget.activityId,
-                              subActivityId: widget.subActivityId,
+                        if (data.dsaType == "Connector") {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Connector_signup(
+                                    activityId: widget.activityId,
+                                    subActivityId: widget.subActivityId,
+                                  ),
                             ),
-                          ),
-                        );
-                      });
-                    } else {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => direct_selling_agent(
-                              activityId: widget.activityId,
-                              subActivityId: widget.subActivityId,
+                          );
+                        } else {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  direct_selling_agent(
+                                    activityId: widget.activityId,
+                                    subActivityId: widget.subActivityId,
+                                  ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       });
                     }
                   } else {
@@ -211,7 +221,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              Center(
+              const Center(
                 child: Text(
                   'Choose Profile Type',
                   textAlign: TextAlign.start,
@@ -277,7 +287,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
                   children: [
                     CommonElevatedButton(
                       onPressed: () async {
-                        chooseUserTypeApi(
+                         chooseUserTypeApi(
                             context, productProvider, isTermsChecks, userType!);
                       },
                       text: "Next",
@@ -370,6 +380,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getDSAPersonalInfo(context, userId!, productCode!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getDSAPersonalInfo(context, userId!, productCode!);
   }
 }
