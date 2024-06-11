@@ -341,19 +341,15 @@ class _LeadScreenState extends State<LeadScreen> {
           DsaUsersList dsaUsers =
           dsaUsersList ![index];
 
-         /* // Null check for each property before accessing it
-          String leadID = dsaUsers.fullName ??
-              ''; // Default value if anchorName is null
-          String dueDate = transaction.dueDate != null
-              ? Utils.convertDateTime(transaction.dueDate!)
+          // Null check for each property before accessing it
+          String leadID = dsaUsers.userId ?? ''; // Default value if anchorName is null
+          String createdDate = dsaUsers.createdDate != null
+              ? Utils.convertDateTime(dsaUsers.createdDate.toString())
               : "Not generated yet.";
-          String orderId = transaction.orderId ?? '';
-          String status = transaction.status ?? '';
-          int? amount = int.tryParse(transaction.amount.toString());
-          String? transactionId = transaction.transactionId.toString() ?? '';
-          String? invoiceId = transaction.invoiceId.toString() ?? '';
-          String paidAmount = transaction.paidAmount?.toString() ?? '';
-          String invoiceNo = transaction.invoiceNo ?? '';*/
+          String name = dsaUsers.fullName ?? '';
+          String status = dsaUsers.status.toString()  ?? '';
+          String? mobile =dsaUsers.mobileNo ?? '';
+
 
           return GestureDetector(
             onTap: () async {
@@ -390,7 +386,7 @@ class _LeadScreenState extends State<LeadScreen> {
                               children: [
 
                                 Text(
-                                  "Lead ID : 1542152",
+                                  "Lead ID : $leadID",
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.black,
@@ -398,7 +394,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                 ),
                                 Spacer(),
                                 Text(
-                                  "Created Date: 3 June 2024",
+                                  "Created Date: $createdDate",
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,
@@ -428,7 +424,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      "Diksha Rawat",
+                                      "$name",
                                       style: TextStyle(
                                           fontSize: 15,
                                           color: Colors.black,
@@ -472,7 +468,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                           fontWeight: FontWeight.normal),
                                     ),
                                     Text(
-                                      "Pending",
+                                      "$status",
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
@@ -489,7 +485,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                     ),
 
                                     Text(
-                                      " +91 12345 67890",
+                                      " +91 $mobile",
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
