@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../providers/DataProvider.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';
+import 'Lead_screen/LeadScreen.dart';
 import 'home/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
@@ -21,11 +22,11 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
     const HomeScreen(),
-    const HomeScreen(),
+    const LeadScreen(),
     const HomeScreen(),
      UserProfileClass(),
   ];
-  var selectedIndex = 2;
+  var selectedIndex = 0;
   late DataProvider productProvider;
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _BottomNavState extends State<BottomNav> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               setState(() {
-                selectedIndex = 2;
+                //selectedIndex = 2;
                 // productProvider.disposegetCustomerOrderSummaryData();
                 // productProvider.disposegetCustomerTransactionList();
               });
@@ -118,8 +119,7 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 1;
-                        //  productProvider.disposegetCustomerOrderSummaryData();
-                        //  productProvider.disposegetCustomerTransactionList();
+                          productProvider.disposehomeScreenData();
                       });
                     },
                     child: Padding(
@@ -147,10 +147,11 @@ class _BottomNavState extends State<BottomNav> {
                   // Print item
                   GestureDetector(
                     onTap: () {
-                      /* setState(() {
-                        selectedIndex = 3;
-                      });*/
-                      Utils.showBottomToast("Service Not Available");
+
+                       setState(() {
+                        selectedIndex = 2;
+                      });
+                     // Utils.showBottomToast("Service Not Available");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -193,7 +194,7 @@ class _BottomNavState extends State<BottomNav> {
                           ),
                           const SizedBox(height: 3), // Add space between icon and text
                           Text(
-                            'Home',
+                            'Profile',
                             style: TextStyle(
                               color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
                               fontSize: 10,

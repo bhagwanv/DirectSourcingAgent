@@ -76,4 +76,5 @@ class ApiUrls{
   final String getDSASalesAgentList="/services/product/v1/GetDSASalesAgentList";
   final String dSAGenerateAgreement="/aggregator/DSAAgg/DSAGenerateAgreement";
   final String checkESignDocumentStatus="/aggregator/DSAAgg/CheckeSignDocumentStatus";
+  final String getDSAUsersList="/services/product/v1/GetDSAUsersList";
 }
