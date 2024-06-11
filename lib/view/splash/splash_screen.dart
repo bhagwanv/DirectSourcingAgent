@@ -143,13 +143,24 @@ class _SplashScreenState extends State<SplashScreen> {
               prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
               prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
               if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
-              prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
+              if (data.userData?.address != null) {
+                prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
+              }
               if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
-              prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
+              if (data.userData?.selfie != null) {
+                prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
+              }
               prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
-              if( data.userData!.docSignedUrl!=null) {
+              if (data.userData?.docSignedUrl != null) {
                 prefsUtil.saveString(
-                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
+                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
+                );
+              }
+              prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+              if (data.userData?.docSignedUrl != null) {
+                prefsUtil.saveString(
+                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
+                );
               }
 
             }

@@ -167,6 +167,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
                   if (data.status!) {
                     if (data.dsaType == "Connector") {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
+                        print("hello page 11111");
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => Connector_signup(
