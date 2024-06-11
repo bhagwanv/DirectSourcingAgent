@@ -9,8 +9,6 @@ class CreateLeadWebView extends StatefulWidget {
   final String? companyID;
   final String? productID;
 
-
-
   CreateLeadWebView({
     required this.mobileNumber,
     required this.companyID,
@@ -47,23 +45,50 @@ class _CreateLeadWebViewState extends State<CreateLeadWebView> {
           controller: webViewController= WebViewController()
             ..setJavaScriptMode(JavaScriptMode.unrestricted)
             ..setBackgroundColor(const Color(0x00000000))
-
+            ..addJavaScriptChannel("_callJavaScriptFunction", onMessageReceived: (JavaScriptMessage message)
+            {
+              Text(message.message);
+            })
             ..setNavigationDelegate(
               NavigationDelegate(
                 onProgress: (int progress) {
                   CircularProgressIndicator();
                 },
-                onPageStarted: (String url) {
+                onPageStarted: (String url)async {
+                  // webViewController?.evaluateJavascript(source:"yourJavaScriptFunction('Hello from Flutter!')" );
                 },
                 onPageFinished: (String url) {
-                  _injectJavaScript();
+
+                  webViewController?.runJavaScript('''
+    (function() {
+      function _callJavaScriptFunction() {
+        // Your JavaScript code here
+        return 'Hello from JavaScript';
+      }
+      return _callJavaScriptFunction(); })(); ''').then((result) {
+                    print('JavaScript injection result:');
+                  }).catchError((error) {
+                    print('JavaScript injection error: $error');
+                  });
+
+
+
+                  //_injectJavaScript();
                 },
               ),
+              
             )
             ..loadRequest(
                 Uri.parse(_constructUrl()))),
+      floatingActionButton: FloatingActionButton(
+        //backgroundColor: Colors.transparent,
+        onPressed: () async {
+         print("Bhagwan"+result.toString());
+        },
+      ),
     );
   }
+
 
 
 
@@ -76,19 +101,18 @@ class _CreateLeadWebViewState extends State<CreateLeadWebView> {
   }
 
   void _injectJavaScript() {
-    webViewController!.runJavaScript('''
-    function yourJavaScriptFunction() {
-      // Your JavaScript code here
-      return 'Hello from JavaScript';
-    }
-    yourJavaScriptFunction();
-  ''').then((result) {
+    webViewController?.runJavaScript('''
+    (function() {
+      function _callJavaScriptFunction() {
+        // Your JavaScript code here
+        return 'Hello from JavaScript';
+      }
+      return _callJavaScriptFunction(); })(); ''').then((result) {
       print('JavaScript injection result:');
     }).catchError((error) {
       print('JavaScript injection error: $error');
     });
   }
-
 
   // Method to call JavaScript function
   void _callJavaScriptFunction() async {
@@ -102,67 +126,7 @@ class _CreateLeadWebViewState extends State<CreateLeadWebView> {
   }
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyInAppWebView(),
-    );
-  }
-}
 
-class MyInAppWebView extends StatefulWidget {
-  @override
-  _MyInAppWebViewState createState() => _MyInAppWebViewState();
-}
 
-class _MyInAppWebViewState extends State<MyInAppWebView> {
-  InAppWebViewController? webView;
- String result = "Result will be shown here";
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("InAppWebView Example"),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: InAppWebView(
-              initialUrlRequest: URLRequest(
-                url: WebUri(
-                    "https://customer-uat.scaleupfin.com/#/lead/8959311437/SCA010/BusinessLoan/true"),
-              ),
-              initialOptions: InAppWebViewGroupOptions(
-                android: AndroidInAppWebViewOptions(
-                  useHybridComposition: true,
-                ),
-              ),
-              onWebViewCreated: (controller) {
-                webView = controller;
-              },
-              onLoadStart: (controller, url)async {
-                print("Page started loading: $url");
-                if (webView != null) {
-                  // Replace 'yourFunctionName()' with the actual JavaScript function you want to call
-                  String jsResult = await webView!.evaluateJavascript(
-                      source: "yourFunctionName()");
-                  setState(() {
-                    result = jsResult;
-                  });
-                }
-
-              },
-              onLoadStop: (controller, url) {
-                print("Page finished loading: $url");
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 
