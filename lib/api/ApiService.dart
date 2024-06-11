@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.d
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateUserModel.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
@@ -2064,7 +2065,7 @@ class ApiService {
     }
   }
 
-  Future<Result<CommanResponceModel, Exception>> createDSAUser(
+  Future<Result<CreateUserModel, Exception>> createDSAUser(
       CreateDSAUserReqModel model) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
@@ -2082,8 +2083,8 @@ class ApiService {
         switch (response.statusCode) {
           case 200:
             final dynamic jsonData = json.decode(response.body);
-            final CommanResponceModel responseModel =
-                CommanResponceModel.fromJson(jsonData);
+            final CreateUserModel responseModel =
+            CreateUserModel.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));

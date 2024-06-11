@@ -1,3 +1,5 @@
+import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
+import 'package:direct_sourcing_agent/view/dashboard/leadcreate/CreateLeadWidgets.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,10 +24,10 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const HomeScreen(),
-    const HomeScreen(),
+    CreateLeadWidgets(),
      UserProfileClass(),
   ];
-  var selectedIndex = 2;
+  var selectedIndex = 0;
   late DataProvider productProvider;
   @override
   Widget build(BuildContext context) {
@@ -52,11 +54,13 @@ class _BottomNavState extends State<BottomNav> {
           extendBody: true,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              setState(() {
+              createLeadBottom();
+
+             /* setState(() {
                 selectedIndex = 2;
                 // productProvider.disposegetCustomerOrderSummaryData();
                 // productProvider.disposegetCustomerTransactionList();
-              });
+              });*/
             },
             child: SvgPicture.asset(
               'assets/icons/ic_plush_button.svg',
@@ -213,5 +217,27 @@ class _BottomNavState extends State<BottomNav> {
 
       ),
     );
+
   }
+  void createLeadBottom()async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(16.0), // Adjust the padding as needed
+              child: CreateLeadWidgets(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

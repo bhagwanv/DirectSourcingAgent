@@ -103,13 +103,11 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                 labelText: "Payout %",
               ),
               SizedBox(
-                height: 30.0,
+                height: 10.0,
               ),
-              SizedBox(
-                height: 80.0,
-              ),
+
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30, top: 90),
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
                 child: Column(
                   children: [
                     CommonElevatedButton(
@@ -133,10 +131,10 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
 
                           if (productProvider.getCreatDSAUserData != null) {
                             productProvider.getCreatDSAUserData!.when(
-                              success: (CommanResponceModel) async {
+                              success: (CreateUserModel) async {
                                 // Handle successful response
-                                var model = CommanResponceModel;
-                                if (model.isSuccess!) {
+                                var model = CreateUserModel;
+                                if (model.status!) {
                                   Navigator.pop(context);
                                 } else {
                                   Utils.showToast(model.message!, context);

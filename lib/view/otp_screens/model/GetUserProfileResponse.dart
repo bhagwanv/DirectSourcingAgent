@@ -76,6 +76,9 @@ class UserData {
   String? workingLocation;
   String? selfie;
   int? payout;
+  String? docSignedUrl;
+  String? startedOn;
+  String? expiredOn;
 
   UserData(
       {this.name,
@@ -85,7 +88,10 @@ class UserData {
         this.address,
         this.workingLocation,
         this.selfie,
-        this.payout});
+        this.payout,
+      this.docSignedUrl,
+      this.startedOn,
+      this.expiredOn});
 
   UserData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -96,6 +102,9 @@ class UserData {
     workingLocation = json['workingLocation'];
     selfie = json['selfie'];
     payout = json['payout'];
+    docSignedUrl = json['docSignedUrl'];
+    startedOn = json['startedOn'];
+    expiredOn = json['expiredOn'];
   }
 
   Map<String, dynamic> toJson() {
@@ -108,6 +117,9 @@ class UserData {
     data['workingLocation'] = this.workingLocation;
     data['selfie'] = this.selfie;
     data['payout'] = this.payout;
+    data['docSignedUrl'] = this.docSignedUrl;
+    data['startedOn'] = this.startedOn;
+    data['expiredOn'] = this.expiredOn;
     return data;
   }
 }

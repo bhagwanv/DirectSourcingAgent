@@ -147,6 +147,10 @@ class _SplashScreenState extends State<SplashScreen> {
               if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
               prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
               prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+              if( data.userData!.docSignedUrl!=null) {
+                prefsUtil.saveString(
+                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
+              }
 
             }
 
