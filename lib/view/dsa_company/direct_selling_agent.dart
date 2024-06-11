@@ -1476,6 +1476,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
             _businessDocumentNumberController.text =
             getCustomerDetailUsingGSTData!.busGSTNO!;
             companyStateId = getCustomerDetailUsingGSTData!.stateId.toString();
+            companyCityId = getCustomerDetailUsingGSTData!.cityId.toString();
           } else {
             Utils.showToast(getCustomerDetailUsingGSTData!.message!, context);
           }
