@@ -157,10 +157,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 );
               }
               prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
-              if (data.userData?.docSignedUrl != null) {
+              if( data.userData!.docSignedUrl!=null) {
                 prefsUtil.saveString(
-                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
-                );
+                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
               }
 
             }

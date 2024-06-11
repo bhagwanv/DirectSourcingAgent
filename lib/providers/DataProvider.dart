@@ -26,10 +26,13 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
-import '../view/dashboard/Lead_screen/model/DSAUsersListResModel.dart';
+import '../view/dashboard/Lead_screen/model/DSADashboardLeadListReqModel.dart';
+import '../view/dashboard/Lead_screen/model/DSADashboardLeadListResModel.dart';
 import '../view/dashboard/home/DSASalesAgentListResModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
+import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.dart';
+import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
@@ -304,8 +307,11 @@ class DataProvider extends ChangeNotifier {
   Result<DsaSalesAgentListResModel,Exception>? _getDSASalesAgentListData;
   Result<DsaSalesAgentListResModel,Exception>? get getDSASalesAgentListData => _getDSASalesAgentListData;
 
-  Result<DsaUsersListResModel,Exception>? _getDSAUsersListData;
-  Result<DsaUsersListResModel,Exception>? get getDSAUsersListData => _getDSAUsersListData;
+  Result<DsaDashboardLeadListResModel,Exception>? _getDSADashboardLeadListData;
+  Result<DsaDashboardLeadListResModel,Exception>? get getDSADashboardLeadListData => _getDSADashboardLeadListData;
+
+  Result<GetDsaDashboardPayoutListResModel,Exception>? _getDSADashboardPayoutListData;
+  Result<GetDsaDashboardPayoutListResModel,Exception>? get getDSADashboardPayoutListData => _getDSADashboardPayoutListData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -728,8 +734,12 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDSAUsersList(String userId,int skip,  int take) async {
-    _getDSAUsersListData = await apiService.getDSAUsersList(userId,skip,take);
+  Future<void> getDSADashboardLeadList(DsaDashboardLeadListReqModel model) async {
+    _getDSADashboardLeadListData = await apiService.getDSADashboardLeadList(model);
+    notifyListeners();
+  }
+  Future<void> getDSADashboardPayoutList(GetDsaDashboardPayoutListReqModel model) async {
+    _getDSADashboardPayoutListData = await apiService.getDSADashboardPayoutList(model);
     notifyListeners();
   }
 
@@ -795,6 +805,16 @@ class DataProvider extends ChangeNotifier {
   Future<void> disposehomeScreenData() async {
     _getDSASalesAgentListData=null;
     _getDSADashboardDetailsData=null;
+    notifyListeners();
+  }
+  Future<void> disposeLeadScreenData() async {
+    _getDSASalesAgentListData=null;
+    _getDSADashboardLeadListData=null;
+    notifyListeners();
+  }
+  Future<void> disposePayOutScreenData() async {
+    _getDSASalesAgentListData=null;
+    _getDSADashboardPayoutListData=null;
     notifyListeners();
   }
 

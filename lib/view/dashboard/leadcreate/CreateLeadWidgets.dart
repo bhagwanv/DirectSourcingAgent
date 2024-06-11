@@ -20,6 +20,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final TextEditingController _MobileNumberController = TextEditingController();
   String? companyID;
   String? productID;
+  String? Token;
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) =>  CreateLeadWebView(mobileNumber: _MobileNumberController.text.toString(),companyID: companyID,productID: productID,)),
+                                builder: (context) =>  WebViewExample(mobileNumber: _MobileNumberController.text.toString(),companyID: companyID,productID: productID,token: Token,)),
                           );
 
                         }
@@ -109,5 +110,6 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     final prefsUtil = await SharedPref.getInstance();
     companyID = prefsUtil.getString(COMPANY_CODE);
     productID = prefsUtil.getString(PRODUCT_CODE);
+    Token = prefsUtil.getString(TOKEN);
   }
 }

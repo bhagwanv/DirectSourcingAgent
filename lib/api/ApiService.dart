@@ -28,10 +28,13 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
-import '../view/dashboard/Lead_screen/model/DSAUsersListResModel.dart';
+import '../view/dashboard/Lead_screen/model/DSADashboardLeadListReqModel.dart';
+import '../view/dashboard/Lead_screen/model/DSADashboardLeadListResModel.dart';
 import '../view/dashboard/home/DSASalesAgentListResModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
+import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.dart';
+import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
@@ -2256,23 +2259,29 @@ class ApiService {
 
   }
 
-  Future<Result<DsaUsersListResModel,Exception>> getDSAUsersList(String userId,int skip,  int take) async {
-
+  Future<Result<DsaDashboardLeadListResModel, Exception>>
+  getDSADashboardLeadList(DsaDashboardLeadListReqModel model) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
-        final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.getDSAUsersList}?UserId=$userId&Skip=$skip&Take=$take'),headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        },);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.getDSADashboardLeadList}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        //print(json.encode(leadCurrentRequestModel));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
           // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
-            final DsaUsersListResModel responseModel = DsaUsersListResModel.fromJson(jsonData);
+            final DsaDashboardLeadListResModel responseModel =
+            DsaDashboardLeadListResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -2284,6 +2293,42 @@ class ApiService {
     } on Exception catch (e) {
       return Failure(e);
     }
-
   }
+
+  Future<Result<GetDsaDashboardPayoutListResModel, Exception>>
+  getDSADashboardPayoutList(GetDsaDashboardPayoutListReqModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.getDSADashboardPayoutList}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final GetDsaDashboardPayoutListResModel responseModel =
+            GetDsaDashboardPayoutListResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
 }
