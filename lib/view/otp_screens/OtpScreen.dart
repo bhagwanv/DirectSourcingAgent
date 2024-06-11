@@ -302,7 +302,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
               getLoggedInUserData(context, userLoginMobile, data.userId, data.leadId, data.token, productProvider);
             }
           },
-          failure: (exception) {},
+          failure: (exception) {
+            Utils.showToast("Something went wrong", context);
+          },
         );
       }
     }
