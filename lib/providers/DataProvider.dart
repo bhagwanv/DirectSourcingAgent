@@ -6,6 +6,7 @@ import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
+import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateUserModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
@@ -215,8 +216,8 @@ class DataProvider extends ChangeNotifier {
   Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
 
 
-  Result<CommanResponceModel,Exception>? _getCreatDSAUserData;
-  Result<CommanResponceModel,Exception>? get getCreatDSAUserData => _getCreatDSAUserData;
+  Result<CreateUserModel,Exception>? _getCreatDSAUserData;
+  Result<CreateUserModel,Exception>? get getCreatDSAUserData => _getCreatDSAUserData;
 
 
   /*Result< CheckOutOtpModel, Exception>? _genrateOptPaymentData;

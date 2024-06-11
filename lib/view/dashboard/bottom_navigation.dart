@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../providers/DataProvider.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';
-import 'Lead_screen/LeadScreen.dart';
 import 'home/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
@@ -22,6 +21,8 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
     const HomeScreen(),
+    const HomeScreen(),
+    CreateLeadWidgets(),
     const LeadScreen(),
     const HomeScreen(),
      UserProfileClass(),
@@ -53,8 +54,10 @@ class _BottomNavState extends State<BottomNav> {
           extendBody: true,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              setState(() {
-                //selectedIndex = 2;
+              createLeadBottom();
+
+             /* setState(() {
+                selectedIndex = 2;
                 // productProvider.disposegetCustomerOrderSummaryData();
                 // productProvider.disposegetCustomerTransactionList();
               });
@@ -194,7 +197,7 @@ class _BottomNavState extends State<BottomNav> {
                           ),
                           const SizedBox(height: 3), // Add space between icon and text
                           Text(
-                            'Profile',
+                            'Home',
                             style: TextStyle(
                               color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
                               fontSize: 10,
@@ -214,5 +217,27 @@ class _BottomNavState extends State<BottomNav> {
 
       ),
     );
+
   }
+  void createLeadBottom()async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(16.0), // Adjust the padding as needed
+              child: CreateLeadWidgets(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

@@ -54,4 +54,5 @@ const String USER_ADDRESS = "address";
 const String USER_WORKING_LOCTION = "workingLocation";
 const String USER_SELFI = "selfie";
 const String USER_PAY_OUT = "payout";
+const String USER_DOC_SiGN_URL = "docSignedUrl";
 
