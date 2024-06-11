@@ -1,3 +1,5 @@
+import 'package:direct_sourcing_agent/view/dashboard/Lead_screen/LeadScreen.dart';
+import 'package:direct_sourcing_agent/view/dashboard/leadcreate/CreateLeadWidgets.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,13 +23,11 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
     const HomeScreen(),
-    const HomeScreen(),
-    CreateLeadWidgets(),
     const LeadScreen(),
     const HomeScreen(),
      UserProfileClass(),
   ];
-  var selectedIndex = 0;
+  var selectedIndex = 2;
   late DataProvider productProvider;
   @override
   Widget build(BuildContext context) {
@@ -54,10 +54,9 @@ class _BottomNavState extends State<BottomNav> {
           extendBody: true,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              createLeadBottom();
-
-             /* setState(() {
-                selectedIndex = 2;
+              setState(() {
+                createLeadBottom();
+              //  selectedIndex = 2;
                 // productProvider.disposegetCustomerOrderSummaryData();
                 // productProvider.disposegetCustomerTransactionList();
               });
@@ -122,7 +121,8 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 1;
-                          productProvider.disposehomeScreenData();
+                        //  productProvider.disposegetCustomerOrderSummaryData();
+                        //  productProvider.disposegetCustomerTransactionList();
                       });
                     },
                     child: Padding(
@@ -150,11 +150,10 @@ class _BottomNavState extends State<BottomNav> {
                   // Print item
                   GestureDetector(
                     onTap: () {
-
-                       setState(() {
-                        selectedIndex = 2;
-                      });
-                     // Utils.showBottomToast("Service Not Available");
+                      /* setState(() {
+                        selectedIndex = 3;
+                      });*/
+                      Utils.showBottomToast("Service Not Available");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -217,7 +216,6 @@ class _BottomNavState extends State<BottomNav> {
 
       ),
     );
-
   }
   void createLeadBottom()async {
     showModalBottomSheet(
