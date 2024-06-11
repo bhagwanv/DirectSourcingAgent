@@ -1,5 +1,3 @@
-import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
-import 'package:direct_sourcing_agent/view/dashboard/leadcreate/CreateLeadWidgets.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +23,8 @@ class _BottomNavState extends State<BottomNav> {
     const HomeScreen(),
     const HomeScreen(),
     CreateLeadWidgets(),
+    const LeadScreen(),
+    const HomeScreen(),
      UserProfileClass(),
   ];
   var selectedIndex = 0;
@@ -60,7 +60,7 @@ class _BottomNavState extends State<BottomNav> {
                 selectedIndex = 2;
                 // productProvider.disposegetCustomerOrderSummaryData();
                 // productProvider.disposegetCustomerTransactionList();
-              });*/
+              });
             },
             child: SvgPicture.asset(
               'assets/icons/ic_plush_button.svg',
@@ -122,8 +122,7 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 1;
-                        //  productProvider.disposegetCustomerOrderSummaryData();
-                        //  productProvider.disposegetCustomerTransactionList();
+                          productProvider.disposehomeScreenData();
                       });
                     },
                     child: Padding(
@@ -151,10 +150,11 @@ class _BottomNavState extends State<BottomNav> {
                   // Print item
                   GestureDetector(
                     onTap: () {
-                      /* setState(() {
-                        selectedIndex = 3;
-                      });*/
-                      Utils.showBottomToast("Service Not Available");
+
+                       setState(() {
+                        selectedIndex = 2;
+                      });
+                     // Utils.showBottomToast("Service Not Available");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),

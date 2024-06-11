@@ -12,6 +12,7 @@ import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
 import 'package:getwidget/types/gf_progress_type.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ import '../../../api/FailureException.dart';
 import '../../../providers/DataProvider.dart';
 import '../../../shared_preferences/shared_pref.dart';
 import '../../../utils/constant.dart';
+import 'DsaSalesAgentList.dart';
 import 'GetDSADashboardDetailsReqModel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var isLoading = true;
   var leadOverviewSuccessRate = 0;
   var leadOverviewProgrssSuccessRate = null;
+ var agentUserId="";
 
   var leadOverviewSubmitted="";
   var leadOverviewrejected="";
@@ -51,14 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
   var loanOverviewSuccessRate = 0;
   var loanOverviewProgrssSuccessRate = null;
 
-  final List<String> businessTypeList = [
-    'Proprietorship',
-    'Partnership',
-    'Pvt Ltd',
-    'HUF',
-    'LLP'
-  ];
-  String? selectedFirmTypeValue;
+  final List<DsaSalesAgentList> dsaSalesAgentList = [
+    ];
+  String? selecteddsaSalesAgentValue;
 
   @override
   void initState() {
@@ -194,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(
                             height: 10.0,
                           ),
-                          DropdownButtonFormField2<String>(
+                          DropdownButtonFormField2<DsaSalesAgentList>(
                             isExpanded: true,
                             decoration: InputDecoration(
                               fillColor: light_gry,
@@ -219,15 +217,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             hint: const Text(
                               'All Agents ',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
+                                color: blueColor,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            items: _addDividersAfterItems(businessTypeList),
-                            value: selectedFirmTypeValue,
-                            onChanged: (String? value) {
-                              selectedFirmTypeValue = value;
+                            items: _addDividersAfterItems(dsaSalesAgentList),
+                            onChanged: (DsaSalesAgentList? value) {
+                              selecteddsaSalesAgentValue = value!.fullName;
+                              getDSADashboardDetails(context);
+                            /*  setState(() {
+
+                              });*/
                             },
                             buttonStyleData: const ButtonStyleData(
                               padding: EdgeInsets.only(right: 8),
@@ -236,10 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               maxHeight: 200,
                             ),
                             menuItemStyleData: MenuItemStyleData(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights:
-                                  _getCustomItemsHeights(businessTypeList),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              customHeights: _getCustomItemsHeights3(dsaSalesAgentList),
                             ),
                             iconStyleData: const IconStyleData(
                               openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -261,6 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(
                             height: 5.0,
                           ),
+
                           Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
@@ -281,11 +281,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
                                     Container(
-                                        width: 150,
+                                        width: 80,
                                         child:CircularPercentIndicator(
-                                          radius: 70.0,
-                                          lineWidth: 18.0,
+                                          radius: 55.0,
+                                          lineWidth: 12.0,
                                           percent: loanOverviewProgrssSuccessRate == null ? 0.0 : loanOverviewProgrssSuccessRate.toDouble()/100,
                                           circularStrokeCap: CircularStrokeCap.round,
                                           progressColor: whiteColor,
@@ -440,11 +443,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
                                     Container(
-                                        width: 150,
+                                        width: 80,
                                         child:CircularPercentIndicator(
-                                          radius: 70.0,
-                                          lineWidth: 18.0,
+                                          radius: 55.0,
+                                          lineWidth: 12.0,
                                           percent: leadOverviewProgrssSuccessRate == null ? 0.0 : leadOverviewProgrssSuccessRate.toDouble()/100,
                                           circularStrokeCap: CircularStrokeCap.round,
                                           progressColor: kPrimaryColor,
@@ -653,57 +659,41 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
-    final List<DropdownMenuItem<String>> menuItems = [];
-    for (final String item in items) {
-      menuItems.addAll(
-        [
-          DropdownMenuItem<String>(
-            value: item,
-            child: Text(
-              item,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          //If it's last item, we will not add Divider after it.
-          if (item != items.last)
-            const DropdownMenuItem<String>(
-              enabled: false,
-              child: Divider(
-                height: 0.1,
-              ),
-            ),
-        ],
-      );
-    }
-    return menuItems;
-  }
 
-  List<double> _getCustomItemsHeights(List<String> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
-  }
 
   Future<void> getDSADashboardDetails(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
+    DateTime now = DateTime.now();
+    String currentDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
+    print("Formatted Date: $currentDate");
+
+    DateTime oneMonthBefore = DateTime(now.year, now.month - 1, now.day, now.hour, now.minute, now.second, now.millisecond, now.microsecond);
+    if (oneMonthBefore.month == 0) {
+      oneMonthBefore = DateTime(now.year - 1, 12, now.day, now.hour, now.minute, now.second, now.millisecond, now.microsecond);
+    }
+    String oneMonthBeforeDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(oneMonthBefore.toUtc());
+    print("Formatted Date: $oneMonthBeforeDate");
+
+
+    dsaSalesAgentList.forEach((agent) {
+      if(agent.fullName==selecteddsaSalesAgentValue){
+        setState(() {
+          agentUserId=agent.userId!;
+          print("userId${agent.userId!}");
+          print("fullName${agent.fullName!}");
+        });
+
+      }
+
+    });
+
     var model = GetDsaDashboardDetailsReqModel(
-        agentUserId: "",
-        startDate: "2024-06-01T11:30:11.612Z",
-        endDate: "2024-06-30T11:30:11.612Z");
+        agentUserId: agentUserId,
+        startDate: currentDate,
+        endDate: oneMonthBeforeDate);
 
     await Provider.of<DataProvider>(context, listen: false)
         .getDSADashboardDetails(model);
@@ -721,8 +711,9 @@ class _HomeScreenState extends State<HomeScreen> {
         success: (data) {
           // Handle successful response
          var getDSASalesAgentListData = data;
-          if (getDSASalesAgentListData.isSuccess!) {
-
+          if (getDSASalesAgentListData.result!=null) {
+            dsaSalesAgentList.clear();
+            dsaSalesAgentList.addAll(getDSASalesAgentListData.result as Iterable<DsaSalesAgentList>);
 
           }else{
 
@@ -741,5 +732,49 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       );
     }
+    setState(() {
+
+    });
+  }
+
+  List<DropdownMenuItem<DsaSalesAgentList>> _addDividersAfterItems(List<DsaSalesAgentList?> list) {
+    final List<DropdownMenuItem<DsaSalesAgentList>> menuItems = [];
+    for (final DsaSalesAgentList? item in list) {
+      menuItems.addAll(
+        [
+          DropdownMenuItem<DsaSalesAgentList>(
+            value: item,
+            child: Text(
+              item!.fullName.toString(), // Assuming 'name' is the property to display
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          // If it's not the last item, add Divider after it.
+          if (item != list.last)
+            const DropdownMenuItem<DsaSalesAgentList>(
+              enabled: false,
+              child: Divider(
+                height: 0.1,
+              ),
+            ),
+        ],
+      );
+    }
+    return menuItems;
+  }
+  List<double> _getCustomItemsHeights3(List<DsaSalesAgentList?> items) {
+    final List<double> itemsHeights = [];
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      if (i.isEven) {
+        itemsHeights.add(40);
+      }
+      //Dividers indexes will be the odd indexes
+      if (i.isOdd) {
+        itemsHeights.add(4);
+      }
+    }
+    return itemsHeights;
   }
 }

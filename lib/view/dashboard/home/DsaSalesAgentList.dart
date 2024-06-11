@@ -1,5 +1,5 @@
-class Result {
-  Result({
+class DsaSalesAgentList {
+  DsaSalesAgentList({
       this.userId, 
       this.mobileNo, 
       this.anchorCompanyId, 
@@ -10,7 +10,7 @@ class Result {
       this.agreementStartDate, 
       this.agreementEndDate,});
 
-  Result.fromJson(dynamic json) {
+  DsaSalesAgentList.fromJson(dynamic json) {
     userId = json['userId'];
     mobileNo = json['mobileNo'];
     anchorCompanyId = json['anchorCompanyId'];
@@ -26,10 +26,10 @@ class Result {
   int? anchorCompanyId;
   String? type;
   String? fullName;
-  int? payoutPercenatge;
+  int? payoutPercenatge = 0;
   String? role;
-  String? agreementStartDate;
-  String? agreementEndDate;
+  String? agreementStartDate="";
+  String? agreementEndDate="";
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

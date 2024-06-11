@@ -1,22 +1,22 @@
-import 'DsaSalesAgentList.dart';
+import 'DsaUsersList.dart';
 
-class DsaSalesAgentListResModel {
-  DsaSalesAgentListResModel({
+class DsaUsersListResModel {
+  DsaUsersListResModel({
       this.result, 
       this.isSuccess, 
       this.message,});
 
-  DsaSalesAgentListResModel.fromJson(dynamic json) {
+  DsaUsersListResModel.fromJson(dynamic json) {
     if (json['result'] != null) {
       result = [];
       json['result'].forEach((v) {
-        result?.add(DsaSalesAgentList.fromJson(v));
+        result?.add(DsaUsersList.fromJson(v));
       });
     }
     isSuccess = json['isSuccess'];
     message = json['message'];
   }
-  List<DsaSalesAgentList>? result;
+  List<DsaUsersList>? result;
   bool? isSuccess;
   String? message;
 
