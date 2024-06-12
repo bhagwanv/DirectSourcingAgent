@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
-import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -54,6 +53,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   final TextEditingController _fullNameCl = TextEditingController();
   final TextEditingController _fatherOrHusbandNameCl = TextEditingController();
   final TextEditingController _ageCl = TextEditingController();
+  final TextEditingController _dobCl = TextEditingController();
   final TextEditingController _addressCl = TextEditingController();
   final TextEditingController _pinCodeCl = TextEditingController();
   final TextEditingController _cityCl = TextEditingController();
@@ -91,9 +91,12 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   var isImageDelete = false;
   var isGstFilled = false;
   var updateData = true;
+  var isWorkingWithOtherChange = false;
+  var isGstStatusChange = false;
 
   void _handleCheckboxChange(int index, bool? value) {
     setState(() {
+      isWorkingWithOtherChange = true;
       if (index == 1) {
         isPresentlyworking = "Yes";
         _isSelected1 = value!;
@@ -108,6 +111,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
 
   void _handleGstCheckboxChange(int index, bool? value) {
     setState(() {
+      isGstStatusChange = true;
       if (index == 1) {
         isGSTRegistered = "Yes";
         _isGstSelected1 = value!;
@@ -130,6 +134,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   String? selectedCompanyCityValue;
   String? companyCityId;
   String? companyStateId;
+
+  CityResponce? selectedCompanyCity = null;
+  ReturnObject? selectedCompanyState = null;
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
@@ -305,55 +312,12 @@ class DirectSellingAgent extends State<direct_selling_agent> {
     return itemsHeights;
   }
 
-  /// Display date picker.
-  void _showDatePicker(BuildContext context) {
-    DatePicker.showDatePicker(
-      context,
-      pickerTheme: DateTimePickerTheme(
-        cancel: const Icon(
-          Icons.close,
-          color: Colors.black38,
-        ),
-        title: 'Business Incorporation Date',
-        titleTextStyle: const TextStyle(fontSize: 14),
-        showTitle: _showTitle,
-        selectionOverlayColor: Colors.blue,
-        // showTitle: false,
-        // titleHeight: 80,
-        // confirm: const Text('确定', style: TextStyle(color: Colors.blue)),
-      ),
-      minDateTime: DateTime.parse(minDateTime),
-      maxDateTime: DateTime.parse(maxDateTime),
-      initialDateTime: _dateTime,
-      dateFormat: _format,
-      locale: _locale,
-      onClose: () => debugPrint("----- onClose -----"),
-      onCancel: () => debugPrint('onCancel'),
-      onChange: (dateTime, List<int> index) {
-        setState(() {
-          _dateTime = dateTime;
-        });
-      },
-      onConfirm: (dateTime, List<int> index) {
-        setState(() {
-          _dateTime = dateTime;
-          selectedDate = Utils.dateFormate(context, _dateTime.toString());
-          print("errere$selectedDate");
-          if (kDebugMode) {
-            print("$_dateTime");
-          }
-        });
-      },
-    );
-  }
-
   Widget buildStateField(DataProvider productProvider) {
-    ReturnObject? initialData;
     if (productProvider.getAllStateData != null) {
       if (productProvider.getAllStateData != null) {
         var allStates = productProvider.getAllStateData!.returnObject!;
         if (companyStateId != null) {
-          initialData = allStates.firstWhere(
+          selectedCompanyState = allStates.firstWhere(
               (element) => element?.id == int.parse(companyStateId!),
               orElse: () => null);
 
@@ -363,13 +327,11 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                 .getAllCity(int.parse(companyStateId!));
             cityCallInitial = false;
           }
-        } else {
-          initialData = null;
         }
       }
       return DropdownButtonFormField2<ReturnObject?>(
         isExpanded: true,
-        value: initialData,
+        value: selectedCompanyState,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           fillColor: textFiledBackgroundColour,
@@ -397,11 +359,17 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
         onChanged: (ReturnObject? value) {
-          citylist.clear();
-          setStateListFirstTime = false;
-          Provider.of<DataProvider>(context, listen: false)
-              .getAllCity(value!.id!);
-          selectedStateValue = value.id!.toString();
+          setState(() {
+            citylist.clear();
+            setStateListFirstTime = false;
+            Provider.of<DataProvider>(context, listen: false)
+                .getAllCity(value!.id!);
+            selectedStateValue = value.id!.toString();
+            selectedCompanyCity = null;
+            selectedCompanyState = value;
+            companyCityId = null;
+            companyStateId = null;
+          });
         },
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.only(right: 8),
@@ -424,42 +392,19 @@ class DirectSellingAgent extends State<direct_selling_agent> {
   }
 
   Widget buildCityField(DataProvider productProvider) {
-    if (productProvider.getAllCityData != null) {
-      citylist.clear();
+    if (productProvider.getAllCityData != null &&
+        productProvider.getAllCityData!.isNotEmpty) {
       citylist = productProvider.getAllCityData!;
-      CityResponce? initialData;
-      if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
-        if (getCustomerDetailUsingGSTData!.cityId != null &&
-            getCustomerDetailUsingGSTData!.cityId != 0) {
-          setCityListFirstTime = true;
-          if (setCityListFirstTime) {
-            initialData = citylist.firstWhere(
-                (element) =>
-                    element?.id == getCustomerDetailUsingGSTData!.cityId,
-                orElse: () => CityResponce());
-          }
-        }
-      } else {
-        if (getDsaPersonalDetailData!.companyCityId != null) {
-          if (int.parse(getDsaPersonalDetailData!.companyCityId!) != 0) {
-            if (setCityListFirstTime) {
-              initialData = citylist.firstWhere(
-                  (element) =>
-                      element?.id ==
-                      int.parse(getDsaPersonalDetailData!.companyCityId!),
-                  orElse: () => CityResponce());
-            }
-          } else {
-            setCityListFirstTime = false;
-          }
-        } else {
-          setCityListFirstTime = false;
-        }
+      print("companyCityId:: ${companyCityId}");
+      print("cityCallInitial:: ${cityCallInitial}");
+      if (companyCityId != null) {
+        selectedCompanyCity = citylist.firstWhere(
+            (element) => element?.id == int.parse(companyCityId!),
+            orElse: () => CityResponce());
       }
-
       return DropdownButtonFormField2<CityResponce>(
         isExpanded: true,
-        value: initialData,
+        value: selectedCompanyCity,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           fillColor: textFiledBackgroundColour,
@@ -487,10 +432,10 @@ class DirectSellingAgent extends State<direct_selling_agent> {
         ),
         items: getAllCity(citylist),
         onChanged: (CityResponce? value) {
-          selectedCityValue = value!.id.toString();
-          companyCityId = value!.id.toString();
           setState(() {
+            selectedCompanyCity = value;
             setCityListFirstTime = false;
+            companyCityId = null;
           });
         },
         buttonStyleData: const ButtonStyleData(
@@ -590,44 +535,27 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       const SizedBox(
                         height: 16.0,
                       ),
-                      InkWell(
-                        onTap: updateData
-                            ? () {
-                                _showDatePicker(context);
-                              }
-                            : null,
-                        // Set onTap to null when field is disabled
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: textFiledBackgroundColour,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: kPrimaryColor),
+                      Stack(
+                        children: [
+                          CommonTextField(
+                            controller: _dobCl,
+                            enabled: false,
+                            keyboardType: TextInputType.number,
+                            hintText: "Date of Birth",
+                            labelText: "Date of Birth",
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  selectedDate!.isEmpty
-                                      ? "Date of Birth"
-                                      : "$selectedDate",
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.date_range,
-                                  color: kPrimaryColor,
-                                ),
-                              ],
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 16.0, right: 8.0),
+                            child: const Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                Icons.date_range,
+                                color: kPrimaryColor,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
@@ -882,26 +810,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             right: 0,
                             bottom: 0,
                             child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  updateData = true;
-                                  isImageDelete = true;
-                                  gstUpdate = true;
-                                  setCityListFirstTime = false;
-                                  _gstController.text = "";
-                                  _businessDocumentNumberController.text = "";
-                                  selectedDate = "";
-                                  businessProofDocId = null;
-                                  selectedFirmTypeValue = null;
-                                  selectedStateValue = null;
-                                  selectedCityValue = null;
-                                  selectedChooseBusinessProofValue = null;
-                                  isClearData = true;
-                                  gstNumber = "";
-                                  image = "";
-                                  isGstFilled = false;
-                                });
-                              },
+                              onTap: () {},
                               child: Container(
                                 padding: const EdgeInsets.all(8),
                                 child: SvgPicture.asset(
@@ -1143,88 +1052,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       buildCityField(dataProvider),
                       const SizedBox(height: 54.0),
                       CommonElevatedButton(
-                        onPressed: () async {
-                          if (_fullNameCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Full Name", context);
-                          } else if (_fatherOrHusbandNameCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Father  Name", context);
-                          } else if (selectedDate!.isEmpty) {
-                            Utils.showToast("Please Select Date ", context);
-                          } else if (_ageCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Age ", context);
-                          } else if (_addressCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Address", context);
-                          } else if (_pinCodeCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Pin Code ", context);
-                          } else if (_cityCl.text.isEmpty) {
-                            Utils.showToast("Please Enter City", context);
-                          } else if (_stateCl.text.isEmpty) {
-                            Utils.showToast("Please Enter State", context);
-                          } else if (_alternetMobileNumberCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter AlterNet Mobile Number ",
-                                context);
-                          } else if (_emailIDCl.text.isEmpty) {
-                            Utils.showToast("Enter Email", context);
-                          } else if (_presentOccupationCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Present Occupation ", context);
-                          } else if (_currentEmploymentCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter No of years in current employment",
-                                context);
-                          } else if (_qualificationCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Qualification", context);
-                          } else if (_languagesKnownCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Languages Known", context);
-                          } else if (_locationCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Location", context);
-                          } else if (isPresentlyworking.isEmpty) {
-                            Utils.showToast(
-                                "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
-                                context);
-                          } else if (_referenceNames.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Reference Name", context);
-                          } else if (_referenceContactNoCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Reference Contact Number",
-                                context);
-                          } else if (isGSTRegistered.isEmpty) {
-                            Utils.showToast(
-                                "Please select GST Registered or Non GST Registered ",
-                                context);
-                          } else if (selectedFirmTypeValue == null) {
-                            Utils.showToast("Please Select Firm Type", context);
-                          } else if (selectedBusinessTypeValue == null) {
-                            Utils.showToast(
-                                "Please Select Business Type", context);
-                          } else if (image.isEmpty) {
-                            Utils.showToast("Please Upload Document", context);
-                          } else if (_companyNameCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Company Name", context);
-                          } else if (_companyAddressCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Company Address", context);
-                          } else if (_companyPinCodeCodeCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Company Address PinCode",
-                                context);
-                          } else if (_companyCityCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Company City", context);
-                          } else if (_companyStateCl.text.isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Company State", context);
-                          } else {
-                            await postLeadDSAPersonalDetail(
-                                context, dataProvider);
-                          }
-                        },
+                        onPressed: () {},
                         text: 'Next',
                         upperCase: true,
                       ),
@@ -1245,7 +1073,9 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       _fatherOrHusbandNameCl.text = data.fatherOrHusbandName!;
                     }
                     if (data.dob != null) {
+                      var formateDob = Utils.dateFormate(context, data.dob!);
                       selectedDate = data.dob!;
+                      _dobCl.text = formateDob;
                     }
                     if (data.age != null) {
                       _ageCl.text = data.age!.toString();
@@ -1314,13 +1144,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       stateId = data.stateId!;
                     }
 
-                    if (data.workingWithOther != null) {
-                      isPresentlyworking = data.workingWithOther!;
-                    }
-                    if (data.gstStatus != null) {
-                      isGSTRegistered = data.gstStatus!;
-                    }
-
                     if (data.buisnessDocImg != null && !isImageDelete) {
                       image = data.buisnessDocImg!;
                     }
@@ -1347,6 +1170,17 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                         if (data.companyCityId != null) {
                           companyCityId = data.companyCityId!;
                         }
+                      }
+                    }
+
+                    if (data.workingWithOther != null) {
+                      if (!isWorkingWithOtherChange) {
+                        isPresentlyworking = data.workingWithOther!;
+                      }
+                    }
+                    if (data.gstStatus != null) {
+                      if (!isGstStatusChange) {
+                        isGSTRegistered = data.gstStatus!;
                       }
                     }
                   },
@@ -1426,44 +1260,37 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                       const SizedBox(
                         height: 16.0,
                       ),
-                      InkWell(
-                        onTap: updateData
-                            ? () {
-                                _showDatePicker(context);
-                              }
-                            : null,
-                        // Set onTap to null when field is disabled
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: textFiledBackgroundColour,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: kPrimaryColor),
+                      CommonTextField(
+                        controller: _ageCl,
+                        enabled: updateData,
+                        keyboardType: TextInputType.number,
+                        hintText: "Age",
+                        labelText: "Age",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Stack(
+                        children: [
+                          CommonTextField(
+                            controller: _dobCl,
+                            enabled: false,
+                            keyboardType: TextInputType.number,
+                            hintText: "Date of Birth",
+                            labelText: "Date of Birth",
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  selectedDate!.isEmpty
-                                      ? "Date of Birth"
-                                      : "$selectedDate",
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.date_range,
-                                  color: kPrimaryColor,
-                                ),
-                              ],
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 16.0, right: 8.0),
+                            child: const Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                Icons.date_range,
+                                color: kPrimaryColor,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
@@ -1604,6 +1431,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                               content: "Yes",
                               isChecked: _isSelected1,
                               onChanged: (bool? value) {
+                                isWorkingWithOtherChange = true;
                                 _handleCheckboxChange(1, value);
                               },
                             ),
@@ -1613,6 +1441,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                               content: "No",
                               isChecked: _isSelected2,
                               onChanged: (bool? value) {
+                                isWorkingWithOtherChange = true;
                                 _handleCheckboxChange(2, value);
                               },
                             ),
@@ -1670,6 +1499,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                               content: "GST Registered",
                               isChecked: _isGstSelected1,
                               onChanged: (bool? value) {
+                                isGstStatusChange = true;
                                 _handleGstCheckboxChange(1, value);
                               },
                             ),
@@ -1679,6 +1509,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                               content: "Not GST Registered",
                               isChecked: _isGstSelected2,
                               onChanged: (bool? value) {
+                                isGstStatusChange = true;
                                 _handleGstCheckboxChange(2, value);
                               },
                             ),
@@ -1736,6 +1567,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                                   gstNumber = "";
                                   image = "";
                                   isGstFilled = false;
+                                  companyCityId = null;
+                                  companyStateId = null;
                                 });
                               },
                               child: Container(
@@ -2060,6 +1893,8 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             await postLeadDSAPersonalDetail(
                                 context, dataProvider);
                           }
+                          await postLeadDSAPersonalDetail(
+                              context, dataProvider);
                         },
                         text: 'Next',
                         upperCase: true,
@@ -2227,14 +2062,14 @@ class DirectSellingAgent extends State<direct_selling_agent> {
       pincode: _pinCodeCl.text,
       mobileNo: userMobileNumber,
       companyAddress: _companyAddressCl.text,
-      companyCity: companyCityId,
-      companyState: companyStateId,
+      companyCity: selectedCompanyCity!.id.toString(),
+      companyState: selectedCompanyState!.id.toString(),
       companyPincode: _companyPinCodeCodeCl.text,
     );
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-    /* Utils.onLoading(context, "Loading...");
+     Utils.onLoading(context, "Loading...");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -2259,7 +2094,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
           }
         },
       );
-    }*/
+    }
   }
 
   Future<void> fetchData(BuildContext context) async {
