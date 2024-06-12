@@ -2,7 +2,6 @@ import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/providers/ThemeProvider.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:direct_sourcing_agent/view/agreement_screen/Agreementscreen.dart';
-import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
 import 'package:direct_sourcing_agent/view/dashboard/bottom_navigation.dart';
 import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-     // home: Connector_signup (activityId: 1, subActivityId: 0,),
+     // home:  AadhaarScreen(activityId: 1, subActivityId: 0,),
     );
   }
 }

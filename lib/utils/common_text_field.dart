@@ -70,21 +70,22 @@ class _CommonTextFieldState extends State<CommonTextField> {
       textInputAction: widget.textInputAction,
       maxLines: !_isObscure ? widget.maxLines : 1,
       maxLength: !_isMaxLength ? widget.maxLength : 1,
-      /*style: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w500,
-        color: widget.textColor ?? Colors.black,),*/
       style: GoogleFonts.urbanist(
         fontSize: 16,
         color: widget.textColor ?? Colors.black,
         fontWeight: FontWeight.w400,
       ),
       decoration: InputDecoration(
+        floatingLabelBehavior: FloatingLabelBehavior.always,
         fillColor: widget.fillColor,
         filled: true,
         hintText: widget.hintText,
         labelText: widget.labelText ?? 'Default Simple TextField', // Use confirmation text as label if provided, else use default label text
-        labelStyle: TextStyle(color: widget.accentColor ?? blackSmall), // Set accent color
+        labelStyle: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: widget.accentColor ?? blackSmall,
+        fontWeight: FontWeight.w400,
+      ), // Set accent color
         helperText: widget.helperText,
         prefixIcon: widget.prefixIconData != null
             ? Icon(widget.prefixIconData, color: widget.accentColor ?? kPrimaryColor) // Set accent color for prefix icon
@@ -100,7 +101,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
           color: widget.accentColor ?? kPrimaryColor,
         )
             : null,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: kPrimaryColor, width: 1),
@@ -111,7 +112,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: kPrimaryColor, width: 1),
+          borderSide: const BorderSide(color: kPrimaryColor, width: 1),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),

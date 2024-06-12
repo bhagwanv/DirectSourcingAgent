@@ -1,5 +1,7 @@
+import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'adhar_faild_widgets.dart';
 import 'kyc_faild_widgets.dart';
@@ -13,8 +15,13 @@ enum ValueType {
 
 class Utils {
   static void showToast(String msg, BuildContext context) {
+
     Widget okButton = TextButton(
-      child: Text("OK"),
+      child: Text("OK", style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: kPrimaryColor,
+        fontWeight: FontWeight.w700,
+      ),),
       onPressed: () {
         Navigator.of(context).pop(false);
       },
@@ -24,9 +31,17 @@ class Utils {
     AlertDialog alert = AlertDialog(
       title: Text(
         "Alert",
-        style: TextStyle(),
+        style: GoogleFonts.urbanist(
+        fontSize: 20,
+        color: Colors.black,
+        fontWeight: FontWeight.w700,
       ),
-      content: Text(msg, textAlign: TextAlign.justify),
+      ),
+      content: Text(msg, textAlign: TextAlign.justify, style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+      ),),
       actions: [
         okButton,
       ],

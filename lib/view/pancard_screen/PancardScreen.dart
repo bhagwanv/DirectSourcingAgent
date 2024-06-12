@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
@@ -32,10 +31,13 @@ import 'model/ValidPanCardResponsModel.dart';
 class PancardScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
-  final String?  pageType;
+  final String? pageType;
 
   PancardScreen(
-      {super.key, required this.activityId, required this.subActivityId, this.pageType});
+      {super.key,
+      required this.activityId,
+      required this.subActivityId,
+      this.pageType});
 
   @override
   State<PancardScreen> createState() => _PancardScreenState();
@@ -58,9 +60,9 @@ class _PancardScreenState extends State<PancardScreen> {
   late LeadPanResponseModel LeadPANData;
   late ValidPanCardResponsModel validPanCardResponsModel;
   late FathersNameByValidPanCardResponseModel
-  fathersNameByValidPanCardResponseModel;
+      fathersNameByValidPanCardResponseModel;
   late PostLeadPanResponseModel postLeadPanResponseModel;
-  var isPanProgressDilog=false;
+  var isPanProgressDilog = false;
 
   @override
   void initState() {
@@ -94,11 +96,10 @@ class _PancardScreenState extends State<PancardScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
         if (didPop) {
           return;
         }
-        if(widget.pageType == "pushReplacement" ) {
+        if (widget.pageType == "pushReplacement") {
           final bool shouldPop = await Utils().onback(context);
           if (shouldPop) {
             SystemNavigator.pop();
@@ -112,487 +113,458 @@ class _PancardScreenState extends State<PancardScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-                if (productProvider.getLeadPANData == null && isLoading) {
-                  return Utils.onLoading(context,"");
-                } else {
-                  if (productProvider.getLeadPANData != null && isLoading) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    isLoading = false;
-                  }
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            if (productProvider.getLeadPANData == null && isLoading) {
+              return Utils.onLoading(context, "");
+            } else {
+              if (productProvider.getLeadPANData != null && isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
+              }
 
-                  if (productProvider.getLeadPANData != null) {
-                    productProvider.getLeadPANData!.when(
-                      success: (LeadPanResponseModel) {
-                        // Handle successful response
-                        LeadPANData = LeadPanResponseModel;
+              if (productProvider.getLeadPANData != null) {
+                productProvider.getLeadPANData!.when(
+                  success: (LeadPanResponseModel) {
+                    // Handle successful response
+                    LeadPANData = LeadPanResponseModel;
 
-                        if (LeadPANData.panCard != null &&
-                            !isDataClear &&
-                            !isImageDelete) {
-                          isVerifyPanNumber = true;
-                          isEnabledPanNumber = false;
-                          if(LeadPANData.panCard!=null){
-                            _panNumberCl.text = LeadPANData.panCard!;
-                          }
-                          if(LeadPANData.nameOnCard!=null){
-                            _nameAsPanCl.text = LeadPANData.nameOnCard!;
-                          }
+                    if (LeadPANData.panCard != null &&
+                        !isDataClear &&
+                        !isImageDelete) {
+                      isVerifyPanNumber = true;
+                      isEnabledPanNumber = false;
+                      if (LeadPANData.panCard != null) {
+                        _panNumberCl.text = LeadPANData.panCard!;
+                      }
+                      if (LeadPANData.nameOnCard != null) {
+                        _nameAsPanCl.text = LeadPANData.nameOnCard!;
+                      }
 
-                          if(LeadPANData.dob!=null){
-                            var formateDob =
+                      if (LeadPANData.dob != null) {
+                        var formateDob =
                             Utils.dateFormate(context, LeadPANData.dob!);
-                            dobAsPan = LeadPANData.dob!;
-                            _dOBAsPanCl.text = formateDob;
-                          }
+                        dobAsPan = LeadPANData.dob!;
+                        _dOBAsPanCl.text = formateDob;
+                      }
 
-                          if( LeadPANData.fatherName!=null){
-                            _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-                          }
-                          if(LeadPANData.panImagePath!=null){
-                            image = LeadPANData.panImagePath!;
-                          }
+                      if (LeadPANData.fatherName != null) {
+                        _fatherNameAsPanCl.text = LeadPANData.fatherName!;
+                      }
+                      if (LeadPANData.panImagePath != null) {
+                        image = LeadPANData.panImagePath!;
+                      }
 
-                          if(LeadPANData.documentId!=null){
-                            documentId = LeadPANData.documentId!;
-                          }
-
-                        }
-                      },
-                      failure: (exception) {
-                        if (exception is ApiException) {
-                          if(exception.statusCode==401){
-                            productProvider.disposeAllProviderData();
-                            ApiService().handle401(context);
-                          }else{
-                            Utils.showToast(exception.errorMessage,context);
-                          }
-                        }
-                      },
-                    );
-                  }
-
-                  if (productProvider.getPostSingleFileData != null &&
-                      !isImageDelete) {
-                    if (productProvider.getPostSingleFileData!.filePath != null) {
-                      image = productProvider.getPostSingleFileData!.filePath!;
-                      documentId = productProvider.getPostSingleFileData!.docId!;
+                      if (LeadPANData.documentId != null) {
+                        documentId = LeadPANData.documentId!;
+                      }
                     }
-                  }
+                  },
+                  failure: (exception) {
+                    if (exception is ApiException) {
+                      if (exception.statusCode == 401) {
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      } else {
+                        Utils.showToast(exception.errorMessage, context);
+                      }
+                    }
+                  },
+                );
+              }
 
-                  return Center(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 20),
-                            Center(
-                              child: const Text(
-                                'PAN Verification',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.bold),
-                              ),
+              if (productProvider.getPostSingleFileData != null &&
+                  !isImageDelete) {
+                if (productProvider.getPostSingleFileData!.filePath != null) {
+                  image = productProvider.getPostSingleFileData!.filePath!;
+                  documentId = productProvider.getPostSingleFileData!.docId!;
+                }
+              }
+
+              return Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            'PAN Verification',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 16,
+                              color: blackSmall,
+                              fontWeight: FontWeight.w900,
                             ),
-                            const SizedBox(height: 20),
-                            isVerifyPanNumber?Center(
-                              child: Container(
-                                height: 100,
-                                width: 100,
-                                alignment: Alignment.center,
-                                child:  SvgPicture.asset(
-                                  'assets/images/ic_verified_pancard.svg',
-                                  semanticsLabel: 'Verify PAN SVG',
-                                ),),
-                            ):Center(
-                              child: Container(
-                                height: 100,
-                                width: 100,
-                                alignment: Alignment.center,
-                                child:  SvgPicture.asset(
-                                  'assets/images/ic_verify_pancard.svg',
-                                  semanticsLabel: 'Verify PAN SVG',
-                                ),),
-                            ),
-
-                            const SizedBox(height: 20),
-                            isVerifyPanNumber?Center(
-                              child: const Text(
-                                'PAN Verification Complete',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 15, color: Colors.black),
-                              ),
-                            ):
-                            Center(
-                              child: const Text(
-                                'Provide your PAN details to verify registered name and active status',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 15, color: Colors.black),
-                              ),
-                            ),
-                            const SizedBox(height: 30),
-
-                            Stack(
-                              children: [
-                                CommonTextField(
-                                    controller: _panNumberCl,
-                                    hintText: "Enter PAN Number",
-                                    keyboardType: TextInputType.text,
-                                    enabled: isEnabledPanNumber,
-                                    labelText: "Enter PAN Number",
-                                    textCapitalization: TextCapitalization.characters,
-                                    inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
-                                      LengthLimitingTextInputFormatter(10)],
-                                    onChanged: (text) async {
-                                      if (text.length == 10) {
-                                        // Make API Call to validate PAN card
-                                        setState(() {
-                                          isPanProgressDilog=true;
-                                        });
-
-                                        await getLeadValidPanCard(context,
-                                            _panNumberCl.text, productProvider);
-                                      }else{
-                                        isPanProgressDilog=false;
-                                      }
-                                    }),
-                                isVerifyPanNumber?
-                                Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      // print('Edit icon tapped');
-                                      setState(() {
-                                        isEnabledPanNumber = true;
-                                        isVerifyPanNumber = false;
-                                        isDataClear = true;
-                                        _panNumberCl.text = "";
-                                        _nameAsPanCl.text = "";
-                                        dobAsPan = "";
-                                        _dOBAsPanCl.text= "";
-                                        documentId = 0;
-
-                                        LeadPANData.panCard = "";
-                                        LeadPANData.nameOnCard = "";
-                                        LeadPANData.dob = "";
-                                        LeadPANData.fatherName = "";
-                                        LeadPANData.panImagePath = "";
-                                        LeadPANData.documentId = 0;
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      child: SvgPicture.asset(
-                                        'assets/images/verify_pan.svg',
-                                        semanticsLabel: 'Verify PAN SVG',
-                                      ),
-                                    ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        isVerifyPanNumber
+                            ? Center(
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  alignment: Alignment.center,
+                                  child: SvgPicture.asset(
+                                    'assets/images/ic_verified_pancard.svg',
+                                    semanticsLabel: 'Verify PAN SVG',
                                   ),
-                                ): isPanProgressDilog?Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    // Adjusted to be slightly larger than the indicator
-                                    width: 50, // Adjusted to be slightly larger than the indicator
-                                    child: Transform.scale(
-                                      scale: 0.4, // Scale down the CircularProgressIndicator
-                                      child: CircularProgressIndicator(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                ),
+                              )
+                            : Center(
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  alignment: Alignment.center,
+                                  child: SvgPicture.asset(
+                                    'assets/images/ic_verify_pancard.svg',
+                                    semanticsLabel: 'Verify PAN SVG',
                                   ),
-                                ):Container(),
-                              ],
-                            ),
-
-
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Name ( As per PAN )',
-                              textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
-                            ),
-                            const SizedBox(height: 5),
-                            TextField(
-                              controller: _nameAsPanCl,
-                              keyboardType: TextInputType.text,
-                              cursorColor: kPrimaryColor,
-                              enabled: false,
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 16.0, horizontal: 16.0),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: kPrimaryColor),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                                hintText: "Enter Name",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              'DOB ( As per PAN )',
-                              textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
-                            ),
-                            SizedBox(height: 5),
-                            TextField(
-                              controller: _dOBAsPanCl,
-                              keyboardType: TextInputType.text,
-                              cursorColor: kPrimaryColor,
-                              enabled: false,
-                              inputFormatters: [DateTextFormatter()],
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 16.0, horizontal: 16.0),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: kPrimaryColor),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                                hintText: "DD | MM | YYYY",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: kPrimaryColor, width: 1.0),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
+                        const SizedBox(height: 20),
+                        isVerifyPanNumber
+                            ? Center(
+                                child: Text(
+                                  'PAN Verification Complete',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: blackSmall,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Provide your PAN details to verify registered name and active status',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: blackSmall,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              'Father’s Name ( As per PAN )',
-                              textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
-                            ),
-                            SizedBox(height: 5),
-                            TextField(
-                              controller: _fatherNameAsPanCl,
-                              keyboardType: TextInputType.text,
-                              cursorColor: kPrimaryColor,
-                              textCapitalization: TextCapitalization.characters,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 16.0, horizontal: 16.0),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: kPrimaryColor),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                                hintText: "Enter Father Name",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: kPrimaryColor, width: 1.0),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Stack(
-                              children: [
-                                Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(color: Color(0xff0196CE))),
-                                    width: double.infinity,
+                        const SizedBox(height: 30),
+                        Stack(
+                          children: [
+                            CommonTextField(
+                                controller: _panNumberCl,
+                                hintText: "Enter PAN Number",
+                                keyboardType: TextInputType.text,
+                                enabled: isEnabledPanNumber,
+                                labelText: "Enter PAN Number",
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                inputFormatter: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp((r'[A-Z0-9]'))),
+                                  LengthLimitingTextInputFormatter(10)
+                                ],
+                                onChanged: (text) async {
+                                  if (text.length == 10) {
+                                    // Make API Call to validate PAN card
+                                    setState(() {
+                                      isPanProgressDilog = true;
+                                    });
+
+                                    await getLeadValidPanCard(context,
+                                        _panNumberCl.text, productProvider);
+                                  } else {
+                                    isPanProgressDilog = false;
+                                  }
+                                }),
+                            isVerifyPanNumber
+                                ? Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    bottom: 0,
                                     child: GestureDetector(
                                       onTap: () {
-                                        bottomSheetMenu(context);
+                                        // print('Edit icon tapped');
+                                        setState(() {
+                                          isEnabledPanNumber = true;
+                                          isVerifyPanNumber = false;
+                                          isDataClear = true;
+                                          _panNumberCl.text = "";
+                                          _nameAsPanCl.text = "";
+                                          dobAsPan = "";
+                                          _dOBAsPanCl.text = "";
+                                          documentId = 0;
+                                          isPanProgressDilog = false;
+                                          LeadPANData.panCard = "";
+                                          LeadPANData.nameOnCard = "";
+                                          LeadPANData.dob = "";
+                                          LeadPANData.fatherName = "";
+                                          LeadPANData.panImagePath = "";
+                                          LeadPANData.documentId = 0;
+                                        });
                                       },
                                       child: Container(
-                                        height: 148,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color:Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: (!image.isEmpty)
-                                            ? ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 148,
-                                          ),
-                                        )
-                                            : (image.isNotEmpty)
-                                            ? ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 148,
-                                          ),
-                                        )
-                                            : Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                                'assets/images/gallery.svg'),
-                                            const Text(
-                                              'Upload PAN Image',
-                                              style: TextStyle(
-                                                  color:
-                                                  Color(0xff0196CE),
-                                                  fontSize: 12),
-                                            ),
-                                            const Text(
-                                                'Supports : JPEG, PNG',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color(
-                                                        0xffCACACA))),
-                                          ],
+                                        padding: const EdgeInsets.all(8),
+                                        child: SvgPicture.asset(
+                                          'assets/images/verify_pan.svg',
+                                          semanticsLabel: 'Verify PAN SVG',
                                         ),
                                       ),
-                                    )),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isImageDelete = true;
-                                      image = "";
-                                    });
-                                  },
-                                  child: !image.isEmpty
-                                      ? Container(
-                                    padding: EdgeInsets.all(4),
-                                    alignment: Alignment.topRight,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/delete_icon.svg'),
+                                    ),
                                   )
-                                      : Container(),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 20),
-
-                             CommonCheckBox(
-                              onChanged: (bool isChecked) async {
-                                // Handle the state change here
-                                print('Checkbox state changed: $isChecked');
-                                if (isChecked) {
-                                  final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PermissionsScreen()),
-                                  );
-                                  // Handle the result from Screen B using the callback function
-                                  _handlePermissionsAccepted(result ?? false);
-                                }
-                              },
-                              isChecked: _acceptPermissions,
-                              text: "By proceeding, I provide consent on the following",
-                              upperCase: false,
-                            ),
-                            SizedBox(height: 20),
-                               RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'I hereby accept ',
-                                    style: TextStyle(
-                                      color: Colors.black,
+                                : isPanProgressDilog
+                                    ? Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          // Adjusted to be slightly larger than the indicator
+                                          width: 50,
+                                          // Adjusted to be slightly larger than the indicator
+                                          child: Transform.scale(
+                                            scale: 0.4,
+                                            // Scale down the CircularProgressIndicator
+                                            child: CircularProgressIndicator(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        CommonTextField(
+                          controller: _nameAsPanCl,
+                          hintText: "Enter Name",
+                          keyboardType: TextInputType.text,
+                          enabled: false,
+                          labelText: "Name ( As per PAN )",
+                          textCapitalization: TextCapitalization.characters,
+                        ),
+                        const SizedBox(height: 20),
+                        CommonTextField(
+                          controller: _dOBAsPanCl,
+                          hintText: "DD | MM | YYYY",
+                          keyboardType: TextInputType.text,
+                          enabled: false,
+                          labelText: "DOB ( As per PAN )",
+                          textCapitalization: TextCapitalization.characters,
+                        ),
+                        const SizedBox(height: 20),
+                        CommonTextField(
+                          controller: _fatherNameAsPanCl,
+                          hintText: "Enter Father Name",
+                          keyboardType: TextInputType.text,
+                          enabled: true,
+                          labelText: "Father’s Name ( As per PAN )",
+                          textCapitalization: TextCapitalization.characters,
+                        ),
+                        const SizedBox(height: 20),
+                        Stack(
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: const Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    bottomSheetMenu(context);
+                                  },
+                                  child: Container(
+                                    height: 148,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
+                                    child: (image.isNotEmpty)
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: Image.network(
+                                              image,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: 148,
+                                            ),
+                                          )
+                                        : (image.isNotEmpty)
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.network(
+                                                  image,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: 148,
+                                                ),
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                      'assets/images/gallery.svg'),
+                                                  Text(
+                                                    'Upload PAN Image',
+                                                    style: GoogleFonts.urbanist(
+                                                      fontSize: 12,
+                                                      color: kPrimaryColor,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Supports : JPEG, PNG',
+                                                    style: GoogleFonts.urbanist(
+                                                      fontSize: 12,
+                                                      color: const Color(
+                                                          0xffCACACA),
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                   ),
-                                  _buildClickableTextSpan(
-                                    text: 'T&C  & Privacy Policy',
-                                    onClick: ()async {
-
-                                      final result = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => PermissionsScreen()),
-                                      );
-                                      // Handle the result from Screen B using the callback function
-                                      _handlePermissionsAccepted(result ?? false);
-                                    },
-                                  ),
-                                  TextSpan(
-                                    text:
-                                    '. Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 30),
-                            CommonElevatedButton(
-                              onPressed: () async {
-                                final prefsUtil = await SharedPref.getInstance();
-                                final String? userId = prefsUtil.getString(USER_ID);
-                                final int? companyId = prefsUtil.getInt(COMPANY_ID);
-
-                                if (_panNumberCl.text.isEmpty) {
-                                  Utils.showToast("Please Enter Valid Pan Card Details",context);
-                                }/* else if (_nameAsPanCl.text.isEmpty) {
-                                  Utils.showToast("Please Enter Name (As Per Pan))",context);
-                                } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
-                                  Utils.showToast("Please Enter Name (As Per Pan))",context);
-                                }*/ else if (_fatherNameAsPanCl.text.isEmpty) {
-                                  Utils.showToast("Please Enter Father Name!!!",context);
-                                } else if (image.isEmpty) {
-                                  Utils.showToast("Upload PAN-CARD Image!! ",context);
-                                } else if (!_acceptPermissions) {
-                                  Utils.showToast(
-                                      "Please provide consent for T&C & privacy!!!",context);
-                                } else {
-                                  var postLeadPanRequestModel =
-                                  PostLeadPanRequestModel(
-                                    leadId: prefsUtil.getInt(LEADE_ID),
-                                    userId: userId,
-                                    activityId: widget.activityId,
-                                    subActivityId: widget.subActivityId,
-                                    uniqueId: _panNumberCl.text,
-                                    imagePath: image,
-                                    documentId: documentId,
-                                    companyId: companyId,
-                                    fathersName: _fatherNameAsPanCl.text,
-                                    dob: dobAsPan,
-                                    name: _nameAsPanCl.text,
-                                  );
-                                  await postLeadPAN(context, productProvider,
-                                      postLeadPanRequestModel);
-                                }
+                                )),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isImageDelete = true;
+                                  image = "";
+                                });
                               },
-                              text: "next",
-                              upperCase: true,
+                              child: image.isNotEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.all(4),
+                                      alignment: Alignment.topRight,
+                                      child: SvgPicture.asset(
+                                          'assets/icons/delete_icon.svg'),
+                                    )
+                                  : Container(),
                             )
                           ],
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                        CommonCheckBox(
+                          onChanged: (bool isChecked) async {
+                            if (isChecked) {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PermissionsScreen()),
+                              );
+                              // Handle the result from Screen B using the callback function
+                              _handlePermissionsAccepted(result ?? false);
+                            }
+                          },
+                          isChecked: _acceptPermissions,
+                          text:
+                              "By proceeding, I provide consent on the following",
+                          upperCase: false,
+                        ),
+                        const SizedBox(height: 20),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'I hereby accept ',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: blackSmall,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              _buildClickableTextSpan(
+                                text: 'T&C  & Privacy Policy',
+                                onClick: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PermissionsScreen()),
+                                  );
+                                  // Handle the result from Screen B using the callback function
+                                  _handlePermissionsAccepted(result ?? false);
+                                },
+                              ),
+                              TextSpan(
+                                text:
+                                    '. Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners.',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: blackSmall,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        CommonElevatedButton(
+                          onPressed: () async {
+                            final prefsUtil = await SharedPref.getInstance();
+                            final String? userId = prefsUtil.getString(USER_ID);
+                            final int? companyId = prefsUtil.getInt(COMPANY_ID);
+
+                            if (_panNumberCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Valid Pan Card Details",
+                                  context);
+                            }
+                            /* else if (_nameAsPanCl.text.isEmpty) {
+                                  Utils.showToast("Please Enter Name (As Per Pan))",context);
+                                } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
+                                  Utils.showToast("Please Enter Name (As Per Pan))",context);
+                                }*/
+                            else if (_fatherNameAsPanCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Father Name!!!", context);
+                            } else if (image.isEmpty) {
+                              Utils.showToast(
+                                  "Upload PAN-CARD Image!! ", context);
+                            } else if (!_acceptPermissions) {
+                              Utils.showToast(
+                                  "Please provide consent for T&C & privacy!!!",
+                                  context);
+                            } else {
+                              var postLeadPanRequestModel =
+                                  PostLeadPanRequestModel(
+                                leadId: prefsUtil.getInt(LEADE_ID),
+                                userId: userId,
+                                activityId: widget.activityId,
+                                subActivityId: widget.subActivityId,
+                                uniqueId: _panNumberCl.text,
+                                imagePath: image,
+                                documentId: documentId,
+                                companyId: companyId,
+                                fathersName: _fatherNameAsPanCl.text,
+                                dob: dobAsPan,
+                                name: _nameAsPanCl.text,
+                              );
+                              await postLeadPAN(context, productProvider,
+                                  postLeadPanRequestModel);
+                            }
+                          },
+                          text: "next",
+                          upperCase: true,
+                        )
+                      ],
                     ),
-                  );
-                }
-              }),
+                  ),
+                ),
+              );
+            }
+          }),
         ),
       ),
     );
-
-    Widget loadingWidget = Utils.onLoading(context, "Loading....");
   }
 
   @override
@@ -616,10 +588,11 @@ class _PancardScreenState extends State<PancardScreen> {
       {required String text, required VoidCallback onClick}) {
     return TextSpan(
       text: text,
-      style: TextStyle(
-          color: Colors.black, // Set text color to blue for clickable text
-          decoration: TextDecoration.underline,
-          fontWeight: FontWeight.bold // Underline clickable text
+      style: GoogleFonts.urbanist(
+        fontSize: 12,
+        color: Colors.black, // Set text color to blue for clickable text
+        decoration: TextDecoration.underline,
+        fontWeight: FontWeight.w900,
       ),
       recognizer: TapGestureRecognizer()..onTap = onClick,
     );
@@ -630,7 +603,8 @@ class _PancardScreenState extends State<PancardScreen> {
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!,productCode!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadPAN(userId!, productCode!);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -649,9 +623,9 @@ class _PancardScreenState extends State<PancardScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
-      as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService()
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -660,7 +634,8 @@ class _PancardScreenState extends State<PancardScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
@@ -675,36 +650,33 @@ class _PancardScreenState extends State<PancardScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .getLeadValidPanCard(pancardNumber);
 
-
     if (productProvider.getLeadValidPanCardData != null) {
       productProvider.getLeadValidPanCardData!.when(
           success: (ValidPanCardResponsModel) async {
-            validPanCardResponsModel = ValidPanCardResponsModel;
-            if (validPanCardResponsModel.nameOnPancard != null) {
-              _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
-              isVerifyPanNumber = true;
-              isEnabledPanNumber = false;
-              //  Utils.showToast(validPanCardResponsModel.message!,context);
-              await getFathersNameByValidPanCard(
-                  context, pancardNumber, productProvider);
-            } else {
-              Utils.showToast(validPanCardResponsModel.message!,context);
-              _nameAsPanCl.clear();
-              _dOBAsPanCl.clear();
-              _fatherNameAsPanCl.clear();
-            }
-          },
-          failure: (exception) {
-            if (exception is ApiException) {
-              if(exception.statusCode==401){
-                productProvider.disposeAllProviderData();
-                ApiService().handle401(context);
-              }else{
-                Utils.showToast(exception.errorMessage,context);
-              }
-            }
+        validPanCardResponsModel = ValidPanCardResponsModel;
+        if (validPanCardResponsModel.nameOnPancard != null) {
+          _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
+          isVerifyPanNumber = true;
+          isEnabledPanNumber = false;
+          //  Utils.showToast(validPanCardResponsModel.message!,context);
+          await getFathersNameByValidPanCard(
+              context, pancardNumber, productProvider);
+        } else {
+          Utils.showToast(validPanCardResponsModel.message!, context);
+          _nameAsPanCl.clear();
+          _dOBAsPanCl.clear();
+          _fatherNameAsPanCl.clear();
+        }
+      }, failure: (exception) {
+        if (exception is ApiException) {
+          if (exception.statusCode == 401) {
+            productProvider.disposeAllProviderData();
+            ApiService().handle401(context);
+          } else {
+            Utils.showToast(exception.errorMessage, context);
           }
-      );
+        }
+      });
     }
   }
 
@@ -719,23 +691,28 @@ class _PancardScreenState extends State<PancardScreen> {
       productProvider.getFathersNameByValidPanCardData!.when(
         success: (FathersNameByValidPanCardResponseModel) {
           // Handle successful response
-          fathersNameByValidPanCardResponseModel = FathersNameByValidPanCardResponseModel;
+          fathersNameByValidPanCardResponseModel =
+              FathersNameByValidPanCardResponseModel;
           if (fathersNameByValidPanCardResponseModel.dob != null) {
-            var formateDob = Utils.dateFormate(context, fathersNameByValidPanCardResponseModel.dob);dobAsPan = fathersNameByValidPanCardResponseModel.dob;_dOBAsPanCl.text = formateDob;
+            var formateDob = Utils.dateFormate(
+                context, fathersNameByValidPanCardResponseModel.dob);
+            dobAsPan = fathersNameByValidPanCardResponseModel.dob;
+            _dOBAsPanCl.text = formateDob;
           } else {
-            if(fathersNameByValidPanCardResponseModel.message != null) {
-              Utils.showToast(fathersNameByValidPanCardResponseModel.message!, context);
+            if (fathersNameByValidPanCardResponseModel.message != null) {
+              Utils.showToast(
+                  fathersNameByValidPanCardResponseModel.message!, context);
             }
           }
         },
         failure: (exception) {
           // Handle failure
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
@@ -754,7 +731,6 @@ class _PancardScreenState extends State<PancardScreen> {
         success: (PostLeadPanResponseModel) {
           // Handle successful response
           postLeadPanResponseModel = PostLeadPanResponseModel;
-          Utils.showToast(postLeadPanResponseModel.message!,context);
           if (postLeadPanResponseModel.isSuccess!) {
             fetchData(context);
           }
@@ -762,11 +738,11 @@ class _PancardScreenState extends State<PancardScreen> {
         failure: (exception) {
           // Handle failure
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
