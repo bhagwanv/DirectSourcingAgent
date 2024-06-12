@@ -109,6 +109,7 @@ class _WebViewExampleState extends State<WebViewExample> {
           },
           onPageFinished: (String url) {
             debugPrint('Page finished loading: $url');
+            _controller.runJavaScript("_callJavaScriptFunction('$token')");
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint('''
@@ -132,7 +133,7 @@ Page resource error:
         ),
       )
       ..addJavaScriptChannel(
-        '"_callJavaScriptFunction(' "123" ')"',
+        '"_callJavaScriptFunction"',
         onMessageReceived: (JavaScriptMessage message) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
@@ -155,19 +156,18 @@ Page resource error:
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Flutter WebView example'),
+          title: const Text('Lead Create'),
           // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
         ),
         body: WebViewWidget(controller: _controller),
-        floatingActionButton: FloatingActionButton(
+        /*floatingActionButton: FloatingActionButton(
           onPressed: () {
             print("Hello");
-            String valueToSend = "Hello from Flutter!";
             _controller.runJavaScript("_callJavaScriptFunction('$token')");
           },
-        ));
+        )*/);
   }
 
   String _constructUrl() {
