@@ -65,7 +65,6 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     isBackImageDelete = false;
     Utils.onLoading(context, "");
 
-    // Perform asynchronous work first
     await Provider.of<DataProvider>(context, listen: false)
         .postAadhaarBackSingleFile(imageFile, true, "", "");
 
@@ -493,6 +492,9 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                               //call api
                               if (_aadhaarController.text == "") {
                                 Utils.showToast("Please Enter Aadhaar Number", context);
+                              } else if (!isVerifyAdharNumber) {
+                                Utils.showToast(
+                                    "Please Enter valid Aadhaar Number", context);
                               } else if (frontFileUrl == "" || frontDocumentId == "") {
                                 Utils.showToast(
                                     "Please select Aadhaar Front Image", context);
