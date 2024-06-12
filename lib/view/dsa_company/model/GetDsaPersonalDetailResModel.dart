@@ -1,6 +1,6 @@
 class GetDsaPersonalDetailResModel {
   String? gstStatus;
-  Null? gstNumber;
+  String? gstNumber;
   String? firmType;
   String? buisnessDocument;
   String? documentId;

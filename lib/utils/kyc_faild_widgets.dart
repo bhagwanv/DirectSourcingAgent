@@ -1,13 +1,14 @@
+import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class KycFailedWidgets extends StatelessWidget {
   String message;
   String imagePath;
 
-  //KycFailedWidgets({required this.message,super.key});
-
-  KycFailedWidgets({Key? key, required this.message,required this.imagePath}) : super(key: key);
+  KycFailedWidgets({Key? key, required this.message, required this.imagePath})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +24,10 @@ class KycFailedWidgets extends StatelessWidget {
                 topRight: Radius.circular(30.0))),
         child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Column(
                 children: [
                   Row(
@@ -45,7 +46,7 @@ class KycFailedWidgets extends StatelessWidget {
                 ],
               ),
               Container(
-                height: 250,
+                  height: 250,
                   width: 250,
                   alignment: Alignment.topCenter,
                   child: Image.asset(imagePath)),
@@ -56,16 +57,19 @@ class KycFailedWidgets extends StatelessWidget {
                 child: Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: Colors.black),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15,
+                    color: blackSmall,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               const SizedBox(
                 height: 20,
               ),
-
-                        ],
-                      ),
-            )),
+            ],
+          ),
+        )),
       ),
     );
   }

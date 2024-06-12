@@ -122,24 +122,44 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: <TextSpan>[
                                   TextSpan(
                                     text: 'I agree to the ',
-                                    style: TextStyle(color: Colors.black),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: 'Terms of service',
-                                    style: TextStyle(color: Colors.blue),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12,
+                                      color: kPrimaryColor,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: ' and ',
-                                    style: TextStyle(color: Colors.black),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: 'Privacy Policy',
-                                    style: TextStyle(color: Colors.blue),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12,
+                                      color: kPrimaryColor,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                   TextSpan(
                                     text:
                                         ', override my NDNC registration and authorize Scaleup to contact me through Calls, WhatsApp, SMS & Email',
-                                    style: TextStyle(color: Colors.black),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   )
                                 ],
                               ),
@@ -152,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 15, left: 15),
                       child: CommonElevatedButton(
+                        textSize: 20.0,
                         onPressed: () async {
                           if (_mobileNumberController.text.isEmpty) {
                             Utils.showToast(
@@ -165,6 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Utils.showToast(
                                 "Please Check Term n Condition", context);
                           } else {
+                            Utils.hideKeyBored(context);
                             final prefsUtil = await SharedPref.getInstance();
                             Utils.onLoading(context, "");
                             await Provider.of<DataProvider>(context,
@@ -184,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return OtpScreen();
+                                          return const OtpScreen();
                                         },
                                       ),
                                     );
@@ -197,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         text: "Continue",
-                        upperCase: true,
+                        upperCase: false,
                       ),
                     ),
                     const SizedBox(height: 32),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'constant.dart';
 
@@ -11,12 +12,12 @@ class CommonCheckBox extends StatefulWidget {
   bool isChecked = false;
 
   CommonCheckBox({
-    Key? key,
+    super.key,
     this.onChanged,
     this.text,
     this.upperCase = false,
     this.isChecked = false,
-  }) : super(key: key);
+  });
 
   @override
   _CommonCheckBoxState createState() => _CommonCheckBoxState();
@@ -63,6 +64,11 @@ class _CommonCheckBoxState extends State<CommonCheckBox> {
             Expanded(
               child: Text(
                 widget.upperCase ? widget.text!.toUpperCase() : widget.text!,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],
