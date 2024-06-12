@@ -50,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
   var loanOverviewPending = "";
   var loanOverviewApproved = "";
 
-  var payoutOverviewTotalDisbursedAmount = "";
-  var payoutOverviewPayoutAmount = "";
+  var payoutOverviewTotalDisbursedAmount = "0";
+  var payoutOverviewPayoutAmount = "0";
 
   var loanOverviewSuccessRate = 0;
   var loanOverviewProgrssSuccessRate = null;
@@ -216,15 +216,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10.0),
                       child: Container(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 10),
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20,right: 20,top: 15),
+                                  child: Center(
                                     child: Row(
                                       crossAxisAlignment: CrossAxisAlignment
                                           .center,
@@ -262,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 10.0,
+                                  height: 15.0,
                                 ),
                                 DropdownButtonFormField2<DsaSalesAgentList>(
                                   isExpanded: true,
@@ -270,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fillColor: light_gry,
                                     filled: true,
                                     contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 5),
+                                        vertical: 5, horizontal: 5),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
                                         borderSide: const BorderSide(
@@ -286,12 +285,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: light_dark_gry, width: 0),
                                     ),
                                   ),
-                                  hint: const Text(
+                                  hint:  Text(
                                     'All Agents ',
-                                    style: TextStyle(
-                                      color: blueColor,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w500,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 15,
+                                      color: light_black,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                   items: _addDividersAfterItems(
@@ -330,8 +329,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       textAlign: TextAlign.left,
                                       style: GoogleFonts.urbanist(
                                         fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
                                       )),
                                 ),
                                 const SizedBox(
@@ -339,29 +338,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Card(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  elevation: 10,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  elevation: 2,
                                   color: Colors.white,
                                   child: Container(
                                     width: double.infinity,
-                                    height: 190,
                                     decoration: BoxDecoration(
                                       color: kPrimaryColor,
-                                      borderRadius: BorderRadius.circular(
-                                          10), // Adjust the value to change the roundness
+                                      borderRadius: BorderRadius.circular(10), // Adjust the value to change the roundness
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(16),
                                       child: Row(
                                         mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const SizedBox(
-                                            width: 5,
+                                            width: 5.0,
                                           ),
                                           Container(
-                                              width: 80,
                                               child: CircularPercentIndicator(
                                                 radius: 55.0,
                                                 lineWidth: 12.0,
@@ -385,19 +381,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       style: GoogleFonts
                                                           .urbanist(
                                                         fontSize: 25,
-                                                        color: Colors.white,
+                                                        color:whiteColor,
                                                         fontWeight: FontWeight
-                                                            .w600,
+                                                            .w700,
                                                       ),
                                                     ),
                                                     Text(
                                                       "Success Rate",
                                                       style: GoogleFonts
                                                           .urbanist(
-                                                        fontSize: 12,
-                                                        color: Colors.white,
+                                                        fontSize: 8,
+                                                        color: whiteColor,
                                                         fontWeight: FontWeight
-                                                            .w600,
+                                                            .w500,
                                                       ),
                                                     ),
                                                   ],
@@ -405,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               )),
                                           SizedBox(height: 20),
                                           Container(
-                                            width: 180,
+                                            width: 140,
                                             child: Row(
                                               mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -414,7 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                                   children: [
-                                                    SizedBox(height: 20),
+
                                                     Text('Total Leads',
                                                         textAlign: TextAlign
                                                             .left,
@@ -423,9 +419,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text('Pending',
                                                         textAlign: TextAlign
                                                             .left,
@@ -434,9 +430,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text('Rejected',
                                                         textAlign: TextAlign
                                                             .left,
@@ -445,9 +441,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text('Submitted',
                                                         textAlign: TextAlign
                                                             .left,
@@ -456,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
                                                   ],
                                                 ),
@@ -464,7 +460,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                                   children: [
-                                                    SizedBox(height: 20),
                                                     Text(
                                                         '$leadOverviewTotalLeads',
                                                         textAlign: TextAlign
@@ -474,9 +469,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text('$leadOverviewPending',
                                                         textAlign: TextAlign
                                                             .left,
@@ -485,9 +480,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         '$leadOverviewrejected',
                                                         textAlign: TextAlign
@@ -497,9 +492,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         '$leadOverviewSubmitted',
                                                         textAlign: TextAlign
@@ -509,7 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: whiteColor,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
                                                   ],
                                                 ),
@@ -530,8 +525,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       textAlign: TextAlign.left,
                                       style: GoogleFonts.urbanist(
                                         fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
+                                          color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
                                       )),
                                 ),
                                 const SizedBox(
@@ -539,12 +534,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Card(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  elevation: 10,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  elevation: 2,
                                   color: Colors.white,
                                   child: Container(
                                     width: double.infinity,
-                                    height: 190,
                                     decoration: BoxDecoration(
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(
@@ -558,10 +552,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const SizedBox(
-                                            width: 5,
+                                            width: 2,
                                           ),
                                           Container(
-                                              width: 80,
                                               child: CircularPercentIndicator(
                                                 radius: 55.0,
                                                 lineWidth: 12.0,
@@ -587,17 +580,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontSize: 25,
                                                         color: kPrimaryColor,
                                                         fontWeight: FontWeight
-                                                            .w600,
+                                                            .w700,
                                                       ),
                                                     ),
                                                     Text(
                                                       "Success Rate",
                                                       style: GoogleFonts
                                                           .urbanist(
-                                                        fontSize: 12,
+                                                        fontSize: 8,
                                                         color: kPrimaryColor,
                                                         fontWeight: FontWeight
-                                                            .w600,
+                                                            .w500,
                                                       ),
                                                     ),
                                                   ],
@@ -614,7 +607,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                                   children: [
-                                                    SizedBox(height: 20),
                                                     Text('Total Loan',
                                                         textAlign: TextAlign
                                                             .left,
@@ -623,9 +615,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         'Disbursement Pending ',
                                                         textAlign: TextAlign
@@ -635,9 +627,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         'Disbursement Approved',
                                                         textAlign: TextAlign
@@ -647,9 +639,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         'Disbursement Rejected ',
                                                         textAlign: TextAlign
@@ -659,7 +651,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
                                                   ],
                                                 ),
@@ -667,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                                   children: [
-                                                    SizedBox(height: 20),
+
                                                     Text(
                                                         '$loanOverviewTotalLoans',
                                                         textAlign: TextAlign
@@ -677,9 +669,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text('$loanOverviewPending',
                                                         textAlign: TextAlign
                                                             .left,
@@ -688,9 +680,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         '$loanOverviewApproved',
                                                         textAlign: TextAlign
@@ -700,9 +692,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
-                                                    SizedBox(height: 20),
+                                                    SizedBox(height: 15),
                                                     Text(
                                                         '$loanOverviewRejected',
                                                         textAlign: TextAlign
@@ -712,7 +704,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12,
                                                           color: Colors.black,
                                                           fontWeight: FontWeight
-                                                              .w400,
+                                                              .w500,
                                                         )),
                                                   ],
                                                 ),
@@ -733,8 +725,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       textAlign: TextAlign.left,
                                       style: GoogleFonts.urbanist(
                                         fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
                                       )),
                                 ),
                                 const SizedBox(
@@ -753,7 +745,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           10), // Adjust the value to change the roundness
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(16.0),
                                       child: Container(
                                         child: Row(
                                           mainAxisAlignment:
@@ -770,7 +762,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontSize: 20,
                                                       color: Colors.black,
                                                       fontWeight: FontWeight
-                                                          .w400,
+                                                          .w800,
                                                     )),
                                                 Text('Total Disbursed Amount',
                                                     textAlign: TextAlign.left,
@@ -778,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontSize: 12,
                                                       color: Colors.black,
                                                       fontWeight: FontWeight
-                                                          .w400,
+                                                          .w500,
                                                     )),
                                               ],
                                             ),
@@ -793,7 +785,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontSize: 20,
                                                       color: Colors.black,
                                                       fontWeight: FontWeight
-                                                          .w400,
+                                                          .w800,
                                                     )),
                                                 Text('Payout Amount',
                                                     textAlign: TextAlign.left,
@@ -801,7 +793,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontSize: 12,
                                                       color: Colors.black,
                                                       fontWeight: FontWeight
-                                                          .w400,
+                                                          .w500,
                                                     )),
                                               ],
                                             ),
@@ -1002,13 +994,12 @@ class _HomeScreenState extends State<HomeScreen> {
               : DateTime(selectedYear + 1, 1, 0);
         }
 
-        setState(() {
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
-          print('Start date: $startDate');
-          print('End date: $endDate');
-          getDSADashboardDetails(context);
-        });
+        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
+        endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
+        print('Start date: $startDate');
+        print('End date: $endDate');
+        getDSADashboardDetails(context);
+
       }
     }
   }

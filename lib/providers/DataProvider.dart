@@ -818,6 +818,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> disposeUserProfileScreenData() async {
+    _getCreatDSAUserData=null;
+    notifyListeners();
+  }
+
   Future<void> disposegetDSAPersonalInfoData() async {
     _getDSAPersonalInfoData=null;
     notifyListeners();

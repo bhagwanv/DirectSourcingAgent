@@ -6,7 +6,9 @@ const textFiledBackgroundColour = whiteColor;
 //const textFiledBackgroundColour = Color(0xffEFFAFF);
 const gryColor = Color(0xff858585);
 const blackSmall = Color(0xff1E1E1E);
+const light_black = Color(0xff2F2E2E);
 const redColor = Color(0xffE8505B);
+const lightredColor = Color(0xffFF4646);
 const lightBlueColor = Color(0x00effaff);
 const blueColor = Color(0xFF2B3674);
 const greenColor = Color(0xFF6BCFB3);
@@ -22,6 +24,7 @@ const light_gry = Color(0xFFE0E0E0);
 const dark_gry = Color(0xFF7F7F7F);
 const light_dark_gry = Color(0xFFD9D9D9);
 const dark_blue = Color(0xFF00506D);
+
 
 
 const double defaultPadding = 16.0;

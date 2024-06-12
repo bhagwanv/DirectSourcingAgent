@@ -94,8 +94,8 @@ class _BottomNavState extends State<BottomNav> {
                         selectedIndex = 0;
                         productProvider. disposeLeadScreenData();
                         productProvider. disposePayOutScreenData();
-                        // productProvider.disposegetCustomerOrderSummaryData();
-                        // productProvider.disposegetCustomerTransactionList();
+                        productProvider. disposeUserProfileScreenData();
+
                       });
                     },
                     child: Padding(
@@ -126,9 +126,9 @@ class _BottomNavState extends State<BottomNav> {
                         selectedIndex = 1;
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();
+                        productProvider.disposeUserProfileScreenData();
 
-                        //  productProvider.disposegetCustomerOrderSummaryData();
-                        //  productProvider.disposegetCustomerTransactionList();
+
                       });
                     },
                     child: Padding(
@@ -160,6 +160,7 @@ class _BottomNavState extends State<BottomNav> {
                         selectedIndex = 2;
                         productProvider.disposehomeScreenData();
                         productProvider. disposeLeadScreenData();
+                        productProvider. disposeUserProfileScreenData();
                       });
                       //Utils.showBottomToast("Service Not Available");
                     },
@@ -189,8 +190,10 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 3;
-                        //productProvider.disposegetCustomerOrderSummaryData();
-                        // productProvider.disposegetCustomerTransactionList();
+                        productProvider. disposeLeadScreenData();
+                        productProvider. disposePayOutScreenData();
+                        productProvider.disposehomeScreenData();
+
                       });
                     },
                     child: Padding(
