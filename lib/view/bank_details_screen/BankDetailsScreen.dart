@@ -159,7 +159,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           backgroundColor: Colors.white,
           body: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getBankDetailsData == null && isLoading) {
-              return Loader();
+              return const Loader();
             } else {
               if (productProvider.getBankDetailsData != null && isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
@@ -240,7 +240,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       Center(
@@ -249,15 +249,15 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                           style: GoogleFonts.urbanist(
                             fontSize: 14,
                             color: Colors.black,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       bankListWidget(productProvider),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
@@ -265,7 +265,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         hintText: "Account Holder Name ",
                         labelText: "Account Holder Name ",
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
@@ -279,11 +279,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         hintText: "Bank Acc Number ",
                         labelText: "Bank Acc Number ",
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       accountTypeWidget(productProvider),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
@@ -297,7 +297,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         labelText: "IFSC Code",
                         textCapitalization: TextCapitalization.characters,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
@@ -305,7 +305,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         hintText: "Bank Statement password(optional)",
                         labelText: "Bank Statement password(optional)",
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       Container(
@@ -355,21 +355,26 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset('assets/images/gallery.svg'),
-                                const Text(
+                                 Text(
                                   'Upload Bank Proof',
-                                  style: TextStyle(
-                                      color: Color(0xff0196CE), fontSize: 12),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                                const Text('Supports : PDF',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xffCACACA))),
+                                Text('Supports : PDF',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0,
                       ),
                       documentList!.isNotEmpty
@@ -402,10 +407,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                                 documentList!.removeAt(index);
                                               });
                                             },
-                                            child: Container(
-                                              child: SvgPicture.asset(
-                                                  'assets/icons/delete_icon.svg'),
-                                            ),
+                                            child: SvgPicture.asset(
+                                                'assets/icons/delete_icon.svg'),
                                           ),
                                         ],
                                       ),
@@ -415,7 +418,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               }).toList(),
                             )
                           : Container(),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       CommonElevatedButton(
@@ -495,11 +498,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint: Text(
           'Bank Name',
-          style: TextStyle(
-            color: blueColor,
-            fontSize: 14.0,
+          style: GoogleFonts.urbanist(
+            fontSize: 14,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -541,11 +544,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint: Text(
           'Bank Name',
-          style: TextStyle(
-            color: blueColor,
-            fontSize: 14.0,
+          style: GoogleFonts.urbanist(
+            fontSize: 14,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -586,7 +589,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               selectedAccountTypeValue = initialData.first;
             }
 
-            print("Bhagwan ${initialData}");
             return DropdownButtonFormField2<String>(
               value: initialData.isNotEmpty ? initialData.first : null,
               isExpanded: true,
@@ -653,11 +655,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   borderSide: BorderSide(color: kPrimaryColor, width: 1),
                 ),
               ),
-              hint: const Text(
+              hint: Text(
                 'Account Type',
-                style: TextStyle(
-                  color: blueColor,
-                  fontSize: 14.0,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: Colors.black,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -700,11 +702,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 borderSide: BorderSide(color: kPrimaryColor, width: 1),
               ),
             ),
-            hint: const Text(
+            hint: Text(
               'Account Type',
-              style: TextStyle(
-                color: blueColor,
-                fontSize: 14.0,
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -744,7 +746,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: kPrimaryColor, width: 1),
+              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
             ),
           ),
           hint: const Text(
