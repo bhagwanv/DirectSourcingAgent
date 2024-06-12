@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-    //  home:  direct_selling_agent(activityId: 1, subActivityId: 0,),
+     // home:  AadhaarScreen(activityId: 1, subActivityId: 0,),
     );
   }
 }

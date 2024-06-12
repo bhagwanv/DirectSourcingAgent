@@ -26,10 +26,13 @@ import 'model/PostLeadSelfieRequestModel.dart';
 class TakeSelfieScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
-  final String?  pageType;
+  final String? pageType;
 
   TakeSelfieScreen(
-      {super.key, required this.activityId, required this.subActivityId, this.pageType});
+      {super.key,
+      required this.activityId,
+      required this.subActivityId,
+      this.pageType});
 
   @override
   State<TakeSelfieScreen> createState() => _TakeSelfieScreenState();
@@ -77,7 +80,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         if (didPop) {
           return;
         }
-        if(widget.pageType == "pushReplacement" ) {
+        if (widget.pageType == "pushReplacement") {
           final bool shouldPop = await Utils().onback(context);
           if (shouldPop) {
             SystemNavigator.pop();
@@ -89,8 +92,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
       child: Scaffold(
         backgroundColor: textFiledBackgroundColour,
         body: SafeArea(
-          child:
-          Consumer<DataProvider>(builder: (context, productProvider, child) {
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
             if (productProvider.getLeadSelfieData == null && isLoading) {
               return CircularProgressIndicator();
             } else {
@@ -103,35 +106,37 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                   success: (LeadSelfieResponseModel) async {
                     leadSelfieResponseModel = LeadSelfieResponseModel;
                     if (leadSelfieResponseModel != null) {
-                      if (leadSelfieResponseModel!.frontImageUrl != null && leadSelfieResponseModel!.frontDocumentId != null && !isSelfieDelete) {
+                      if (leadSelfieResponseModel!.frontImageUrl != null &&
+                          leadSelfieResponseModel!.frontDocumentId != null &&
+                          !isSelfieDelete) {
                         selfieImage = leadSelfieResponseModel!.frontImageUrl!;
                         frontDocumentId =
-                        leadSelfieResponseModel!.frontDocumentId!;
+                            leadSelfieResponseModel!.frontDocumentId!;
                       }
                     }
                   },
                   failure: (exception) {
                     if (exception is ApiException) {
-                      if(exception.statusCode==401){
+                      if (exception.statusCode == 401) {
                         productProvider.disposeAllProviderData();
                         ApiService().handle401(context);
-                      }else{
-                        Utils.showToast(exception.errorMessage,context);
+                      } else {
+                        Utils.showToast(exception.errorMessage, context);
                       }
                     }
                   },
                 );
                 if (productProvider.getPostSelfieImageSingleFileData != null) {
                   if (productProvider
-                      .getPostSelfieImageSingleFileData!.filePath !=
-                      null &&
+                              .getPostSelfieImageSingleFileData!.filePath !=
+                          null &&
                       productProvider.getPostSelfieImageSingleFileData!.docId !=
                           null &&
                       !isAgenSelfieDelete) {
                     selfieImage = productProvider
                         .getPostSelfieImageSingleFileData!.filePath!;
-                    frontDocumentId =
-                    productProvider.getPostSelfieImageSingleFileData!.docId!;
+                    frontDocumentId = productProvider
+                        .getPostSelfieImageSingleFileData!.docId!;
                   }
                 }
               }
@@ -143,8 +148,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Center(
-                         child: Text(
+                      Center(
+                        child: Text(
                           'A Selfie with your identity',
                           textAlign: TextAlign.start,
                           style: GoogleFonts.urbanist(
@@ -152,8 +157,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                           ),
-                                               ),
-                       ),
+                        ),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -181,51 +186,68 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                                 color: Colors.white,
                                 shape: BoxShape.rectangle,
                                 border:
-                                Border.all(color: kPrimaryColor, width: 1),
-                                borderRadius: BorderRadius.only(
+                                    Border.all(color: kPrimaryColor, width: 1),
+                                borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10),
                                     bottomRight: Radius.circular(10),
                                     bottomLeft: Radius.circular(10))),
                             child: Center(
                               child: Container(
-                                  child: (!selfieImage.isEmpty)
-                                      ? Stack(
-                                    children: [
-                                      Container(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            selfieImage,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 322,
+                                child: (selfieImage.isNotEmpty)
+                                    ? Stack(
+                                        children: [
+                                          Container(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                selfieImage,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: 322,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isSelfieDelete = true;
-                                              isAgenSelfieDelete = true;
-                                              selfieImage = "";
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 250,
-                                            width: 322,
-                                            padding: EdgeInsets.all(4),
-                                            alignment: Alignment.topRight,
-                                            child: SvgPicture.asset(
-                                                'assets/icons/delete_icon.svg'),
-                                          ))
-                                    ],
-                                  )
-                                      : Container(
-                                    child: SvgPicture.asset(
-                                        'assets/images/take_selfie.svg'),
-                                  )),
+                                          GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  isSelfieDelete = true;
+                                                  isAgenSelfieDelete = true;
+                                                  selfieImage = "";
+                                                });
+                                              },
+                                              child: Container(
+                                                height: 250,
+                                                width: 322,
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                alignment: Alignment.topRight,
+                                                child: SvgPicture.asset(
+                                                    'assets/icons/delete_icon.svg'),
+                                              ))
+                                        ],
+                                      )
+                                    : GestureDetector(
+                                        onTap: () async {
+                                          isAgenSelfieDelete = false;
+                                          final result =
+                                              await availableCameras().then(
+                                                  (value) => Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              CameraPage(
+                                                                  cameras:
+                                                                      value))));
+
+                                          // Handle the result from Screen B using the callback function
+                                          _handlePermissionsAccepted(
+                                              result ?? null);
+                                        },
+                                        child: SvgPicture.asset(
+                                            'assets/images/take_selfie.svg')),
+                              ),
                             ),
                           ),
                         ),
@@ -233,31 +255,31 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                       const SizedBox(height: 50),
                       (selfieImage.isEmpty)
                           ? CommonElevatedButton(
-                        onPressed: () async {
-                          isAgenSelfieDelete = false;
-                          final result = await availableCameras().then(
-                                  (value) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          CameraPage(cameras: value))));
+                              onPressed: () async {
+                                isAgenSelfieDelete = false;
+                                final result = await availableCameras().then(
+                                    (value) => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                CameraPage(cameras: value))));
 
-                          // Handle the result from Screen B using the callback function
-                          _handlePermissionsAccepted(result ?? "");
-                        },
-                        text: "Take a Selfie",
-                        upperCase: true,
-                      )
+                                // Handle the result from Screen B using the callback function
+                                _handlePermissionsAccepted(result ?? "");
+                              },
+                              text: "Take a Selfie",
+                              upperCase: true,
+                            )
                           : CommonElevatedButton(
-                        onPressed: () async {
-                          if (!selfieImage.isEmpty) {
-                            await postLeadSelfie(selfieImage,
-                                frontDocumentId, productProvider);
-                          }
-                        },
-                        text: "Next",
-                        upperCase: true,
-                      ),
+                              onPressed: () async {
+                                if (selfieImage.isNotEmpty) {
+                                  await postLeadSelfie(selfieImage,
+                                      frontDocumentId, productProvider);
+                                }
+                              },
+                              text: "Next",
+                              upperCase: true,
+                            ),
                     ]),
               ),
             );
@@ -271,7 +293,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getLeadSelfie(userId!,productCode!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadSelfie(userId!, productCode!);
   }
 
   Future<void> uolpadSelfie(BuildContext context, File picture) async {
@@ -313,11 +336,11 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         },
         failure: (exception) {
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
@@ -342,9 +365,9 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel,context)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService()
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -353,7 +376,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
