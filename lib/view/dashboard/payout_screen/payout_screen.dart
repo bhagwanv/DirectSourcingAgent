@@ -118,15 +118,18 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         // Handle successful response
                         var getDSADashboardPayoutListData = data;
 
+                      //  loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "3 June 2024",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: ""));
+
                         if (getDSADashboardPayoutListData.response != null) {
                           if(getDSADashboardPayoutListData.response!.loanPayoutDetailList != null){
-                            loanPayoutDetailList.addAll(getDSADashboardPayoutListData
-                                .response! as Iterable<LoanPayoutDetailList>);
-                            print("aaa${loanPayoutDetailList.length}");
-                          }else{
-                            loading=false;
+                            if(getDSADashboardPayoutListData.response!.loanPayoutDetailList!.isNotEmpty){
+                              loanPayoutDetailList.addAll(getDSADashboardPayoutListData
+                                  .response! as Iterable<LoanPayoutDetailList>);
+                              print("aaa${loanPayoutDetailList.length}");
+                            }else{
+                              loading=false;
+                            }
                           }
-
                         }
                       },
                       failure: (exception) {
@@ -149,50 +152,49 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10),
                               Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Payout",
-                                            style: GoogleFonts.urbanist(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
+                                  padding: const EdgeInsets.only(left: 20,right: 20,top: 15),
+                                  child: Center(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .center,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Payout",
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 20,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          print("date ");
-                                          setState(() {
+                                        GestureDetector(
+                                          onTap: () async {
+                                            print("date ");
+                                            showCustomMonthYearPicker(context);
+                                            //print('Selected date: $selectedDate');
+                                          },
 
-                                          });
-                                          showCustomMonthYearPicker(context);
-                                          //print('Selected date: $selectedDate');
-                                        },
-
-                                        child: Container(
-                                          alignment: Alignment.centerRight,
-                                          child: SvgPicture.asset(
-                                            'assets/icons/ic_document_filter.svg',
-                                            semanticsLabel: 'Edit Icon SVG',
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/ic_document_filter.svg',
+                                              semanticsLabel: 'Edit Icon SVG',
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                               const SizedBox(
-                                height: 10.0,
+                                height: 15.0,
                               ),
                               DropdownButtonFormField2<DsaSalesAgentList>(
                                 isExpanded: true,
@@ -216,12 +218,12 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                         color: light_dark_gry, width: 0),
                                   ),
                                 ),
-                                hint: const Text(
+                                hint:  Text(
                                   'All Agents ',
-                                  style: TextStyle(
-                                    color: blueColor,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500,
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: light_black,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                                 items: _addDividersAfterItems(dsaSalesAgentList),
@@ -254,8 +256,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               ),
                               Card(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                elevation: 10,
+                                    borderRadius: BorderRadius.circular(10)),
+                                elevation: 5,
                                 color: Colors.white,
                                 child: Container(
                                   width: double.infinity,
@@ -265,7 +267,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                         10), // Adjust the value to change the roundness
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: const EdgeInsets.all(16.0),
                                     child: Container(
                                       child: Row(
                                         mainAxisAlignment:
@@ -282,7 +284,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                                     fontSize: 20,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight
-                                                        .w400,
+                                                        .w800,
                                                   )),
                                               Text('Total Disbursed Amount',
                                                   textAlign: TextAlign.left,
@@ -290,7 +292,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                                     fontSize: 12,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight
-                                                        .w400,
+                                                        .w500,
                                                   )),
                                             ],
                                           ),
@@ -305,7 +307,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                                     fontSize: 20,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight
-                                                        .w400,
+                                                        .w800,
                                                   )),
                                               Text('Payout Amount',
                                                   textAlign: TextAlign.left,
@@ -313,7 +315,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                                     fontSize: 12,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight
-                                                        .w400,
+                                                        .w500,
                                                   )),
                                             ],
                                           ),
@@ -469,8 +471,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
           // Null check for each property before accessing it
           String leadID = loanPayoutDetail.loanId.toString() ??
               ''; // Default value if anchorName is null
-          String disbursmentDate = loanPayoutDetail.disbursmentDate != null
-              ? Utils.convertDateTime(loanPayoutDetail.disbursmentDate !.toString())
+          String disbursmentDate =  loanPayoutDetail.disbursmentDate != null
+              ? Utils.convertDateTime(loanPayoutDetail.disbursmentDate.toString())
               : "Not generated yet.";
           String name = loanPayoutDetail.fullName ?? '';
           String status = loanPayoutDetail.status.toString() ?? '';
@@ -494,7 +496,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                   // Set border radius
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 3,
                       offset: Offset(0, 3), // changes position of shadow
@@ -512,58 +514,64 @@ class _PayOutScreenState extends State<PayOutScreen> {
                           children: <Widget>[
 
                             Text(
-                              "Lead ID : $leadID",
-                              style: TextStyle(
+                              "Lead ID: $leadID",
+                                style: GoogleFonts.urbanist(
                                   fontSize: 12,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                                  fontWeight: FontWeight
+                                      .w500,
+                                )),
 
                             Text(
                               "Dis. Date: $disbursmentDate",
-                              style: TextStyle(
+                                style: GoogleFonts.urbanist(
                                   fontSize: 12,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.normal),
-                            ),
+                                  fontWeight: FontWeight
+                                      .w500,
+                                )),
 
                             SizedBox(
                               height: 10,
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 profileImage.isNotEmpty?
                                 Image.network(
                                   profileImage,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 148,
+                                  height: 80,
+                                  width: 80,
                                 ):SvgPicture.asset(
                                   'assets/images/dummy_image.svg',
                                   semanticsLabel: 'Edit Icon SVG',
                                   height: 80,
                                   width: 80,
                                 ),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Column(
                                   children: [
                                     Text(
                                       " Borrower Name ",
-                                      style: TextStyle(
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 10,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          color: dark_gry,
+                                          fontWeight: FontWeight
+                                              .w500,
+                                        )),
                                     Text(
                                       "$name",
-                                      style: TextStyle(
-                                          fontSize: 15,
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          fontWeight: FontWeight
+                                              .w600,
+                                        )),
                                   ],
                                 ),
-                                Card(
+                               /* Card(
                                   color: kPrimaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
@@ -572,15 +580,16 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "View Details",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      "VIEW DETAILS",
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight
+                                              .w500,
+                                        ),
                                     ),
                                   ),
-                                ),
+                                ),*/
                               ],
                             ),
                             SizedBox(
@@ -592,19 +601,21 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      "Status :",
-                                      style: TextStyle(
-                                          fontSize: 12,
+                                      "Status: ",
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10,
                                           color: Colors.grey,
-                                          fontWeight: FontWeight.normal),
-                                    ),
+                                          fontWeight: FontWeight
+                                              .w500,
+                                        )),
                                     Text(
                                       "$status",
-                                      style: TextStyle(
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 12,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.normal),
-                                    ),
+                                          color: lightredColor,
+                                          fontWeight: FontWeight
+                                              .w600,
+                                        )),
                                   ],
                                 ),
                                 Row(
@@ -615,12 +626,13 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                     ),
 
                                     Text(
-                                      " +91 mobile",
-                                      style: TextStyle(
+                                      " +91 $mobile",
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 12,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          color: Colors.black,
+                                          fontWeight: FontWeight
+                                              .w600,
+                                        )),
                                   ],
                                 ),
                               ],
@@ -645,36 +657,40 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                   children: [
                                     Text(
                                       "Dis. Amount",
-                                      style: TextStyle(
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 10,
                                           color: Colors.grey,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          fontWeight: FontWeight
+                                              .w500,
+                                        )),
                                     Text(
                                       "₹$disbursmentAmount",
-                                      style: TextStyle(
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 15,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          fontWeight: FontWeight
+                                              .w800,
+                                        )),
                                   ],
                                 ),
                                 Column(
                                   children: [
                                     Text(
                                       "Payout Amount",
-                                      style: TextStyle(
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 10,
                                           color: Colors.grey,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          fontWeight: FontWeight
+                                              .w500,
+                                        )),
                                     Text(
                                       "₹$payoutAmount",
-                                      style: TextStyle(
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 15,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                          fontWeight: FontWeight
+                                              .w800,
+                                        )),
                                   ],
                                 ),
                               ],
@@ -777,15 +793,14 @@ class _PayOutScreenState extends State<PayOutScreen> {
               ? DateTime(selectedYear, selectedMonth + 1, 0)
               : DateTime(selectedYear + 1, 1, 0);
         }
+        loanPayoutDetailList.clear();
+        skip=0;
+        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
+        endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
+        print('Start date: $startDate');
+        print('End date: $endDate');
+        getDSADashboardPayoutList(context);
 
-        setState(() {
-          skip=0;
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
-          print('Start date: $startDate');
-          print('End date: $endDate');
-          getDSADashboardPayoutList(context);
-        });
       }
     }
   }
