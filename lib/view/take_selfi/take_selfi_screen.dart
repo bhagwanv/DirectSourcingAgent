@@ -222,17 +222,14 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                                           ))
                                     ],
                                   )
-                                      : Container(
-                                    child: SvgPicture.asset(
-                                        'assets/images/take_selfie.svg'),
+                                      : Container(child: SvgPicture.asset('assets/images/take_selfie.svg'),
                                   )),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 50),
-                      (selfieImage.isEmpty)
-                          ? CommonElevatedButton(
+                      (selfieImage.isEmpty) ? CommonElevatedButton(
                         onPressed: () async {
                           isAgenSelfieDelete = false;
                           final result = await availableCameras().then(

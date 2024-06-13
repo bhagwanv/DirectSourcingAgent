@@ -103,7 +103,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                               ? Container()
                               : Container(
                                   height: 40,
-                                  width: 100,
+                                  width: 110,
                                   child: CommonElevatedButton(
                                     onPressed: () async {
                                       showModalBottomSheet(
