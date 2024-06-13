@@ -11,7 +11,6 @@ import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   runApp( MultiProvider(

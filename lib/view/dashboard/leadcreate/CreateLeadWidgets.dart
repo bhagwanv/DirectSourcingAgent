@@ -19,8 +19,8 @@ class CreateLeadWidgets extends StatefulWidget {
 class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final TextEditingController _MobileNumberController = TextEditingController();
   String? companyID;
-  String? productID;
-  String? Token;
+  String? productCode;
+  String? UserToken;
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) =>  WebViewExample(mobileNumber: _MobileNumberController.text.toString(),companyID: companyID,productID: productID,token: Token,)),
+                                builder: (context) =>  WebViewExample(mobileNumber: _MobileNumberController.text.toString(),companyID: companyID,productID: productCode,token: UserToken,)),
                           );
 
                         }
@@ -109,7 +109,8 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   Future<void> getUserData()async {
     final prefsUtil = await SharedPref.getInstance();
     companyID = prefsUtil.getString(COMPANY_CODE);
-    productID = prefsUtil.getString(PRODUCT_CODE);
-    Token = prefsUtil.getString(TOKEN);
+    productCode = prefsUtil.getString(PRODUCT_CODE);
+    UserToken = prefsUtil.getString(TOKEN);
+
   }
 }

@@ -1,15 +1,21 @@
+import 'dart:io';
+
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
+import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/CreateUserWidgets.dart';
+import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
@@ -97,7 +103,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                               ? Container()
                               : Container(
                                   height: 40,
-                                  width: 100,
+                                  width: 110,
                                   child: CommonElevatedButton(
                                     onPressed: () async {
                                       showModalBottomSheet(
@@ -247,7 +253,12 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                         width: 300,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            _startDownload(doc_sign_url!);
+                            /*if(doc_sign_url!=null) {
+                              _startDownload(doc_sign_url!);
+                            }else{
+                              Utils.showToast("Document Not Availble", context);
+                            }*/
+
 
                           },
                           icon: Icon(Icons.thumb_up, size: 24),
@@ -274,30 +285,81 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                       SizedBox(
                         height: 30.0,
                       ),
+                      Container(
+                        width: 300,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            logOut();
+
+                          },
+                          icon: Icon(Icons.thumb_up, size: 24),
+                          label: Text(
+                            'Log out',
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.red,
+                            // text color
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
                     ],
                   ),
                 ),
               ),
             )));
   }
-
-  void _startDownload(String url) async {
-
-    var dl = DownloadManager();
-    var url = "adasdad.com/asda.sdas";
-    dl.addDownload(url, "./test.sdas");
-    DownloadTask? task = dl.getDownload(url);
-
-    task?.status.addListener(() {
-      print(task.status.value);
-    });
-
-    task?.progress.addListener(() {
-      print(task.progress.value);
-    });
-
-    await dl.whenDownloadComplete(url);
+  Future<void> logOut()async {
+    final prefsUtil = await SharedPref.getInstance();
+    prefsUtil.clear();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => LoginScreen()),
+    );
   }
+
+  Future<void> _showProgressNotification() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+    const int maxProgress = 5;
+    for (int i = 0; i <= maxProgress; i++) {
+      await Future<void>.delayed(const Duration(seconds: 1), () async {
+        final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails('progress channel', 'progress channel',
+            channelShowBadge: false,
+            importance: Importance.max,
+            priority: Priority.high,
+            onlyAlertOnce: true,
+            showProgress: true,
+            maxProgress: maxProgress,
+            progress: i);
+        final NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+        await flutterLocalNotificationsPlugin.show(
+            0,
+            'PDF file has been download',
+            'progress notification body',
+            platformChannelSpecifics,
+            payload: 'item x');
+      });
+    }
+  }
+
 
   Future<void> getUserData(
       TextEditingController mobileNoController,
@@ -319,14 +381,24 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     user_payout = prefsUtil.getInt(USER_PAY_OUT);
     doc_sign_url = prefsUtil.getString(USER_DOC_SiGN_URL);
 
-    mobileNoController.text = user_mobile!;
-    panCardNoController.text = user_panNumber!;
-    adharcardNOController.text =
-        "XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
-    addreshController.text = user_address!;
-    payOutController.text = user_payout!.toString();
-    workingLocationController.text = user_workingLocation!;
-
+    if(user_mobile!=null){
+      mobileNoController.text = user_mobile!;
+    }
+    if(user_panNumber!=null){
+      panCardNoController.text = user_panNumber!;
+    }
+    if(user_aadharNumber!=null){
+      adharcardNOController.text = "XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
+    }
+    if(user_address!=null){
+      addreshController.text = user_address!;
+    }
+    if(user_payout!=null){
+      payOutController.text = user_payout!.toString();
+    }
+    if(user_workingLocation!=null){
+      workingLocationController.text = user_workingLocation!;
+    }
     setState(() {});
   }
 }

@@ -20,16 +20,16 @@ class CommonElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        minimumSize: WidgetStateProperty.all<Size>(
+        minimumSize: MaterialStateProperty.all<Size>(
           Size(MediaQuery.of(context).size.width, 58),
         ),
-        backgroundColor: WidgetStateProperty.all<Color>(kPrimaryColor),
-        foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+        backgroundColor: MaterialStateProperty.all<Color>(kPrimaryColor),
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
       ),
       onPressed: onPressed,
       child: upperCase

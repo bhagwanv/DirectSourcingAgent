@@ -43,8 +43,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
   bool _isSelected1 = false;
   bool _isSelected2 = false;
   String? userType;
-  bool _isNavigated = false; // State variable to track navigation
-
+  bool _isNavigated = false;
   void _handleCheckboxChange(int index, bool? value) {
     setState(() {
       if (index == 1) {
