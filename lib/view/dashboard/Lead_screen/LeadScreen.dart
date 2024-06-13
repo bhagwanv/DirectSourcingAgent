@@ -62,6 +62,7 @@ class _LeadScreenState extends State<LeadScreen> {
   String maxDateTime = '';
   bool loading = false;
   bool isAgentSelected = false;
+  var type = "";
 
 
 
@@ -125,10 +126,8 @@ class _LeadScreenState extends State<LeadScreen> {
 
                         if (getDSADashboardLeadListData.response != null) {
                           if (getDSADashboardLeadListData.response!.isNotEmpty) {
-                            print("1111111:${getDSADashboardLeadListData.response!.length}");
                             dsaDashboardLead.addAll(getDSADashboardLeadListData
                                 .response! as Iterable<DsaDashboardLeadList>);
-                            print("aaa${dsaDashboardLead.length}");
                           } else {
                             loading = false;
                           }
@@ -141,8 +140,6 @@ class _LeadScreenState extends State<LeadScreen> {
                             Utils.showToast(exception.errorMessage, context);
                             productProvider.disposeAllProviderData();
                             ApiService().handle401(context);
-                          } else {
-                            Utils.showToast("Something went Wrong", context);
                           }
                         }
                       },
@@ -224,6 +221,7 @@ class _LeadScreenState extends State<LeadScreen> {
                               const SizedBox(
                                 height: 15.0,
                               ),
+                              type!=null && type=="DSA"?
                               DropdownButtonFormField2<DsaSalesAgentList>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
@@ -282,7 +280,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                 iconStyleData: const IconStyleData(
                                   openMenuIcon: Icon(Icons.arrow_drop_up),
                                 ),
-                              ),
+                              ):Container(),
                               const SizedBox(
                                 height: 20.0,
                               ),
@@ -301,9 +299,8 @@ class _LeadScreenState extends State<LeadScreen> {
 
   Future<void> getDSADashboardLead(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
-    String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-
+    type = prefsUtil.getString(TYPE)!;
+    print("type$type");
     if(isAgentSelected){
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue) {
@@ -340,7 +337,7 @@ class _LeadScreenState extends State<LeadScreen> {
 
   Future<void> getDSASalesAgentList(BuildContext context,
       DataProvider productProvider,) async {
-    // Loader();
+   // Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .getDSASalesAgentList();
     //Navigator.of(context, rootNavigator: true).pop();
@@ -422,7 +419,7 @@ class _LeadScreenState extends State<LeadScreen> {
     if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
-        child: Text('No transactions available'),
+        child: Text('Data Not available'),
       );
     }
 
@@ -434,11 +431,8 @@ class _LeadScreenState extends State<LeadScreen> {
           DsaDashboardLeadList dsaDashboardLead = dsaDashboardLeadList![index];
 
           // Null check for each property before accessing it
-          String leadID = dsaDashboardLead.leadId.toString() ??
-              ''; // Default value if anchorName is null
-          String createdDate = dsaDashboardLead.createdDate != null
-              ? Utils.dateMonthAndYearFormat(dsaDashboardLead.createdDate.toString())
-              : "Not generated yet.";
+          String? leadID = dsaDashboardLead.leadId.toString() ?? ''; // Default value if anchorName is null
+          String createdDate = dsaDashboardLead.createdDate != null ? Utils.dateMonthAndYearFormat(dsaDashboardLead.createdDate.toString()) : "";
           String name = dsaDashboardLead.fullName ?? '';
           String status = dsaDashboardLead.status.toString() ?? '';
           String? mobile = dsaDashboardLead.mobileNo ?? '';
@@ -446,9 +440,6 @@ class _LeadScreenState extends State<LeadScreen> {
 
           return GestureDetector(
             onTap: () async {
-              // transactionList.clear();
-              /*await getTransactionBreakup(context, productProvider, invoiceId);
-              _showDialog(context, productProvider, transactionList);*/
             },
             child: Card(
               child: Container(

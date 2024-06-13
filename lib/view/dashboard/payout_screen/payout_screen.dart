@@ -57,6 +57,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
   String maxDateTime = '';
   bool loading = false;
   bool isAgentSelected = false;
+  var type = "";
 
 
   var payoutOverviewTotalDisbursedAmount = "0";
@@ -117,7 +118,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         // Handle successful response
                         var getDSADashboardPayoutListData = data;
 
-                      //  loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "3 June 2024",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: ""));
+                      //  loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "2024-06-01T18:30:00.000Z",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: "",fullName: "atul"));
 
                         if (getDSADashboardPayoutListData.response != null) {
                           if(getDSADashboardPayoutListData.response!.totalDisbursedAmount!=null){
@@ -135,6 +136,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               loading=false;
                             }
                           }
+
                         }
                       },
                       failure: (exception) {
@@ -144,8 +146,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
                             Utils.showToast(exception.errorMessage, context);
                             productProvider.disposeAllProviderData();
                             ApiService().handle401(context);
-                          } else {
-                            Utils.showToast("Something went Wrong", context);
                           }
                         }
                       },
@@ -201,6 +201,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               const SizedBox(
                                 height: 15.0,
                               ),
+                              type!=null && type=="DSA"?
                               DropdownButtonFormField2<DsaSalesAgentList>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
@@ -260,14 +261,14 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 iconStyleData: const IconStyleData(
                                   openMenuIcon: Icon(Icons.arrow_drop_up),
                                 ),
-                              ),
+                              ):Container(),
                               const SizedBox(
                                 height: 20.0,
                               ),
                               Card(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
-                                elevation: 5,
+                                elevation: 4,
                                 color: Colors.white,
                                 child: Container(
                                   width: double.infinity,
@@ -351,6 +352,12 @@ class _PayOutScreenState extends State<PayOutScreen> {
   }
 
   Future<void> getDSADashboardPayoutList(BuildContext) async {
+
+    final prefsUtil = await SharedPref.getInstance();
+    type = prefsUtil.getString(TYPE)!;
+    print("type$type");
+
+
     if(isAgentSelected){
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue) {
@@ -466,7 +473,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
     if (loanPayoutDetailList == null || loanPayoutDetailList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
-        child: Text('No transactions available'),
+        child: Text('Data Not available'),
       );
     }
 
@@ -478,21 +485,17 @@ class _PayOutScreenState extends State<PayOutScreen> {
           LoanPayoutDetailList loanPayoutDetail = loanPayoutDetailList![index];
 
           // Null check for each property before accessing it
-          String leadID = loanPayoutDetail.loanId.toString() ?? ''; // Default value if anchorName is null
-          String disbursmentDate =  loanPayoutDetail.disbursmentDate != null ? Utils.dateMonthAndYearFormat(loanPayoutDetail.disbursmentDate.toString()) : "Not generated yet.";
-          String name = loanPayoutDetail.fullName ?? '';
-          String status = loanPayoutDetail.status.toString() ?? '';
+          String? leadID = loanPayoutDetail.loanId.toString() ?? ''; // Default value if anchorName is null
+          String? disbursmentDate =  loanPayoutDetail.disbursmentDate != null ? Utils.dateMonthAndYearFormat(loanPayoutDetail.disbursmentDate.toString()) : "";
+          String? name = loanPayoutDetail.fullName ?? '';
+          String? status = loanPayoutDetail.status.toString() ?? '';
           String? mobile = loanPayoutDetail.mobileNo ?? '';
           String? profileImage = loanPayoutDetail.profileImage.toString() ?? '';
-
           String? disbursmentAmount = loanPayoutDetail.disbursmentAmount.toString() ?? '';
           String? payoutAmount = loanPayoutDetail.payoutAmount.toString() ?? '';
 
           return GestureDetector(
             onTap: () async {
-              // transactionList.clear();
-              /*await getTransactionBreakup(context, productProvider, invoiceId);
-              _showDialog(context, productProvider, transactionList);*/
             },
             child: Card(
               child: Container(
@@ -541,18 +544,25 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               height: 10,
                             ),
                             Row(
-                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                profileImage.isNotEmpty?
-                                Image.network(
-                                  profileImage,
-                                  height: 80,
-                                  width: 80,
-                                ):SvgPicture.asset(
-                                  'assets/images/dummy_image.svg',
-                                  semanticsLabel: 'Edit Icon SVG',
-                                  height: 80,
-                                  width: 80,
+                                Container(
+                                    child: profileImage.isNotEmpty ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
+                                      child: Image.network(
+                                        profileImage,
+                                        height: 70,
+                                        width: 70,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ) : ClipRRect(
+                                      borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
+                                      child: SvgPicture.asset(
+                                        'assets/images/user_profile_dummy.svg',
+                                        semanticsLabel: 'Edit Icon SVG',
+                                        height: 70,
+                                        width: 70,
+                                      ),
+                                    )
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -560,7 +570,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 Column(
                                   children: [
                                     Text(
-                                      " Borrower Name ",
+                                        " Borrower Name ",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 10,
                                           color: dark_gry,
@@ -568,7 +578,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                               .w500,
                                         )),
                                     Text(
-                                      "$name",
+                                        "$name",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 10,
                                           color: Colors.black,
@@ -577,25 +587,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                         )),
                                   ],
                                 ),
-                               /* Card(
-                                  color: kPrimaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        8), // Set the card radius
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "VIEW DETAILS",
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight
-                                              .w500,
-                                        ),
-                                    ),
-                                  ),
-                                ),*/
                               ],
                             ),
                             SizedBox(
@@ -720,6 +711,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
   }
 
   Future<void> dateTime(BuildContext) async {
+
     DateTime now = DateTime.now();
     DateTime firstDay = new DateTime(
       DateTime
