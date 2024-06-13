@@ -153,8 +153,8 @@ class _ProfileTypesState extends State<ProfileTypes> {
                     children: [
                       CommonElevatedButton(
                         onPressed: () async {
-                           chooseUserTypeApi(
-                              context, productProvider, isTermsChecks, userType!);
+                          chooseUserTypeApi(context, productProvider,
+                              isTermsChecks, userType!);
                         },
                         text: "Next",
                         upperCase: true,
@@ -167,7 +167,6 @@ class _ProfileTypesState extends State<ProfileTypes> {
           }
         } else {
           if (productProvider.getDSAPersonalInfoData != null) {
-            // Navigator.of(context, rootNavigator: true).pop();
             if (productProvider.getDSAPersonalInfoData != null) {
               productProvider.getDSAPersonalInfoData!.when(
                 success: (data) {
@@ -178,21 +177,19 @@ class _ProfileTypesState extends State<ProfileTypes> {
                         if (data.dsaType == "Connector") {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  Connector_signup(
-                                    activityId: widget.activityId,
-                                    subActivityId: widget.subActivityId,
-                                  ),
+                              builder: (context) => Connector_signup(
+                                activityId: widget.activityId,
+                                subActivityId: widget.subActivityId,
+                              ),
                             ),
                           );
                         } else {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  direct_selling_agent(
-                                    activityId: widget.activityId,
-                                    subActivityId: widget.subActivityId,
-                                  ),
+                              builder: (context) => direct_selling_agent(
+                                activityId: widget.activityId,
+                                subActivityId: widget.subActivityId,
+                              ),
                             ),
                           );
                         }
@@ -286,7 +283,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
                   children: [
                     CommonElevatedButton(
                       onPressed: () async {
-                         chooseUserTypeApi(
+                        chooseUserTypeApi(
                             context, productProvider, isTermsChecks, userType!);
                       },
                       text: "Next",

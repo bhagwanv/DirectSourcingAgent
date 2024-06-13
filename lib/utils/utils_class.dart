@@ -223,8 +223,8 @@ class Utils {
     DateTime dateTime = DateTime.parse(date);
 
     // Format the DateTime into "MMMM d, yyyy"
-    String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
-
+   // String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
+    String formattedDate = DateFormat('d MMMM yyyy').format(dateTime);
     return formattedDate;
   }
 
