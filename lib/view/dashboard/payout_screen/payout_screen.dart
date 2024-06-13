@@ -18,6 +18,7 @@ import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../providers/DataProvider.dart';
 import '../../../shared_preferences/shared_pref.dart';
+import '../../../utils/CustomMonthYearPicker.dart';
 import '../../../utils/constant.dart';
 import '../Lead_screen/model/DSADashboardLeadListReqModel.dart';
 import '../Lead_screen/model/DsaDashboardLeadList.dart';
@@ -55,6 +56,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
   var endDate = "";
   String maxDateTime = '';
   bool loading = false;
+  bool isAgentSelected = false;
 
 
   var payoutOverviewTotalDisbursedAmount = "0";
@@ -118,11 +120,17 @@ class _PayOutScreenState extends State<PayOutScreen> {
                       //  loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "3 June 2024",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: ""));
 
                         if (getDSADashboardPayoutListData.response != null) {
+                          if(getDSADashboardPayoutListData.response!.totalDisbursedAmount!=null){
+                            payoutOverviewTotalDisbursedAmount=getDSADashboardPayoutListData.response!.totalDisbursedAmount!.toString();
+                          }
+                          if(getDSADashboardPayoutListData.response!.totalPayoutAmount!=null){
+                            payoutOverviewPayoutAmount=getDSADashboardPayoutListData.response!.totalPayoutAmount!.toString();
+                          }
+
                           if(getDSADashboardPayoutListData.response!.loanPayoutDetailList != null){
                             if(getDSADashboardPayoutListData.response!.loanPayoutDetailList!.isNotEmpty){
                               loanPayoutDetailList.addAll(getDSADashboardPayoutListData
                                   .response! as Iterable<LoanPayoutDetailList>);
-                              print("aaa${loanPayoutDetailList.length}");
                             }else{
                               loading=false;
                             }
@@ -228,6 +236,11 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                   selecteddsaSalesAgentValue = value!.fullName;
                                   dateTime(context);
                                   getDSADashboardPayoutList(context);
+                                  setState(() {
+                                    loanPayoutDetailList.clear();
+                                    productProvider.disposePayOutScreenData();
+                                    isAgentSelected=true;
+                                  });
                                   //getDSADashboardDetails(context);
                                   /*   setState(() {
 
@@ -338,20 +351,17 @@ class _PayOutScreenState extends State<PayOutScreen> {
   }
 
   Future<void> getDSADashboardPayoutList(BuildContext) async {
-    final prefsUtil = await SharedPref.getInstance();
-    String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    if(isAgentSelected){
+      dsaSalesAgentList.forEach((agent) {
+        if (agent.fullName == selecteddsaSalesAgentValue) {
+          setState(() {
+            skip=0;
+            agentUserId = agent.userId!;
+          });
+        }
+      });
+    }
 
-    dsaSalesAgentList.forEach((agent) {
-      if (agent.fullName == selecteddsaSalesAgentValue) {
-        setState(() {
-          skip=0;
-          agentUserId = agent.userId!;
-          print("userId${agent.userId!}");
-          print("fullName${agent.fullName!}");
-        });
-      }
-    });
 
     var model = GetDsaDashboardPayoutListReqModel(
         agentUserId: agentUserId, startDate: startDate, endDate: endDate, skip: skip, take: take);
@@ -360,8 +370,10 @@ class _PayOutScreenState extends State<PayOutScreen> {
       await Provider.of<DataProvider>(context, listen: false)
           .getDSADashboardPayoutList(model);
     }else{
+      Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false)
           .getDSADashboardPayoutList(model);
+      Navigator.of(context, rootNavigator: true).pop();
     }
 
     setState(() {
@@ -466,11 +478,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
           LoanPayoutDetailList loanPayoutDetail = loanPayoutDetailList![index];
 
           // Null check for each property before accessing it
-          String leadID = loanPayoutDetail.loanId.toString() ??
-              ''; // Default value if anchorName is null
-          String disbursmentDate =  loanPayoutDetail.disbursmentDate != null
-              ? Utils.convertDateTime(loanPayoutDetail.disbursmentDate.toString())
-              : "Not generated yet.";
+          String leadID = loanPayoutDetail.loanId.toString() ?? ''; // Default value if anchorName is null
+          String disbursmentDate =  loanPayoutDetail.disbursmentDate != null ? Utils.dateMonthAndYearFormat(loanPayoutDetail.disbursmentDate.toString()) : "Not generated yet.";
           String name = loanPayoutDetail.fullName ?? '';
           String status = loanPayoutDetail.status.toString() ?? '';
           String? mobile = loanPayoutDetail.mobileNo ?? '';
@@ -712,19 +721,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
 
   Future<void> dateTime(BuildContext) async {
     DateTime now = DateTime.now();
-
-
-    /* DateTime startOfMonth  = DateTime(now.year, now.month - 1, now.day,
-        now.hour, now.minute, now.second, now.millisecond, now.microsecond);
-    if (startOfMonth.month == 0) {
-      startOfMonth = DateTime(now.year - 1, 12, now.day, now.hour, now.minute,
-          now.second, now.millisecond, now.microsecond);
-    }
-    startDate =
-        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-    print("Formatted Date: $startDate");*/
-
-
     DateTime firstDay = new DateTime(
       DateTime
           .now()
@@ -752,34 +748,46 @@ class _PayOutScreenState extends State<PayOutScreen> {
 
 
   Future<void> showCustomMonthYearPicker(BuildContext context) async {
+    var isOk=true;
     // Current Date
     DateTime now = DateTime.now();
-
+    // Define the onCancel callback
+    void onCancel() {
+      print("Picker was cancelled");
+      setState(() {
+        isOk=false;      });
+    }
+    void onOk() {
+      print("Picker was ok");
+      setState(() {
+        isOk=true;
+      });
+    }
     // Show the month-year picker dialog
-    final selectedDate = await SimpleMonthYearPicker.showMonthYearPickerDialog(
-        context: context,
-        titleTextStyle: TextStyle(), // Customize as needed
-        monthTextStyle: TextStyle(), // Customize as needed
-        yearTextStyle: TextStyle(),  // Customize as needed
-        disableFuture: true,
-        backgroundColor: Colors.grey[200], // Set the background color
-        selectionColor: kPrimaryColor // Set the selected button color// Disable future years and months
+    final selectedDate = await CustomMonthYearPicker.showMonthYearPickerDialog(
+      context: context,
+      titleTextStyle: TextStyle(),
+      monthTextStyle: TextStyle(),
+      yearTextStyle: TextStyle(),
+      disableFuture: true,
+      backgroundColor: Colors.grey[200],
+      selectionColor: kPrimaryColor,
+      barrierDismissible:false,
+      onCancel: onCancel,
+      onOk: onOk,
+
+
+
     );
 
     if (selectedDate != null) {
-      // Get the selected year and month
       int selectedYear = selectedDate.year;
       int selectedMonth = selectedDate.month;
-
-      // Check if the selected date is in the future
-      if (selectedYear > now.year || (selectedYear == now.year && selectedMonth > now.month)) {
-        // Handle future month selection, which should not happen due to disableFuture:true
+      if (selectedYear > now.year ||
+          (selectedYear == now.year && selectedMonth > now.month)) {
         Utils.showToast("Future dates are disabled", context);
       } else {
-        // Calculate the first date of the selected month
-        DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1+1);
-
-        // Calculate the end date
+        DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
         DateTime endOfMonth;
         if (selectedYear == now.year && selectedMonth == now.month) {
           // If the selected month is the current month, set end date to current date
@@ -790,14 +798,19 @@ class _PayOutScreenState extends State<PayOutScreen> {
               ? DateTime(selectedYear, selectedMonth + 1, 0)
               : DateTime(selectedYear + 1, 1, 0);
         }
-        loanPayoutDetailList.clear();
-        skip=0;
-        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-        endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
-        print('Start date: $startDate');
-        print('End date: $endDate');
-        getDSADashboardPayoutList(context);
 
+        if(isOk){
+          agentUserId="";
+          isAgentSelected=false;
+          print("deees$selectedDate");
+          loanPayoutDetailList.clear();
+          skip=0;
+          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
+          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
+          print('Start date: $startDate');
+          print('End date: $endDate');
+          getDSADashboardPayoutList(context);
+        }
       }
     }
   }

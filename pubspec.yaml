@@ -43,7 +43,7 @@ dependencies:
   camera: ^0.10.5+9
   bottom_picker: ^2.4.0
   cupertino_date_time_picker_loki: ^0.0.5
-  intl: ^0.19.0
+  intl: ^0.18.0
   image_picker: ^1.0.7
   fluttertoast: ^8.0.6
   dio: ^4.0.0
@@ -74,7 +74,7 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   path_provider: ^2.0.12
 
-
+  month_year_picker: ^0.3.0+1
 
 
 dev_dependencies:
