@@ -11,6 +11,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/common_elevted_button.dart';
@@ -315,8 +316,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             } else {
               final prefsUtil = await SharedPref.getInstance();
               await prefsUtil.saveString(TOKEN, data.token!);
-              getLoggedInUserData(context, userLoginMobile, data.userId,
-                  data.leadId, data.token, productProvider);
+              await prefsUtil.saveString(USER_ID, data.userId!);
+              getLoggedInUserData(context, productProvider);
             }
           },
           failure: (exception) {
@@ -327,76 +328,118 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  Future<void> getLoggedInUserData(
+  Future<void> GetLeadByMobileNo(
       BuildContext context,
+      DataProvider productProvider,
       String userLoginMobile,
-      String? userId,
-      int? leadId,
-      String? token,
-      DataProvider productProvider) async {
-    Utils.onLoading(context, "");
-    try {
-      await Provider.of<DataProvider>(context, listen: false).getUserData(
-          /*getUserProfileRequest*/);
-      Navigator.of(context, rootNavigator: true).pop();
-      if (productProvider.getUserProfileResponse != null) {
-        productProvider.getUserProfileResponse!.when(
-          success: (data) async {
-            final prefsUtil = await SharedPref.getInstance();
-            prefsUtil.saveString(USER_ID, data.userId!);
-            prefsUtil.saveString(TOKEN, data.userToken!);
-            prefsUtil.saveInt(LEADE_ID, data.leadId!);
-            prefsUtil.saveInt(COMPANY_ID, data.companyId!);
-            prefsUtil.saveInt(PRODUCT_ID, data.productId!);
-            prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-            if (data.companyCode != null) {
-              prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
-            }
-            if (data.role != null) {
-              prefsUtil.saveString(ROLE, data.role!);
-            }
-            if (data.type != null) {
-              prefsUtil.saveString(TYPE, data.type!);
-            }
+      String userId) async {
 
-            if (data.userData != null) {
-              prefsUtil.saveString(USER_NAME, data.userData!.name!);
-              prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
-              prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-              if (data.userData!.mobile != null)
-                prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
-              if (data.userData?.address != null) {
-                prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
-              }
-              if (data.userData!.workingLocation != null)
-                prefsUtil.saveString(
-                    USER_WORKING_LOCTION, data.userData!.workingLocation!);
-              if (data.userData?.selfie != null) {
-                prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
-              }
-              prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
-              if (data.userData?.docSignedUrl != null) {
-                prefsUtil.saveString(
-                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
-              }
-            }
-            prefsUtil.saveBool(IS_LOGGED_IN, true);
-            if (data.isActivated!) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const BottomNav()),
-              );
+      productProvider.disposeAllProviderData();
+      Utils.onLoading(context, "");
+      await Provider.of<DataProvider>(context, listen: false)
+          .GetLeadByMobileNo(userId, userLoginMobile);
+      Navigator.of(context, rootNavigator: true).pop();
+      if (productProvider.getLeadMobileNoData != null) {
+        productProvider.getLeadMobileNoData!.when(
+          success: (data) async {
+            if (!data.status!) {
+              Utils.showToast(data.message!, context);
             } else {
-              fetchData(context, userLoginMobile);
+              final prefsUtil = await SharedPref.getInstance();
+              await prefsUtil.saveInt(LEADE_ID, data.leadId!);
+              fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
             }
           },
-          failure: (exception) {},
+          failure: (exception) {
+            Utils.showToast("Something went wrong", context);
+          },
         );
       }
-    } catch (error) {
-      Navigator.of(context, rootNavigator: true).pop();
-      if (kDebugMode) {
-        print('Error occurred during API call: $error');
+
+  }
+
+  Future<void> getLoggedInUserData(BuildContext context, DataProvider productProvider) async {
+    final prefsUtil = await SharedPref.getInstance();
+    if(prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null && prefsUtil.getString(USER_ID) != null) {
+      var userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+      var  userId = prefsUtil.getString(USER_ID);
+      try {
+        await Provider.of<DataProvider>(context, listen: false).getUserData(userId!, userLoginMobile!);
+        final productProvider = Provider.of<DataProvider>(context, listen: false);
+        if(productProvider.getUserProfileResponse != null) {
+          productProvider.getUserProfileResponse!.when(
+            success: (data) async {
+              final prefsUtil = await SharedPref.getInstance();
+              prefsUtil.saveString(USER_ID, data.userId!);
+              prefsUtil.saveString(TOKEN, data.userToken!);
+              prefsUtil.saveInt(COMPANY_ID, data.companyId!);
+              prefsUtil.saveInt(PRODUCT_ID, data.productId!);
+              prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
+              if( data.companyCode!=null) {
+                prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+              }
+              if( data.role!=null) {
+                prefsUtil.saveString(ROLE, data.role!);
+              } if( data.type!=null) {
+                prefsUtil.saveString(TYPE, data.type!);
+              }
+
+              if(data.userData!=null){
+                prefsUtil.saveString(USER_NAME, data.userData!.name!);
+                prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
+                prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
+                if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                if (data.userData?.address != null) {
+                  prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
+                }
+                if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                if (data.userData?.selfie != null) {
+                  prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
+                }
+                prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+                if (data.userData?.docSignedUrl != null) {
+                  prefsUtil.saveString(
+                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
+                  );
+                }
+                prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+                if( data.userData!.docSignedUrl!=null) {
+                  prefsUtil.saveString(
+                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
+                }
+
+              }
+
+              prefsUtil.saveBool(IS_LOGGED_IN, true);
+              if (data.isActivated!) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) =>  BottomNav()),
+                );
+              } else {
+                GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+              }
+            },
+            failure: (exception) {
+              if (exception is ApiException) {
+                if(exception.statusCode==401){
+                  Utils.showToast(exception.errorMessage,context);
+                  productProvider.disposeAllProviderData();
+                  ApiService().handle401(context);
+                }else{
+                  Utils.showToast("Something went Wrong",context);
+                }
+              }
+            },
+          );
+        }
+      } catch (error) {
+        Navigator.of(context, rootNavigator: true).pop();
+        if (kDebugMode) {
+          print('Error occurred during API call: $error');
+        }
       }
+    } else {
+      ApiService().handle401(context);
     }
   }
 

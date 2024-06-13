@@ -170,7 +170,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       CommonTextField(

@@ -40,6 +40,7 @@ import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/GetUserProfileRequest.dart';
 import '../view/otp_screens/model/GetUserProfileResponse.dart';
+import '../view/otp_screens/model/LeadMobileNoResModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponse.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
@@ -158,6 +159,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<GetUserProfileResponse,Exception>? _getUserProfileResponse;
   Result<GetUserProfileResponse,Exception>? get getUserProfileResponse => _getUserProfileResponse;
+
+  Result<LeadMobileNoResModel,Exception>? _getLeadMobileNoData;
+  Result<LeadMobileNoResModel,Exception>? get getLeadMobileNoData => _getLeadMobileNoData;
 
   BankListResponceModel? _getBankListData;
 
@@ -347,8 +351,13 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getUserData(/*GetUserProfileRequest requestModel*/) async {
-    _getUserProfileResponse = await apiService.getUserData();
+  Future<void> getUserData(String userId, String mobile) async {
+    _getUserProfileResponse = await apiService.getUserData(userId, mobile);
+    notifyListeners();
+  }
+
+  Future<void> GetLeadByMobileNo(String userId, String mobile) async {
+    _getLeadMobileNoData = await apiService.GetLeadByMobileNo(userId, mobile);
     notifyListeners();
   }
 

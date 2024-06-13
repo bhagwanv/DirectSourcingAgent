@@ -171,88 +171,120 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   Future<void> getLoggedInUserData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    Utils.onLoading(context, "");
-    try {
-      //var getUserProfileRequest = GetUserProfileRequest(mobileNumber:  prefsUtil.getString(LOGIN_MOBILE_NUMBER), userId:  prefsUtil.getString(USER_ID), leadId:  prefsUtil.getInt(LEADE_ID));
-      await Provider.of<DataProvider>(context, listen: false).getUserData();
-      final productProvider = Provider.of<DataProvider>(context, listen: false);
-      if (productProvider.getUserProfileResponse != null) {
-        productProvider.getUserProfileResponse!.when(
-          success: (data) async {
-            final prefsUtil = await SharedPref.getInstance();
-            prefsUtil.saveString(USER_ID, data.userId!);
-            prefsUtil.saveString(TOKEN, data.userToken!);
-            prefsUtil.saveInt(LEADE_ID, data.leadId!);
-            prefsUtil.saveInt(COMPANY_ID, data.companyId!);
-            prefsUtil.saveInt(PRODUCT_ID, data.productId!);
-            prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-            if (data.companyCode != null) {
-              prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
-            }
-            if (data.role != null) {
-              prefsUtil.saveString(ROLE, data.role!);
-            }
-            if (data.type != null) {
-              prefsUtil.saveString(TYPE, data.type!);
-            }
+    if(prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null && prefsUtil.getString(USER_ID) != null) {
+      var userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+      var  userId = prefsUtil.getString(USER_ID);
+      try {
+        await Provider.of<DataProvider>(context, listen: false).getUserData(userId!, userLoginMobile!);
+        final productProvider = Provider.of<DataProvider>(context, listen: false);
+        if(productProvider.getUserProfileResponse != null) {
+          productProvider.getUserProfileResponse!.when(
+            success: (data) async {
+              final prefsUtil = await SharedPref.getInstance();
+              prefsUtil.saveString(USER_ID, data.userId!);
+              prefsUtil.saveString(TOKEN, data.userToken!);
+              prefsUtil.saveInt(COMPANY_ID, data.companyId!);
+              prefsUtil.saveInt(PRODUCT_ID, data.productId!);
+              prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
+              if( data.companyCode!=null) {
+                prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+              }
+              if( data.role!=null) {
+                prefsUtil.saveString(ROLE, data.role!);
+              } if( data.type!=null) {
+                prefsUtil.saveString(TYPE, data.type!);
+              }
 
-            if (data.userData != null) {
-              prefsUtil.saveString(USER_NAME, data.userData!.name!);
-              prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
-              prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-              if (data.userData!.mobile != null)
-                prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
-              if (data.userData?.address != null) {
-                prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
-              }
-              if (data.userData!.workingLocation != null)
-                prefsUtil.saveString(
-                    USER_WORKING_LOCTION, data.userData!.workingLocation!);
-              if (data.userData?.selfie != null) {
-                prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
-              }
-              prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
-              if (data.userData?.docSignedUrl != null) {
-                prefsUtil.saveString(
-                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
-              }
-              prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
-              if (data.userData!.docSignedUrl != null) {
-                prefsUtil.saveString(
-                    USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
-              }
-            }
+              if(data.userData!=null){
+                prefsUtil.saveString(USER_NAME, data.userData!.name!);
+                prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
+                prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
+                if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                if (data.userData?.address != null) {
+                  prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
+                }
+                if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                if (data.userData?.selfie != null) {
+                  prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
+                }
+                prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+                if (data.userData?.docSignedUrl != null) {
+                  prefsUtil.saveString(
+                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
+                  );
+                }
+                prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+                if( data.userData!.docSignedUrl!=null) {
+                  prefsUtil.saveString(
+                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
+                }
 
-            prefsUtil.saveBool(IS_LOGGED_IN, true);
-            if (data.isActivated!) {
-              Navigator.of(context, rootNavigator: true).pop();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => BottomNav()),
-              );
-            } else {
-              fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
-            }
-          },
-          failure: (exception) {
-            if (exception is ApiException) {
-              if (exception.statusCode == 401) {
-                Utils.showToast(exception.errorMessage, context);
-                productProvider.disposeAllProviderData();
-                ApiService().handle401(context);
+              }
+
+
+              prefsUtil.saveBool(IS_LOGGED_IN, true);
+              if (data.isActivated!) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) =>  BottomNav()),
+                );
               } else {
-                Utils.showToast("Something went Wrong", context);
+               // fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
               }
-            }
-          },
-        );
+            },
+            failure: (exception) {
+              if (exception is ApiException) {
+                if(exception.statusCode==401){
+                  Utils.showToast(exception.errorMessage,context);
+                  productProvider.disposeAllProviderData();
+                  ApiService().handle401(context);
+                }else{
+                  Utils.showToast("Something went Wrong",context);
+                }
+              }
+            },
+          );
+        }
+      } catch (error) {
+        Navigator.of(context, rootNavigator: true).pop();
+        if (kDebugMode) {
+          print('Error occurred during API call: $error');
+        }
       }
-    } catch (error) {
-      Navigator.of(context, rootNavigator: true).pop();
-      if (kDebugMode) {
-        print('Error occurred during API call: $error');
-      }
+    } else {
+      ApiService().handle401(context);
     }
   }
+
+  Future<void> GetLeadByMobileNo(
+      BuildContext context,
+      DataProvider productProvider,
+      String userLoginMobile,
+      String userId) async {
+
+    productProvider.disposeAllProviderData();
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .GetLeadByMobileNo(userId, userLoginMobile);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getLeadMobileNoData != null) {
+      productProvider.getLeadMobileNoData!.when(
+        success: (data) async {
+          if (!data.status!) {
+            Utils.showToast(data.message!, context);
+          } else {
+            final prefsUtil = await SharedPref.getInstance();
+            await prefsUtil.saveInt(LEADE_ID, data.leadId!);
+            GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+          }
+        },
+        failure: (exception) {
+          Utils.showToast("Something went wrong", context);
+        },
+      );
+    }
+
+  }
+
 
   Future<void> fetchData(BuildContext context, String userLoginMobile) async {
     final prefsUtil = await SharedPref.getInstance();
