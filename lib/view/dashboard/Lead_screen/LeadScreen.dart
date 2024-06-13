@@ -14,7 +14,6 @@ import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
 import 'package:getwidget/types/gf_progress_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:month_year_picker/month_year_picker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_month_year_picker/custom.dialog.dart';
