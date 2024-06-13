@@ -128,7 +128,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                               ? Container()
                               : SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height - 230,
+                                      MediaQuery.of(context).size.height - 205,
                                   width: MediaQuery.of(context).size.width,
                                   child: WebViewWidget(
                                       controller: WebViewController()
@@ -231,7 +231,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
 
-    Utils.onLoading(context, "Loading...");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .checkESignDocumentStatus(leadId.toString());
     Navigator.of(context, rootNavigator: true).pop();

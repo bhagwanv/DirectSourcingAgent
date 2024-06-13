@@ -285,7 +285,6 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   }
 
-
   Future<void> fetchData(BuildContext context, String userLoginMobile) async {
     final prefsUtil = await SharedPref.getInstance();
     try {
