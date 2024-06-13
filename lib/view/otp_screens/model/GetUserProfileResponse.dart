@@ -8,7 +8,6 @@ class GetUserProfileResponse {
   int? companyId;
   String? productCode;
   int? productId;
-  int? leadId;
   String? role;
   String? type;
   UserData? userData;
@@ -23,7 +22,6 @@ class GetUserProfileResponse {
         this.companyId,
         this.productCode,
         this.productId,
-        this.leadId,
         this.role,
         this.type,
         this.userData});
@@ -38,7 +36,6 @@ class GetUserProfileResponse {
     companyId = json['companyId'];
     productCode = json['productCode'];
     productId = json['productId'];
-    leadId = json['leadId'];
     role = json['role'];
     type = json['type'];
     userData = json['userData'] != null
@@ -57,7 +54,6 @@ class GetUserProfileResponse {
     data['companyId'] = this.companyId;
     data['productCode'] = this.productCode;
     data['productId'] = this.productId;
-    data['leadId'] = this.leadId;
     data['role'] = this.role;
     data['type'] = this.type;
     if (this.userData != null) {

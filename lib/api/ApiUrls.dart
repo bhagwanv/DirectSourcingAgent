@@ -11,6 +11,8 @@ class ApiUrls{
   final String generateOtp="/aggregator/DSAAgg/GenerateDSAOtp";
   final String leadMobileValidate="/aggregator/DSAAgg/DSAValidateOTP";
   final String getUserData="/aggregator/DSAAgg/GetDSAUserProfile";
+  final String GetLeadByMobileNo="/aggregator/DSAAgg/GetLeadByMobileNo";
+
 
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";

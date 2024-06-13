@@ -42,6 +42,7 @@ import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/GetUserProfileRequest.dart';
 import '../view/otp_screens/model/GetUserProfileResponse.dart';
+import '../view/otp_screens/model/LeadMobileNoResModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponse.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
@@ -233,15 +234,14 @@ class ApiService {
     }
   }
 
-  Future<Result<GetUserProfileResponse, Exception>> getUserData(
-      /*GetUserProfileRequest requestData*/) async {
+  Future<Result<GetUserProfileResponse, Exception>> getUserData(String userId, String mobile) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
-          Uri.parse(apiUrls.baseUrl + apiUrls.getUserData),
+          Uri.parse('${apiUrls.baseUrl + apiUrls.getUserData}?UserId=$userId&Mobile=$mobile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -253,6 +253,37 @@ class ApiService {
             final dynamic jsonData = json.decode(response.body);
             final GetUserProfileResponse responseModel =
             GetUserProfileResponse.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<LeadMobileNoResModel, Exception>> GetLeadByMobileNo(String userId, String mobile) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadByMobileNo}?UserId=$userId&Mobile=$mobile'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        );
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final LeadMobileNoResModel responseModel =
+            LeadMobileNoResModel.fromJson(jsonData);
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode, ""));

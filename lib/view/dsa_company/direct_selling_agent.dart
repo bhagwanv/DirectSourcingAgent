@@ -33,22 +33,22 @@ import 'model/CustomerDetailUsingGSTResponseModel.dart';
 import 'model/GetDsaPersonalDetailResModel.dart';
 import 'model/PostLeadDSAPersonalDetailReqModel.dart';
 
-class direct_selling_agent extends StatefulWidget {
+class DirectSellingAgent extends StatefulWidget {
   int? activityId;
   int? subActivityId;
   final String? pageType;
 
-  direct_selling_agent(
+  DirectSellingAgent(
       {required this.activityId,
       required this.subActivityId,
       super.key,
       this.pageType});
 
   @override
-  State<direct_selling_agent> createState() => DirectSellingAgent();
+  State<DirectSellingAgent> createState() => _DirectSellingAgent();
 }
 
-class DirectSellingAgent extends State<direct_selling_agent> {
+class _DirectSellingAgent extends State<DirectSellingAgent> {
   final TextEditingController _gstController = TextEditingController();
   final TextEditingController _fullNameCl = TextEditingController();
   final TextEditingController _fatherOrHusbandNameCl = TextEditingController();
@@ -544,10 +544,10 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             hintText: "Date of Birth",
                             labelText: "Date of Birth",
                           ),
-                          Padding(
+                          const Padding(
                             padding:
-                                const EdgeInsets.only(top: 16.0, right: 8.0),
-                            child: const Align(
+                                EdgeInsets.only(top: 16.0, right: 8.0),
+                            child: Align(
                               alignment: Alignment.centerRight,
                               child: Icon(
                                 Icons.date_range,
@@ -630,7 +630,7 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       CommonTextField(
                         controller: _presentOccupationCl,
                         enabled: updateData,
@@ -1893,8 +1893,6 @@ class DirectSellingAgent extends State<direct_selling_agent> {
                             await postLeadDSAPersonalDetail(
                                 context, dataProvider);
                           }
-                          await postLeadDSAPersonalDetail(
-                              context, dataProvider);
                         },
                         text: 'Next',
                         upperCase: true,
