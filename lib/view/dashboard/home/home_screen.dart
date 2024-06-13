@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   var startDate = "";
   var endDate = "";
+  String? userType;
 
   @override
   void initState() {
@@ -89,732 +90,656 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-                if (productProvider.getDSADashboardDetailsData == null &&
-                    isLoading) {
-                  return Loader();
-                } else {
-                  if (productProvider.getDSADashboardDetailsData != null &&
-                      isLoading) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    isLoading = false;
-                    getDSASalesAgentList(context, productProvider);
-                  }
+            if (productProvider.getDSADashboardDetailsData == null &&
+                isLoading) {
+              return Loader();
+            } else {
+              if (productProvider.getDSADashboardDetailsData != null &&
+                  isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
+                getDSASalesAgentList(context, productProvider);
+              }
 
-                  if (productProvider.getDSADashboardDetailsData != null) {
-                    productProvider.getDSADashboardDetailsData!.when(
-                      success: (data) {
-                        // Handle successful response
-                        var getDSADashboardDetailsData = data;
+              if (productProvider.getDSADashboardDetailsData != null) {
+                productProvider.getDSADashboardDetailsData!.when(
+                  success: (data) {
+                    // Handle successful response
+                    var getDSADashboardDetailsData = data;
 
-                        if (getDSADashboardDetailsData
-                            .response!.leadOverviewData!.successRate !=
-                            null) {
-                          leadOverviewSuccessRate = getDSADashboardDetailsData
-                              .response!.leadOverviewData!.successRate;
-                          leadOverviewProgrssSuccessRate =
-                              getDSADashboardDetailsData
-                                  .response!.leadOverviewData!.successRate;
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.leadOverviewData!.totalLeads !=
-                            null) {
-                          leadOverviewTotalLeads = getDSADashboardDetailsData
-                              .response!.leadOverviewData!.totalLeads!
-                              .toString();
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.leadOverviewData!.pending !=
-                            null) {
-                          leadOverviewPending = getDSADashboardDetailsData
-                              .response!.leadOverviewData!.pending!
-                              .toString();
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.leadOverviewData!.rejected !=
-                            null) {
-                          leadOverviewrejected = getDSADashboardDetailsData
-                              .response!.leadOverviewData!.rejected!
-                              .toString();
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.leadOverviewData!.submitted !=
-                            null) {
-                          leadOverviewSubmitted = getDSADashboardDetailsData
-                              .response!.leadOverviewData!.submitted!
-                              .toString();
-                        }
+                    if (getDSADashboardDetailsData.response != null) {
+                      if (getDSADashboardDetailsData
+                              .response!.leadOverviewData!.successRate !=
+                          null) {
+                        leadOverviewSuccessRate = getDSADashboardDetailsData
+                            .response!.leadOverviewData!.successRate;
+                        leadOverviewProgrssSuccessRate =
+                            getDSADashboardDetailsData
+                                .response!.leadOverviewData!.successRate;
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.leadOverviewData!.totalLeads !=
+                          null) {
+                        leadOverviewTotalLeads = getDSADashboardDetailsData
+                            .response!.leadOverviewData!.totalLeads!
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.leadOverviewData!.pending !=
+                          null) {
+                        leadOverviewPending = getDSADashboardDetailsData
+                            .response!.leadOverviewData!.pending!
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.leadOverviewData!.rejected !=
+                          null) {
+                        leadOverviewrejected = getDSADashboardDetailsData
+                            .response!.leadOverviewData!.rejected!
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.leadOverviewData!.submitted !=
+                          null) {
+                        leadOverviewSubmitted = getDSADashboardDetailsData
+                            .response!.leadOverviewData!.submitted!
+                            .toString();
+                      }
 
-                        if (getDSADashboardDetailsData
-                            .response!.loanOverviewData!.successRate !=
-                            null) {
-                          loanOverviewSuccessRate = getDSADashboardDetailsData
-                              .response!.loanOverviewData!.successRate;
-                          loanOverviewProgrssSuccessRate =
-                              getDSADashboardDetailsData
-                                  .response!.loanOverviewData!.successRate;
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.loanOverviewData!.totalLoans !=
-                            null) {
-                          loanOverviewTotalLoans = getDSADashboardDetailsData
-                              .response!.loanOverviewData!.totalLoans
-                              .toString();
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.loanOverviewData!.pending !=
-                            null) {
-                          loanOverviewPending = getDSADashboardDetailsData
-                              .response!.loanOverviewData!.pending
-                              .toString();
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.loanOverviewData!.rejected !=
-                            null) {
-                          loanOverviewRejected = getDSADashboardDetailsData
-                              .response!.loanOverviewData!.rejected
-                              .toString();
-                        }
-                        if (getDSADashboardDetailsData
-                            .response!.loanOverviewData!.approved !=
-                            null) {
-                          loanOverviewApproved = getDSADashboardDetailsData
-                              .response!.loanOverviewData!.approved
-                              .toString();
-                        }
+                      if (getDSADashboardDetailsData
+                              .response!.loanOverviewData!.successRate !=
+                          null) {
+                        loanOverviewSuccessRate = getDSADashboardDetailsData
+                            .response!.loanOverviewData!.successRate;
+                        loanOverviewProgrssSuccessRate =
+                            getDSADashboardDetailsData
+                                .response!.loanOverviewData!.successRate;
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.loanOverviewData!.totalLoans !=
+                          null) {
+                        loanOverviewTotalLoans = getDSADashboardDetailsData
+                            .response!.loanOverviewData!.totalLoans
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.loanOverviewData!.pending !=
+                          null) {
+                        loanOverviewPending = getDSADashboardDetailsData
+                            .response!.loanOverviewData!.pending
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.loanOverviewData!.rejected !=
+                          null) {
+                        loanOverviewRejected = getDSADashboardDetailsData
+                            .response!.loanOverviewData!.rejected
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData
+                              .response!.loanOverviewData!.approved !=
+                          null) {
+                        loanOverviewApproved = getDSADashboardDetailsData
+                            .response!.loanOverviewData!.approved
+                            .toString();
+                      }
 
-                        if (getDSADashboardDetailsData
-                            .response!.payoutOverviewData!.payoutAmount !=
-                            null) {
-                          payoutOverviewPayoutAmount =
-                              getDSADashboardDetailsData
-                                  .response!.payoutOverviewData!.payoutAmount!
-                                  .toString();
-                        }
-                        if (getDSADashboardDetailsData.response!
-                            .payoutOverviewData!
-                            .totalDisbursedAmount !=
-                            null) {
-                          payoutOverviewTotalDisbursedAmount =
-                              getDSADashboardDetailsData.response!
-                                  .payoutOverviewData!.totalDisbursedAmount!
-                                  .toString();
-                        }
-                      },
-                      failure: (exception) {
-                        // Handle failure
-                        if (exception is ApiException) {
-                          if (exception.statusCode == 401) {
-                            Utils.showToast(exception.errorMessage, context);
-                            productProvider.disposeAllProviderData();
-                            ApiService().handle401(context);
-                          } else {
-                            Utils.showToast("Something went Wrong", context);
-                          }
-                        }
-                      },
-                    );
-                  }
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      if (getDSADashboardDetailsData
+                              .response!.payoutOverviewData!.payoutAmount !=
+                          null) {
+                        payoutOverviewPayoutAmount = getDSADashboardDetailsData
+                            .response!.payoutOverviewData!.payoutAmount!
+                            .toString();
+                      }
+                      if (getDSADashboardDetailsData.response!
+                              .payoutOverviewData!.totalDisbursedAmount !=
+                          null) {
+                        payoutOverviewTotalDisbursedAmount =
+                            getDSADashboardDetailsData.response!
+                                .payoutOverviewData!.totalDisbursedAmount!
+                                .toString();
+                      }
+                    }
+                  },
+                  failure: (exception) {
+                    // Handle failure
+                    if (exception is ApiException) {
+                      if (exception.statusCode == 401) {
+                        Utils.showToast(exception.errorMessage, context);
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      } else {
+                        Utils.showToast("Something went Wrong", context);
+                      }
+                    }
+                  },
+                );
+              }
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 15),
+                          child: Center(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20,right: 20,top: 15),
-                                  child: Center(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .center,
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Dashboard",
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    print("date ");
+                                    showCustomMonthYearPicker(context);
+                                    //print('Selected date: $selectedDate');
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: SvgPicture.asset(
+                                      'assets/icons/ic_document_filter.svg',
+                                      semanticsLabel: 'Edit Icon SVG',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                            userType != null && userType == "DSA"
+                            ? DropdownButtonFormField2<DsaSalesAgentList>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  fillColor: light_gry,
+                                  filled: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 5),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(
+                                          color: light_dark_gry, width: 0)),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: light_dark_gry, width: 0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: light_dark_gry, width: 0),
+                                  ),
+                                ),
+                                hint: Text(
+                                  'All Agents ',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: light_black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                items:
+                                    _addDividersAfterItems(dsaSalesAgentList),
+                                onChanged: (DsaSalesAgentList? value) async {
+                                  selecteddsaSalesAgentValue = value!.fullName;
+                                  await dateTime(context);
+                                  await getDSADashboardDetails(context);
+                                  /*  setState(() {
+
+                              });*/
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.only(right: 8),
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: MenuItemStyleData(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  customHeights: _getCustomItemsHeights3(
+                                      dsaSalesAgentList),
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                ),
+                              )
+                            : Container(),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text('Lead Overview',
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          elevation: 2,
+                          color: Colors.white,
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: kPrimaryColor,
+                              borderRadius: BorderRadius.circular(
+                                  10), // Adjust the value to change the roundness
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Container(
+                                      child: CircularPercentIndicator(
+                                    radius: 55.0,
+                                    lineWidth: 12.0,
+                                    percent:
+                                        leadOverviewProgrssSuccessRate == null
+                                            ? 0.0
+                                            : leadOverviewProgrssSuccessRate
+                                                    .toDouble() /
+                                                100,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    progressColor: whiteColor,
+                                    backgroundColor: dark_blue,
+                                    center: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Expanded(
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Dashboard",
-                                              style: GoogleFonts.urbanist(
-                                                fontSize: 20,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
+                                        Text(
+                                          "$leadOverviewSuccessRate %",
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 25,
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w700,
                                           ),
                                         ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            print("date ");
-                                            showCustomMonthYearPicker(context);
-                                            //print('Selected date: $selectedDate');
-                                          },
-
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/ic_document_filter.svg',
-                                              semanticsLabel: 'Edit Icon SVG',
-                                            ),
+                                        Text(
+                                          "Success Rate",
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 8,
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15.0,
-                                ),
-                                DropdownButtonFormField2<DsaSalesAgentList>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    fillColor: light_gry,
-                                    filled: true,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 5),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                            color: light_dark_gry, width: 0)),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: light_dark_gry, width: 0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: light_dark_gry, width: 0),
-                                    ),
-                                  ),
-                                  hint:  Text(
-                                    'All Agents ',
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 15,
-                                      color: light_black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  items: _addDividersAfterItems(
-                                      dsaSalesAgentList),
-                                  onChanged: (DsaSalesAgentList? value) async {
-                                    selecteddsaSalesAgentValue =
-                                        value!.fullName;
-                                    await dateTime(context);
-                                    await getDSADashboardDetails(context);
-                                    /*  setState(() {
-
-                              });*/
-                                  },
-                                  buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.only(right: 8),
-                                  ),
-                                  dropdownStyleData: const DropdownStyleData(
-                                    maxHeight: 200,
-                                  ),
-                                  menuItemStyleData: MenuItemStyleData(
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                    customHeights:
-                                    _getCustomItemsHeights3(dsaSalesAgentList),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    openMenuIcon: Icon(Icons.arrow_drop_up),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text('Lead Overview',
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 15,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  elevation: 2,
-                                  color: Colors.white,
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryColor,
-                                      borderRadius: BorderRadius.circular(10), // Adjust the value to change the roundness
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            width: 5.0,
-                                          ),
-                                          Container(
-                                              child: CircularPercentIndicator(
-                                                radius: 55.0,
-                                                lineWidth: 12.0,
-                                                percent:
-                                                leadOverviewProgrssSuccessRate ==
-                                                    null
-                                                    ? 0.0
-                                                    : leadOverviewProgrssSuccessRate
-                                                    .toDouble() /
-                                                    100,
-                                                circularStrokeCap:
-                                                CircularStrokeCap.round,
-                                                progressColor: whiteColor,
-                                                backgroundColor: dark_blue,
-                                                center: Column(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "$leadOverviewSuccessRate %",
-                                                      style: GoogleFonts
-                                                          .urbanist(
-                                                        fontSize: 25,
-                                                        color:whiteColor,
-                                                        fontWeight: FontWeight
-                                                            .w700,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "Success Rate",
-                                                      style: GoogleFonts
-                                                          .urbanist(
-                                                        fontSize: 8,
-                                                        color: whiteColor,
-                                                        fontWeight: FontWeight
-                                                            .w500,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )),
-                                          SizedBox(height: 20),
-                                          Container(
-                                            width: 140,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-
-                                                    Text('Total Leads',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text('Pending',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text('Rejected',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text('Submitted',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                        '$leadOverviewTotalLeads',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text('$leadOverviewPending',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        '$leadOverviewrejected',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        '$leadOverviewSubmitted',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: whiteColor,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text('Loan Overview',
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 15,
-                                          color: Colors.grey,
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  elevation: 2,
-                                  color: Colors.white,
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius: BorderRadius.circular(
-                                          10), // Adjust the value to change the roundness
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            width: 2,
-                                          ),
-                                          Container(
-                                              child: CircularPercentIndicator(
-                                                radius: 55.0,
-                                                lineWidth: 12.0,
-                                                percent:
-                                                loanOverviewProgrssSuccessRate ==
-                                                    null
-                                                    ? 0.0
-                                                    : loanOverviewProgrssSuccessRate
-                                                    .toDouble() /
-                                                    100,
-                                                circularStrokeCap:
-                                                CircularStrokeCap.round,
-                                                progressColor: kPrimaryColor,
-                                                backgroundColor: dark_blue,
-                                                center: Column(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "$loanOverviewSuccessRate %",
-                                                      style: GoogleFonts
-                                                          .urbanist(
-                                                        fontSize: 25,
-                                                        color: kPrimaryColor,
-                                                        fontWeight: FontWeight
-                                                            .w700,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "Success Rate",
-                                                      style: GoogleFonts
-                                                          .urbanist(
-                                                        fontSize: 8,
-                                                        color: kPrimaryColor,
-                                                        fontWeight: FontWeight
-                                                            .w500,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )),
-                                          SizedBox(height: 20),
-                                          Container(
-                                            width: 180,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('Total Loan',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        'Disbursement Pending ',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        'Disbursement Approved',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        'Disbursement Rejected ',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-
-                                                    Text(
-                                                        '$loanOverviewTotalLoans',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text('$loanOverviewPending',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        '$loanOverviewApproved',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                    SizedBox(height: 15),
-                                                    Text(
-                                                        '$loanOverviewRejected',
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                        style: GoogleFonts
-                                                            .urbanist(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          fontWeight: FontWeight
-                                                              .w500,
-                                                        )),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text('Payout Overview',
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 15,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  elevation: 10,
-                                  color: Colors.white,
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius: BorderRadius.circular(
-                                          10), // Adjust the value to change the roundness
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Container(
-                                        child: Row(
-                                          mainAxisAlignment:
+                                  )),
+                                  SizedBox(height: 20),
+                                  Container(
+                                    width: 140,
+                                    child: Row(
+                                      mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    '₹$payoutOverviewTotalDisbursedAmount',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 20,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight
-                                                          .w800,
-                                                    )),
-                                                Text('Total Disbursed Amount',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight
-                                                          .w500,
-                                                    )),
-                                              ],
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    '₹$payoutOverviewPayoutAmount',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 20,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight
-                                                          .w800,
-                                                    )),
-                                                Text('Payout Amount',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight
-                                                          .w500,
-                                                    )),
-                                              ],
-                                            ),
+                                            Text('Total Leads',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('Pending',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('Rejected',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('Submitted',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
                                           ],
                                         ),
-                                      ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('$leadOverviewTotalLeads',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('$leadOverviewPending',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('$leadOverviewrejected',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('$leadOverviewSubmitted',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text('Loan Overview',
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          elevation: 2,
+                          color: Colors.white,
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(
+                                  10), // Adjust the value to change the roundness
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Container(
+                                      child: CircularPercentIndicator(
+                                    radius: 55.0,
+                                    lineWidth: 12.0,
+                                    percent:
+                                        loanOverviewProgrssSuccessRate == null
+                                            ? 0.0
+                                            : loanOverviewProgrssSuccessRate
+                                                    .toDouble() /
+                                                100,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    progressColor: kPrimaryColor,
+                                    backgroundColor: dark_blue,
+                                    center: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "$loanOverviewSuccessRate %",
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 25,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Success Rate",
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 8,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                                  SizedBox(height: 20),
+                                  Container(
+                                    width: 180,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Total Loan',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('Disbursement Pending ',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('Disbursement Approved',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('Disbursement Rejected ',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('$loanOverviewTotalLoans',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('$loanOverviewPending',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('$loanOverviewApproved',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            SizedBox(height: 15),
+                                            Text('$loanOverviewRejected',
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text('Payout Overview',
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          elevation: 10,
+                          color: Colors.white,
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(
+                                  10), // Adjust the value to change the roundness
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            '₹$payoutOverviewTotalDisbursedAmount',
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w800,
+                                            )),
+                                        Text('Total Disbursed Amount',
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 12,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            )),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('₹$payoutOverviewPayoutAmount',
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w800,
+                                            )),
+                                        Text('Payout Amount',
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 12,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            )),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ])),
-                    ),
-                  );
-                }
-              }),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ])),
+                ),
+              );
+            }
+          }),
         ));
   }
 
-  Future<void> getDSADashboardDetails(BuildContext) async {
+  Future<void> getDSADashboardDetails(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    userType = prefsUtil.getString(TYPE);
     dsaSalesAgentList.forEach((agent) {
       if (agent.fullName == selecteddsaSalesAgentValue) {
         setState(() {
@@ -826,9 +751,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     var model = GetDsaDashboardDetailsReqModel(
-        agentUserId: agentUserId,
-        startDate: startDate,
-        endDate: endDate);
+        agentUserId: agentUserId, startDate: startDate, endDate: endDate);
 
     await Provider.of<DataProvider>(context, listen: false)
         .getDSADashboardDetails(model);
@@ -836,7 +759,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> dateTime(BuildContext) async {
     DateTime now = DateTime.now();
-
 
     /* DateTime startOfMonth  = DateTime(now.year, now.month - 1, now.day,
         now.hour, now.minute, now.second, now.millisecond, now.microsecond);
@@ -848,14 +770,9 @@ class _HomeScreenState extends State<HomeScreen> {
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
     print("Formatted Date: $startDate");*/
 
-
     DateTime firstDay = new DateTime(
-      DateTime
-          .now()
-          .year,
-      DateTime
-          .now()
-          .month,
+      DateTime.now().year,
+      DateTime.now().month,
       1 + 1,
     ); //
 
@@ -863,20 +780,18 @@ class _HomeScreenState extends State<HomeScreen> {
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(firstDay.toUtc());
     print("Formatted Date: $startDate");
 
-    endDate =
-        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
+    endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
     print("Formatted Date: $endDate");
 
-
-    String maxDateTimeFormate =
-    DateFormat("yyyy-MM-dd").format(now.toUtc());
+    String maxDateTimeFormate = DateFormat("yyyy-MM-dd").format(now.toUtc());
     print("Formatted Datesasa: $maxDateTimeFormate");
     maxDateTime = maxDateTimeFormate;
   }
 
-
-  Future<void> getDSASalesAgentList(BuildContext context,
-      DataProvider productProvider,) async {
+  Future<void> getDSASalesAgentList(
+    BuildContext context,
+    DataProvider productProvider,
+  ) async {
     // Utils.onLoading(context, "");;
 
     await Provider.of<DataProvider>(context, listen: false)
@@ -892,7 +807,7 @@ class _HomeScreenState extends State<HomeScreen> {
             dsaSalesAgentList.clear();
             dsaSalesAgentList.addAll(
                 getDSASalesAgentListData.result as Iterable<DsaSalesAgentList>);
-          } else {}
+          }
         },
         failure: (exception) {
           // Handle failure
@@ -960,14 +875,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Show the month-year picker dialog
     final selectedDate = await SimpleMonthYearPicker.showMonthYearPickerDialog(
-      context: context,
-      titleTextStyle: TextStyle(), // Customize as needed
-      monthTextStyle: TextStyle(), // Customize as needed
-      yearTextStyle: TextStyle(),  // Customize as needed
-      disableFuture: true,
-      backgroundColor: Colors.grey[200], // Set the background color
-     selectionColor: kPrimaryColor // Set the selected button color// Disable future years and months
-    );
+        context: context,
+        titleTextStyle: TextStyle(),
+        // Customize as needed
+        monthTextStyle: TextStyle(),
+        // Customize as needed
+        yearTextStyle: TextStyle(),
+        // Customize as needed
+        disableFuture: true,
+        backgroundColor: Colors.grey[200],
+        // Set the background color
+        selectionColor:
+            kPrimaryColor // Set the selected button color// Disable future years and months
+        );
 
     if (selectedDate != null) {
       // Get the selected year and month
@@ -975,12 +895,13 @@ class _HomeScreenState extends State<HomeScreen> {
       int selectedMonth = selectedDate.month;
 
       // Check if the selected date is in the future
-      if (selectedYear > now.year || (selectedYear == now.year && selectedMonth > now.month)) {
+      if (selectedYear > now.year ||
+          (selectedYear == now.year && selectedMonth > now.month)) {
         // Handle future month selection, which should not happen due to disableFuture:true
         Utils.showToast("Future dates are disabled", context);
       } else {
         // Calculate the first date of the selected month
-        DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1+1);
+        DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
 
         // Calculate the end date
         DateTime endOfMonth;
@@ -994,16 +915,14 @@ class _HomeScreenState extends State<HomeScreen> {
               : DateTime(selectedYear + 1, 1, 0);
         }
 
-        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-        endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
+        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+            .format(startOfMonth.toUtc());
+        endDate =
+            DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
         print('Start date: $startDate');
         print('End date: $endDate');
         getDSADashboardDetails(context);
-
       }
     }
   }
-
-
 }
-

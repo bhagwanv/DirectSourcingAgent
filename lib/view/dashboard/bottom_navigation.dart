@@ -57,26 +57,23 @@ class _BottomNavState extends State<BottomNav> {
             onPressed: () {
               setState(() {
                 createLeadBottom();
-              //  selectedIndex = 2;
-                // productProvider.disposegetCustomerOrderSummaryData();
-                // productProvider.disposegetCustomerTransactionList();
               });
             },
-            child: SvgPicture.asset(
-              'assets/icons/ic_plush_button.svg',
-              semanticsLabel: 'home',
-            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
             backgroundColor: kPrimaryColor,
+            child: SvgPicture.asset(
+              'assets/icons/ic_plush_button.svg',
+              semanticsLabel: 'home',
+            ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
           bottomNavigationBar: BottomAppBar(
             surfaceTintColor: Colors.white,
             shadowColor: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
             height: 75,
             shape: const CircularNotchedRectangle(),
             notchMargin: 0,
@@ -99,7 +96,7 @@ class _BottomNavState extends State<BottomNav> {
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
                           SvgPicture.asset(
@@ -132,7 +129,7 @@ class _BottomNavState extends State<BottomNav> {
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
                           SvgPicture.asset(
@@ -165,7 +162,7 @@ class _BottomNavState extends State<BottomNav> {
                       //Utils.showBottomToast("Service Not Available");
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
                           SvgPicture.asset(
@@ -197,7 +194,7 @@ class _BottomNavState extends State<BottomNav> {
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
                           SvgPicture.asset(

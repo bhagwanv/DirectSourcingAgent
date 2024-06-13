@@ -16,7 +16,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
   final int subActivityId;
@@ -113,11 +112,14 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                                         builder: (context) {
                                           return Padding(
                                             padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom,
                                             ),
                                             child: SingleChildScrollView(
                                               child: Container(
-                                                padding: EdgeInsets.all(16.0), // Adjust the padding as needed
+                                                padding: EdgeInsets.all(16.0),
+                                                // Adjust the padding as needed
                                                 child: CreateUserWidgets(),
                                               ),
                                             ),
@@ -243,76 +245,75 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                         labelText: "Working Location",
                         enabled: false,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Container(
-                        width: 300,
-                        child: ElevatedButton.icon(
+                      type == "DSA" ?
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: kPrimaryColor,
+                            // text color
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onPressed: () {
                             /*if(doc_sign_url!=null) {
                               _startDownload(doc_sign_url!);
                             }else{
                               Utils.showToast("Document Not Availble", context);
                             }*/
-
-
                           },
-                          icon: Icon(Icons.thumb_up, size: 24),
-                          label: Text(
-                            'Download Agreement',
-                            style: GoogleFonts.urbanist(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: kPrimaryColor,
-                            // text color
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.download, size: 24),
+                              SizedBox(height: 0, width: 10),
+                              Text(
+                                'Download Agreement',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
+                          )) : Container(),
+                      const SizedBox(
                         height: 30.0,
                       ),
-                      Container(
-                        width: 300,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            logOut();
-
-                          },
-                          icon: Icon(Icons.thumb_up, size: 24),
-                          label: Text(
-                            'Log out',
-                            style: GoogleFonts.urbanist(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                      ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.red,
                             // text color
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                        ),
-                      ),
+                          onPressed: () {
+                            logOut();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.logout, size: 24),
+                              SizedBox(height: 0, width: 10),
+                              Text(
+                                'Log out',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )),
                       SizedBox(
                         height: 30.0,
                       ),
@@ -322,34 +323,36 @@ class _UserProfileScreenState extends State<UserProfileClass> {
               ),
             )));
   }
-  Future<void> logOut()async {
+
+  Future<void> logOut() async {
     final prefsUtil = await SharedPref.getInstance();
     prefsUtil.clear();
     Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => LoginScreen()),
+      MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
 
   Future<void> _showProgressNotification() async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+        FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
     const int maxProgress = 5;
     for (int i = 0; i <= maxProgress; i++) {
       await Future<void>.delayed(const Duration(seconds: 1), () async {
         final AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('progress channel', 'progress channel',
-            channelShowBadge: false,
-            importance: Importance.max,
-            priority: Priority.high,
-            onlyAlertOnce: true,
-            showProgress: true,
-            maxProgress: maxProgress,
-            progress: i);
+            AndroidNotificationDetails('progress channel', 'progress channel',
+                channelShowBadge: false,
+                importance: Importance.max,
+                priority: Priority.high,
+                onlyAlertOnce: true,
+                showProgress: true,
+                maxProgress: maxProgress,
+                progress: i);
         final NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+            NotificationDetails(android: androidPlatformChannelSpecifics);
         await flutterLocalNotificationsPlugin.show(
             0,
             'PDF file has been download',
@@ -359,7 +362,6 @@ class _UserProfileScreenState extends State<UserProfileClass> {
       });
     }
   }
-
 
   Future<void> getUserData(
       TextEditingController mobileNoController,
@@ -381,22 +383,23 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     user_payout = prefsUtil.getInt(USER_PAY_OUT);
     doc_sign_url = prefsUtil.getString(USER_DOC_SiGN_URL);
 
-    if(user_mobile!=null){
+    if (user_mobile != null) {
       mobileNoController.text = user_mobile!;
     }
-    if(user_panNumber!=null){
+    if (user_panNumber != null) {
       panCardNoController.text = user_panNumber!;
     }
-    if(user_aadharNumber!=null){
-      adharcardNOController.text = "XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
+    if (user_aadharNumber != null && user_aadharNumber!.isNotEmpty) {
+      adharcardNOController.text =
+          "XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
     }
-    if(user_address!=null){
+    if (user_address != null) {
       addreshController.text = user_address!;
     }
-    if(user_payout!=null){
+    if (user_payout != null) {
       payOutController.text = user_payout!.toString();
     }
-    if(user_workingLocation!=null){
+    if (user_workingLocation != null) {
       workingLocationController.text = user_workingLocation!;
     }
     setState(() {});
