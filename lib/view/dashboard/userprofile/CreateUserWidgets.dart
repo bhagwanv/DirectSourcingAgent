@@ -13,6 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class CreateUserWidgets extends StatefulWidget {
+  int? user_payout;
+
+  CreateUserWidgets({required this.user_payout});
   @override
   State<CreateUserWidgets> createState() => _CreateUserWidgetsState();
 }
@@ -101,6 +104,18 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                 controller: _PayOutController,
                 hintText: "Payout %",
                 labelText: "Payout %",
+                  keyboardType: TextInputType.number,
+                onChanged: (value){
+                  final intValue = int.tryParse(value);
+                  if (intValue != null && intValue > widget.user_payout!) {
+                    setState(() {
+                     Utils.showToast("Value cannot be greater than pay out amount", context);
+                    });
+                  } else {
+                    setState(() {
+                    });
+                  }
+                }
               ),
               SizedBox(
                 height: 10.0,
@@ -135,6 +150,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                                 // Handle successful response
                                 var model = CreateUserModel;
                                 if (model.status!) {
+                                  Utils.showToast(model.message!, context);
                                   Navigator.pop(context);
                                 } else {
                                   Utils.showToast(model.message!, context);
