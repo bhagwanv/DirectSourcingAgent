@@ -23,6 +23,7 @@ import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../providers/DataProvider.dart';
 import '../../../shared_preferences/shared_pref.dart';
+import '../../../utils/CustomMonthYearPicker.dart';
 import '../../../utils/constant.dart';
 import 'DsaSalesAgentList.dart';
 import 'GetDSADashboardDetailsReqModel.dart';
@@ -753,8 +754,17 @@ class _HomeScreenState extends State<HomeScreen> {
     var model = GetDsaDashboardDetailsReqModel(
         agentUserId: agentUserId, startDate: startDate, endDate: endDate);
 
-    await Provider.of<DataProvider>(context, listen: false)
-        .getDSADashboardDetails(model);
+    if(isLoading){
+      await Provider.of<DataProvider>(context, listen: false)
+          .getDSADashboardDetails(model);
+    }else{
+      Utils.onLoading(context, "");
+      await Provider.of<DataProvider>(context, listen: false)
+          .getDSADashboardDetails(model);
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+
+
   }
 
   Future<void> dateTime(BuildContext) async {
@@ -815,8 +825,6 @@ class _HomeScreenState extends State<HomeScreen> {
             if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            } else {
-              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
@@ -870,40 +878,46 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> showCustomMonthYearPicker(BuildContext context) async {
+    var isOk=true;
     // Current Date
     DateTime now = DateTime.now();
-
+    // Define the onCancel callback
+    void onCancel() {
+      print("Picker was cancelled");
+      setState(() {
+        isOk=false;      });
+    }
+    void onOk() {
+      print("Picker was ok");
+      setState(() {
+        isOk=true;
+      });
+    }
     // Show the month-year picker dialog
-    final selectedDate = await SimpleMonthYearPicker.showMonthYearPickerDialog(
-        context: context,
-        titleTextStyle: TextStyle(),
-        // Customize as needed
-        monthTextStyle: TextStyle(),
-        // Customize as needed
-        yearTextStyle: TextStyle(),
-        // Customize as needed
-        disableFuture: true,
-        backgroundColor: Colors.grey[200],
-        // Set the background color
-        selectionColor:
-            kPrimaryColor // Set the selected button color// Disable future years and months
-        );
+    final selectedDate = await CustomMonthYearPicker.showMonthYearPickerDialog(
+      context: context,
+      titleTextStyle: TextStyle(),
+      monthTextStyle: TextStyle(),
+      yearTextStyle: TextStyle(),
+      disableFuture: true,
+      backgroundColor: Colors.grey[200],
+      selectionColor: kPrimaryColor,
+      barrierDismissible:false,
+      onCancel: onCancel,
+      onOk: onOk,
+
+
+
+    );
 
     if (selectedDate != null) {
-      // Get the selected year and month
       int selectedYear = selectedDate.year;
       int selectedMonth = selectedDate.month;
-
-      // Check if the selected date is in the future
       if (selectedYear > now.year ||
           (selectedYear == now.year && selectedMonth > now.month)) {
-        // Handle future month selection, which should not happen due to disableFuture:true
         Utils.showToast("Future dates are disabled", context);
       } else {
-        // Calculate the first date of the selected month
         DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
-
-        // Calculate the end date
         DateTime endOfMonth;
         if (selectedYear == now.year && selectedMonth == now.month) {
           // If the selected month is the current month, set end date to current date
@@ -915,13 +929,16 @@ class _HomeScreenState extends State<HomeScreen> {
               : DateTime(selectedYear + 1, 1, 0);
         }
 
-        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
-            .format(startOfMonth.toUtc());
-        endDate =
-            DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
-        print('Start date: $startDate');
-        print('End date: $endDate');
-        getDSADashboardDetails(context);
+        if(isOk){
+          agentUserId="";
+          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
+              startOfMonth.toUtc());
+          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
+              endOfMonth.toUtc());
+          print('Start date: $startDate');
+          print('End date: $endDate');
+          getDSADashboardDetails(context);
+        }
       }
     }
   }

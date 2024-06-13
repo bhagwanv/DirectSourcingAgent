@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
@@ -13,14 +14,19 @@ import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
 import 'package:getwidget/types/gf_progress_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_month_year_picker/custom.dialog.dart';
+import 'package:simple_month_year_picker/month.container.dart';
+import 'package:simple_month_year_picker/month.model.dart';
 import 'package:simple_month_year_picker/simple_month_year_picker.dart';
 
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../providers/DataProvider.dart';
 import '../../../shared_preferences/shared_pref.dart';
+import '../../../utils/CustomMonthYearPicker.dart';
 import '../../../utils/constant.dart';
 import '../home/DsaSalesAgentList.dart';
 import '../home/GetDSADashboardDetailsReqModel.dart';
@@ -55,6 +61,9 @@ class _LeadScreenState extends State<LeadScreen> {
   var endDate = "";
   String maxDateTime = '';
   bool loading = false;
+  bool isAgentSelected = false;
+  var type = "";
+
 
 
   var payoutOverviewTotalDisbursedAmount = "";
@@ -119,7 +128,6 @@ class _LeadScreenState extends State<LeadScreen> {
                           if (getDSADashboardLeadListData.response!.isNotEmpty) {
                             dsaDashboardLead.addAll(getDSADashboardLeadListData
                                 .response! as Iterable<DsaDashboardLeadList>);
-                            print("aaa${dsaDashboardLead.length}");
                           } else {
                             loading = false;
                           }
@@ -132,8 +140,6 @@ class _LeadScreenState extends State<LeadScreen> {
                             Utils.showToast(exception.errorMessage, context);
                             productProvider.disposeAllProviderData();
                             ApiService().handle401(context);
-                          } else {
-                            Utils.showToast("Something went Wrong", context);
                           }
                         }
                       },
@@ -173,6 +179,30 @@ class _LeadScreenState extends State<LeadScreen> {
                                             print("date ");
                                             showCustomMonthYearPicker(context);
                                             //print('Selected date: $selectedDate');
+
+                                          /*  DateTime currentDate = DateTime.now();
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return BackdropFilter(
+                                                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                                                  child: WillPopScope(
+                                                    onWillPop: () async {
+                                                      return true;
+                                                    },
+                                                    child: Dialog(
+                                                      backgroundColor: Colors.white,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(15),
+                                                      ),
+                                                      child: MonthPicker(initialYear: currentDate.year, startYear: 2000, endYear: currentDate.year, month: currentDate.month),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );*/
+
                                           },
 
                                           child: Container(
@@ -191,6 +221,7 @@ class _LeadScreenState extends State<LeadScreen> {
                               const SizedBox(
                                 height: 15.0,
                               ),
+                              type!=null && type=="DSA"?
                               DropdownButtonFormField2<DsaSalesAgentList>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
@@ -225,6 +256,11 @@ class _LeadScreenState extends State<LeadScreen> {
                                     dsaSalesAgentList),
                                 onChanged: (DsaSalesAgentList? value) {
                                   selecteddsaSalesAgentValue = value!.fullName;
+                                  setState(() {
+                                    dsaDashboardLead.clear();
+                                    productProvider.disposeLeadScreenData();
+                                    isAgentSelected=true;
+                                  });
                                   dateTime(context);
                                   getDSADashboardLead(context);
 
@@ -244,7 +280,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                 iconStyleData: const IconStyleData(
                                   openMenuIcon: Icon(Icons.arrow_drop_up),
                                 ),
-                              ),
+                              ):Container(),
                               const SizedBox(
                                 height: 20.0,
                               ),
@@ -263,21 +299,19 @@ class _LeadScreenState extends State<LeadScreen> {
 
   Future<void> getDSADashboardLead(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
-    String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    type = prefsUtil.getString(TYPE)!;
+    print("type$type");
+    if(isAgentSelected){
+      dsaSalesAgentList.forEach((agent) {
+        if (agent.fullName == selecteddsaSalesAgentValue) {
+          setState(() {
+            skip = 0;
+            agentUserId = agent.userId!;
+          });
+        }
+      });
+    }
 
-    dsaSalesAgentList.forEach((agent) {
-      if (agent.fullName == selecteddsaSalesAgentValue) {
-        setState(() {
-          dsaDashboardLead.clear();
-          skip = 0;
-          agentUserId = agent.userId!;
-          print("userId${agent.userId!}");
-          print("fullName${agent.fullName!}");
-          print("clear${dsaDashboardLead.length}");
-        });
-      }
-    });
 
     var model = DsaDashboardLeadListReqModel(
         agentUserId: agentUserId,
@@ -290,8 +324,10 @@ class _LeadScreenState extends State<LeadScreen> {
       await Provider.of<DataProvider>(context, listen: false)
           .getDSADashboardLeadList(model);
     } else {
+      Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false)
           .getDSADashboardLeadList(model);
+      Navigator.of(context, rootNavigator: true).pop();
     }
 
     setState(() {
@@ -301,7 +337,7 @@ class _LeadScreenState extends State<LeadScreen> {
 
   Future<void> getDSASalesAgentList(BuildContext context,
       DataProvider productProvider,) async {
-    // Loader();
+   // Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .getDSASalesAgentList();
     //Navigator.of(context, rootNavigator: true).pop();
@@ -383,7 +419,7 @@ class _LeadScreenState extends State<LeadScreen> {
     if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
-        child: Text('No transactions available'),
+        child: Text('Data Not available'),
       );
     }
 
@@ -395,11 +431,8 @@ class _LeadScreenState extends State<LeadScreen> {
           DsaDashboardLeadList dsaDashboardLead = dsaDashboardLeadList![index];
 
           // Null check for each property before accessing it
-          String leadID = dsaDashboardLead.leadId.toString() ??
-              ''; // Default value if anchorName is null
-          String createdDate = dsaDashboardLead.createdDate != null
-              ? Utils.dateMonthAndYearFormat(dsaDashboardLead.createdDate.toString())
-              : "Not generated yet.";
+          String? leadID = dsaDashboardLead.leadId.toString() ?? ''; // Default value if anchorName is null
+          String createdDate = dsaDashboardLead.createdDate != null ? Utils.dateMonthAndYearFormat(dsaDashboardLead.createdDate.toString()) : "";
           String name = dsaDashboardLead.fullName ?? '';
           String status = dsaDashboardLead.status.toString() ?? '';
           String? mobile = dsaDashboardLead.mobileNo ?? '';
@@ -407,9 +440,6 @@ class _LeadScreenState extends State<LeadScreen> {
 
           return GestureDetector(
             onTap: () async {
-              // transactionList.clear();
-              /*await getTransactionBreakup(context, productProvider, invoiceId);
-              _showDialog(context, productProvider, transactionList);*/
             },
             child: Card(
               child: Container(
@@ -593,23 +623,12 @@ class _LeadScreenState extends State<LeadScreen> {
         }
       },
     );
+
   }
+
 
   Future<void> dateTime(BuildContext) async {
     DateTime now = DateTime.now();
-
-
-    /* DateTime startOfMonth  = DateTime(now.year, now.month - 1, now.day,
-        now.hour, now.minute, now.second, now.millisecond, now.microsecond);
-    if (startOfMonth.month == 0) {
-      startOfMonth = DateTime(now.year - 1, 12, now.day, now.hour, now.minute,
-          now.second, now.millisecond, now.microsecond);
-    }
-    startDate =
-        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-    print("Formatted Date: $startDate");*/
-
-
     DateTime firstDay = new DateTime(
       DateTime
           .now()
@@ -623,12 +642,9 @@ class _LeadScreenState extends State<LeadScreen> {
     startDate =
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(firstDay.toUtc());
     print("Formatted Date: $startDate");
-
     endDate =
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
     print("Formatted Date: $endDate");
-
-
     String maxDateTimeFormate =
     DateFormat("yyyy-MM-dd").format(now.toUtc());
     print("Formatted Datesasa: $maxDateTimeFormate");
@@ -637,39 +653,46 @@ class _LeadScreenState extends State<LeadScreen> {
 
 
   Future<void> showCustomMonthYearPicker(BuildContext context) async {
+    var isOk=true;
     // Current Date
     DateTime now = DateTime.now();
-
+    // Define the onCancel callback
+    void onCancel() {
+      print("Picker was cancelled");
+      setState(() {
+        isOk=false;      });
+    }
+    void onOk() {
+      print("Picker was ok");
+      setState(() {
+        isOk=true;
+      });
+    }
     // Show the month-year picker dialog
-    final selectedDate = await SimpleMonthYearPicker.showMonthYearPickerDialog(
+    final selectedDate = await CustomMonthYearPicker.showMonthYearPickerDialog(
         context: context,
         titleTextStyle: TextStyle(),
-        // Customize as needed
         monthTextStyle: TextStyle(),
-        // Customize as needed
         yearTextStyle: TextStyle(),
-        // Customize as needed
         disableFuture: true,
         backgroundColor: Colors.grey[200],
-        // Set the background color
-        selectionColor: kPrimaryColor // Set the selected button color// Disable future years and months
+        selectionColor: kPrimaryColor,
+        barrierDismissible:false,
+        onCancel: onCancel,
+        onOk: onOk,
+
+
+
     );
 
     if (selectedDate != null) {
-      // Get the selected year and month
       int selectedYear = selectedDate.year;
       int selectedMonth = selectedDate.month;
-
-      // Check if the selected date is in the future
       if (selectedYear > now.year ||
           (selectedYear == now.year && selectedMonth > now.month)) {
-        // Handle future month selection, which should not happen due to disableFuture:true
         Utils.showToast("Future dates are disabled", context);
       } else {
-        // Calculate the first date of the selected month
         DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
-
-        // Calculate the end date
         DateTime endOfMonth;
         if (selectedYear == now.year && selectedMonth == now.month) {
           // If the selected month is the current month, set end date to current date
@@ -681,16 +704,22 @@ class _LeadScreenState extends State<LeadScreen> {
               : DateTime(selectedYear + 1, 1, 0);
         }
 
-        dsaDashboardLead.clear();
-        skip = 0;
-        startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
-            startOfMonth.toUtc());
-        endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
-            endOfMonth.toUtc());
-        print('Start date: $startDate');
-        print('End date: $endDate');
-        getDSADashboardLead(context);
+        if(isOk){
+          isAgentSelected=false;
+          print("deees$selectedDate");
+          dsaDashboardLead.clear();
+          agentUserId="";
+          skip = 0;
+          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
+              startOfMonth.toUtc());
+          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
+              endOfMonth.toUtc());
+          print('Start date: $startDate');
+          print('End date: $endDate');
+          print('dsaDashboardLead : ${dsaDashboardLead.length}');
+           getDSADashboardLead(context);
+        }
       }
     }
   }
-}
+ }

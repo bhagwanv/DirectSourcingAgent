@@ -105,6 +105,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                                   width: 110,
                                   child: CommonElevatedButton(
                                     onPressed: () async {
+
                                       showModalBottomSheet(
                                         context: context,
                                         isScrollControlled: true,
@@ -112,15 +113,12 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                                         builder: (context) {
                                           return Padding(
                                             padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom,
+                                              bottom: MediaQuery.of(context).viewInsets.bottom,
                                             ),
                                             child: SingleChildScrollView(
                                               child: Container(
-                                                padding: EdgeInsets.all(16.0),
-                                                // Adjust the padding as needed
-                                                child: CreateUserWidgets(),
+                                                padding: EdgeInsets.all(16.0), // Adjust the padding as needed
+                                                child: CreateUserWidgets(user_payout: user_payout),
                                               ),
                                             ),
                                           );
