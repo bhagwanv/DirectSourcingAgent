@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +38,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
   var isLoading = true;
   var content = "";
   var isSubmit = false;
+  var isCheckStatus = false;
 
   @override
   void initState() {
@@ -46,153 +49,187 @@ class _AgreementScreenState extends State<AgreementScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    isCheckStatus = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dataProvider = Provider.of<DataProvider>(context);
-    if (dataProvider.dSAGenerateAgreementData != null) {
-      dataProvider.dSAGenerateAgreementData!.when(
-        success: (data) {
-          content = data.response.toString();
-        },
-        failure: (exception) {
-          if (exception is ApiException) {
-            if (exception.statusCode == 401) {
-              ApiService().handle401(context);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Utils.showToast(exception.errorMessage, context);
-              });
-            }
-          }
-        },
-      );
-    }
-    return Scaffold(
-        body: SafeArea(
-      top: true,
-      bottom: true,
-      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        return isSubmit ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 16.0,
-                ),
-                const Center(
-                  child: Text(
-                    "Agreement",
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w100,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                SizedBox(
-                  height: 500,
-                  width: MediaQuery.of(context).size.width,
-                  child: WebViewWidget(
-                      controller: WebViewController()
-                        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                        ..setBackgroundColor(const Color(0x00000000))
 
-                        ..setNavigationDelegate(
-                          NavigationDelegate(
-                            onProgress: (int progress) {
-                              CircularProgressIndicator();
-                            },
-                            onPageStarted: (String url) {
-                            },
-                            onPageFinished: (String url) {
-                            },
-                            onWebResourceError:
-                                (WebResourceError error) {},
-                          ),
-                        )
-                        ..loadRequest(
-                            Uri.parse(content))),
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                CommonElevatedButton(
-                  onPressed: () async {
-                    await checkESignDocumentStatus(
-                        context, productProvider);
-                    },
-                  text: 'Next',
-                  upperCase: true,
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-              ],
-            ),
-          ),
-        ) : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 16.0,
-              ),
-              const Center(
-                child: Text(
-                  "Agreement",
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w100,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              const SizedBox(
-                height: 8.0,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: HtmlWidget(
-                    content, // If HtmlWidget supports webView
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              CommonElevatedButton(
-                onPressed: () async {
-                  isSubmit = true;
-                  callApi(context, isSubmit);
-                 // content = "https://app.karza.in/test/esign/initial-consent/9b03ed73-6064-42f7-a74f-cbbbb57f3827";
-                },
-                text: 'Proceed to E-sign',
-                upperCase: true,
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-            ],
-          ),
+    if (!isCheckStatus) {
+      if (dataProvider.dSAGenerateAgreementData != null) {
+        dataProvider.dSAGenerateAgreementData!.when(
+          success: (data) {
+            content = data.response.toString();
+          },
+          failure: (exception) {
+            if (exception is ApiException) {
+              if (exception.statusCode == 401) {
+                ApiService().handle401(context);
+              } else {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  content = "";
+                  Utils.showToast("Something went wrong", context);
+                });
+              }
+            }
+          },
         );
-      }),
-    ));
+      }
+    }
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        final bool shouldPop = await Utils().onback(context);
+        if (shouldPop) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            return isSubmit
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 0.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          const Center(
+                            child: Text(
+                              "Agreement",
+                              style: TextStyle(
+                                fontSize: 40.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w100,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                          dataProvider.dSAGenerateAgreementData == null ||
+                                  content.isEmpty
+                              ? Container()
+                              : SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height - 230,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: WebViewWidget(
+                                      controller: WebViewController()
+                                        ..setJavaScriptMode(
+                                            JavaScriptMode.unrestricted)
+                                        ..setBackgroundColor(
+                                            const Color(0x00000000))
+                                        ..setNavigationDelegate(
+                                          NavigationDelegate(
+                                            onProgress: (int progress) {
+                                              CircularProgressIndicator();
+                                            },
+                                            onPageStarted: (String url) {},
+                                            onPageFinished: (String url) {},
+                                            onWebResourceError:
+                                                (WebResourceError error) {},
+                                          ),
+                                        )
+                                        ..loadRequest(Uri.parse(content))),
+                                ),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          CommonElevatedButton(
+                            onPressed: () async {
+                              isCheckStatus = true;
+                              await checkESignDocumentStatus(
+                                  context, productProvider);
+                            },
+                            text: 'Next',
+                            upperCase: true,
+                          ),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 0.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Center(
+                          child: Text(
+                            "Agreement",
+                            style: GoogleFonts.urbanist(
+                              fontSize: 30,
+                              color: blackSmall,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: HtmlWidget(
+                              content, // If HtmlWidget supports webView
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonElevatedButton(
+                          onPressed: () async {
+                            isSubmit = true;
+                            content = "";
+                            dataProvider.disposeDSAGenerateAgreementData();
+                            callApi(context, isSubmit);
+                            // content = "https://app.karza.in/test/esign/initial-consent/9b03ed73-6064-42f7-a74f-cbbbb57f3827";
+                          },
+                          text: 'Proceed to E-sign',
+                          upperCase: true,
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
+                    ),
+                  );
+          }),
+        ),
+      ),
+    );
   }
 
   Future<void> checkESignDocumentStatus(
-      BuildContext context,
-      DataProvider productProvider,
-      ) async {
+    BuildContext context,
+    DataProvider productProvider,
+  ) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-
 
     Utils.onLoading(context, "Loading...");
     await Provider.of<DataProvider>(context, listen: false)
@@ -227,7 +264,11 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
     final String? userMobileNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
     Provider.of<DataProvider>(context, listen: false).dSAGenerateAgreement(
-        context, leadId!.toString(), productId.toString(), companyId.toString(), isSubmit);
+        context,
+        leadId!.toString(),
+        productId.toString(),
+        companyId.toString(),
+        isSubmit);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -246,9 +287,9 @@ class _AgreementScreenState extends State<AgreementScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel,context)
-      as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService()
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -257,7 +298,8 @@ class _AgreementScreenState extends State<AgreementScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

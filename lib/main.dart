@@ -1,7 +1,9 @@
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/providers/ThemeProvider.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
+import 'package:direct_sourcing_agent/view/CongratulationScreen.dart';
 import 'package:direct_sourcing_agent/view/agreement_screen/Agreementscreen.dart';
+import 'package:direct_sourcing_agent/view/bank_details_screen/BankDetailsScreen.dart';
 import 'package:direct_sourcing_agent/view/dashboard/bottom_navigation.dart';
 import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-     // home:  direct_selling_agent(activityId: 1, subActivityId: 0,),
+     // home:  CongratulationScreen(transactionReqNo: '', amount: 0, mobileNo: '', loanAccountId: 0, creditDay: 0,),
     );
   }
 }

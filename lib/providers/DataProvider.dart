@@ -724,6 +724,10 @@ class DataProvider extends ChangeNotifier {
     Navigator.of(context).pop();
   }
 
+  Future<void> disposeDSAGenerateAgreementData() async {
+    _dSAGenerateAgreementData = null;
+  }
+
   Future<void> checkESignDocumentStatus(String leadId) async {
     _checkESignResponseModelData = await apiService.checkESignDocumentStatus(leadId) ;
     notifyListeners();
