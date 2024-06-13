@@ -1,20 +1,11 @@
 import 'dart:io';
 
-import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/ImagePicker.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
-import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -41,92 +32,24 @@ class _WebViewExampleState extends State<WebViewExample> {
   int? productID;
   bool checkCamera = false;
   bool openCameraOnly = false;
-  late String _cameraPhotoPath;
+  late String _cameraPhotoPath="";
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-
-    /* late final PlatformWebViewControllerCreationParams params;
-    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-      params = WebKitWebViewControllerCreationParams(
-        allowsInlineMediaPlayback: true,
-        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-      );
-    } else {
-      params = const PlatformWebViewControllerCreationParams();
-    }
-
-    final WebViewController controller = WebViewController.fromPlatformCreationParams(params);
-     _controller = WebViewController.fromPlatformCreationParams(params, onPermissionRequest: (resources) async {
-      return resources.grant();
-    });
-    controller
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            debugPrint('WebView is loading (progress : $progress%)');
-          },
-          onPageStarted: (String url) {
-            debugPrint('Page started loading: $url');
-          },
-          onPageFinished: (String url) {
-            debugPrint('Page finished loading: $url');
-            _controller.runJavaScript("_callJavaScriptFunction('${widget.token}')");
-          },
-          onNavigationRequest: (NavigationRequest request) {
-            return NavigationDecision.navigate;
-          },
-          onHttpError: (HttpResponseError error) {
-            debugPrint('Error occurred on page: ${error.response?.statusCode}');
-          },
-          onUrlChange: (UrlChange change) {
-            debugPrint('url change to ${change.url}');
-          },
-          onHttpAuthRequest: (HttpAuthRequest request) {},
-        )
-      )
-      ..addJavaScriptChannel(
-        '"cameraPermission"',
-        onMessageReceived: (JavaScriptMessage message) {
-          print("Call Method$message");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        },
-      )
-      ..loadRequest(Uri.parse(_constructUrl()));
-
-    // #docregion platform_features
-    if (controller.platform is AndroidWebViewController) {
-      AndroidWebViewController.enableDebugging(true);
-      (controller.platform as AndroidWebViewController)
-          .setMediaPlaybackRequiresUserGesture(false);
-    }
-    // #enddocregion platform_features
-
-    _controller = controller;*/
-
     late final PlatformWebViewControllerCreationParams params;
 
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-      params = WebKitWebViewControllerCreationParams(
-        allowsInlineMediaPlayback: true,
-        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-      );
+      params = WebKitWebViewControllerCreationParams(allowsInlineMediaPlayback: true, mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},);
     } else {
       params = const PlatformWebViewControllerCreationParams();
     }
 
-    final WebViewController controller =
-        WebViewController.fromPlatformCreationParams(
-      params,
-      onPermissionRequest: (resources) async {
+    final WebViewController controller = WebViewController.fromPlatformCreationParams(params, onPermissionRequest: (resources) async {
         return resources.grant();
       },
+
     );
 
 
@@ -143,8 +66,9 @@ class _WebViewExampleState extends State<WebViewExample> {
           },
           onPageFinished: (String url) {
             debugPrint('Page finished loading: $url');
-            controller
-                .runJavaScript("_callJavaScriptFunction('${widget.token}')");
+            controller.runJavaScript("_callJavaScriptFunction('${widget.token}')");
+           // controller.runJavaScript("getDocUrlFromFlutter('${_cameraPhotoPath}')");
+
             /* controller.runJavaScript(
               'openCameraOnly.postMessage("User Agent: " + navigator.userAgent);',
             );*/
@@ -170,10 +94,10 @@ class _WebViewExampleState extends State<WebViewExample> {
         ),
       )
 
-      ..addJavaScriptChannel(
-        'openCameraOnly',
+      /*..addJavaScriptChannel(
+        'openFlutterCameraOnly',
         onMessageReceived: (JavaScriptMessage message) {
-          ScaffoldMessenger.of(context).showSnackBar(
+         *//* ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
           );
           bool enable = message.message == 'true';
@@ -184,23 +108,16 @@ class _WebViewExampleState extends State<WebViewExample> {
             _showFileChooser();
           } else {
             bottomSheetMenu(context);
-          }
-        },
-      )
+          }*//*
+        },)*/
       ..loadRequest(Uri.parse(_constructUrl()));
-
-// #docregion platform_features
     if (controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
-      (controller.platform as AndroidWebViewController)
-          .setMediaPlaybackRequiresUserGesture(false);
+      (controller.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false);
+      (controller.platform as AndroidWebViewController).clearCache();
     }
-// #enddocregion platform_features
-
     _controller = controller;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -228,13 +145,13 @@ class _WebViewExampleState extends State<WebViewExample> {
   }
 
   void _onImageSelected(File imageFile) async {
+    _cameraPhotoPath =imageFile.path;
     // Handle the selected image here
     // For example, you can setState to update UI with the selected image;
-    Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .postSingleFile(imageFile, true, "", "");
+    /*Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false).postSingleFile(imageFile, true, "", "");
     // Navigator.pop(context);
-    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.of(context, rootNavigator: true).pop();*/
   }
 
   String _constructUrl() {
@@ -272,6 +189,7 @@ class _WebViewExampleState extends State<WebViewExample> {
       if (file != null) {
         setState(() {
           _cameraPhotoPath = file.path;
+          print("ImagePath"+_cameraPhotoPath);
         });
       }
     }

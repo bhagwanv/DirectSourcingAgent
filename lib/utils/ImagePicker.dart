@@ -22,14 +22,9 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
   var imagePicker;
 
   Future<void> _handleURLButtonPress(BuildContext context, var type) async {
-    var source = (type == ImageSourceType.camera)
-        ? ImageSource.camera
-        : ImageSource.gallery;
+    var source = (type == ImageSourceType.camera) ? ImageSource.camera : ImageSource.gallery;
 
-    XFile image = await imagePicker.pickImage(
-        source: source,
-        imageQuality: 50,
-        preferredCameraDevice: CameraDevice.front);
+    XFile image = await imagePicker.pickImage(source: source, imageQuality: 50, preferredCameraDevice: CameraDevice.front);
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: image.path,
@@ -146,6 +141,6 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
     if (croppedFile == null) {
       return null;
     }
-    return File(croppedFile.path!);
+    return File(croppedFile.path);
   }
 }

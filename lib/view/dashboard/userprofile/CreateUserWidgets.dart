@@ -3,7 +3,6 @@ import 'package:direct_sourcing_agent/api/FailureException.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
-import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
 import 'package:flutter/cupertino.dart';
