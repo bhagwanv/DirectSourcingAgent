@@ -6,8 +6,10 @@ import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
@@ -63,8 +65,6 @@ class _LeadScreenState extends State<LeadScreen> {
   bool isAgentSelected = false;
   var type = "";
 
-
-
   var payoutOverviewTotalDisbursedAmount = "";
   var payoutOverviewPayoutAmount = "";
 
@@ -77,13 +77,24 @@ class _LeadScreenState extends State<LeadScreen> {
 
   String? selecteddsaSalesAgentValue;
 
+  final browser = MyInAppBrowser();
+
+  final settings = InAppBrowserClassSettings(
+      browserSettings: InAppBrowserSettings(hideUrlBar: true),
+      webViewSettings: InAppWebViewSettings(
+          javaScriptEnabled: true, isInspectable: kDebugMode));
+  String? companyID;
+  String? productCode;
+  String? UserToken;
+  String? LeadCreateMobileNo;
+
   @override
   void initState() {
     super.initState();
+    getUserData();
     //Api Call
     dateTime(context);
     getDSADashboardLead(context);
-
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -106,80 +117,79 @@ class _LeadScreenState extends State<LeadScreen> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-                if (productProvider.getDSADashboardLeadListData == null &&
-                    isLoading) {
-                  return Loader();
-                } else {
-                  if (productProvider.getDSADashboardLeadListData != null &&
-                      isLoading) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    isLoading = false;
-                    getDSASalesAgentList(context, productProvider);
-                  }
+            if (productProvider.getDSADashboardLeadListData == null &&
+                isLoading) {
+              return Loader();
+            } else {
+              if (productProvider.getDSADashboardLeadListData != null &&
+                  isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
+                getDSASalesAgentList(context, productProvider);
+              }
 
-                  if (productProvider.getDSADashboardLeadListData != null) {
-                    productProvider.getDSADashboardLeadListData!.when(
-                      success: (data) {
-                        // Handle successful response
-                        var getDSADashboardLeadListData = data;
+              if (productProvider.getDSADashboardLeadListData != null) {
+                productProvider.getDSADashboardLeadListData!.when(
+                  success: (data) {
+                    // Handle successful response
+                    var getDSADashboardLeadListData = data;
 
-                        if (getDSADashboardLeadListData.response != null) {
-                          if (getDSADashboardLeadListData.response!.isNotEmpty) {
-                            dsaDashboardLead.addAll(getDSADashboardLeadListData
-                                .response! as Iterable<DsaDashboardLeadList>);
-                          } else {
-                            loading = false;
-                          }
-                        }
-                      },
-                      failure: (exception) {
-                        // Handle failure
-                        if (exception is ApiException) {
-                          if (exception.statusCode == 401) {
-                            Utils.showToast(exception.errorMessage, context);
-                            productProvider.disposeAllProviderData();
-                            ApiService().handle401(context);
-                          }
-                        }
-                      },
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 10),
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, top: 15),
-                                  child: Center(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Lead",
-                                              style: GoogleFonts.urbanist(
-                                                fontSize: 20,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            print("date ");
-                                            showCustomMonthYearPicker(context);
-                                            //print('Selected date: $selectedDate');
+                    if (getDSADashboardLeadListData.response != null) {
+                      if (getDSADashboardLeadListData.response!.isNotEmpty) {
+                        dsaDashboardLead.addAll(getDSADashboardLeadListData
+                            .response! as Iterable<DsaDashboardLeadList>);
+                      } else {
+                        loading = false;
+                      }
+                    }
+                  },
+                  failure: (exception) {
+                    // Handle failure
+                    if (exception is ApiException) {
+                      if (exception.statusCode == 401) {
+                        Utils.showToast(exception.errorMessage, context);
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      }
+                    }
+                  },
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      SizedBox(height: 10),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 15),
+                          child: Center(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Lead",
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    print("date ");
+                                    showCustomMonthYearPicker(context);
+                                    //print('Selected date: $selectedDate');
 
-                                          /*  DateTime currentDate = DateTime.now();
+                                    /*  DateTime currentDate = DateTime.now();
                                             showDialog(
                                               context: context,
                                               barrierDismissible: true,
@@ -201,98 +211,94 @@ class _LeadScreenState extends State<LeadScreen> {
                                                 );
                                               },
                                             );*/
-
-                                          },
-
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/ic_document_filter.svg',
-                                              semanticsLabel: 'Edit Icon SVG',
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: SvgPicture.asset(
+                                      'assets/icons/ic_document_filter.svg',
+                                      semanticsLabel: 'Edit Icon SVG',
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 15.0,
-                              ),
-                              type!=null && type=="DSA"?
-                              DropdownButtonFormField2<DsaSalesAgentList>(
-                                isExpanded: true,
-                                decoration: InputDecoration(
-                                  fillColor: light_gry,
-                                  filled: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 5),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: light_dark_gry, width: 0)),
-                                  focusedBorder: OutlineInputBorder(
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      type != null && type == "DSA"
+                          ? DropdownButtonFormField2<DsaSalesAgentList>(
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                fillColor: light_gry,
+                                filled: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 5),
+                                border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                     borderSide: const BorderSide(
-                                        color: light_dark_gry, width: 0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: light_dark_gry, width: 0),
-                                  ),
+                                        color: light_dark_gry, width: 0)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                      color: light_dark_gry, width: 0),
                                 ),
-                                hint: Text(
-                                  'All Agents ',
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 15,
-                                    color: light_black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                      color: light_dark_gry, width: 0),
                                 ),
-                                items: _addDividersAfterItems(
-                                    dsaSalesAgentList),
-                                onChanged: (DsaSalesAgentList? value) {
-                                  selecteddsaSalesAgentValue = value!.fullName;
-                                  setState(() {
-                                    dsaDashboardLead.clear();
-                                    productProvider.disposeLeadScreenData();
-                                    isAgentSelected=true;
-                                  });
-                                  dateTime(context);
-                                  getDSADashboardLead(context);
-
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
-                                ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights:
-                                  _getCustomItemsHeights3(dsaSalesAgentList),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
-                                ),
-                              ):Container(),
-                              const SizedBox(
-                                height: 20.0,
                               ),
-                              Expanded(
-                                  child: dsaDashboardLead != null
-                                      ? _myListView(
-                                      context, dsaDashboardLead,
-                                      productProvider)
-                                      : Container())
-                            ])),
-                  );
-                }
-              }),
+                              hint: Text(
+                                'All Agents ',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 15,
+                                  color: light_black,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              items: _addDividersAfterItems(dsaSalesAgentList),
+                              onChanged: (DsaSalesAgentList? value) {
+                                selecteddsaSalesAgentValue = value!.fullName;
+                                setState(() {
+                                  dsaDashboardLead.clear();
+                                  productProvider.disposeLeadScreenData();
+                                  isAgentSelected = true;
+                                });
+                                dateTime(context);
+                                getDSADashboardLead(context);
+                              },
+                              buttonStyleData: const ButtonStyleData(
+                                padding: EdgeInsets.only(right: 8),
+                              ),
+                              dropdownStyleData: const DropdownStyleData(
+                                maxHeight: 200,
+                              ),
+                              menuItemStyleData: MenuItemStyleData(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                customHeights:
+                                    _getCustomItemsHeights3(dsaSalesAgentList),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                openMenuIcon: Icon(Icons.arrow_drop_up),
+                              ),
+                            )
+                          : Container(),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      Expanded(
+                          child: dsaDashboardLead != null
+                              ? _myListView(
+                                  context, dsaDashboardLead, productProvider)
+                              : Container())
+                    ])),
+              );
+            }
+          }),
         ));
   }
 
@@ -300,7 +306,7 @@ class _LeadScreenState extends State<LeadScreen> {
     final prefsUtil = await SharedPref.getInstance();
     type = prefsUtil.getString(TYPE)!;
     print("type$type");
-    if(isAgentSelected){
+    if (isAgentSelected) {
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue) {
           setState(() {
@@ -310,7 +316,6 @@ class _LeadScreenState extends State<LeadScreen> {
         }
       });
     }
-
 
     var model = DsaDashboardLeadListReqModel(
         agentUserId: agentUserId,
@@ -334,9 +339,11 @@ class _LeadScreenState extends State<LeadScreen> {
     });
   }
 
-  Future<void> getDSASalesAgentList(BuildContext context,
-      DataProvider productProvider,) async {
-   // Utils.onLoading(context, "");
+  Future<void> getDSASalesAgentList(
+    BuildContext context,
+    DataProvider productProvider,
+  ) async {
+    // Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .getDSASalesAgentList();
     //Navigator.of(context, rootNavigator: true).pop();
@@ -412,7 +419,8 @@ class _LeadScreenState extends State<LeadScreen> {
     return itemsHeights;
   }
 
-  Widget _myListView(BuildContext context,
+  Widget _myListView(
+      BuildContext context,
       List<DsaDashboardLeadList> dsaDashboardLeadList,
       DataProvider productProvider) {
     if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
@@ -430,16 +438,19 @@ class _LeadScreenState extends State<LeadScreen> {
           DsaDashboardLeadList dsaDashboardLead = dsaDashboardLeadList![index];
 
           // Null check for each property before accessing it
-          String? leadID = dsaDashboardLead.leadId.toString() ?? ''; // Default value if anchorName is null
-          String createdDate = dsaDashboardLead.createdDate != null ? Utils.dateMonthAndYearFormat(dsaDashboardLead.createdDate.toString()) : "";
+          String? leadID = dsaDashboardLead.leadId.toString() ??
+              ''; // Default value if anchorName is null
+          String createdDate = dsaDashboardLead.createdDate != null
+              ? Utils.dateMonthAndYearFormat(
+                  dsaDashboardLead.createdDate.toString())
+              : "";
           String name = dsaDashboardLead.fullName ?? '';
           String status = dsaDashboardLead.status.toString() ?? '';
-          String? mobile = dsaDashboardLead.mobileNo ?? '';
+          LeadCreateMobileNo = dsaDashboardLead.mobileNo ?? '';
           String? profileImage = dsaDashboardLead.profileImage.toString() ?? '';
 
           return GestureDetector(
-            onTap: () async {
-            },
+            onTap: () async {},
             child: Card(
               child: Container(
                 decoration: BoxDecoration(
@@ -467,22 +478,18 @@ class _LeadScreenState extends State<LeadScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(
-                                    "Lead ID : $leadID",
+                                Text("Lead ID : $leadID",
                                     style: GoogleFonts.urbanist(
                                       fontSize: 12,
                                       color: Colors.black,
-                                      fontWeight: FontWeight
-                                          .w500,
+                                      fontWeight: FontWeight.w500,
                                     )),
                                 Spacer(),
-                                Text(
-                                    "Created Date: $createdDate",
+                                Text("Created Date: $createdDate",
                                     style: GoogleFonts.urbanist(
                                       fontSize: 12,
                                       color: Colors.black,
-                                      fontWeight: FontWeight
-                                          .w500,
+                                      fontWeight: FontWeight.w500,
                                     )),
                               ],
                             ),
@@ -492,49 +499,49 @@ class _LeadScreenState extends State<LeadScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
-
                                 Row(
                                   children: [
                                     Container(
-                                      child: profileImage.isNotEmpty ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
-                                        child: Image.network(
-                                          profileImage,
-                                          height: 70,
-                                          width: 70,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ) : ClipRRect(
-                                        borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
-                                        child: SvgPicture.asset(
-                                          'assets/images/dummy_image.svg',
-                                          semanticsLabel: 'Edit Icon SVG',
-                                          height: 70,
-                                          width: 70,
-                                        ),
-                                      )
-                                    ),
+                                        child: profileImage.isNotEmpty
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                // Adjust the value to change the roundness
+                                                child: Image.network(
+                                                  profileImage,
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                // Adjust the value to change the roundness
+                                                child: SvgPicture.asset(
+                                                  'assets/images/dummy_image.svg',
+                                                  semanticsLabel:
+                                                      'Edit Icon SVG',
+                                                  height: 70,
+                                                  width: 70,
+                                                ),
+                                              )),
                                     SizedBox(
                                       width: 10,
                                     ),
                                     Column(
                                       children: [
-                                        Text(
-                                            " Borrower Name ",
+                                        Text(" Borrower Name ",
                                             style: GoogleFonts.urbanist(
                                               fontSize: 10,
                                               color: dark_gry,
-                                              fontWeight: FontWeight
-                                                  .w500,
+                                              fontWeight: FontWeight.w500,
                                             )),
-                                        Text(
-                                            "$name",
+                                        Text("$name",
                                             style: GoogleFonts.urbanist(
                                               fontSize: 10,
                                               color: Colors.black,
-                                              fontWeight: FontWeight
-                                                  .w600,
+                                              fontWeight: FontWeight.w600,
                                             )),
                                       ],
                                     ),
@@ -543,21 +550,25 @@ class _LeadScreenState extends State<LeadScreen> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Card(
-                                  color: kPrimaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        8), // Set the card radius
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "RESUME",
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 12,
-                                        color: whiteColor,
-                                        fontWeight: FontWeight
-                                            .w700,
+                                GestureDetector(
+                                  onTap: () {
+                                    openInAppBrowser(UserToken!,context);
+                                  },
+                                  child: Card(
+                                    color: kPrimaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Set the card radius
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "RESUME",
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 12,
+                                          color: whiteColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -572,21 +583,17 @@ class _LeadScreenState extends State<LeadScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                        "Status :",
+                                    Text("Status :",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 10,
                                           color: Colors.grey,
-                                          fontWeight: FontWeight
-                                              .w500,
+                                          fontWeight: FontWeight.w500,
                                         )),
-                                    Text(
-                                        "$status",
+                                    Text("$status",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 12,
                                           color: lightredColor,
-                                          fontWeight: FontWeight
-                                              .w600,
+                                          fontWeight: FontWeight.w600,
                                         )),
                                   ],
                                 ),
@@ -596,14 +603,11 @@ class _LeadScreenState extends State<LeadScreen> {
                                       'assets/icons/ic_call_calling.svg',
                                       semanticsLabel: 'Edit Icon SVG',
                                     ),
-
-                                    Text(
-                                        " +91 $mobile",
+                                    Text(" +91 $LeadCreateMobileNo",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 12,
                                           color: Colors.black,
-                                          fontWeight: FontWeight
-                                              .w600,
+                                          fontWeight: FontWeight.w600,
                                         )),
                                   ],
                                 ),
@@ -622,66 +626,57 @@ class _LeadScreenState extends State<LeadScreen> {
         }
       },
     );
-
   }
-
 
   Future<void> dateTime(BuildContext) async {
     DateTime now = DateTime.now();
     DateTime firstDay = new DateTime(
-      DateTime
-          .now()
-          .year,
-      DateTime
-          .now()
-          .month,
+      DateTime.now().year,
+      DateTime.now().month,
       1 + 1,
     ); //
 
     startDate =
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(firstDay.toUtc());
     print("Formatted Date: $startDate");
-    endDate =
-        DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
+    endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
     print("Formatted Date: $endDate");
-    String maxDateTimeFormate =
-    DateFormat("yyyy-MM-dd").format(now.toUtc());
+    String maxDateTimeFormate = DateFormat("yyyy-MM-dd").format(now.toUtc());
     print("Formatted Datesasa: $maxDateTimeFormate");
     maxDateTime = maxDateTimeFormate;
   }
 
-
   Future<void> showCustomMonthYearPicker(BuildContext context) async {
-    var isOk=true;
+    var isOk = true;
     // Current Date
     DateTime now = DateTime.now();
     // Define the onCancel callback
     void onCancel() {
       print("Picker was cancelled");
       setState(() {
-        isOk=false;      });
+        isOk = false;
+      });
     }
+
     void onOk() {
       print("Picker was ok");
       setState(() {
-        isOk=true;
+        isOk = true;
       });
     }
+
     // Show the month-year picker dialog
     final selectedDate = await CustomMonthYearPicker.showMonthYearPickerDialog(
-        context: context,
-        titleTextStyle: TextStyle(),
-        monthTextStyle: TextStyle(),
-        yearTextStyle: TextStyle(),
-        disableFuture: true,
-        backgroundColor: Colors.grey[200],
-        selectionColor: kPrimaryColor,
-        barrierDismissible:false,
-        onCancel: onCancel,
-        onOk: onOk,
-
-
-
+      context: context,
+      titleTextStyle: TextStyle(),
+      monthTextStyle: TextStyle(),
+      yearTextStyle: TextStyle(),
+      disableFuture: true,
+      backgroundColor: Colors.grey[200],
+      selectionColor: kPrimaryColor,
+      barrierDismissible: false,
+      onCancel: onCancel,
+      onOk: onOk,
     );
 
     if (selectedDate != null) {
@@ -703,22 +698,80 @@ class _LeadScreenState extends State<LeadScreen> {
               : DateTime(selectedYear + 1, 1, 0);
         }
 
-        if(isOk){
-          isAgentSelected=false;
+        if (isOk) {
+          isAgentSelected = false;
           print("deees$selectedDate");
           dsaDashboardLead.clear();
-          agentUserId="";
+          agentUserId = "";
           skip = 0;
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
-              startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
-              endOfMonth.toUtc());
+          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+              .format(startOfMonth.toUtc());
+          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+              .format(endOfMonth.toUtc());
           print('Start date: $startDate');
           print('End date: $endDate');
           print('dsaDashboardLead : ${dsaDashboardLead.length}');
-           getDSADashboardLead(context);
+          getDSADashboardLead(context);
         }
       }
     }
   }
- }
+
+  void openInAppBrowser(String token, BuildContext _context) {
+    browser.token=token;
+    browser.context=_context;
+    browser.openUrlRequest(
+      urlRequest: URLRequest(url: WebUri(_constructUrl())),
+      settings: settings,
+
+    );
+  }
+  Future<void> getUserData()async {
+    final prefsUtil = await SharedPref.getInstance();
+    companyID = prefsUtil.getString(COMPANY_CODE);
+    productCode = prefsUtil.getString(PRODUCT_CODE);
+    UserToken = prefsUtil.getString(TOKEN);
+
+  }
+
+  String _constructUrl() {
+    String baseUrl = "https://customer-qa.scaleupfin.com/#/lead";
+    String mobileNumber = LeadCreateMobileNo ?? "";
+    String companyId = companyID?.toString() ?? "";
+    String productId = productCode?.toString() ?? "";
+    return "$baseUrl/$mobileNumber/$companyId/$productId/true";
+  }
+}
+class MyInAppBrowser extends InAppBrowser {
+  var token;
+  var context;
+
+
+  MyInAppBrowser();
+  @override
+  Future onBrowserCreated() async {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  Future onLoadStart(url) async {
+    print("Started $url");
+    Loader();
+  }
+
+  @override
+  Future onLoadStop(url) async {
+    print("Stopped $token");
+    await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
+  }
+
+  @override
+  void onProgressChanged(progress) {
+    print("Progress: $progress");
+  }
+
+  @override
+  void onExit() {
+    print("Browser  closed!");
+  }
+}
