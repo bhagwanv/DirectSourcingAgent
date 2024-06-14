@@ -221,8 +221,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             Utils.showToast(exception.errorMessage, context);
                             productProvider.disposeAllProviderData();
                             ApiService().handle401(context);
-                          } else {
-                            Utils.showToast("Something went Wrong", context);
                           }
                         }
                       },
