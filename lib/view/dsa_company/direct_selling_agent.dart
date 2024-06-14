@@ -435,6 +435,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           setState(() {
             selectedCompanyCity = value;
             setCityListFirstTime = false;
+            _companyCityCl.text = value!.id.toString();
             companyCityId = null;
           });
         },
