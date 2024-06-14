@@ -83,7 +83,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                 labelText: "Mobile Number ",
                 inputFormatter: [
                   FilteringTextInputFormatter.allow(
-                      RegExp((r'[A-Z0-9]'))),
+                      RegExp((r'[0-9]'))),
                   LengthLimitingTextInputFormatter(10)
                 ],
                   keyboardType: TextInputType.number,

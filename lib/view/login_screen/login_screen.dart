@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         textInputAction: TextInputAction.done,
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
+                              RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(10)
                         ],
                         maxLines: 1,

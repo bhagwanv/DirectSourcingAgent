@@ -200,8 +200,6 @@ class ConnectorSignup extends State<Connector_signup> {
                         if (exception.statusCode == 401) {
                           productProvider.disposeAllProviderData();
                           ApiService().handle401(context);
-                        } else {
-                          Utils.showToast(exception.errorMessage, context);
                         }
                       }
                     },
@@ -289,6 +287,10 @@ class ConnectorSignup extends State<Connector_signup> {
                       controller: _ageController,
                       enabled: updateData,
                       keyboardType: TextInputType.number,
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[0-9]'))),
+                      ],
                       hintText: "Age",
                       labelText: "Age",
                     ),
@@ -305,7 +307,7 @@ class ConnectorSignup extends State<Connector_signup> {
                       enabled: updateData,
                       inputFormatter: [
                         FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Z0-9]'))),
+                            RegExp((r'[0-9]'))),
                         LengthLimitingTextInputFormatter(6)
                       ],
                       keyboardType: TextInputType.number,
@@ -332,7 +334,7 @@ class ConnectorSignup extends State<Connector_signup> {
                       enabled: updateData,
                       inputFormatter: [
                         FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Z0-9]'))),
+                            RegExp((r'[0-9]'))),
                         LengthLimitingTextInputFormatter(10)
                       ],
                       keyboardType: TextInputType.number,
@@ -422,7 +424,7 @@ class ConnectorSignup extends State<Connector_signup> {
                       enabled: updateData,
                       inputFormatter: [
                         FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Z0-9]'))),
+                            RegExp((r'[0-9]'))),
                         LengthLimitingTextInputFormatter(10)
                       ],
                       keyboardType: TextInputType.number,
@@ -535,8 +537,6 @@ class ConnectorSignup extends State<Connector_signup> {
                 Utils.showToast(exception.errorMessage,context);
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
-              }else{
-                Utils.showToast("Something went Wrong",context);
               }
             }
           },
