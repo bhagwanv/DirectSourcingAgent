@@ -77,6 +77,9 @@ dependencies:
   #month_year_picker: ^0.3.0+1
 
 
+dependency_overrides:
+  webview_flutter_android: 3.16.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
