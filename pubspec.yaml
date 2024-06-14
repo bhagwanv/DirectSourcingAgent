@@ -71,16 +71,13 @@ dependencies:
   flutter_downloader: ^1.7.1
   flutter_download_manager: any
   flutter_local_notifications: ^17.1.2
- # path_provider: ^2.0.12
+  # path_provider: ^2.0.12
 
   #month_year_picker: ^0.3.0+1
 
 dependency_overrides:
   webview_flutter_android: 3.16.1
 
-
-dependency_overrides:
-  webview_flutter_android: 3.16.1
 
 dev_dependencies:
   flutter_test:

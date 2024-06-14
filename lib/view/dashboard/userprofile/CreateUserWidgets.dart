@@ -15,6 +15,7 @@ class CreateUserWidgets extends StatefulWidget {
   int? user_payout;
 
   CreateUserWidgets({required this.user_payout});
+
   @override
   State<CreateUserWidgets> createState() => _CreateUserWidgetsState();
 }
@@ -100,26 +101,25 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                 height: 16.0,
               ),
               CommonTextField(
-                controller: _PayOutController,
-                hintText: "Payout %",
-                labelText: "Payout %",
+                  controller: _PayOutController,
+                  hintText: "Payout %",
+                  labelText: "Payout %",
                   keyboardType: TextInputType.number,
-                onChanged: (value){
-                  final intValue = int.tryParse(value);
-                  if (intValue != null && intValue > widget.user_payout!) {
-                    setState(() {
-                     Utils.showToast("Value cannot be greater than pay out amount", context);
-                    });
-                  } else {
-                    setState(() {
-                    });
-                  }
-                }
-              ),
+                  onChanged: (value) {
+                    final intValue = int.tryParse(value);
+                    if (intValue != null && intValue > widget.user_payout!) {
+                      setState(() {
+                        Utils.showToast(
+                            "Value cannot be greater than pay out amount",
+                            context);
+                      });
+                    } else {
+                      setState(() {});
+                    }
+                  }),
               SizedBox(
                 height: 10.0,
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
                 child: Column(
@@ -137,10 +137,22 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                               "Please Enter Mobile Number", context);
                         } else if (_PayOutController.text.toString().isEmpty) {
                           Utils.showToast("Please Enter Pay Out", context);
+                        } else if (int.parse(_PayOutController.text.toString()) > widget.user_payout!) {
+                          Utils.showToast(
+                              "Value cannot be greater than pay out amount",
+                              context);
                         } else {
                           Utils.onLoading(context, "");
-                          var model =CreateDSAUserReqModel(mobileNumber: _MobileNumberController.text.toString(),fullName:_UserNameController.text.toString() ,emailId:_EmailController.text.toString() ,payoutPercenatge:int.parse(_PayOutController.text.toString()));
-                          await Provider.of<DataProvider>(context, listen: false).createDSAUser(model);
+                          var model = CreateDSAUserReqModel(
+                              mobileNumber:
+                                  _MobileNumberController.text.toString(),
+                              fullName: _UserNameController.text.toString(),
+                              emailId: _EmailController.text.toString(),
+                              payoutPercenatge:
+                                  int.parse(_PayOutController.text.toString()));
+                          await Provider.of<DataProvider>(context,
+                                  listen: false)
+                              .createDSAUser(model);
                           Navigator.of(context, rootNavigator: true).pop();
 
                           if (productProvider.getCreatDSAUserData != null) {
@@ -161,13 +173,13 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                                     productProvider.disposeAllProviderData();
                                     ApiService().handle401(context);
                                   } else {
-                                    Utils.showToast(exception.errorMessage, context);
+                                    Utils.showToast(
+                                        exception.errorMessage, context);
                                   }
                                 }
                               },
                             );
                           }
-
                         }
                       },
                       text: "Add New User",
@@ -183,4 +195,3 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
     });
   }
 }
-
