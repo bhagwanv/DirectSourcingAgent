@@ -584,6 +584,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       CommonTextField(
                         controller: _pinCodeCl,
                         enabled: updateData,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)
+                        ],
                         keyboardType: TextInputType.number,
                         hintText: "PIN Code",
                         labelText: "PIN Code",
@@ -1263,16 +1268,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       const SizedBox(
                         height: 16.0,
                       ),
-                      CommonTextField(
-                        controller: _ageCl,
-                        enabled: updateData,
-                        keyboardType: TextInputType.number,
-                        hintText: "Age",
-                        labelText: "Age",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
                       Stack(
                         children: [
                           CommonTextField(
@@ -1320,6 +1315,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       CommonTextField(
                         controller: _pinCodeCl,
                         enabled: updateData,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)
+                        ],
                         keyboardType: TextInputType.number,
                         hintText: "PIN Code",
                         labelText: "PIN Code",
@@ -1803,6 +1803,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       CommonTextField(
                         controller: _companyPinCodeCodeCl,
                         enabled: updateData,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)
+                        ],
+                        keyboardType: TextInputType.number,
                         hintText: "PIN Code",
                         labelText: "PIN Code",
                       ),

@@ -68,12 +68,9 @@ dependencies:
   flutter_inappwebview: ^6.0.0
   simple_month_year_picker: ^1.0.5
   permission_handler: ^11.3.1
-  flutter_downloader: ^1.7.1
   flutter_download_manager: any
   flutter_local_notifications: ^17.1.2
-  # path_provider: ^2.0.12
-
-  #month_year_picker: ^0.3.0+1
+  path_provider: ^2.1.3
 
 dependency_overrides:
   webview_flutter_android: 3.16.1

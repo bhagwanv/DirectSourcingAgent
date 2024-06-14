@@ -113,7 +113,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                             child: Text(
                               "Agreement",
                               style: TextStyle(
-                                fontSize: 40.0,
+                                fontSize: 20.0,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w100,
                               ),
@@ -128,7 +128,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                               ? Container()
                               : SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height - 205,
+                                      MediaQuery.of(context).size.height - 250,
                                   width: MediaQuery.of(context).size.width,
                                   child: WebViewWidget(
                                       controller: WebViewController()
@@ -201,16 +201,18 @@ class _AgreementScreenState extends State<AgreementScreen> {
                         const SizedBox(
                           height: 16.0,
                         ),
-                        CommonElevatedButton(
-                          onPressed: () async {
-                            isSubmit = true;
-                            content = "";
-                            dataProvider.disposeDSAGenerateAgreementData();
-                            callApi(context, isSubmit);
-                            // content = "https://app.karza.in/test/esign/initial-consent/9b03ed73-6064-42f7-a74f-cbbbb57f3827";
-                          },
-                          text: 'Proceed to E-sign',
-                          upperCase: true,
+                        Container(
+                          child: CommonElevatedButton(
+                            onPressed: () async {
+                              isSubmit = true;
+                              content = "";
+                              dataProvider.disposeDSAGenerateAgreementData();
+                              callApi(context, isSubmit);
+                              // content = "https://app.karza.in/test/esign/initial-consent/9b03ed73-6064-42f7-a74f-cbbbb57f3827";
+                            },
+                            text: 'Proceed to E-sign',
+                            upperCase: true,
+                          ),
                         ),
                         const SizedBox(
                           height: 16.0,
@@ -231,7 +233,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
 
-    Utils.onLoading(context, "Loading...");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .checkESignDocumentStatus(leadId.toString());
     Navigator.of(context, rootNavigator: true).pop();
