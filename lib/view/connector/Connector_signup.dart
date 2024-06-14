@@ -3,7 +3,6 @@ import 'package:direct_sourcing_agent/api/ApiService.dart';
 import 'package:direct_sourcing_agent/api/FailureException.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
-import 'package:direct_sourcing_agent/utils/CustomGifLoader.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:direct_sourcing_agent/utils/customer_sequence_logic.dart';
@@ -304,6 +303,11 @@ class ConnectorSignup extends State<Connector_signup> {
                     CommonTextField(
                       controller: _pincodeController,
                       enabled: updateData,
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[A-Z0-9]'))),
+                        LengthLimitingTextInputFormatter(6)
+                      ],
                       keyboardType: TextInputType.number,
                       hintText: "Pin Code",
                       labelText: "Pin Code",
