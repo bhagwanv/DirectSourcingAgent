@@ -141,11 +141,13 @@ class _LeadScreenState extends State<LeadScreen> {
                           if (getDSADashboardLeadListData.response!.isNotEmpty) {
                             dsaDashboardLead.clear();
                             dsaDashboardLead.addAll(getDSADashboardLeadListData.response!);
+                            dsaDashboardLeadFinal.addAll(dsaDashboardLead);
                             print("sdfdskf2${dsaDashboardLead.length}");
                           } else {
                             loading = false;
                           }
                         }
+                        productProvider. disposeLeadScreenData();
                       },
                       failure: (exception) {
                         // Handle failure
@@ -273,9 +275,9 @@ class _LeadScreenState extends State<LeadScreen> {
                                 height: 20.0,
                               ),
                               Expanded(
-                                  child: dsaDashboardLead != null
+                                  child: dsaDashboardLeadFinal != null
                                       ? _myListView(
-                                      context, dsaDashboardLead,
+                                      context, dsaDashboardLeadFinal,
                                       productProvider)
                                       : Container())
                             ])),
@@ -318,9 +320,9 @@ class _LeadScreenState extends State<LeadScreen> {
       Navigator.of(context, rootNavigator: true).pop();
     }
 
-    /*setState(() {
+    setState(() {
       loading = true;
-    });*/
+    });
   }
 
   Future<void> getDSASalesAgentList(BuildContext context,
@@ -404,7 +406,6 @@ class _LeadScreenState extends State<LeadScreen> {
   Widget _myListView(BuildContext context,
       List<DsaDashboardLeadList> dsaDashboardLeadList,
       DataProvider productProvider) {
-    dsaDashboardLeadFinal.addAll(dsaDashboardLead);
     if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
@@ -497,9 +498,8 @@ class _LeadScreenState extends State<LeadScreen> {
                                         ),
                                       ) : ClipRRect(
                                         borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
-                                        child: SvgPicture.asset(
-                                          'assets/images/dummy_image.svg',
-                                          semanticsLabel: 'Edit Icon SVG',
+                                        child: Container (
+                                          color: light_gry,
                                           height: 70,
                                           width: 70,
                                         ),

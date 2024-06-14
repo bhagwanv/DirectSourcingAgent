@@ -68,6 +68,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
 
   final List<DsaSalesAgentList> dsaSalesAgentList = [];
   final List<LoanPayoutDetailList> loanPayoutDetailList = [];
+  final List<LoanPayoutDetailList> loanPayoutDetailfinalList = [];
   ScrollController _scrollController = ScrollController();
 
   String? selecteddsaSalesAgentValue;
@@ -130,8 +131,10 @@ class _PayOutScreenState extends State<PayOutScreen> {
 
                           if(getDSADashboardPayoutListData.response!.loanPayoutDetailList != null){
                             if(getDSADashboardPayoutListData.response!.loanPayoutDetailList!.isNotEmpty){
+                              loanPayoutDetailList.clear();
                               loanPayoutDetailList.addAll(getDSADashboardPayoutListData
                                   .response! as Iterable<LoanPayoutDetailList>);
+                              loanPayoutDetailfinalList.addAll(loanPayoutDetailList);
                             }else{
                               loading=false;
                             }
@@ -238,7 +241,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                   dateTime(context);
                                   getDSADashboardPayoutList(context);
                                   setState(() {
-                                    loanPayoutDetailList.clear();
+                                    loanPayoutDetailfinalList.clear();
                                     productProvider.disposePayOutScreenData();
                                     isAgentSelected=true;
                                   });
@@ -340,9 +343,9 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 height: 20.0,
                               ),
                               Expanded(
-                                  child: loanPayoutDetailList != null
+                                  child: loanPayoutDetailfinalList != null
                                       ? _myListView(
-                                      context, loanPayoutDetailList, productProvider)
+                                      context, loanPayoutDetailfinalList, productProvider)
                                       : Container())
                             ])),
                   );
@@ -556,9 +559,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                       ),
                                     ) : ClipRRect(
                                       borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
-                                      child: SvgPicture.asset(
-                                        'assets/images/user_profile_dummy.svg',
-                                        semanticsLabel: 'Edit Icon SVG',
+                                      child: Container (
+                                        color: light_gry,
                                         height: 70,
                                         width: 70,
                                       ),
@@ -792,15 +794,15 @@ class _PayOutScreenState extends State<PayOutScreen> {
         }
 
         if(isOk){
-          agentUserId="";
-          isAgentSelected=false;
-          print("deees$selectedDate");
-          loanPayoutDetailList.clear();
-          skip=0;
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
-          print('Start date: $startDate');
-          print('End date: $endDate');
+          setState(() {
+            agentUserId="";
+            isAgentSelected=false;
+            loanPayoutDetailfinalList.clear();
+            skip=0;
+            startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
+            endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());
+          });
+
           getDSADashboardPayoutList(context);
         }
       }
