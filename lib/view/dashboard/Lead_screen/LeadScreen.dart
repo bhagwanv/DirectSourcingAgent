@@ -307,9 +307,9 @@ class _LeadScreenState extends State<LeadScreen> {
       Navigator.of(context, rootNavigator: true).pop();
     }
 
-    /*setState(() {
+    setState(() {
       loading = true;
-    });*/
+    });
   }
 
   Future<void> getDSASalesAgentList(BuildContext context,
