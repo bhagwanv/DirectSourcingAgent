@@ -307,15 +307,10 @@ class ConnectorSignup extends State<Connector_signup> {
                       enabled: updateData,
                       inputFormatter: [
                         FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Z0-9]'))),
-                        LengthLimitingTextInputFormatter(6)
-                      ],
-                      keyboardType: TextInputType.number,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(
                             RegExp((r'[0-9]'))),
                         LengthLimitingTextInputFormatter(6)
                       ],
+                      keyboardType: TextInputType.number,
                       hintText: "Pin Code",
                       labelText: "Pin Code",
                     ),
