@@ -438,6 +438,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         text: 'Next',
                         upperCase: true,
                       ),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
                     ],
                   ),
                 ),
