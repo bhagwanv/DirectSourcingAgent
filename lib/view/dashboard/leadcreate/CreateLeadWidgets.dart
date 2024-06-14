@@ -32,7 +32,6 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
       webViewSettings: InAppWebViewSettings(
           javaScriptEnabled: true, isInspectable: kDebugMode));
 
-
   @override
   void initState() {
     // TODO: implement initState
