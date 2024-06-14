@@ -30,7 +30,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final settings = InAppBrowserClassSettings(
       browserSettings: InAppBrowserSettings(hideUrlBar: true),
       webViewSettings: InAppWebViewSettings(
-          javaScriptEnabled: true, isInspectable: kDebugMode));
+          javaScriptEnabled: true, isInspectable: kDebugMode,clearCache:true));
 
   @override
   void initState() {

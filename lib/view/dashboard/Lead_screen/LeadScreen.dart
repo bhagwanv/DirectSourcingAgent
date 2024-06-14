@@ -18,10 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_month_year_picker/custom.dialog.dart';
-import 'package:simple_month_year_picker/month.container.dart';
-import 'package:simple_month_year_picker/month.model.dart';
-import 'package:simple_month_year_picker/simple_month_year_picker.dart';
+
 
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
@@ -33,6 +30,7 @@ import '../home/DsaSalesAgentList.dart';
 import '../home/GetDSADashboardDetailsReqModel.dart';
 import 'model/DSADashboardLeadListReqModel.dart';
 import 'model/DsaDashboardLeadList.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LeadScreen extends StatefulWidget {
   const LeadScreen({super.key});
@@ -67,6 +65,7 @@ class _LeadScreenState extends State<LeadScreen> {
 
 
 
+
   var payoutOverviewTotalDisbursedAmount = "";
   var payoutOverviewPayoutAmount = "";
 
@@ -75,6 +74,7 @@ class _LeadScreenState extends State<LeadScreen> {
 
   final List<DsaSalesAgentList> dsaSalesAgentList = [];
   final List<DsaDashboardLeadList> dsaDashboardLead = [];
+  final List<DsaDashboardLeadList> dsaDashboardLeadFinal = [];
   ScrollController _scrollController = ScrollController();
 
   String? selecteddsaSalesAgentValue;
@@ -84,7 +84,7 @@ class _LeadScreenState extends State<LeadScreen> {
   final settings = InAppBrowserClassSettings(
       browserSettings: InAppBrowserSettings(hideUrlBar: true),
       webViewSettings: InAppWebViewSettings(
-          javaScriptEnabled: true, isInspectable: kDebugMode));
+          javaScriptEnabled: true, isInspectable: kDebugMode,clearCache:true));
   String? companyID;
   String? productCode;
   String? UserToken;
@@ -535,7 +535,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    openInAppBrowser(UserToken!,context);
+                                    openInAppBrowser(UserToken!,context, dsaDashboardLead.mobileNo.toString());
                                   },
                                   child: Card(
                                     color: kPrimaryColor,
@@ -591,14 +591,17 @@ class _LeadScreenState extends State<LeadScreen> {
                                       semanticsLabel: 'Edit Icon SVG',
                                     ),
 
-                                    Text(
-                                        " +91 $mobile",
+                                    GestureDetector(onTap: (){
+                                      _makePhoneCall("tel:${dsaDashboardLead.mobileNo}");
+                                    },child: Text(
+                                        " +91 $LeadCreateMobileNo",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 12,
                                           color: Colors.black,
                                           fontWeight: FontWeight
                                               .w600,
-                                        )),
+                                        )),)
+
                                   ],
                                 ),
                               ],
@@ -617,6 +620,14 @@ class _LeadScreenState extends State<LeadScreen> {
       },
     );
 
+  }
+
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
 
@@ -645,7 +656,7 @@ class _LeadScreenState extends State<LeadScreen> {
   }
 
 
-  Future<void> showCustomMonthYearPicker(BuildContext context) async {
+  Future<void> showCustomMonthYearPicker(BuildContext context, DataProvider productProvider) async {
     var isOk=true;
     // Current Date
     DateTime now = DateTime.now();
@@ -716,12 +727,14 @@ class _LeadScreenState extends State<LeadScreen> {
     }
   }
 
-  void openInAppBrowser(String token, BuildContext _context) {
+  void openInAppBrowser(String token, BuildContext _context, String mobile) {
     browser.token=token;
     browser.context=_context;
     browser.openUrlRequest(
-      urlRequest: URLRequest(url: WebUri(_constructUrl())),
+      urlRequest: URLRequest(url: WebUri(_constructUrl(mobile))),
       settings: settings,
+
+
 
     );
   }
@@ -733,9 +746,9 @@ class _LeadScreenState extends State<LeadScreen> {
 
   }
 
-  String _constructUrl() {
+  String _constructUrl(String mobile) {
     String baseUrl = "https://customer-qa.scaleupfin.com/#/lead";
-    String mobileNumber = LeadCreateMobileNo ?? "";
+    String mobileNumber = mobile ?? "";
     String companyId = companyID?.toString() ?? "";
     String productId = productCode?.toString() ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
@@ -749,7 +762,7 @@ class MyInAppBrowser extends InAppBrowser {
   MyInAppBrowser();
   @override
   Future onBrowserCreated() async {
-    Navigator.of(context, rootNavigator: true).pop();
+   // Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
