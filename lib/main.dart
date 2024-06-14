@@ -6,14 +6,22 @@ import 'package:direct_sourcing_agent/view/CongratulationScreen.dart';
 import 'package:direct_sourcing_agent/view/agreement_screen/Agreementscreen.dart';
 import 'package:direct_sourcing_agent/view/bank_details_screen/BankDetailsScreen.dart';
 import 'package:direct_sourcing_agent/view/dashboard/bottom_navigation.dart';
+import 'package:direct_sourcing_agent/view/dashboard/leadcreate/CreateLeadWebView.dart';
 import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Permission.camera.request();
+  await Permission.microphone.request();
+
   runApp( MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => DataProvider()),
@@ -35,7 +43,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-     // home:  ProfileReview(),
+    //  home: WebViewExample(mobileNumber: '1234567890', companyID: '8', productID: '', token: '',),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/ImagePicker.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,9 +45,18 @@ class _WebViewExampleState extends State<WebViewExample> {
   late String _cameraPhotoPath;
   final ImagePicker _picker = ImagePicker();
 
+  final browser = MyInAppBrowser();
+
+  final settings = InAppBrowserClassSettings(
+      browserSettings: InAppBrowserSettings(hideUrlBar: true),
+      webViewSettings: InAppWebViewSettings(
+          javaScriptEnabled: true, isInspectable: kDebugMode));
+
+
   @override
   void initState() {
     super.initState();
+    openInAppBrowser();
 
     /* late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -110,7 +120,7 @@ class _WebViewExampleState extends State<WebViewExample> {
 
     _controller = controller;*/
 
-    late final PlatformWebViewControllerCreationParams params;
+   /* late final PlatformWebViewControllerCreationParams params;
 
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
@@ -145,15 +155,15 @@ class _WebViewExampleState extends State<WebViewExample> {
             debugPrint('Page finished loading: $url');
             controller
                 .runJavaScript("_callJavaScriptFunction('${widget.token}')");
-            /* controller.runJavaScript(
+            *//* controller.runJavaScript(
               'openCameraOnly.postMessage("User Agent: " + navigator.userAgent);',
-            );*/
+            );*//*
 
-          /*  controller.runJavaScript('''
+          *//*  controller.runJavaScript('''
       document.addEventListener('click', (event) => {
      openCameraOnly.postMessage("false");
       });
-    ''');*/
+    ''');*//*
           },
           onNavigationRequest: (NavigationRequest request) {
             return NavigationDecision.navigate;
@@ -197,7 +207,14 @@ class _WebViewExampleState extends State<WebViewExample> {
     }
 // #enddocregion platform_features
 
-    _controller = controller;
+    _controller = controller;*/
+  }
+
+  void openInAppBrowser() {
+    browser.openUrlRequest(
+      urlRequest: URLRequest(url: WebUri(_constructUrl())),
+      settings: settings,
+    );
   }
 
 
@@ -210,7 +227,7 @@ class _WebViewExampleState extends State<WebViewExample> {
           title: const Text('Create Lead'),
           // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
         ),
-        body: WebViewWidget(controller: _controller),
+        body:Container(),
        /* floatingActionButton: FloatingActionButton(
           onPressed: () {
             _controller.runJavaScript(
@@ -219,7 +236,7 @@ class _WebViewExampleState extends State<WebViewExample> {
         )*/);
   }
 
-  bottomSheetMenu(BuildContext context) {
+  /*bottomSheetMenu(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
@@ -235,7 +252,7 @@ class _WebViewExampleState extends State<WebViewExample> {
         .postSingleFile(imageFile, true, "", "");
     // Navigator.pop(context);
     Navigator.of(context, rootNavigator: true).pop();
-  }
+  }*/
 
   String _constructUrl() {
     String baseUrl = "https://customer-qa.scaleupfin.com/#/lead";
@@ -251,30 +268,34 @@ class _WebViewExampleState extends State<WebViewExample> {
     productID = prefsUtil.getInt(PRODUCT_ID);
   }
 
-  Future<File> createImageFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    final file = File('$path/temp_photo.jpg');
-    return file;
+
+
+}
+
+class MyInAppBrowser extends InAppBrowser {
+  @override
+  Future onBrowserCreated() async {
+    print("Browser Created!");
   }
 
-  Future<void> _showFileChooser() async {
-    if (openCameraOnly) {
-      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-      if (photo != null) {
-        setState(() {
-          _cameraPhotoPath = photo.path;
-        });
-      }
-    } else {
-      // You can add more functionality here to handle other file types if needed
-      final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
-      if (file != null) {
-        setState(() {
-          _cameraPhotoPath = file.path;
-        });
-      }
-    }
+  @override
+  Future onLoadStart(url) async {
+    print("Started $url");
+  }
+
+  @override
+  Future onLoadStop(url) async {
+    print("Stopped $url");
+  }
+
+  @override
+  void onProgressChanged(progress) {
+    print("Progress: $progress");
+  }
+
+  @override
+  void onExit() {
+    print("Browser closed!");
   }
 }
 
