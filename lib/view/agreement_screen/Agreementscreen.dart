@@ -128,7 +128,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                               ? Container()
                               : SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height - 230,
+                                      MediaQuery.of(context).size.height - 205,
                                   width: MediaQuery.of(context).size.width,
                                   child: WebViewWidget(
                                       controller: WebViewController()
