@@ -13,7 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileClass extends StatefulWidget {
@@ -49,10 +52,14 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   String? user_selfie;
   int? user_payout;
   String? doc_sign_url;
+  var savedDir = "";
+
 
   @override
   void initState() {
     super.initState();
+    getApplicationSupportDirectory().then((value) => savedDir = value.path);
+
 
     getUserData(
         _MobileNoController,
@@ -98,37 +105,37 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                             ),
                           ),
                           Spacer(),
-                          (role == "Connector" && type == "Connector")
-                              ? Container()
-                              : Container(
-                                  height: 40,
-                                  width: 110,
-                                  child: CommonElevatedButton(
-                                    onPressed: () async {
+                          (type == "DSA")
+                              ? Container(
+                            height: 40,
+                            width: 110,
+                            child: CommonElevatedButton(
+                              onPressed: () async {
 
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.white,
-                                        builder: (context) {
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context).viewInsets.bottom,
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Container(
-                                                padding: EdgeInsets.all(16.0), // Adjust the padding as needed
-                                                child: CreateUserWidgets(user_payout: user_payout),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    text: "Create",
-                                    upperCase: true,
-                                  ),
-                                ),
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.white,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.all(16.0), // Adjust the padding as needed
+                                          child: CreateUserWidgets(user_payout: user_payout),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              text: "Create",
+                              upperCase: true,
+                            ),
+                          )
+                              : Container(),
                         ],
                       ),
                       SizedBox(
@@ -259,6 +266,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                             ),
                           ),
                           onPressed: () {
+                            downloadFile();
                             /*if(doc_sign_url!=null) {
                               _startDownload(doc_sign_url!);
                             }else{
@@ -401,5 +409,34 @@ class _UserProfileScreenState extends State<UserProfileClass> {
       workingLocationController.text = user_workingLocation!;
     }
     setState(() {});
+  }
+
+  Future<void> downloadFile() async {
+    var url = "https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/56ba89b1-a12b-4452-a8de-d45779c1afb8.pdf";
+    var dl = DownloadManager();
+    bool dirDownloadExists = true;
+    var directory;
+    if (Platform.isIOS) {
+      directory = await getDownloadsDirectory();
+    } else {
+      directory = "/storage/emulated/0/Download/";
+
+      dirDownloadExists = await Directory(directory).exists();
+      if(dirDownloadExists){
+        directory = "/storage/emulated/0/Download/";
+      }else{
+        directory = "/storage/emulated/0/Downloads/";
+      }
+    }
+
+    var currentDate = "Scaleup_dsa"+convertCurrentDateTimeToString();
+    final path = '$directory$currentDate.pdf';
+    dl.addDownload(url, path);
+    Utils.showBottomToast("$path");
+    await dl.whenDownloadComplete(url);
+  //  _showProgressNotification();
+  }
+  String convertCurrentDateTimeToString() {
+    return DateFormat('yyyyMMdd_kkmmss').format(DateTime.now());
   }
 }
