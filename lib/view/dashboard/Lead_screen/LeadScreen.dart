@@ -73,6 +73,7 @@ class _LeadScreenState extends State<LeadScreen> {
 
   final List<DsaSalesAgentList> dsaSalesAgentList = [];
   final List<DsaDashboardLeadList> dsaDashboardLead = [];
+  final List<DsaDashboardLeadList> dsaDashboardLeadFinal = [];
   ScrollController _scrollController = ScrollController();
 
   String? selecteddsaSalesAgentValue;
@@ -89,6 +90,7 @@ class _LeadScreenState extends State<LeadScreen> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         // Load more data if not already loading
+        print("Mukesh 11111 $loading");
         if (loading) {
           skip += 10;
           getDSADashboardLead(context);
@@ -122,11 +124,12 @@ class _LeadScreenState extends State<LeadScreen> {
                       success: (data) {
                         // Handle successful response
                         var getDSADashboardLeadListData = data;
-
+                        print("sdfdskf1${dsaDashboardLead.length}");
                         if (getDSADashboardLeadListData.response != null) {
                           if (getDSADashboardLeadListData.response!.isNotEmpty) {
-                            dsaDashboardLead.addAll(getDSADashboardLeadListData
-                                .response! as Iterable<DsaDashboardLeadList>);
+                            dsaDashboardLead.clear();
+                            dsaDashboardLead.addAll(getDSADashboardLeadListData.response!);
+                            print("sdfdskf2${dsaDashboardLead.length}");
                           } else {
                             loading = false;
                           }
@@ -175,33 +178,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                         ),
                                         GestureDetector(
                                           onTap: () async {
-                                            print("date ");
-                                            showCustomMonthYearPicker(context);
-                                            //print('Selected date: $selectedDate');
-
-                                          /*  DateTime currentDate = DateTime.now();
-                                            showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (BuildContext context) {
-                                                return BackdropFilter(
-                                                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                                                  child: WillPopScope(
-                                                    onWillPop: () async {
-                                                      return true;
-                                                    },
-                                                    child: Dialog(
-                                                      backgroundColor: Colors.white,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(15),
-                                                      ),
-                                                      child: MonthPicker(initialYear: currentDate.year, startYear: 2000, endYear: currentDate.year, month: currentDate.month),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            );*/
-
+                                            showCustomMonthYearPicker(context,productProvider);
                                           },
 
                                           child: Container(
@@ -256,7 +233,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                 onChanged: (DsaSalesAgentList? value) {
                                   selecteddsaSalesAgentValue = value!.fullName;
                                   setState(() {
-                                    dsaDashboardLead.clear();
+                                    dsaDashboardLeadFinal.clear();
                                     productProvider.disposeLeadScreenData();
                                     isAgentSelected=true;
                                   });
@@ -299,7 +276,6 @@ class _LeadScreenState extends State<LeadScreen> {
   Future<void> getDSADashboardLead(BuildContext) async {
     final prefsUtil = await SharedPref.getInstance();
     type = prefsUtil.getString(TYPE)!;
-    print("type$type");
     if(isAgentSelected){
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue) {
@@ -329,9 +305,9 @@ class _LeadScreenState extends State<LeadScreen> {
       Navigator.of(context, rootNavigator: true).pop();
     }
 
-    setState(() {
+    /*setState(() {
       loading = true;
-    });
+    });*/
   }
 
   Future<void> getDSASalesAgentList(BuildContext context,
@@ -415,6 +391,7 @@ class _LeadScreenState extends State<LeadScreen> {
   Widget _myListView(BuildContext context,
       List<DsaDashboardLeadList> dsaDashboardLeadList,
       DataProvider productProvider) {
+    dsaDashboardLeadFinal.addAll(dsaDashboardLead);
     if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
@@ -424,7 +401,7 @@ class _LeadScreenState extends State<LeadScreen> {
 
     return ListView.builder(
       controller: _scrollController,
-      itemCount: dsaDashboardLead!.length,
+      itemCount: dsaDashboardLeadFinal!.length,
       itemBuilder: (context, index) {
         if (index < dsaDashboardLeadList.length) {
           DsaDashboardLeadList dsaDashboardLead = dsaDashboardLeadList![index];
@@ -651,7 +628,7 @@ class _LeadScreenState extends State<LeadScreen> {
   }
 
 
-  Future<void> showCustomMonthYearPicker(BuildContext context) async {
+  Future<void> showCustomMonthYearPicker(BuildContext context, DataProvider productProvider) async {
     var isOk=true;
     // Current Date
     DateTime now = DateTime.now();
@@ -704,18 +681,18 @@ class _LeadScreenState extends State<LeadScreen> {
         }
 
         if(isOk){
-          isAgentSelected=false;
-          print("deees$selectedDate");
-          dsaDashboardLead.clear();
-          agentUserId="";
-          skip = 0;
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
-              startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
-              endOfMonth.toUtc());
-          print('Start date: $startDate');
-          print('End date: $endDate');
-          print('dsaDashboardLead : ${dsaDashboardLead.length}');
+          setState(() {
+            isAgentSelected=false;
+            productProvider.disposeLeadScreenData();
+            dsaDashboardLeadFinal.clear();
+            agentUserId="";
+            skip = 0;
+            startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
+                startOfMonth.toUtc());
+            endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
+                endOfMonth.toUtc());
+          });
+
            getDSADashboardLead(context);
         }
       }

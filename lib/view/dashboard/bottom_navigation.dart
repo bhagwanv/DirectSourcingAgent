@@ -89,10 +89,10 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 0;
+                        productProvider.disposehomeScreenData();
+                        productProvider.disposePayOutScreenData();
+                        productProvider.disposeUserProfileScreenData();
                         productProvider. disposeLeadScreenData();
-                        productProvider. disposePayOutScreenData();
-                        productProvider. disposeUserProfileScreenData();
-
                       });
                     },
                     child: Container(
@@ -127,8 +127,7 @@ class _BottomNavState extends State<BottomNav> {
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();
                         productProvider.disposeUserProfileScreenData();
-
-
+                        productProvider. disposeLeadScreenData();
                       });
                     },
                     child: Container(
@@ -162,8 +161,9 @@ class _BottomNavState extends State<BottomNav> {
                        setState(() {
                         selectedIndex = 2;
                         productProvider.disposehomeScreenData();
+                        productProvider.disposePayOutScreenData();
+                        productProvider.disposeUserProfileScreenData();
                         productProvider. disposeLeadScreenData();
-                        productProvider. disposeUserProfileScreenData();
                       });
                       //Utils.showBottomToast("Service Not Available");
                     },
@@ -196,9 +196,10 @@ class _BottomNavState extends State<BottomNav> {
                     onTap: () {
                       setState(() {
                         selectedIndex = 3;
-                        productProvider. disposeLeadScreenData();
-                        productProvider. disposePayOutScreenData();
                         productProvider.disposehomeScreenData();
+                        productProvider.disposePayOutScreenData();
+                        productProvider.disposeUserProfileScreenData();
+                        productProvider. disposeLeadScreenData();
 
                       });
                     },

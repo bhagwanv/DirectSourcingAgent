@@ -90,7 +90,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
               CommonTextField(
                 controller: _MobileNumberController,
                 inputFormatter: [
-                  FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
+                  FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                   LengthLimitingTextInputFormatter(10)
                 ],
                 keyboardType: TextInputType.number,
