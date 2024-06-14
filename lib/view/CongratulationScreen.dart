@@ -218,9 +218,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                 }
-
               }
-
 
               prefsUtil.saveBool(IS_LOGGED_IN, true);
               if (data.isActivated!) {
@@ -228,7 +226,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                   MaterialPageRoute(builder: (context) =>  BottomNav()),
                 );
               } else {
-               // fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
+                GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
               }
             },
             failure: (exception) {
@@ -237,8 +235,6 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                   Utils.showToast(exception.errorMessage,context);
                   productProvider.disposeAllProviderData();
                   ApiService().handle401(context);
-                }else{
-                  Utils.showToast("Something went Wrong",context);
                 }
               }
             },
@@ -274,7 +270,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
           } else {
             final prefsUtil = await SharedPref.getInstance();
             await prefsUtil.saveInt(LEADE_ID, data.leadId!);
-            GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+            fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
           }
         },
         failure: (exception) {
@@ -310,11 +306,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
-      Navigator.of(context, rootNavigator: true).pop();
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData,
           "pushReplacement");
     } catch (error) {
-      Navigator.of(context, rootNavigator: true).pop();
       if (kDebugMode) {
         print('Error occurred during API call: $error');
       }

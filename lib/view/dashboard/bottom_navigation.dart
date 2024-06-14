@@ -95,24 +95,27 @@ class _BottomNavState extends State<BottomNav> {
 
                       });
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/ic_home_icon.svg',
-                            semanticsLabel: 'ic_home_icon',
-                            color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                          ),
-                          const SizedBox(height: 3), // Add space between icon and text
-                          Text(
-                            'Home',
-                            style: TextStyle(
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/ic_home_icon.svg',
+                              semanticsLabel: 'ic_home_icon',
                               color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                              fontSize: 10,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3), // Add space between icon and text
+                            Text(
+                              'Home',
+                              style: TextStyle(
+                                color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -128,24 +131,27 @@ class _BottomNavState extends State<BottomNav> {
 
                       });
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/ic_personal_card.svg',
-                            semanticsLabel: 'ic_personal_card',
-                            color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                          ),
-                          const SizedBox(height: 3), // Add space between icon and text
-                          Text(
-                            'Lead',
-                            style: TextStyle(
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/ic_personal_card.svg',
+                              semanticsLabel: 'ic_personal_card',
                               color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                              fontSize: 10,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3), // Add space between icon and text
+                              Text(
+                              'Lead',
+                              style: TextStyle(
+                                color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -161,24 +167,27 @@ class _BottomNavState extends State<BottomNav> {
                       });
                       //Utils.showBottomToast("Service Not Available");
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/ic_task_square.svg',
-                            semanticsLabel: 'ic_task_square',
-                            color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                          ),
-                          const SizedBox(height: 3), // Add space between icon and text
-                          Text(
-                            'Payout',
-                            style: TextStyle(
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/ic_task_square.svg',
+                              semanticsLabel: 'ic_task_square',
                               color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                              fontSize: 10,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3), // Add space between icon and text
+                            Text(
+                              'Payout',
+                              style: TextStyle(
+                                color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -193,24 +202,27 @@ class _BottomNavState extends State<BottomNav> {
 
                       });
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/ic_user_square.svg',
-                            semanticsLabel: 'ic_user_squaree',
-                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                          ),
-                          const SizedBox(height: 3), // Add space between icon and text
-                          Text(
-                            'Profile',
-                            style: TextStyle(
-                              color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
-                              fontSize: 10,
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/ic_user_square.svg',
+                              semanticsLabel: 'ic_user_squaree',
+                              color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 3), // Add space between icon and text
+                            Text(
+                              'Profile',
+                              style: TextStyle(
+                                color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
