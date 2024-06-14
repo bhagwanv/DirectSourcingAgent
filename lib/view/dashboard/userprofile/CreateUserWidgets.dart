@@ -161,9 +161,10 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                                 // Handle successful response
                                 var model = CreateUserModel;
                                 if (model.status!) {
-                                  Utils.showToast(model.message!, context);
+                                  //Utils.showToast(model.message!, context);
                                   Navigator.pop(context);
                                 } else {
+                                  Navigator.pop(context);
                                   Utils.showToast(model.message!, context);
                                 }
                               },
