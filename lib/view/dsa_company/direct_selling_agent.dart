@@ -367,6 +367,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             selectedStateValue = value.id!.toString();
             selectedCompanyCity = null;
             selectedCompanyState = value;
+            _companyStateCl.text = value!.id.toString();
             companyCityId = null;
             companyStateId = null;
           });
@@ -1038,6 +1039,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         height: 16.0,
                       ),
                       CommonTextField(
+                          keyboardType: TextInputType.number,
                         controller: _companyPinCodeCodeCl,
                         enabled: updateData,
                         hintText: "PIN Code",
@@ -1479,6 +1481,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                               RegExp((r'[A-Z0-9]'))),
                           LengthLimitingTextInputFormatter(10)
                         ],
+                        keyboardType: TextInputType.number,
                         hintText: "Contact No. ",
                         labelText: "Contact No.",
                       ),
