@@ -61,6 +61,7 @@ class _LeadScreenState extends State<LeadScreen> {
   String maxDateTime = '';
   bool loading = false;
   bool isAgentSelected = false;
+  bool providerNull = false;
   var type = "";
 
 
@@ -77,7 +78,7 @@ class _LeadScreenState extends State<LeadScreen> {
   final List<DsaDashboardLeadList> dsaDashboardLeadFinal = [];
   ScrollController _scrollController = ScrollController();
 
-  String? selecteddsaSalesAgentValue;
+  DsaSalesAgentList? selecteddsaSalesAgentValue = null;
 
   final browser = MyInAppBrowser();
 
@@ -90,9 +91,16 @@ class _LeadScreenState extends State<LeadScreen> {
   String? UserToken;
   String? LeadCreateMobileNo;
 
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+  GlobalKey<RefreshIndicatorState>();
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState?.show());
+
     getUserData();
     //Api Call
     dateTime(context);
@@ -136,20 +144,18 @@ class _LeadScreenState extends State<LeadScreen> {
                       success: (data) {
                         // Handle successful response
                         var getDSADashboardLeadListData = data;
-                        print("sdfdskf1${dsaDashboardLead.length}");
                         if (getDSADashboardLeadListData.response != null) {
                           if (getDSADashboardLeadListData.response!.isNotEmpty) {
                             dsaDashboardLead.clear();
                             dsaDashboardLead.addAll(getDSADashboardLeadListData.response!);
                             dsaDashboardLeadFinal.addAll(dsaDashboardLead);
-                            print("sdfdskf2${dsaDashboardLead.length}");
                           } else {
                             loading = false;
                           }
                         }else{
                           loading = false;
                         }
-                       // productProvider.disposeLeadScreenData();
+
                       },
                       failure: (exception) {
                         // Handle failure
@@ -165,124 +171,144 @@ class _LeadScreenState extends State<LeadScreen> {
                   }
                   return Padding(
                     padding: const EdgeInsets.all(10),
-                    child: Container(
+                    child:RefreshIndicator(
+                        key: _refreshIndicatorKey,
+                        onRefresh: () async {
+                          isLoading = true;
+                          dsaDashboardLeadFinal.clear();
+                          loading=false;
+                          skip = 0;
+                          agentUserId="";
+                          productProvider.disposeLeadScreenData();
+
+                          await getDSADashboardLead(context);
+                        },
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 10),
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, top: 15),
-                                  child: Center(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Lead",
-                                              style: GoogleFonts.urbanist(
-                                                fontSize: 20,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 15),
+                              child: Center(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Lead",
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            showCustomMonthYearPicker(context,productProvider);
-                                          },
-
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/ic_document_filter.svg',
-                                              semanticsLabel: 'Edit Icon SVG',
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 15.0,
-                              ),
-                              type!=null && type=="DSA"?
-                              DropdownButtonFormField2<DsaSalesAgentList>(
-                                isExpanded: true,
-                                decoration: InputDecoration(
-                                  fillColor: light_gry,
-                                  filled: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 5),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: light_dark_gry, width: 0)),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: light_dark_gry, width: 0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: light_dark_gry, width: 0),
-                                  ),
-                                ),
-                                hint: Text(
-                                  'All Agents ',
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 15,
-                                    color: light_black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                items: _addDividersAfterItems(
-                                    dsaSalesAgentList),
-                                onChanged: (DsaSalesAgentList? value) {
-                                  selecteddsaSalesAgentValue = value!.fullName;
-                                  setState(() {
-                                    dsaDashboardLeadFinal.clear();
-                                    productProvider.disposeLeadScreenData();
-                                    isAgentSelected=true;
-                                  });
-                                  dateTime(context);
-                                  getDSADashboardLead(context);
+                                    GestureDetector(
+                                      onTap: () async {
+                                        showCustomMonthYearPicker(context,productProvider);
+                                      },
 
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
+                                      child: Container(
+                                        alignment: Alignment.centerRight,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/ic_document_filter.svg',
+                                          semanticsLabel: 'Edit Icon SVG',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights:
-                                  _getCustomItemsHeights3(dsaSalesAgentList),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
-                                ),
-                              ):Container(),
-                              const SizedBox(
-                                height: 20.0,
                               ),
-                              Expanded(
-                                  child: dsaDashboardLeadFinal != null
-                                      ? _myListView(
-                                      context, dsaDashboardLeadFinal,
-                                      productProvider)
-                                      : Container())
-                            ])),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          type!=null && type=="DSA"?
+                          DropdownButtonFormField2<DsaSalesAgentList>(
+                            isExpanded: true,
+                            value: selecteddsaSalesAgentValue,
+                            decoration: InputDecoration(
+                              fillColor: light_gry,
+                              filled: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 5),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                      color: light_dark_gry, width: 0)),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                    color: light_dark_gry, width: 0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                    color: light_dark_gry, width: 0),
+                              ),
+                            ),
+                            hint: Text(
+                              'All Agents ',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: light_black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            items: _addDividersAfterItems(
+                                dsaSalesAgentList),
+                            onChanged: (DsaSalesAgentList? value) {
+                              selecteddsaSalesAgentValue = value;
+                              setState(() {
+                                dsaDashboardLeadFinal.clear();
+                                productProvider.disposeLeadScreenData();
+                                isAgentSelected=true;
+                              });
+                              dateTime(context);
+                              getDSADashboardLead(context);
+
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.only(right: 8),
+                            ),
+                            dropdownStyleData: const DropdownStyleData(
+                              maxHeight: 200,
+                            ),
+                            menuItemStyleData: MenuItemStyleData(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0),
+                              customHeights:
+                              _getCustomItemsHeights3(dsaSalesAgentList),
+                            ),
+                            iconStyleData: const IconStyleData(
+                              openMenuIcon: Icon(Icons.arrow_drop_up),
+                            ),
+                          ):Container(),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          Expanded(
+                              child: dsaDashboardLeadFinal != null && dsaDashboardLeadFinal.isNotEmpty
+                                  ? _myListView(
+                                  context, dsaDashboardLeadFinal,
+                                  productProvider)
+                                  : ListView(
+                                children: [
+                                  Container(
+                                    height: 400,
+                                    alignment: Alignment.center,
+                                    child: Text('No data available'),
+                                  ),
+                                ],
+                              ),)
+                        ])),
                   );
                 }
               }),
@@ -293,15 +319,17 @@ class _LeadScreenState extends State<LeadScreen> {
     final prefsUtil = await SharedPref.getInstance();
     type = prefsUtil.getString(TYPE)!;
     print("type$type");
-    if(isAgentSelected){
-      dsaSalesAgentList.forEach((agent) {
-        if (agent.fullName == selecteddsaSalesAgentValue) {
-          setState(() {
-            skip = 0;
-            agentUserId = agent.userId!;
-          });
-        }
-      });
+    if (selecteddsaSalesAgentValue != null) {
+      if(isAgentSelected){
+        dsaSalesAgentList.forEach((agent) {
+          if (agent.fullName == selecteddsaSalesAgentValue!.fullName.toString()) {
+            setState(() {
+              skip = 0;
+              agentUserId = agent.userId!;
+            });
+          }
+        });
+      }
     }
 
 
@@ -323,8 +351,9 @@ class _LeadScreenState extends State<LeadScreen> {
     }
 
     setState(() {
-      loading = true;
+      loading=true;
     });
+
   }
 
   Future<void> getDSASalesAgentList(BuildContext context,
@@ -407,12 +436,6 @@ class _LeadScreenState extends State<LeadScreen> {
   Widget _myListView(BuildContext context,
       List<DsaDashboardLeadList> dsaDashboardLeadList,
       DataProvider productProvider) {
-    if (dsaDashboardLeadList == null || dsaDashboardLeadList!.isEmpty) {
-      // Return a widget indicating that the list is empty or null
-      return Center(
-        child: Text('Data Not available'),
-      );
-    }
 
     return ListView.builder(
       controller: _scrollController,
