@@ -73,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var startDate = "";
   var endDate = "";
   String? userType;
+  bool isAgentSelected = false;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -314,9 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           value!.fullName;
                                       await dateTime(context);
                                       await getDSADashboardDetails(context);
-                                      /*  setState(() {
-
-                              });*/
+                                      setState(() {
+                                        isAgentSelected = true;
+                                      });
                                     },
                                     buttonStyleData: const ButtonStyleData(
                                       padding: EdgeInsets.only(right: 8),
@@ -768,10 +769,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ],
-                                  ),
+                                  )),
                                 ),
                               ),
-                            ),
                             const SizedBox(
                               height: 32,
                             )
@@ -788,15 +788,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getDSADashboardDetails(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     userType = prefsUtil.getString(TYPE);
-    dsaSalesAgentList.forEach((agent) {
-      if (agent.fullName == selecteddsaSalesAgentValue) {
-        setState(() {
-          agentUserId = agent.userId!;
-          print("userId${agent.userId!}");
-          print("fullName${agent.fullName!}");
-        });
-      }
-    });
+    if (selecteddsaSalesAgentValue != null) {
+    if (isAgentSelected) {
+      dsaSalesAgentList.forEach((agent) {
+        if (agent.fullName == selecteddsaSalesAgentValue) {
+          setState(() {
+            agentUserId = agent.userId!;
+          });
+        }
+      });
+    }
+    }
 
     var model = GetDsaDashboardDetailsReqModel(
         agentUserId: agentUserId, startDate: startDate, endDate: endDate);
@@ -975,13 +977,15 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         if (isOk) {
-          agentUserId = "";
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
-              .format(startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
-              .format(endOfMonth.toUtc());
-          print('Start date: $startDate');
-          print('End date: $endDate');
+          setState(() {
+            isAgentSelected =false;
+            agentUserId = "";
+            startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+                .format(startOfMonth.toUtc());
+            endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+                .format(endOfMonth.toUtc());
+          });
+
           getDSADashboardDetails(context);
         }
       }

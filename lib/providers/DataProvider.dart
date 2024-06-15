@@ -840,5 +840,4 @@ class DataProvider extends ChangeNotifier {
     _getDSAPersonalInfoData=null;
     notifyListeners();
   }
-
 }
