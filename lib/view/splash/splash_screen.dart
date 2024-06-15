@@ -1,4 +1,5 @@
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +27,16 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isLoggedIn = false;
+
+
+  @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    _checkLoginStatus();
+    getFirebaseUrl();
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,8 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(),
-            Image.asset('assets/images/scaleup_logo.png'), // Replace with your logo image path
+            Image.asset('assets/images/scaleup_logo.png'),
+            // Replace with your logo image path
             const SizedBox(height: 20),
             const Text(
               'Scaleup',
@@ -54,7 +62,8 @@ class _SplashScreenState extends State<SplashScreen> {
             const CustomCircularLoader(),
             const Spacer(),
             const SizedBox(height: 40),
-            Image.asset('assets/images/made_in_india.png'), // Replace with your "Made in India" image path
+            Image.asset('assets/images/made_in_india.png'),
+            // Replace with your "Made in India" image path
             const SizedBox(height: 20),
             const Icon(Icons.check_circle, color: Colors.green),
             const Text(
@@ -99,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _checkLoginStatus() async {
     final prefs = await SharedPref.getInstance();
     setState(() {
-      _isLoggedIn = prefs.getBool(IS_LOGGED_IN)?? false;
+      _isLoggedIn = prefs.getBool(IS_LOGGED_IN) ?? false;
     });
     Future.delayed(Duration(seconds: 2), () {
       if (_isLoggedIn) {
@@ -115,13 +124,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> getLoggedInUserData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    if(prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null && prefsUtil.getString(USER_ID) != null) {
+    if (prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null &&
+        prefsUtil.getString(USER_ID) != null) {
       var userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
-      var  userId = prefsUtil.getString(USER_ID);
+      var userId = prefsUtil.getString(USER_ID);
       try {
-        await Provider.of<DataProvider>(context, listen: false).getUserData(userId!, userLoginMobile!);
-        final productProvider = Provider.of<DataProvider>(context, listen: false);
-        if(productProvider.getUserProfileResponse != null) {
+        await Provider.of<DataProvider>(context, listen: false).getUserData(
+            userId!, userLoginMobile!);
+        final productProvider = Provider.of<DataProvider>(
+            context, listen: false);
+        if (productProvider.getUserProfileResponse != null) {
           productProvider.getUserProfileResponse!.when(
             success: (data) async {
               final prefsUtil = await SharedPref.getInstance();
@@ -130,24 +142,30 @@ class _SplashScreenState extends State<SplashScreen> {
               prefsUtil.saveInt(COMPANY_ID, data.companyId!);
               prefsUtil.saveInt(PRODUCT_ID, data.productId!);
               prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-              if( data.companyCode!=null) {
+              if (data.companyCode != null) {
                 prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
               }
-              if( data.role!=null) {
+              if (data.role != null) {
                 prefsUtil.saveString(ROLE, data.role!);
-              } if( data.type!=null) {
+              }
+              if (data.type != null) {
                 prefsUtil.saveString(TYPE, data.type!);
               }
 
-              if(data.userData!=null){
+              if (data.userData != null) {
                 prefsUtil.saveString(USER_NAME, data.userData!.name!);
-                prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
-                prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-                if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                prefsUtil.saveString(
+                    USER_PAN_NUMBER, data.userData!.panNumber!);
+                prefsUtil.saveString(
+                    USER_ADHAR_NO, data.userData!.aadharNumber!);
+                if (data.userData!.mobile != null) prefsUtil.saveString(
+                    USER_MOBILE_NO, data.userData!.mobile!);
                 if (data.userData?.address != null) {
                   prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
                 }
-                if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                if (data.userData!.workingLocation != null) prefsUtil
+                    .saveString(
+                    USER_WORKING_LOCTION, data.userData!.workingLocation!);
                 if (data.userData?.selfie != null) {
                   prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                 }
@@ -158,31 +176,31 @@ class _SplashScreenState extends State<SplashScreen> {
                   );
                 }
                 prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
-                if( data.userData!.docSignedUrl!=null) {
+                if (data.userData!.docSignedUrl != null) {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                 }
-
               }
 
 
               prefsUtil.saveBool(IS_LOGGED_IN, true);
               if (data.isActivated!) {
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) =>  BottomNav()),
+                  MaterialPageRoute(builder: (context) => BottomNav()),
                 );
               } else {
-                GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+                GetLeadByMobileNo(
+                    context, productProvider, userLoginMobile, userId);
               }
             },
             failure: (exception) {
               if (exception is ApiException) {
-                if(exception.statusCode==401){
-                  Utils.showToast(exception.errorMessage,context);
+                if (exception.statusCode == 401) {
+                  Utils.showToast(exception.errorMessage, context);
                   productProvider.disposeAllProviderData();
                   ApiService().handle401(context);
-                }else{
-                  Utils.showToast("Something went Wrong",context);
+                } else {
+                  Utils.showToast("Something went Wrong", context);
                 }
               }
             },
@@ -199,12 +217,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  Future<void> GetLeadByMobileNo(
-      BuildContext context,
+  Future<void> GetLeadByMobileNo(BuildContext context,
       DataProvider productProvider,
       String userLoginMobile,
       String userId) async {
-
     productProvider.disposeAllProviderData();
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
@@ -226,7 +242,6 @@ class _SplashScreenState extends State<SplashScreen> {
         },
       );
     }
-
   }
 
   Future<void> fetchData(BuildContext context, String userLoginMobile) async {
@@ -246,7 +261,8 @@ class _SplashScreenState extends State<SplashScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context)
+      await ApiService().leadCurrentActivityAsync(
+          leadCurrentRequestModel, context)
       as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -263,7 +279,25 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
   }
+
+  Future<String> getFirebaseUrl() async {
+    final prefsUtil = await SharedPref.getInstance();
+    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 1),
+      minimumFetchInterval: const Duration(seconds: 5),
+
+    ));
+
+    await remoteConfig.fetchAndActivate();
+    String Url =remoteConfig.getString('Base_url');
+    await prefsUtil.saveString(BASE_URL, Url);
+    _checkLoginStatus();
+    return 'Fetched: ${remoteConfig.getString('Base_url')}';
+
+  }
 }
+
 class CustomCircularLoader extends StatelessWidget {
   const CustomCircularLoader({super.key});
 

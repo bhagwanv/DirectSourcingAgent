@@ -10,6 +10,7 @@ import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeResponceModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/DSAPersonalInfoModel.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -241,7 +242,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.getUserData}?UserId=$userId&Mobile=$mobile'),
+          Uri.parse('${base_url! + apiUrls.getUserData}?UserId=$userId&Mobile=$mobile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'

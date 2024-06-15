@@ -106,7 +106,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                           ),
                           Spacer(),
                           (type == "DSA")
-                              ? Container(
+                              ?  Container(
                             height: 40,
                             width: 110,
                             child: CommonElevatedButton(
@@ -156,7 +156,15 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                                         fit: BoxFit.fill),
                                   ),
                                 )
-                              : Container(),
+                              : Container(
+                            width: 90,
+                            height: 90,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(10),
+                              color: light_gry,
+                            ),
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -266,12 +274,11 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                             ),
                           ),
                           onPressed: () {
-                            downloadFile();
-                            /*if(doc_sign_url!=null) {
-                              _startDownload(doc_sign_url!);
+                            if(doc_sign_url!=null) {
+                              downloadFile(doc_sign_url!);
                             }else{
                               Utils.showToast("Document Not Availble", context);
-                            }*/
+                            }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -411,8 +418,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     setState(() {});
   }
 
-  Future<void> downloadFile() async {
-    var url = "https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/56ba89b1-a12b-4452-a8de-d45779c1afb8.pdf";
+  Future<void> downloadFile(String docUrl) async {
     var dl = DownloadManager();
     bool dirDownloadExists = true;
     var directory;
@@ -431,9 +437,9 @@ class _UserProfileScreenState extends State<UserProfileClass> {
 
     var currentDate = "Scaleup_dsa"+convertCurrentDateTimeToString();
     final path = '$directory$currentDate.pdf';
-    dl.addDownload(url, path);
+    dl.addDownload(docUrl, path);
     Utils.showBottomToast("$path");
-    await dl.whenDownloadComplete(url);
+    await dl.whenDownloadComplete(docUrl);
   //  _showProgressNotification();
   }
   String convertCurrentDateTimeToString() {

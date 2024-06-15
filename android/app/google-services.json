@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "193379927691",
+    "project_id": "dsaapp-e44e5",
+    "storage_bucket": "dsaapp-e44e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193379927691:android:ee9d2514af3120dd97368e",
+        "android_client_info": {
+          "package_name": "com.direct.sourcing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVRUPR2J1qkkfXbCvcDPzWlxD_zD86FyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
