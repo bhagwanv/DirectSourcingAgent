@@ -13,8 +13,8 @@ import '../../utils/utils_class.dart';
 import 'home/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
-
   final String? pageType;
+
   const BottomNav({super.key, this.pageType});
 
   @override
@@ -30,6 +30,7 @@ class _BottomNavState extends State<BottomNav> {
   ];
   var selectedIndex = 0;
   late DataProvider productProvider;
+
   @override
   Widget build(BuildContext context) {
     productProvider = Provider.of<DataProvider>(context, listen: false);
@@ -40,17 +41,13 @@ class _BottomNavState extends State<BottomNav> {
         if (didPop) {
           return;
         }
-        if(widget.pageType == "pushReplacement" ) {
-          final bool shouldPop = await Utils().onback(context);
-          if (shouldPop) {
-            SystemNavigator.pop();
-          }
-        } else {
+        final bool shouldPop = await Utils().onback(context);
+        if (shouldPop) {
           SystemNavigator.pop();
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+          backgroundColor: Colors.white,
           body: _pages[selectedIndex],
           extendBody: true,
           floatingActionButton: FloatingActionButton(
@@ -68,8 +65,8 @@ class _BottomNavState extends State<BottomNav> {
               semanticsLabel: 'home',
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomAppBar(
             surfaceTintColor: Colors.white,
             shadowColor: Colors.black,
@@ -92,7 +89,7 @@ class _BottomNavState extends State<BottomNav> {
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();
                         productProvider.disposeUserProfileScreenData();
-                        productProvider. disposeLeadScreenData();
+                        productProvider.disposeLeadScreenData();
                       });
                     },
                     child: Container(
@@ -104,13 +101,20 @@ class _BottomNavState extends State<BottomNav> {
                             SvgPicture.asset(
                               'assets/icons/ic_home_icon.svg',
                               semanticsLabel: 'ic_home_icon',
-                              color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              color: selectedIndex == 0
+                                  ? kPrimaryColor
+                                  : Colors
+                                      .black, // Change color based on selected index
                             ),
-                            const SizedBox(height: 3), // Add space between icon and text
+                            const SizedBox(height: 3),
+                            // Add space between icon and text
                             Text(
                               'Home',
                               style: TextStyle(
-                                color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                                color: selectedIndex == 0
+                                    ? kPrimaryColor
+                                    : Colors.black,
+                                // Change color based on selected index
                                 fontSize: 10,
                               ),
                             ),
@@ -123,11 +127,12 @@ class _BottomNavState extends State<BottomNav> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
+                        print("sssss");
                         selectedIndex = 1;
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();
                         productProvider.disposeUserProfileScreenData();
-                        productProvider. disposeLeadScreenData();
+                        productProvider.disposeLeadScreenData();
                       });
                     },
                     child: Container(
@@ -139,13 +144,20 @@ class _BottomNavState extends State<BottomNav> {
                             SvgPicture.asset(
                               'assets/icons/ic_personal_card.svg',
                               semanticsLabel: 'ic_personal_card',
-                              color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              color: selectedIndex == 1
+                                  ? kPrimaryColor
+                                  : Colors
+                                      .black, // Change color based on selected index
                             ),
-                            const SizedBox(height: 3), // Add space between icon and text
-                              Text(
+                            const SizedBox(height: 3),
+                            // Add space between icon and text
+                            Text(
                               'Lead',
                               style: TextStyle(
-                                color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                                color: selectedIndex == 1
+                                    ? kPrimaryColor
+                                    : Colors.black,
+                                // Change color based on selected index
                                 fontSize: 10,
                               ),
                             ),
@@ -158,12 +170,12 @@ class _BottomNavState extends State<BottomNav> {
                   // Print item
                   GestureDetector(
                     onTap: () {
-                       setState(() {
+                      setState(() {
                         selectedIndex = 2;
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();
                         productProvider.disposeUserProfileScreenData();
-                        productProvider. disposeLeadScreenData();
+                        productProvider.disposeLeadScreenData();
                       });
                       //Utils.showBottomToast("Service Not Available");
                     },
@@ -176,13 +188,20 @@ class _BottomNavState extends State<BottomNav> {
                             SvgPicture.asset(
                               'assets/icons/ic_task_square.svg',
                               semanticsLabel: 'ic_task_square',
-                              color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              color: selectedIndex == 2
+                                  ? kPrimaryColor
+                                  : Colors
+                                      .black, // Change color based on selected index
                             ),
-                            const SizedBox(height: 3), // Add space between icon and text
+                            const SizedBox(height: 3),
+                            // Add space between icon and text
                             Text(
                               'Payout',
                               style: TextStyle(
-                                color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                                color: selectedIndex == 2
+                                    ? kPrimaryColor
+                                    : Colors.black,
+                                // Change color based on selected index
                                 fontSize: 10,
                               ),
                             ),
@@ -199,8 +218,7 @@ class _BottomNavState extends State<BottomNav> {
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();
                         productProvider.disposeUserProfileScreenData();
-                        productProvider. disposeLeadScreenData();
-
+                        productProvider.disposeLeadScreenData();
                       });
                     },
                     child: Container(
@@ -212,13 +230,20 @@ class _BottomNavState extends State<BottomNav> {
                             SvgPicture.asset(
                               'assets/icons/ic_user_square.svg',
                               semanticsLabel: 'ic_user_squaree',
-                              color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                              color: selectedIndex == 3
+                                  ? kPrimaryColor
+                                  : Colors
+                                      .black, // Change color based on selected index
                             ),
-                            const SizedBox(height: 3), // Add space between icon and text
+                            const SizedBox(height: 3),
+                            // Add space between icon and text
                             Text(
                               'Profile',
                               style: TextStyle(
-                                color: selectedIndex == 3? kPrimaryColor : Colors.black, // Change color based on selected index
+                                color: selectedIndex == 3
+                                    ? kPrimaryColor
+                                    : Colors.black,
+                                // Change color based on selected index
                                 fontSize: 10,
                               ),
                             ),
@@ -228,17 +253,14 @@ class _BottomNavState extends State<BottomNav> {
                     ),
                   ),
                   // People item
-
                 ],
               ),
             ),
-          )
-
-
-      ),
+          )),
     );
   }
-  void createLeadBottom()async {
+
+  void createLeadBottom() async {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -252,12 +274,10 @@ class _BottomNavState extends State<BottomNav> {
             child: Container(
               padding: EdgeInsets.all(16.0), // Adjust the padding as needed
               child: CreateLeadWidgets(),
-
             ),
           ),
         );
       },
     );
   }
-
 }

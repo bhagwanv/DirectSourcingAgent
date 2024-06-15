@@ -73,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var startDate = "";
   var endDate = "";
   String? userType;
+  bool isAgentSelected = false;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -229,10 +230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   return SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 15),
@@ -315,9 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           value!.fullName;
                                       await dateTime(context);
                                       await getDSADashboardDetails(context);
-                                      /*  setState(() {
-
-                                  });*/
+                                      setState(() {
+                                        isAgentSelected = true;
+                                      });
                                     },
                                     buttonStyleData: const ButtonStyleData(
                                       padding: EdgeInsets.only(right: 8),
@@ -460,46 +460,48 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     )),
                                               ],
                                             ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text('$leadOverviewTotalLeads',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                                SizedBox(height: 15),
-                                                Text('$leadOverviewPending',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                                SizedBox(height: 15),
-                                                Text('$leadOverviewrejected',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                                SizedBox(height: 15),
-                                                Text('$leadOverviewSubmitted',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                              ],
+                                            Flexible(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text('$leadOverviewTotalLeads',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: whiteColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                  SizedBox(height: 15),
+                                                  Text('$leadOverviewPending',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: whiteColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                  SizedBox(height: 15),
+                                                  Text('$leadOverviewrejected',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: whiteColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                  SizedBox(height: 15),
+                                                  Text('$leadOverviewSubmitted',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: whiteColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -633,46 +635,48 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     )),
                                               ],
                                             ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text('$loanOverviewTotalLoans',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                                SizedBox(height: 15),
-                                                Text('$loanOverviewPending',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                                SizedBox(height: 15),
-                                                Text('$loanOverviewApproved',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                                SizedBox(height: 15),
-                                                Text('$loanOverviewRejected',
-                                                    textAlign: TextAlign.left,
-                                                    style: GoogleFonts.urbanist(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                              ],
+                                            Flexible(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text('$loanOverviewTotalLoans',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                  SizedBox(height: 15),
+                                                  Text('$loanOverviewPending',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                  SizedBox(height: 15),
+                                                  Text('$loanOverviewApproved',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                  SizedBox(height: 15),
+                                                  Text('$loanOverviewRejected',
+                                                      textAlign: TextAlign.left,
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      )),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -700,8 +704,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Card(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              elevation: 10,
+                                  borderRadius: BorderRadius.circular(10)),
+                              elevation: 4,
                               color: Colors.white,
                               child: Container(
                                 width: double.infinity,
@@ -712,12 +716,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
@@ -738,7 +742,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 )),
                                           ],
                                         ),
-                                        Column(
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ),
+                                      Flexible(
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
@@ -758,13 +767,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 )),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                    ],
+                                  )),
                                 ),
                               ),
-                            ),
-                          ])),
+                            const SizedBox(
+                              height: 32,
+                            )
+                          ]),
                     ),
                   );
                 }
@@ -777,15 +788,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getDSADashboardDetails(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     userType = prefsUtil.getString(TYPE);
-    dsaSalesAgentList.forEach((agent) {
-      if (agent.fullName == selecteddsaSalesAgentValue) {
-        setState(() {
-          agentUserId = agent.userId!;
-          print("userId${agent.userId!}");
-          print("fullName${agent.fullName!}");
-        });
-      }
-    });
+    if (selecteddsaSalesAgentValue != null) {
+    if (isAgentSelected) {
+      dsaSalesAgentList.forEach((agent) {
+        if (agent.fullName == selecteddsaSalesAgentValue) {
+          setState(() {
+            agentUserId = agent.userId!;
+          });
+        }
+      });
+    }
+    }
 
     var model = GetDsaDashboardDetailsReqModel(
         agentUserId: agentUserId, startDate: startDate, endDate: endDate);
@@ -964,13 +977,15 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         if (isOk) {
-          agentUserId = "";
-          startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
-              .format(startOfMonth.toUtc());
-          endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
-              .format(endOfMonth.toUtc());
-          print('Start date: $startDate');
-          print('End date: $endDate');
+          setState(() {
+            isAgentSelected =false;
+            agentUserId = "";
+            startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+                .format(startOfMonth.toUtc());
+            endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
+                .format(endOfMonth.toUtc());
+          });
+
           getDSADashboardDetails(context);
         }
       }
