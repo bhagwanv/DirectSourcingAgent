@@ -722,7 +722,7 @@ class _PancardScreenState extends State<PancardScreen> {
 
   Future<void> postLeadPAN(BuildContext context, DataProvider productProvider,
       PostLeadPanRequestModel postLeadPanRequestModel) async {
-    Utils.onLoading(context, "Loading...");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadPAN(postLeadPanRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
