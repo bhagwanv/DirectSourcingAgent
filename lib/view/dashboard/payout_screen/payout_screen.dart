@@ -139,7 +139,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               loading=false;
                             }
                           }
-
+                        }else{
+                          loading=false;
                         }
                       },
                       failure: (exception) {
@@ -184,7 +185,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                         GestureDetector(
                                           onTap: () async {
                                             print("date ");
-                                            showCustomMonthYearPicker(context);
+                                            showCustomMonthYearPicker(context,productProvider);
                                             //print('Selected date: $selectedDate');
                                           },
 
@@ -410,6 +411,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                 getDSASalesAgentListData.result as Iterable<DsaSalesAgentList>);
             print("list${dsaSalesAgentList.length}");
           } else {}
+          productProvider.disposePayOutScreenData();
         },
         failure: (exception) {
           // Handle failure
@@ -417,8 +419,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
             if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            } else {
-              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
@@ -741,7 +741,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
   }
 
 
-  Future<void> showCustomMonthYearPicker(BuildContext context) async {
+  Future<void> showCustomMonthYearPicker(BuildContext context, DataProvider productProvider) async {
     var isOk=true;
     // Current Date
     DateTime now = DateTime.now();
@@ -798,6 +798,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
             agentUserId="";
             isAgentSelected=false;
             loanPayoutDetailfinalList.clear();
+            productProvider.disposePayOutScreenData();
             skip=0;
             startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(startOfMonth.toUtc());
             endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(endOfMonth.toUtc());

@@ -123,6 +123,7 @@ class _BottomNavState extends State<BottomNav> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
+                        print("sssss");
                         selectedIndex = 1;
                         productProvider.disposehomeScreenData();
                         productProvider.disposePayOutScreenData();

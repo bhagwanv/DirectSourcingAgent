@@ -324,7 +324,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                             scale: 0.4,
                                             // Scale down the CircularProgressIndicator
                                             child: CircularProgressIndicator(
-                                              color: Colors.grey,
+                                              color: kPrimaryColor,
                                             ),
                                           ),
                                         ),

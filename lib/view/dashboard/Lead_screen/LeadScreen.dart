@@ -146,8 +146,10 @@ class _LeadScreenState extends State<LeadScreen> {
                           } else {
                             loading = false;
                           }
+                        }else{
+                          loading = false;
                         }
-                        productProvider. disposeLeadScreenData();
+                       // productProvider.disposeLeadScreenData();
                       },
                       failure: (exception) {
                         // Handle failure
@@ -342,6 +344,7 @@ class _LeadScreenState extends State<LeadScreen> {
                 getDSASalesAgentListData.result as Iterable<DsaSalesAgentList>);
             print("list${dsaSalesAgentList.length}");
           } else {}
+          productProvider.disposeLeadScreenData();
         },
         failure: (exception) {
           // Handle failure
@@ -349,8 +352,6 @@ class _LeadScreenState extends State<LeadScreen> {
             if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            } else {
-              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
