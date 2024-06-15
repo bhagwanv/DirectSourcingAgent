@@ -772,7 +772,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )),
                                 ),
                               ),
-                            ),
                             const SizedBox(
                               height: 32,
                             )
@@ -789,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getDSADashboardDetails(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     userType = prefsUtil.getString(TYPE);
-
+    if (selecteddsaSalesAgentValue != null) {
     if (isAgentSelected) {
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue) {
@@ -798,6 +797,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         }
       });
+    }
     }
 
     var model = GetDsaDashboardDetailsReqModel(
@@ -978,7 +978,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (isOk) {
           setState(() {
-            isAgentSelected = true;
+            isAgentSelected =false;
             agentUserId = "";
             startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
                 .format(startOfMonth.toUtc());
