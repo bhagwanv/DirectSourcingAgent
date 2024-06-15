@@ -738,6 +738,7 @@ class _LeadScreenState extends State<LeadScreen> {
             productProvider.disposeLeadScreenData();
             dsaDashboardLeadFinal.clear();
             agentUserId="";
+            selecteddsaSalesAgentValue=null;
             skip = 0;
             startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
                 startOfMonth.toUtc());

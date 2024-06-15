@@ -68,7 +68,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
   final List<LoanPayoutDetailList> loanPayoutDetailfinalList = [];
   ScrollController _scrollController = ScrollController();
 
-  String? selecteddsaSalesAgentValue;
+  DsaSalesAgentList? selecteddsaSalesAgentValue = null;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -173,7 +173,15 @@ class _PayOutScreenState extends State<PayOutScreen> {
                 padding: const EdgeInsets.all(10),
                 child:RefreshIndicator(
                     key: _refreshIndicatorKey,
-                    onRefresh: _handleRefresh,
+                    onRefresh: ()async{
+                      isLoading = true;
+                      loanPayoutDetailfinalList.clear();
+                      loading=false;
+                      skip = 0;
+                      agentUserId="";
+                      productProvider.disposePayOutScreenData();
+                      await  getDSADashboardPayoutList(context);
+                    },
                     child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -223,6 +231,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                   ),
                   type != null && type == "DSA"
                       ? DropdownButtonFormField2<DsaSalesAgentList>(
+                          value: selecteddsaSalesAgentValue,
                           isExpanded: true,
                           decoration: InputDecoration(
                             fillColor: light_gry,
@@ -255,7 +264,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                           items:
                               _addDividersAfterItems(dsaSalesAgentList),
                           onChanged: (DsaSalesAgentList? value) {
-                            selecteddsaSalesAgentValue = value!.fullName;
+                            selecteddsaSalesAgentValue = value!;
                             dateTime(context);
                             getDSADashboardPayoutList(context);
                             setState(() {
@@ -383,16 +392,17 @@ class _PayOutScreenState extends State<PayOutScreen> {
     final prefsUtil = await SharedPref.getInstance();
     type = prefsUtil.getString(TYPE)!;
     print("type$type");
-
+    if (selecteddsaSalesAgentValue != null) {
     if (isAgentSelected) {
       dsaSalesAgentList.forEach((agent) {
-        if (agent.fullName == selecteddsaSalesAgentValue) {
+        if (agent.fullName == selecteddsaSalesAgentValue!.fullName.toString()) {
           setState(() {
             skip = 0;
             agentUserId = agent.userId!;
           });
         }
       });
+    }
     }
 
     var model = GetDsaDashboardPayoutListReqModel(
@@ -799,6 +809,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
             isAgentSelected = false;
             loanPayoutDetailfinalList.clear();
             productProvider.disposePayOutScreenData();
+            selecteddsaSalesAgentValue=null;
             skip = 0;
             startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
                 .format(startOfMonth.toUtc());
