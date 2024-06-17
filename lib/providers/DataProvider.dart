@@ -407,6 +407,16 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> disposeFrontAadhaarSingleFileData() async {
+    _getPostFrontAadhaarSingleFileData = null;
+    notifyListeners();
+  }
+
+  Future<void> disposeBackAadhaarSingleFileData() async {
+    _getPostBackAadhaarSingleFileData = null;
+    notifyListeners();
+  }
+
   Future<void> disposeAllSingleFileData() async {
     _getPostFrontAadhaarSingleFileData = null;
     _getPostBackAadhaarSingleFileData=null;

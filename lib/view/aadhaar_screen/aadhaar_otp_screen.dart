@@ -57,6 +57,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
   int _start = 60;
   final CountdownController _controller = CountdownController(autoStart: true);
   bool isReSendDisable = true;
+  final pinController = TextEditingController();
 
   Widget buildCountdown() {
     print("_start $_start");
@@ -82,7 +83,6 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pinController = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -278,7 +278,6 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                   fetchData(context);
                 } else {
                   Utils.showToast(leadAadhaarResponse.message!, context);
-                  //Utils.showBottomSheetKeyFailed(context,"${leadAadhaarResponse.message!}",KYC_FAild_PATH,widget.activityId,widget.subActivityId);
                 }
               }
             }
