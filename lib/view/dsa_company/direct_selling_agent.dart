@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
+import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -91,6 +92,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   var isImageDelete = false;
   var isGstFilled = false;
   var updateData = true;
+  var updateDataGst = true;
   var isWorkingWithOtherChange = false;
   var isGstStatusChange = false;
 
@@ -486,711 +488,140 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           bottom: true,
           child:
               Consumer<DataProvider>(builder: (context, dataProvider, child) {
-            if (dataProvider.getDsaPersonalDetailData == null) {
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 30),
-                      Center(
-                        child: Text('Sign Up',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.urbanist(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Center(
-                        child: Text('Please enter below details',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.urbanist(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _fullNameCl,
-                        enabled: updateData,
-                        hintText: "Full Name",
-                        labelText: "Full Name",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _fatherOrHusbandNameCl,
-                        enabled: updateData,
-                        hintText: "Father’s / Husband’s Name",
-                        labelText: "Father’s / Husband’s Name",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Stack(
-                        children: [
-                          CommonTextField(
-                            controller: _dobCl,
-                            enabled: false,
-                            keyboardType: TextInputType.number,
-                            hintText: "Date of Birth",
-                            labelText: "Date of Birth",
-                          ),
-                          const Padding(
-                            padding:
-                                EdgeInsets.only(top: 16.0, right: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.date_range,
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _ageCl,
-                        enabled: updateData,
-                        keyboardType: TextInputType.number,
-                        hintText: "Age",
-                        labelText: "Age",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _addressCl,
-                        enabled: updateData,
-                        hintText: "Address",
-                        labelText: "Address",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _pinCodeCl,
-                        enabled: updateData,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[0-9]'))),
-                          LengthLimitingTextInputFormatter(6)
-                        ],
-                        keyboardType: TextInputType.number,
-                        hintText: "PIN Code",
-                        labelText: "PIN Code",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _cityCl,
-                        enabled: updateData,
-                        hintText: "City",
-                        labelText: "City",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _stateCl,
-                        enabled: updateData,
-                        hintText: "State",
-                        labelText: "State",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _alternetMobileNumberCl,
-                        enabled: updateData,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
-                          LengthLimitingTextInputFormatter(10)
-                        ],
-                        keyboardType: TextInputType.number,
-                        hintText: "Alternate Contact Number",
-                        labelText: "Alternate Contact Number",
-                      ),
-                      SizedBox(height: 16),
-                      Stack(
-                        children: [
-                          CommonTextField(
-                            controller: _emailIDCl,
-                            keyboardType: TextInputType.emailAddress,
-                            hintText: "E Mail id",
-                            labelText: "E Mail id",
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      CommonTextField(
-                        controller: _presentOccupationCl,
-                        enabled: updateData,
-                        hintText: "Present Occupation",
-                        labelText: "Present Occupation",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _currentEmploymentCl,
-                        keyboardType: TextInputType.number,
-                        enabled: updateData,
-                        hintText: "No of years in current employment",
-                        labelText: "No of years in current employment",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _qualificationCl,
-                        enabled: updateData,
-                        hintText: "Qualification",
-                        labelText: "Qualification",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _languagesKnownCl,
-                        enabled: updateData,
-                        hintText: "Languages Known",
-                        labelText: "Languages Known",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _locationCl,
-                        enabled: updateData,
-                        hintText: "Location",
-                        labelText: "Location",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text(
-                          'Presently working with other Party/bank/NBFC /Financial Institute? ',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          )),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "Yes",
-                              isChecked: _isSelected1,
-                              onChanged: (bool? value) {
-                                _handleCheckboxChange(1, value);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "No",
-                              isChecked: _isSelected2,
-                              onChanged: (bool? value) {
-                                _handleCheckboxChange(2, value);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text('Reference ',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          )),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _referenceNames,
-                        enabled: updateData,
-                        hintText: "Names",
-                        labelText: "Names",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _referenceContactNoCl,
-                        enabled: updateData,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
-                          LengthLimitingTextInputFormatter(10)
-                        ],
-                        hintText: "Contact No. ",
-                        labelText: "Contact No.",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text('GST Registration Status ',
-                          textAlign: TextAlign.left,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "GST Registered",
-                              isChecked: _isGstSelected1,
-                              onChanged: (bool? value) {
-                                _handleGstCheckboxChange(1, value);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "Not GST Registered",
-                              isChecked: _isGstSelected2,
-                              onChanged: (bool? value) {
-                                _handleGstCheckboxChange(2, value);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Stack(
-                        children: [
-                          CommonTextField(
-                              controller: _gstController,
-                              hintText: "GST Number",
-                              keyboardType: TextInputType.text,
-                              enabled: updateData,
-                              labelText: "GST Number",
-                              textCapitalization: TextCapitalization.characters,
-                              inputFormatter: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp((r'[A-Z0-9]'))),
-                                LengthLimitingTextInputFormatter(15)
-                              ],
-                              onChanged: (text) async {
-                                if (text.length == 15) {
-                                  try {
-                                    Utils.hideKeyBored(context);
-                                    await getCustomerDetailUsingGST(context,
-                                        _gstController.text, dataProvider);
-                                  } catch (error) {
-                                    debugPrint('Error: $error');
-                                  }
-                                }
-                              }),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                child: SvgPicture.asset(
-                                  'assets/icons/edit_icon.svg',
-                                  semanticsLabel: 'Edit Icon SVG',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      DropdownButtonFormField2<String>(
-                        isExpanded: true,
-                        decoration: InputDecoration(
-                          fillColor: textFiledBackgroundColour,
-                          filled: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                        ),
-                        hint: const Text(
-                          'Firm Type',
-                          style: TextStyle(
-                            color: blueColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        items: _addDividersAfterItems(businessTypeList),
-                        value: selectedFirmTypeValue,
-                        onChanged: (String? value) {
-                          selectedFirmTypeValue = value;
-                        },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
-                        ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(businessTypeList),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      DropdownButtonFormField2<String>(
-                        isExpanded: true,
-                        decoration: InputDecoration(
-                          fillColor: textFiledBackgroundColour,
-                          filled: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                        ),
-                        hint: const Text(
-                          'Business Document',
-                          style: TextStyle(
-                            color: blueColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        items: _addDividersAfterItems(chooseBusinessProofList),
-                        value: selectedBusinessTypeValue,
-                        onChanged: (String? value) {
-                          selectedBusinessTypeValue = value;
-                        },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
-                        ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(chooseBusinessProofList),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Stack(
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Color(0xff0196CE))),
-                              width: double.infinity,
-                              child: GestureDetector(
-                                onTap: () {
-                                  bottomSheetMenu(context);
-                                },
-                                child: Container(
-                                  height: 148,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: (!image.isEmpty)
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 148,
-                                          ),
-                                        )
-                                      : (image.isNotEmpty)
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              child: Image.network(
-                                                image,
-                                                fit: BoxFit.cover,
-                                                width: double.infinity,
-                                                height: 148,
-                                              ),
-                                            )
-                                          : Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                    'assets/images/gallery.svg'),
-                                                const Text(
-                                                  'Upload Document',
-                                                  style: TextStyle(
-                                                      color: Color(0xff0196CE),
-                                                      fontSize: 12),
-                                                ),
-                                                const Text(
-                                                    'Supports : JPEG, PNG',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color:
-                                                            Color(0xffCACACA))),
-                                              ],
-                                            ),
-                                ),
-                              )),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isImageDelete = true;
-                                image = "";
-                              });
-                            },
-                            child: !image.isEmpty
-                                ? Container(
-                                    padding: EdgeInsets.all(4),
-                                    alignment: Alignment.topRight,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/delete_icon.svg'),
-                                  )
-                                : Container(),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _companyNameCl,
-                        enabled: updateData,
-                        hintText: "Company Name",
-                        labelText: "Company Name",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _companyAddressCl,
-                        enabled: updateData,
-                        hintText: "Address",
-                        labelText: "Address",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                          keyboardType: TextInputType.number,
-                        controller: _companyPinCodeCodeCl,
-                        enabled: updateData,
-                        hintText: "PIN Code",
-                        labelText: "PIN Code",
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      buildStateField(dataProvider),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      buildCityField(dataProvider),
-                      const SizedBox(height: 54.0),
-                      CommonElevatedButton(
-                        onPressed: () {},
-                        text: 'Next',
-                        upperCase: true,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                ),
-              );
+            if (dataProvider.getDsaPersonalDetailData == null && isLoading) {
+              return Loader();
             } else {
+              if (dataProvider.getDsaPersonalDetailData != null && isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
+              }
+
               if (dataProvider.getDsaPersonalDetailData != null) {
                 dataProvider.getDsaPersonalDetailData!.when(
                   success: (data) {
                     getDsaPersonalDetailData = data;
-                    if (data.fullName != null) {
-                      _fullNameCl.text = data.fullName!;
-                    }
-                    if (data.fatherOrHusbandName != null) {
-                      _fatherOrHusbandNameCl.text = data.fatherOrHusbandName!;
-                    }
-                    if (data.dob != null) {
-                      var formateDob = Utils.dateFormate(context, data.dob!);
-                      selectedDate = data.dob!;
-                      _dobCl.text = formateDob;
-                    }
-                    if (data.age != null) {
-                      _ageCl.text = data.age!.toString();
-                    }
-                    if (data.address != null) {
-                      _addressCl.text = data.address!;
-                    }
-                    if (data.pinCode != null) {
-                      _pinCodeCl.text = data.pinCode!.toString();
-                    }
-                    if (data.city != null) {
-                      _cityCl.text = data.city!;
-                    }
-
-                    if (data.state != null) {
-                      _stateCl.text = data.state!;
-                    }
-                    if (data.alternatePhoneNo != null) {
-                      _alternetMobileNumberCl.text = data.alternatePhoneNo!;
-                    }
-                    if (data.emailId != null) {
-                      _emailIDCl.text = data.emailId!;
-                    }
-                    if (data.presentOccupation != null) {
-                      _presentOccupationCl.text = data.presentOccupation!;
-                    }
-                    if (data.noOfYearsInCurrentEmployment != null) {
-                      _currentEmploymentCl.text =
-                          data.noOfYearsInCurrentEmployment!;
-                    }
-                    if (data.qualification != null) {
-                      _qualificationCl.text = data.qualification!;
-                    }
-                    if (data.languagesKnown != null) {
-                      _languagesKnownCl.text = data.languagesKnown!;
-                    }
-                    if (data.workingLocation != null) {
-                      _locationCl.text = data.workingLocation!;
-                    }
-                    if (data.referneceName != null) {
-                      _referenceNames.text = data.referneceName!;
-                    }
-                    if (data.referneceContact != null) {
-                      _referenceContactNoCl.text = data.referneceContact!;
-                    }
-                    if (data.gstNumber != null) {
-                      _gstController.text = data.gstNumber!;
-                      gstNumber = data.gstNumber!;
-                    }
-                    if (data.firmType != null) {
-                      selectedFirmTypeValue = data.firmType!;
-                    }
-                    if (data.buisnessDocument != null) {
-                      selectedBusinessTypeValue = data.buisnessDocument!;
-                    }
-
-                    if (data.companyName != null) {
-                      _companyNameCl.text = data.companyName!;
-                    }
-
-                    if (data.cityId != null) {
-                      cityId = data.cityId!;
-                    }
-
-                    if (data.stateId != null) {
-                      stateId = data.stateId!;
-                    }
-
-                    if (data.buisnessDocImg != null && !isImageDelete) {
-                      image = data.buisnessDocImg!;
-                    }
-
-                    if (data.companyAddress != null) {
-                      _companyAddressCl.text = data.companyAddress!;
-                    }
-                    if (data.companyPinCode != null) {
-                      _companyPinCodeCodeCl.text = data.companyPinCode!;
-                    }
-
-                    if (setStateListFirstTime) {
-                      if (data.companyState != null) {
-                        _companyStateCl.text = data.companyState!;
+                    if(updateData){
+                      if (data.fullName != null) {
+                        _fullNameCl.text = data.fullName!;
                       }
-                      if (data.companyStateId != null) {
-                        companyStateId = data.companyStateId!;
+                      if (data.fatherOrHusbandName != null) {
+                        _fatherOrHusbandNameCl.text = data.fatherOrHusbandName!;
                       }
-                      if (setCityListFirstTime && setStateListFirstTime) {
-                        if (data.companyCity != null) {
-                          _companyCityCl.text = data.companyCity!;
+                      if (data.dob != null) {
+                        var formateDob = Utils.dateFormate(context, data.dob!);
+                        selectedDate = data.dob!;
+                        _dobCl.text = formateDob;
+                      }
+                      if (data.age != null) {
+                        _ageCl.text = data.age!.toString();
+                      }
+                      if (data.address != null) {
+                        _addressCl.text = data.address!;
+                      }
+                      if (data.pinCode != null) {
+                        _pinCodeCl.text = data.pinCode!.toString();
+                      }
+                      if (data.city != null) {
+                        _cityCl.text = data.city!;
+                      }
+
+                      if (data.state != null) {
+                        _stateCl.text = data.state!;
+                      }
+                      if (data.alternatePhoneNo != null) {
+                        _alternetMobileNumberCl.text = data.alternatePhoneNo!;
+                      }
+                      if (data.emailId != null) {
+                        _emailIDCl.text = data.emailId!;
+                      }
+                      if (data.presentOccupation != null) {
+                        _presentOccupationCl.text = data.presentOccupation!;
+                      }
+                      if (data.noOfYearsInCurrentEmployment != null) {
+                        _currentEmploymentCl.text =
+                        data.noOfYearsInCurrentEmployment!;
+                      }
+                      if (data.qualification != null) {
+                        _qualificationCl.text = data.qualification!;
+                      }
+                      if (data.languagesKnown != null) {
+                        _languagesKnownCl.text = data.languagesKnown!;
+                      }
+                      if (data.workingLocation != null) {
+                        _locationCl.text = data.workingLocation!;
+                      }
+                      if (data.referneceName != null) {
+                        _referenceNames.text = data.referneceName!;
+                      }
+                      if (data.referneceContact != null) {
+                        _referenceContactNoCl.text = data.referneceContact!;
+                      }
+                      if (data.gstNumber != null) {
+                        _gstController.text = data.gstNumber!;
+                        gstNumber = data.gstNumber!;
+                      }
+                      if (data.firmType != null) {
+                        selectedFirmTypeValue = data.firmType!;
+                      }
+                      if (data.buisnessDocument != null) {
+                        selectedBusinessTypeValue = data.buisnessDocument!;
+                      }
+
+                      if (data.companyName != null) {
+                        _companyNameCl.text = data.companyName!;
+                      }
+
+                      if (data.cityId != null) {
+                        cityId = data.cityId!;
+                      }
+
+                      if (data.stateId != null) {
+                        stateId = data.stateId!;
+                      }
+
+                      if (data.buisnessDocImg != null && !isImageDelete) {
+                        image = data.buisnessDocImg!;
+                      }
+
+                      if (data.companyAddress != null) {
+                        _companyAddressCl.text = data.companyAddress!;
+                      }
+                      if (data.companyPinCode != null) {
+                        _companyPinCodeCodeCl.text = data.companyPinCode!;
+                      }
+
+                      if (setStateListFirstTime) {
+                        if (data.companyState != null) {
+                          _companyStateCl.text = data.companyState!;
                         }
+                        if (data.companyStateId != null) {
+                          companyStateId = data.companyStateId!;
+                        }
+                        if (setCityListFirstTime && setStateListFirstTime) {
+                          if (data.companyCity != null) {
+                            _companyCityCl.text = data.companyCity!;
+                          }
 
-                        if (data.companyCityId != null) {
-                          companyCityId = data.companyCityId!;
+                          if (data.companyCityId != null) {
+                            companyCityId = data.companyCityId!;
+                          }
                         }
                       }
+
+                      if (data.workingWithOther != null) {
+                        if (!isWorkingWithOtherChange) {
+                          isPresentlyworking = data.workingWithOther!;
+                        }
+                      }
+                      if (data.gstStatus != null) {
+                        if (!isGstStatusChange) {
+                          isGSTRegistered = data.gstStatus!;
+                        }
+                      }
+
+                      updateData=false;
                     }
 
-                    if (data.workingWithOther != null) {
-                      if (!isWorkingWithOtherChange) {
-                        isPresentlyworking = data.workingWithOther!;
-                      }
-                    }
-                    if (data.gstStatus != null) {
-                      if (!isGstStatusChange) {
-                        isGSTRegistered = data.gstStatus!;
-                      }
-                    }
                   },
                   failure: (exception) {
                     if (exception is ApiException) {
@@ -1213,7 +644,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                     null) {
                   image = dataProvider
                       .getpostDSABusineesDoumentSingleFileData!.filePath!;
-                  print("atul$image");
                   businessProofDocId = dataProvider
                       .getpostDSABusineesDoumentSingleFileData!.docId!;
                 }
@@ -1252,7 +682,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _fullNameCl,
-                        enabled: updateData,
+                        enabled: false,
                         hintText: "Full Name",
                         labelText: "Full Name",
                       ),
@@ -1261,7 +691,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _fatherOrHusbandNameCl,
-                        enabled: updateData,
+                        enabled: false,
                         hintText: "Father’s / Husband’s Name",
                         labelText: "Father’s / Husband’s Name",
                       ),
@@ -1295,7 +725,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _ageCl,
-                        enabled: updateData,
+                        enabled: false,
                         keyboardType: TextInputType.number,
                         hintText: "Age",
                         labelText: "Age",
@@ -1305,7 +735,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _addressCl,
-                        enabled: updateData,
+                        enabled: false,
                         hintText: "Address",
                         labelText: "Address",
                       ),
@@ -1314,7 +744,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _pinCodeCl,
-                        enabled: updateData,
+                        enabled: false,
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(
                               RegExp((r'[0-9]'))),
@@ -1329,7 +759,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _cityCl,
-                        enabled: updateData,
+                        enabled: false,
                         hintText: "City",
                         labelText: "City",
                       ),
@@ -1338,7 +768,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _stateCl,
-                        enabled: updateData,
+                        enabled: false,
                         hintText: "State",
                         labelText: "State",
                       ),
@@ -1347,10 +777,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _alternetMobileNumberCl,
-                        enabled: updateData,
+                        enabled: true,
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
+                              RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(10)
                         ],
                         keyboardType: TextInputType.number,
@@ -1362,6 +792,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         children: [
                           CommonTextField(
                             controller: _emailIDCl,
+                            enabled: true,
                             keyboardType: TextInputType.emailAddress,
                             hintText: "E Mail id",
                             labelText: "E Mail id",
@@ -1371,7 +802,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       SizedBox(height: 16),
                       CommonTextField(
                         controller: _presentOccupationCl,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Present Occupation",
                         labelText: "Present Occupation",
                       ),
@@ -1381,7 +812,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       CommonTextField(
                         controller: _currentEmploymentCl,
                         keyboardType: TextInputType.number,
-                        enabled: updateData,
+                        enabled: true,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                        ],
                         hintText: "No of years in current employment",
                         labelText: "No of years in current employment",
                       ),
@@ -1390,27 +825,37 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _qualificationCl,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Qualification",
                         labelText: "Qualification",
+                        keyboardType:TextInputType.text ,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z ]'))),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
                         controller: _languagesKnownCl,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Languages Known",
                         labelText: "Languages Known",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z, ]'))),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
                         controller: _locationCl,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Location",
                         labelText: "Location",
+
                       ),
                       const SizedBox(
                         height: 16.0,
@@ -1466,19 +911,23 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _referenceNames,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Names",
                         labelText: "Names",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z ]'))),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
                         controller: _referenceContactNoCl,
-                        enabled: updateData,
+                        enabled: true,
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
+                              RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(10)
                         ],
                         keyboardType: TextInputType.number,
@@ -1529,7 +978,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                               controller: _gstController,
                               hintText: "GST Number",
                               keyboardType: TextInputType.text,
-                              enabled: updateData,
+                              enabled: gstUpdate,
                               labelText: "GST Number",
                               textCapitalization: TextCapitalization.characters,
                               inputFormatter: [
@@ -1555,7 +1004,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  updateData = true;
+                                  updateDataGst = true;
                                   isImageDelete = true;
                                   gstUpdate = true;
                                   setCityListFirstTime = false;
@@ -1784,7 +1233,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _companyNameCl,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Company Name",
                         labelText: "Company Name",
                       ),
@@ -1793,7 +1242,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _companyAddressCl,
-                        enabled: updateData,
+                        enabled: true,
                         hintText: "Address",
                         labelText: "Address",
                       ),
@@ -1802,7 +1251,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       CommonTextField(
                         controller: _companyPinCodeCodeCl,
-                        enabled: updateData,
+                        enabled: true,
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(
                               RegExp((r'[0-9]'))),
@@ -1823,9 +1272,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       const SizedBox(height: 54.0),
                       CommonElevatedButton(
                         onPressed: () async {
-                          if (_fullNameCl.text.isEmpty) {
+                          if (_fullNameCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Full Name", context);
-                          } else if (_fatherOrHusbandNameCl.text.isEmpty) {
+                          } else if (_fatherOrHusbandNameCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Father  Name", context);
                           } else if (selectedDate!.isEmpty) {
@@ -1893,12 +1342,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             Utils.showToast(
                                 "Please Enter Company Address PinCode",
                                 context);
+                          }  else if (_companyStateCl.text.trim().isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Company State", context);
                           } else if (_companyCityCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Company City", context);
-                          } else if (_companyStateCl.text.trim().isEmpty) {
-                            Utils.showToast(
-                                "Please Enter Company State", context);
                           } else {
                             await postLeadDSAPersonalDetail(
                                 context, dataProvider);
