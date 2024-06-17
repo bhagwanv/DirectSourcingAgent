@@ -126,19 +126,19 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                   children: [
                     CommonElevatedButton(
                       onPressed: () async {
-                        if (_UserNameController.text.toString().isEmpty) {
+                        if (_UserNameController.text.trim().toString().isEmpty) {
                           Utils.showToast("Please enter user Name", context);
-                        } else if (_EmailController.text.toString().isEmpty) {
+                        } else if (_EmailController.text.trim().toString().isEmpty) {
                           Utils.showToast("Please enter email ID", context);
-                        } else if (_MobileNumberController.text.toString().isEmpty) {
+                        } else if (_MobileNumberController.text.trim().toString().isEmpty) {
                           Utils.showToast(
                               "Please enter mobile number", context);
-                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text)) {
+                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text.trim())) {
                           Utils.showToast(
                               "Please enter valid mobile number", context);
-                        } else if (_PayOutController.text.toString().isEmpty) {
+                        } else if (_PayOutController.text.trim().toString().isEmpty) {
                           Utils.showToast("Please enter Pay Out", context);
-                        } else if (int.parse(_PayOutController.text.toString()) > widget.user_payout!) {
+                        } else if (int.parse(_PayOutController.text.trim().toString()) > widget.user_payout!) {
                           Utils.showToast(
                               "Value cannot be greater than pay out amount",
                               context);
