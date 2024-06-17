@@ -177,8 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (_mobileNumberController.text.isEmpty) {
                             Utils.showToast(
                                 "Please Enter Mobile Number", context);
-                          } else if (!Utils.isPhoneNoValid(
-                              _mobileNumberController.text)) {
+                          } else if (!Utils.isPhoneNoValid(_mobileNumberController.text)) {
                             Utils.showToast(
                                 "Please Enter Valid Mobile Number", context);
                           } else if (!isTermChecked) {

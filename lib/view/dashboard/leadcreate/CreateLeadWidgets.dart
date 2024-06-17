@@ -46,13 +46,13 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Row(
                 children: [
                   Spacer(),
-                  SizedBox(
+                  const SizedBox(
                     width: 50,
                   ),
                   Center(
@@ -99,7 +99,9 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                       onPressed: () async {
                         if (_MobileNumberController.text.toString().isEmpty || _MobileNumberController.text.length < 10 ) {
                           Utils.showToast("Please enter valid mobile number", context);
-                        } else {
+                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text)) {
+                          Utils.showToast("Please enter valid mobile number", context);
+                        }else {
                           openInAppBrowser(UserToken!,context);
 
                          /* Navigator.of(context).pushReplacement(

@@ -46,7 +46,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-        time.toStringAsFixed(0)+" S",
+        time.toStringAsFixed(0)+" Sec",
         style: TextStyle(
           fontSize: 15,
           color: Colors.blue,

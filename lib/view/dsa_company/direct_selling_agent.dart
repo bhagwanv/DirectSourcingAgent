@@ -1824,60 +1824,68 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       CommonElevatedButton(
                         onPressed: () async {
                           if (_fullNameCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Full Name", context);
+                            Utils.showToast("Please enter Full Name", context);
                           } else if (_fatherOrHusbandNameCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Father  Name", context);
+                                "Please enter Father  Name", context);
                           } else if (selectedDate!.isEmpty) {
                             Utils.showToast("Please Select Date ", context);
                           } else if (_ageCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Age ", context);
+                            Utils.showToast("Please enter Age ", context);
                           } else if (_addressCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Address", context);
+                            Utils.showToast("Please enter Address", context);
                           } else if (_pinCodeCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Pin Code ", context);
+                            Utils.showToast("Please enter Pin Code ", context);
                           } else if (_cityCl.text.isEmpty) {
-                            Utils.showToast("Please Enter City", context);
+                            Utils.showToast("Please enter City", context);
                           } else if (_stateCl.text.isEmpty) {
-                            Utils.showToast("Please Enter State", context);
+                            Utils.showToast("Please enter State", context);
                           } else if (_alternetMobileNumberCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter AlterNet Mobile Number ",
+                                "Please enter alternet mobile number ",
+                                context);
+                          }  else if (!Utils.isPhoneNoValid(_alternetMobileNumberCl.text)) {
+                            Utils.showToast(
+                                "Please enter valid alternet mobile number ",
                                 context);
                           } else if (_emailIDCl.text.isEmpty) {
-                            Utils.showToast("Enter Email", context);
+                            Utils.showToast("Enter email", context);
                           } else if (_presentOccupationCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Present Occupation ", context);
+                                "Please enter present occupation ", context);
                           } else if (_currentEmploymentCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter No of years in current employment",
+                                "Please enter no of years in current employment",
                                 context);
                           } else if (_qualificationCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Qualification", context);
+                                "Please enter qualification", context);
                           } else if (_languagesKnownCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Languages Known", context);
+                                "Please enter languages known", context);
                           } else if (_locationCl.text.isEmpty) {
-                            Utils.showToast("Please Enter Location", context);
+                            Utils.showToast("Please enter location", context);
                           } else if (isPresentlyworking.isEmpty) {
                             Utils.showToast(
-                                "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
+                                "Please select  presently working with other Party/bank/NBFC /Financial Institute?",
                                 context);
                           } else if (_referenceNames.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Reference Name", context);
+                                "Please enter reference name", context);
                           } else if (_referenceContactNoCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Reference Contact Number",
+                                "Please enter reference contact number",
+                                context);
+                          } else if (!Utils.isPhoneNoValid(_referenceContactNoCl.text)) {
+                            Utils.showToast(
+                                "Please enter valid reference contact number",
                                 context);
                           } else if (isGSTRegistered.isEmpty) {
                             Utils.showToast(
                                 "Please select GST Registered or Non GST Registered ",
                                 context);
                           } else if (selectedFirmTypeValue == null) {
-                            Utils.showToast("Please Select Firm Type", context);
+                            Utils.showToast("Please select firm type", context);
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
                                 "Please Select Business Type", context);
@@ -1885,20 +1893,20 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             Utils.showToast("Please Upload Document", context);
                           } else if (_companyNameCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Company Name", context);
+                                "Please enter Company Name", context);
                           } else if (_companyAddressCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Company Address", context);
+                                "Please enter Company Address", context);
                           } else if (_companyPinCodeCodeCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Company Address PinCode",
+                                "Please enter Company Address PinCode",
                                 context);
                           } else if (_companyCityCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Company City", context);
+                                "Please enter Company City", context);
                           } else if (_companyStateCl.text.isEmpty) {
                             Utils.showToast(
-                                "Please Enter Company State", context);
+                                "Please enter Company State", context);
                           } else {
                             await postLeadDSAPersonalDetail(
                                 context, dataProvider);
