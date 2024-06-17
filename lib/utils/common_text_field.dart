@@ -25,6 +25,8 @@ class CommonTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatter;
   final bool? enabled;
   final int? maxLength;
+  final bool? enableinteractiveSelection;
+
 
   const CommonTextField({
     Key? key,
@@ -48,6 +50,7 @@ class CommonTextField extends StatefulWidget {
     this.inputFormatter,
     this.enabled=true,
     this.maxLength,
+    this.enableinteractiveSelection=true
   }) : super(key: key);
 
   @override
@@ -127,6 +130,8 @@ class _CommonTextFieldState extends State<CommonTextField> {
       ),
       inputFormatters: widget.inputFormatter != null ? widget.inputFormatter : null,
       enabled: widget.enabled ,
+       enableInteractiveSelection:widget.enableinteractiveSelection,
+
     );
   }
 }

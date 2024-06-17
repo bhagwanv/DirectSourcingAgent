@@ -193,8 +193,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                             _accountTypeCl.text = bankDetailsResponceModel!
                                 .result!.leadBankDetailDTOs!.first.accountType!;
                             _bankStatmentPassworedController.text =
-                            bankDetailsResponceModel!.result!
-                                .leadBankDetailDTOs!.first.pdfPassword!;
+                            bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
                             if (!isEditableStatement) {
                               for (int i = 0;
                               i <
@@ -270,9 +269,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       CommonTextField(
                         inputFormatter: [
-                          LengthLimitingTextInputFormatter(17),
-                          // Limit to 10 characters
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(17)
                         ],
+                        enableinteractiveSelection:false,
                         keyboardType: TextInputType.number,
                         controller: _bankAccountNumberCl,
                         maxLines: 1,
@@ -296,7 +297,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         hintText: "IFSC Code",
                         labelText: "IFSC Code",
                         textCapitalization: TextCapitalization.characters,
-                      ),
+                          onChanged: (value) {
+
+                          }),
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -329,12 +332,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                       listen: false)
                                   .postBusineesDoumentSingleFile(
                                       file, true, "", "");
-                              if (productProvider
-                                      .getpostBusineesDoumentSingleFileData !=
-                                  null) {
-                                documentList!.add(productProvider
-                                    .getpostBusineesDoumentSingleFileData!
-                                    .filePath);
+                              if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
                               }
                               setState(() {
                                 Navigator.pop(context);
@@ -834,18 +833,19 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
       Utils.showToast("Please Select Bank", context);
-    } else if (_accountHolderController.text.isEmpty) {
+    } else if (_accountHolderController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Account Holder Name", context);
-    } else if (_bankAccountNumberCl.text.isEmpty) {
+    } else if (_bankAccountNumberCl.text.trim().isEmpty) {
       Utils.showToast("Please Enter Account Number", context);
     } else if (selectedAccountTypeValue.isEmpty) {
       Utils.showToast("Please Select account Type", context);
-    } else if (_ifsccodeCl.text.isEmpty) {
+    } else if (_ifsccodeCl.text.trim().isEmpty) {
       Utils.showToast("Please Enter IFSC code", context);
-    } else if (!Utils.isValidIFSCCode(_ifsccodeCl.text)) {
-      Utils.showToast(
-          "IFSC code should be minimum 9 digits and max 11 digits!!", context);
-    } else {
+    } else if (!Utils.isValidIFSCode(_ifsccodeCl.text)) {
+      Utils.showToast("IFSC code should be Proper format", context);
+    } else if(documentList!.isEmpty){
+      Utils.showToast("Please upload Bank Statement", context);
+    }else {
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
 
@@ -863,7 +863,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           subActivityId: widget.subActivityId,
           accountNumber: _bankAccountNumberCl.text,
           accountHolderName: _accountHolderController.text,
-          pdfPassword: _bankStatmentPassworedController.text,
+          pdfPassword: _bankStatmentPassworedController.text.trim(),
           surrogateType: "Banking",
         ),
       );

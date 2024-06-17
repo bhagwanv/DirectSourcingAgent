@@ -70,6 +70,9 @@ class Utils {
     return n.replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "");
   }
 
+
+
+
   static void showBottomSheet(
       BuildContext context, String msg, String imagePath) {
     showModalBottomSheet(
@@ -133,8 +136,13 @@ class Utils {
 
   static bool isValidIFSCCode(String? ifscCode) {
     if (ifscCode == null) return false;
-    final regExp = RegExp(r"^[A-Za-z]{4}[a-zA-Z0-9]{7}$");
+    final regExp = RegExp(r"^[A-Z]{4}[a-zA-Z0-9]{7}$");
     return regExp.hasMatch(ifscCode);
+  }
+
+  static bool isValidIFSCode(String str) {
+    RegExp regex = RegExp(r'^[A-Z]{4}0[A-Z0-9a-z]{6}$');
+    return regex.hasMatch(str);
   }
 
   static void showMsgDialog(

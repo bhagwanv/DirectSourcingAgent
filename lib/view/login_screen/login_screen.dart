@@ -174,16 +174,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: CommonElevatedButton(
                         textSize: 20.0,
                         onPressed: () async {
-                          if (_mobileNumberController.text.isEmpty) {
+                          if (_mobileNumberController.text.trim().isEmpty) {
                             Utils.showToast(
-                                "Please Enter Mobile Number", context);
+                                "Please enter mobile number", context);
                           } else if (!Utils.isPhoneNoValid(_mobileNumberController.text)) {
                             Utils.showToast(
-                                "Please Enter Valid Mobile Number", context);
+                                "Please enter valid mobile number", context);
                           } else if (!isTermChecked) {
                             Utils.hideKeyBored(context);
                             Utils.showToast(
-                                "Please Check Term n Condition", context);
+                                "Please check term & condition", context);
                           } else {
                             Utils.hideKeyBored(context);
                             final prefsUtil = await SharedPref.getInstance();
