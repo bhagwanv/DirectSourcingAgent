@@ -63,12 +63,15 @@ class _PancardScreenState extends State<PancardScreen> {
       fathersNameByValidPanCardResponseModel;
   late PostLeadPanResponseModel postLeadPanResponseModel;
   var isPanProgressDilog = false;
+  late FocusNode myFocusNode;
 
   @override
   void initState() {
     super.initState();
     //Api Call
+
     leadPANApi(context);
+    myFocusNode = FocusNode();
   }
 
   // Callback function to receive the selected image
@@ -338,6 +341,10 @@ class _PancardScreenState extends State<PancardScreen> {
                           hintText: "Enter Name",
                           keyboardType: TextInputType.text,
                           enabled: false,
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp((r'[A-Z]'))),
+                          ],
                           labelText: "Name ( As per PAN )",
                           textCapitalization: TextCapitalization.characters,
                         ),
@@ -349,6 +356,7 @@ class _PancardScreenState extends State<PancardScreen> {
                           enabled: false,
                           labelText: "DOB ( As per PAN )",
                           textCapitalization: TextCapitalization.characters,
+
                         ),
                         const SizedBox(height: 20),
                         CommonTextField(
@@ -356,8 +364,13 @@ class _PancardScreenState extends State<PancardScreen> {
                           hintText: "Enter Father Name",
                           keyboardType: TextInputType.text,
                           enabled: true,
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp((r'[A-Z ]'))),
+                          ],
                           labelText: "Father’s Name ( As per PAN )",
                           textCapitalization: TextCapitalization.characters,
+
                         ),
                         const SizedBox(height: 20),
                         Stack(
@@ -369,7 +382,9 @@ class _PancardScreenState extends State<PancardScreen> {
                                         color: const Color(0xff0196CE))),
                                 width: double.infinity,
                                 child: GestureDetector(
+
                                   onTap: () {
+                                   Utils.hideKeyBored(context);
                                     bottomSheetMenu(context);
                                   },
                                   child: Container(
@@ -454,6 +469,7 @@ class _PancardScreenState extends State<PancardScreen> {
                         CommonCheckBox(
                           onChanged: (bool isChecked) async {
                             if (isChecked) {
+                              Utils.hideKeyBored(context);
                               final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -484,6 +500,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               _buildClickableTextSpan(
                                 text: 'T&C  & Privacy Policy',
                                 onClick: () async {
+                                  Utils.hideKeyBored(context);
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -513,7 +530,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             final String? userId = prefsUtil.getString(USER_ID);
                             final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-                            if (_panNumberCl.text.isEmpty) {
+                            if (_panNumberCl.text.trim().isEmpty) {
                               Utils.showToast(
                                   "Please Enter Valid Pan Card Details",
                                   context);
@@ -523,12 +540,12 @@ class _PancardScreenState extends State<PancardScreen> {
                                 } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
                                   Utils.showToast("Please Enter Name (As Per Pan))",context);
                                 }*/
-                            else if (_fatherNameAsPanCl.text.isEmpty) {
+                            else if (_fatherNameAsPanCl.text.trim().isEmpty) {
                               Utils.showToast(
-                                  "Please Enter Father Name!!!", context);
+                                  "Please enter father name!!!", context);
                             } else if (image.isEmpty) {
                               Utils.showToast(
-                                  "Upload PAN-CARD Image!! ", context);
+                                  "Upload pan-card image!! ", context);
                             } else if (!_acceptPermissions) {
                               Utils.showToast(
                                   "Please provide consent for T&C & privacy!!!",
@@ -573,6 +590,8 @@ class _PancardScreenState extends State<PancardScreen> {
     _nameAsPanCl.dispose();
     _dOBAsPanCl.dispose();
     _fatherNameAsPanCl.dispose();
+
+    myFocusNode;
     super.dispose();
   }
 
@@ -663,6 +682,7 @@ class _PancardScreenState extends State<PancardScreen> {
               context, pancardNumber, productProvider);
         } else {
           Utils.showToast(validPanCardResponsModel.message!, context);
+          isPanProgressDilog=false;
           _nameAsPanCl.clear();
           _dOBAsPanCl.clear();
           _fatherNameAsPanCl.clear();

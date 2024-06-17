@@ -507,52 +507,54 @@ class _LeadScreenState extends State<LeadScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
-
-                                Row(
-                                  children: [
-                                    Container(
-                                      child: profileImage.isNotEmpty ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
-                                        child: Image.network(
-                                          profileImage,
-                                          height: 70,
-                                          width: 70,
-                                          fit: BoxFit.cover,
+                                Flexible(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        child: profileImage.isNotEmpty ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
+                                          child: Image.network(
+                                            profileImage,
+                                            height: 70,
+                                            width: 70,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ) : ClipRRect(
+                                          borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
+                                          child: Container (
+                                            color: light_gry,
+                                            height: 70,
+                                            width: 70,
+                                          ),
+                                        )
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Flexible(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                                " Borrower Name ",
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 10,
+                                                  color: dark_gry,
+                                                  fontWeight: FontWeight
+                                                      .w500,
+                                                )),
+                                            Text(
+                                                "$name",
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 10,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight
+                                                      .w600,
+                                                )),
+                                          ],
                                         ),
-                                      ) : ClipRRect(
-                                        borderRadius: BorderRadius.circular(5), // Adjust the value to change the roundness
-                                        child: Container (
-                                          color: light_gry,
-                                          height: 70,
-                                          width: 70,
-                                        ),
-                                      )
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                            " Borrower Name ",
-                                            style: GoogleFonts.urbanist(
-                                              fontSize: 10,
-                                              color: dark_gry,
-                                              fontWeight: FontWeight
-                                                  .w500,
-                                            )),
-                                        Text(
-                                            "$name",
-                                            style: GoogleFonts.urbanist(
-                                              fontSize: 10,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight
-                                                  .w600,
-                                            )),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 10,

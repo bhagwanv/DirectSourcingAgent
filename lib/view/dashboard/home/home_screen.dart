@@ -37,8 +37,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var isLoading = true;
-  var leadOverviewSuccessRate = 0;
-  var leadOverviewProgrssSuccessRate = null;
+  double leadOverviewSuccessRate = 0.0;
+  double leadOverviewProgrssSuccessRate = 0.0;
+
+  double loanOverviewSuccessRate = 0.0;
+  double loanOverviewProgrssSuccessRate = 0.0;
+
   var agentUserId = "";
 
   var leadOverviewSubmitted = "";
@@ -53,10 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   var payoutOverviewTotalDisbursedAmount = "0";
   var payoutOverviewPayoutAmount = "0";
-
-  var loanOverviewSuccessRate = 0;
-  var loanOverviewProgrssSuccessRate = null;
-
   final List<DsaSalesAgentList> dsaSalesAgentList = [];
   String? selecteddsaSalesAgentValue;
 
@@ -121,14 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         var getDSADashboardDetailsData = data;
 
                         if (getDSADashboardDetailsData.response != null) {
-                          if (getDSADashboardDetailsData
-                                  .response!.leadOverviewData!.successRate !=
-                              null) {
-                            leadOverviewSuccessRate = getDSADashboardDetailsData
-                                .response!.leadOverviewData!.successRate;
-                            leadOverviewProgrssSuccessRate =
-                                getDSADashboardDetailsData
-                                    .response!.leadOverviewData!.successRate;
+                          if (getDSADashboardDetailsData.response!.leadOverviewData!.successRate != null) {
+                            if(getDSADashboardDetailsData.response!.leadOverviewData!.successRate!=0){
+                              leadOverviewSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!;
+                              leadOverviewProgrssSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!;
+                            }
+
                           }
                           if (getDSADashboardDetailsData
                                   .response!.leadOverviewData!.totalLeads !=
@@ -158,15 +156,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .response!.leadOverviewData!.submitted!
                                 .toString();
                           }
-
                           if (getDSADashboardDetailsData
                                   .response!.loanOverviewData!.successRate !=
                               null) {
-                            loanOverviewSuccessRate = getDSADashboardDetailsData
-                                .response!.loanOverviewData!.successRate;
-                            loanOverviewProgrssSuccessRate =
-                                getDSADashboardDetailsData
-                                    .response!.loanOverviewData!.successRate;
+                            if(getDSADashboardDetailsData
+                                .response!.loanOverviewData!.successRate!=0){
+                              loanOverviewSuccessRate = getDSADashboardDetailsData
+                                  .response!.loanOverviewData!.successRate!;
+                              loanOverviewProgrssSuccessRate =
+                              getDSADashboardDetailsData
+                                  .response!.loanOverviewData!.successRate!;
+                              print("111$loanOverviewProgrssSuccessRate");
+                            }
+
                           }
                           if (getDSADashboardDetailsData
                                   .response!.loanOverviewData!.totalLoans !=
@@ -394,9 +396,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "$leadOverviewSuccessRate %",
+                                              "$leadOverviewSuccessRate%",
                                               style: GoogleFonts.urbanist(
-                                                fontSize: 25,
+                                                fontSize: 20,
                                                 color: whiteColor,
                                                 fontWeight: FontWeight.w700,
                                               ),
@@ -557,9 +559,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             loanOverviewProgrssSuccessRate ==
                                                     null
                                                 ? 0.0
-                                                : loanOverviewProgrssSuccessRate
-                                                        .toDouble() /
-                                                    100,
+                                                : loanOverviewProgrssSuccessRate.toDouble() / 100,
                                         circularStrokeCap:
                                             CircularStrokeCap.round,
                                         progressColor: kPrimaryColor,
@@ -569,9 +569,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "$loanOverviewSuccessRate %",
+                                              "$loanOverviewSuccessRate%",
                                               style: GoogleFonts.urbanist(
-                                                fontSize: 25,
+                                                fontSize: 20,
                                                 color: kPrimaryColor,
                                                 fontWeight: FontWeight.w700,
                                               ),
