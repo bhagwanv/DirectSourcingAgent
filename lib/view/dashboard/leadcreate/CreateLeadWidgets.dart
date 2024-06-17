@@ -65,7 +65,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -88,7 +88,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                 ],
                   keyboardType: TextInputType.number,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16.0,
               ),
               Padding(

@@ -2,6 +2,7 @@ import 'package:direct_sourcing_agent/inprogress/ProfileReview.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/providers/ThemeProvider.dart';
 import 'package:direct_sourcing_agent/utils/firebase_options.dart';
+import 'package:direct_sourcing_agent/view/aadhaar_screen/aadhaar_screen.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-     // home:  DirectSellingAgent(activityId: 0, subActivityId: 0),
+     // home:  AadhaarScreen(activityId: 0, subActivityId: 0),
     );
   }
 }
