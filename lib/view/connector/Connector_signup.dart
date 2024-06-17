@@ -459,39 +459,39 @@ class ConnectorSignup extends State<Connector_signup> {
 
   void submitConnectorApi(
       BuildContext context, DataProvider productProvider) async {
-    if (_firstNameController.text.isEmpty) {
+    if (_firstNameController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Full Name", context);
-    } else if (_fatherNameController.text.isEmpty) {
+    } else if (_fatherNameController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Father Name", context);
     } else if (slectedDate!.isEmpty) {
       Utils.showToast("Please Select Date Of Birth", context);
-    } else if (_ageController.text.isEmpty) {
+    } else if (_ageController.text.trim().isEmpty) {
       Utils.showToast("Please Enter age", context);
-    } else if (_addreshController.text.isEmpty) {
+    } else if (_addreshController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Address", context);
-    } else if (_pincodeController.text.isEmpty) {
+    } else if (_pincodeController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Pin Code", context);
-    } else if (_satateController.text.isEmpty) {
+    } else if (_satateController.text.trim().isEmpty) {
       Utils.showToast("Please Enter State", context);
-    } else if (_cityController.text.isEmpty) {
+    } else if (_cityController.text.trim().isEmpty) {
       Utils.showToast("Please Enter City", context);
-    } else if (_alternetMobileNumberController.text.isEmpty) {
+    } else if (_alternetMobileNumberController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Alternate Mobile Number", context);
-    } else if (!Utils.isPhoneNoValid(_alternetMobileNumberController.text)) {
+    } else if (!Utils.isPhoneNoValid(_alternetMobileNumberController.text.trim())) {
       Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
-    } else if (_emailIDController.text.isEmpty) {
+    } else if (_emailIDController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Email ID", context);
-    } else if (_presentEmpolymentController.text.isEmpty) {
+    } else if (_presentEmpolymentController.text.trim().isEmpty) {
       Utils.showToast("Please Enter present Employment", context);
-    } else if (_LanguagesController.text.isEmpty) {
+    } else if (_LanguagesController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Languages", context);
     } else if (workingWithParty.isEmpty) {
       Utils.showToast("Please Select Party", context);
-    } else if (_refranceNameController.text.isEmpty) {
+    } else if (_refranceNameController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Reference Name ", context);
-    } else if (_refranceContectController.text.isEmpty) {
+    } else if (_refranceContectController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Reference Contact No ", context);
-    } else if (_refranceLocationController.text.isEmpty) {
+    } else if (_refranceLocationController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Reference Location", context);
     } else {
       Utils.onLoading(context, "");

@@ -54,8 +54,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   var isLoading = true;
 
   void _onFontImageSelected(File imageFile) async {
+    isFrontImageDelete = true;
     Utils.onLoading(context, "");
-    isFrontImageDelete = false;
     // Perform asynchronous work first
     await Provider.of<DataProvider>(context, listen: false)
         .PostFrontAadhaarSingleFileData(imageFile, true, "", "");
@@ -65,9 +65,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   // Callback function to receive the selected image
   void _onBackImageSelected(File imageFile) async {
-    isBackImageDelete = false;
+    isBackImageDelete = true;
     Utils.onLoading(context, "");
-
     await Provider.of<DataProvider>(context, listen: false)
         .postAadhaarBackSingleFile(imageFile, true, "", "");
 
@@ -164,7 +163,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 );
 
                 if (productProvider.getPostFrontAadhaarSingleFileData != null &&
-                    !isFrontImageDelete) {
+                    isFrontImageDelete) {
                   if (productProvider
                           .getPostFrontAadhaarSingleFileData!.filePath !=
                       null) {
@@ -176,7 +175,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                   }
                 }
                 if (productProvider.getPostBackAadhaarSingleFileData != null &&
-                    !isBackImageDelete) {
+                    isBackImageDelete) {
                   if (productProvider
                           .getPostBackAadhaarSingleFileData!.filePath !=
                       null) {
@@ -375,6 +374,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                 setState(() {
                                   isFrontImageDelete = true;
                                   frontFileUrl = "";
+                                  productProvider.disposeFrontAadhaarSingleFileData();
                                 });
                               },
                               child: frontFileUrl.isNotEmpty
@@ -464,6 +464,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                               setState(() {
                                 isBackImageDelete = true;
                                 backFileUrl = "";
+                                productProvider.disposeBackAadhaarSingleFileData();
                               });
                             },
                             child: !backFileUrl.isEmpty
@@ -511,7 +512,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                           }
 
                           //call api
-                          if (_aadhaarController.text == "") {
+                          if (_aadhaarController.text.trim() == "") {
                             Utils.showToast(
                                 "Please Enter Aadhaar Number", context);
                           } else if (!isVerifyAdharNumber) {

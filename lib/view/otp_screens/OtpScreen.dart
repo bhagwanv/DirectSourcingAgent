@@ -41,6 +41,20 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   var isLoading = true;
   int _start = 30;
   final CountdownController _controller = CountdownController(autoStart: true);
+  final pinController = TextEditingController();
+  final defaultPinTheme = PinTheme(
+    width: 56,
+    height: 60,
+    textStyle: const TextStyle(
+      fontSize: 22,
+      color: Colors.black,
+    ),
+    decoration: BoxDecoration(
+      color: textFiledBackgroundColour,
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: kPrimaryColor),
+    ),
+  );
 
   @override
   void codeUpdated() {
@@ -100,20 +114,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   @override
   Widget build(BuildContext context) {
-    final pinController = TextEditingController();
-    final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 60,
-      textStyle: const TextStyle(
-        fontSize: 22,
-        color: Colors.black,
-      ),
-      decoration: BoxDecoration(
-        color: textFiledBackgroundColour,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: kPrimaryColor),
-      ),
-    );
 
     return Scaffold(
       backgroundColor: Colors.white,
