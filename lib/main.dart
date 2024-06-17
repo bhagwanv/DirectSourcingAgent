@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
-      home:  BankDetailsScreen(activityId: 0, subActivityId: 0),
+      home:  SplashScreen(),
      // home:  DirectSellingAgent(activityId: 0, subActivityId: 0),
     );
   }
