@@ -1830,42 +1830,42 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                 "Please Enter Father  Name", context);
                           } else if (selectedDate!.isEmpty) {
                             Utils.showToast("Please Select Date ", context);
-                          } else if (_ageCl.text.isEmpty) {
+                          } else if (_ageCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Age ", context);
-                          } else if (_addressCl.text.isEmpty) {
+                          } else if (_addressCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Address", context);
-                          } else if (_pinCodeCl.text.isEmpty) {
+                          } else if (_pinCodeCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Pin Code ", context);
-                          } else if (_cityCl.text.isEmpty) {
+                          } else if (_cityCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter City", context);
-                          } else if (_stateCl.text.isEmpty) {
+                          } else if (_stateCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter State", context);
-                          } else if (_alternetMobileNumberCl.text.isEmpty) {
+                          } else if (_alternetMobileNumberCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter AlterNet Mobile Number ",
                                 context);
-                          } else if (_emailIDCl.text.isEmpty) {
+                          } else if (_emailIDCl.text.trim().isEmpty) {
                             Utils.showToast("Enter Email", context);
-                          } else if (_presentOccupationCl.text.isEmpty) {
+                          } else if (_presentOccupationCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Present Occupation ", context);
-                          } else if (_currentEmploymentCl.text.isEmpty) {
+                          } else if (_currentEmploymentCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter No of years in current employment",
                                 context);
-                          } else if (_qualificationCl.text.isEmpty) {
+                          } else if (_qualificationCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Qualification", context);
-                          } else if (_languagesKnownCl.text.isEmpty) {
+                          } else if (_languagesKnownCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Languages Known", context);
-                          } else if (_locationCl.text.isEmpty) {
+                          } else if (_locationCl.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Location", context);
                           } else if (isPresentlyworking.isEmpty) {
                             Utils.showToast(
                                 "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
                                 context);
-                          } else if (_referenceNames.text.isEmpty) {
+                          } else if (_referenceNames.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Reference Name", context);
                           } else if (_referenceContactNoCl.text.isEmpty) {
@@ -1883,20 +1883,20 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                 "Please Select Business Type", context);
                           } else if (image.isEmpty) {
                             Utils.showToast("Please Upload Document", context);
-                          } else if (_companyNameCl.text.isEmpty) {
+                          } else if (_companyNameCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Company Name", context);
-                          } else if (_companyAddressCl.text.isEmpty) {
+                          } else if (_companyAddressCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Company Address", context);
-                          } else if (_companyPinCodeCodeCl.text.isEmpty) {
+                          } else if (_companyPinCodeCodeCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Company Address PinCode",
                                 context);
-                          } else if (_companyCityCl.text.isEmpty) {
+                          } else if (_companyCityCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Company City", context);
-                          } else if (_companyStateCl.text.isEmpty) {
+                          } else if (_companyStateCl.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Company State", context);
                           } else {

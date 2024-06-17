@@ -70,6 +70,9 @@ class Utils {
     return n.replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "");
   }
 
+
+
+
   static void showBottomSheet(
       BuildContext context, String msg, String imagePath) {
     showModalBottomSheet(
@@ -96,8 +99,33 @@ class Utils {
 
   static bool isPhoneNoValid(String? phoneNo) {
     if (phoneNo == null) return false;
+
+    // Regular expression to check the basic phone number format
     final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-    return regExp.hasMatch(phoneNo);
+    if (!regExp.hasMatch(phoneNo)) {
+      return false;
+    }
+
+    // List of invalid phone numbers
+    const invalidNumbers = {
+      '0000000000',
+      '1111111111',
+      '2222222222',
+      '3333333333',
+      '4444444444',
+      '5555555555',
+      '6666666666',
+      '7777777777',
+      '8888888888',
+      '9999999999'
+    };
+
+    // Check if the phone number is in the list of invalid numbers
+    if (invalidNumbers.contains(phoneNo)) {
+      return false;
+    }
+
+    return true;
   }
 
   static bool validateEmail(String value) {
@@ -108,8 +136,13 @@ class Utils {
 
   static bool isValidIFSCCode(String? ifscCode) {
     if (ifscCode == null) return false;
-    final regExp = RegExp(r"^[A-Za-z]{4}[a-zA-Z0-9]{7}$");
+    final regExp = RegExp(r"^[A-Z]{4}[a-zA-Z0-9]{7}$");
     return regExp.hasMatch(ifscCode);
+  }
+
+  static bool isValidIFSCode(String str) {
+    RegExp regex = RegExp(r'^[A-Z]{4}0[A-Z0-9a-z]{6}$');
+    return regex.hasMatch(str);
   }
 
   static void showMsgDialog(

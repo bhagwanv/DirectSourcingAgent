@@ -686,6 +686,9 @@ class _PancardScreenState extends State<PancardScreen> {
           _nameAsPanCl.clear();
           _dOBAsPanCl.clear();
           _fatherNameAsPanCl.clear();
+          setState(() {
+            isPanProgressDilog =false;
+          });
         }
       }, failure: (exception) {
         if (exception is ApiException) {

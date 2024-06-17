@@ -69,7 +69,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-        " ${time.toStringAsFixed(0)} S",
+        " ${time.toStringAsFixed(0)} Sec",
         style: GoogleFonts.urbanist(
           fontSize: 15,
           color: kPrimaryColor,

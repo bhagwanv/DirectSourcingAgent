@@ -127,16 +127,17 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                     CommonElevatedButton(
                       onPressed: () async {
                         if (_UserNameController.text.toString().isEmpty) {
-                          Utils.showToast("Please Enter User Name", context);
+                          Utils.showToast("Please enter user Name", context);
                         } else if (_EmailController.text.toString().isEmpty) {
-                          Utils.showToast("Please Enter Email ID", context);
-                        } else if (_MobileNumberController.text
-                            .toString()
-                            .isEmpty) {
+                          Utils.showToast("Please enter email ID", context);
+                        } else if (_MobileNumberController.text.toString().isEmpty) {
                           Utils.showToast(
-                              "Please Enter Mobile Number", context);
+                              "Please enter mobile number", context);
+                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text)) {
+                          Utils.showToast(
+                              "Please enter valid mobile number", context);
                         } else if (_PayOutController.text.toString().isEmpty) {
-                          Utils.showToast("Please Enter Pay Out", context);
+                          Utils.showToast("Please enter Pay Out", context);
                         } else if (int.parse(_PayOutController.text.toString()) > widget.user_payout!) {
                           Utils.showToast(
                               "Value cannot be greater than pay out amount",
@@ -144,8 +145,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                         } else {
                           Utils.onLoading(context, "");
                           var model = CreateDSAUserReqModel(
-                              mobileNumber:
-                                  _MobileNumberController.text.toString(),
+                              mobileNumber: _MobileNumberController.text.toString(),
                               fullName: _UserNameController.text.toString(),
                               emailId: _EmailController.text.toString(),
                               payoutPercenatge:
@@ -161,10 +161,9 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                                 // Handle successful response
                                 var model = CreateUserModel;
                                 if (model.status!) {
-                                  //Utils.showToast(model.message!, context);
-                                  Navigator.pop(context);
+                                  Navigator.of(context, rootNavigator: true).pop();
+                                  Utils.showBottomToast(model.message!);
                                 } else {
-                                  Navigator.pop(context);
                                   Utils.showToast(model.message!, context);
                                 }
                               },
@@ -174,8 +173,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                                     productProvider.disposeAllProviderData();
                                     ApiService().handle401(context);
                                   } else {
-                                    Utils.showToast(
-                                        exception.errorMessage, context);
+                                    Utils.showToast(exception.errorMessage, context);
                                   }
                                 }
                               },

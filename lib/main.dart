@@ -2,6 +2,7 @@ import 'package:direct_sourcing_agent/inprogress/ProfileReview.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/providers/ThemeProvider.dart';
 import 'package:direct_sourcing_agent/utils/firebase_options.dart';
+import 'package:direct_sourcing_agent/view/bank_details_screen/BankDetailsScreen.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
-      home:  SplashScreen(),
+      home:  BankDetailsScreen(activityId: 0, subActivityId: 0),
      // home:  DirectSellingAgent(activityId: 0, subActivityId: 0),
     );
   }
