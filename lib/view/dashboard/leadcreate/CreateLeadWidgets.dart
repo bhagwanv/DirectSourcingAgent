@@ -97,9 +97,9 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                   children: [
                     CommonElevatedButton(
                       onPressed: () async {
-                        if (_MobileNumberController.text.toString().isEmpty || _MobileNumberController.text.length < 10 ) {
+                        if (_MobileNumberController.text.trim().toString().isEmpty || _MobileNumberController.text.trim().length < 10 ) {
                           Utils.showToast("Please enter valid mobile number", context);
-                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text)) {
+                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text.trim())) {
                           Utils.showToast("Please enter valid mobile number", context);
                         }else {
                           openInAppBrowser(UserToken!,context);
