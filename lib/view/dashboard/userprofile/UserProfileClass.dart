@@ -12,6 +12,7 @@ import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -166,23 +167,25 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                               color: light_gry,
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              user_name != null
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Text(
-                                        user_name!,
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                user_name != null
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          user_name!,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : Container()
-                            ],
+                                      )
+                                    : Container()
+                              ],
+                            ),
                           )
                         ],
                       ),
