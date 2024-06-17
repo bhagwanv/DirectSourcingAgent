@@ -99,8 +99,33 @@ class Utils {
 
   static bool isPhoneNoValid(String? phoneNo) {
     if (phoneNo == null) return false;
+
+    // Regular expression to check the basic phone number format
     final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-    return regExp.hasMatch(phoneNo);
+    if (!regExp.hasMatch(phoneNo)) {
+      return false;
+    }
+
+    // List of invalid phone numbers
+    const invalidNumbers = {
+      '0000000000',
+      '1111111111',
+      '2222222222',
+      '3333333333',
+      '4444444444',
+      '5555555555',
+      '6666666666',
+      '7777777777',
+      '8888888888',
+      '9999999999'
+    };
+
+    // Check if the phone number is in the list of invalid numbers
+    if (invalidNumbers.contains(phoneNo)) {
+      return false;
+    }
+
+    return true;
   }
 
   static bool validateEmail(String value) {
