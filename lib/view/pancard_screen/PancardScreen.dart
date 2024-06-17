@@ -132,9 +132,7 @@ class _PancardScreenState extends State<PancardScreen> {
                     // Handle successful response
                     LeadPANData = LeadPanResponseModel;
 
-                    if (LeadPANData.panCard != null &&
-                        !isDataClear &&
-                        !isImageDelete) {
+                    if (LeadPANData.panCard != null && !isDataClear && !isImageDelete) {
                       isVerifyPanNumber = true;
                       isEnabledPanNumber = false;
                       if (LeadPANData.panCard != null) {
@@ -384,6 +382,10 @@ class _PancardScreenState extends State<PancardScreen> {
                                 child: GestureDetector(
 
                                   onTap: () {
+                                    setState(() {
+                                      isDataClear=true;
+                                    });
+
                                    Utils.hideKeyBored(context);
                                     bottomSheetMenu(context);
                                   },
