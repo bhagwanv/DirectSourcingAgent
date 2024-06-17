@@ -74,6 +74,7 @@ dependencies:
   url_launcher: ^6.1.6
   firebase_remote_config: ^5.0.1
   firebase_analytics: ^11.0.1
+  flutter_automation: ^2.0.0
 
 
 
