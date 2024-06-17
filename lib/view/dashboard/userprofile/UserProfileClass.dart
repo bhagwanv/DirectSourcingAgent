@@ -8,6 +8,7 @@ import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/CreateUserWidgets.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
+import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -340,9 +341,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   Future<void> logOut() async {
     final prefsUtil = await SharedPref.getInstance();
     prefsUtil.clear();
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (context) => SplashScreen()), (Route route) => false);
   }
 
   Future<void> _showProgressNotification() async {
