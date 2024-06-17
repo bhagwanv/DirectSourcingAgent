@@ -168,8 +168,12 @@ class _ProfileTypesState extends State<ProfileTypes> {
                       children: [
                         CommonElevatedButton(
                           onPressed: () async {
-                            chooseUserTypeApi(context, productProvider,
-                                isTermsChecks, userType!);
+                            if(userType != null) {
+                              chooseUserTypeApi(context, productProvider,
+                                  isTermsChecks, userType!);
+                            } else {
+                              Utils.showToast("Please select user type", context);
+                            }
                           },
                           text: "Next",
                           upperCase: true,
