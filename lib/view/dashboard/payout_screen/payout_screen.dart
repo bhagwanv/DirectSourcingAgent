@@ -141,13 +141,14 @@ class _PayOutScreenState extends State<PayOutScreen> {
                       if (getDSADashboardPayoutListData.response!.loanPayoutDetailList != null) {
                         if (getDSADashboardPayoutListData.response!.loanPayoutDetailList!.isNotEmpty) {
                           loanPayoutDetailList.clear();
-                          loanPayoutDetailList.addAll(
-                              getDSADashboardPayoutListData.response!
-                                  as Iterable<LoanPayoutDetailList>);
+                          loanPayoutDetailList.addAll(getDSADashboardPayoutListData.response!.loanPayoutDetailList!);
                           loanPayoutDetailfinalList.addAll(loanPayoutDetailList);
                         } else {
                           loading = false;
                         }
+                      }else{
+                        loading = false;
+                        print("sdfsh");
                       }
                     } else {
                      /* loanPayoutDetailList.clear();
@@ -155,6 +156,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                       loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "2024-06-01T18:30:00.000Z",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: "",fullName: "Mukesh Kumar PAtel dfdfgd fdsfdfd fdsfd fdfdf fdfgd fgdgdg dgdgd "));
                       loanPayoutDetailfinalList.addAll(loanPayoutDetailList);*/
                       loading = false;
+                      print("sdfsh");
                     }
                   },
                   failure: (exception) {
@@ -174,7 +176,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
                 child:RefreshIndicator(
                     key: _refreshIndicatorKey,
                     onRefresh: ()async{
-                      isLoading = true;
                       loanPayoutDetailfinalList.clear();
                       loading=false;
                       skip = 0;
@@ -271,6 +272,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               loanPayoutDetailfinalList.clear();
                               productProvider.disposePayOutScreenData();
                               isAgentSelected = true;
+                              skip = 0;
                             });
                             //getDSADashboardDetails(context);
                             /*   setState(() {
@@ -397,7 +399,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue!.fullName.toString()) {
           setState(() {
-            skip = 0;
+
+            print("sdfsdf");
             agentUserId = agent.userId!;
           });
         }
@@ -601,7 +604,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Expanded(
+                                Flexible(
                                   child: Column(
                                     children: [
                                       Text(" Borrower Name ",
