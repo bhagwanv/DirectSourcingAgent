@@ -126,9 +126,8 @@ class ConnectorSignup extends State<Connector_signup> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   getConnectorInfoApi();
+    getConnectorInfoApi();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,63 +136,85 @@ class ConnectorSignup extends State<Connector_signup> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
             if (productProvider.getConnectorInfoData == null) {
               return Container();
             } else {
               if (productProvider.getConnectorInfoData != null) {
-               //Navigator.of(context, rootNavigator: true).pop();
+                //Navigator.of(context, rootNavigator: true).pop();
                 if (productProvider.getConnectorInfoData != null) {
                   productProvider.getConnectorInfoData!.when(
                     success: (data) {
-                      connectorInfoResponceModel =data;
-                      _firstNameController.text=connectorInfoResponceModel!.fullName!;
-                      _fatherNameController.text= connectorInfoResponceModel!.fatherName!;
-                      slectedDate= Utils.dateFormate(context,connectorInfoResponceModel!.dob!);
-                      _ageController.text=connectorInfoResponceModel!.age.toString();
-                     _addreshController.text=connectorInfoResponceModel!.address!;
+                      connectorInfoResponceModel = data;
 
-                      if(connectorInfoResponceModel?.referenceName!=null) {
-                        _refranceNameController.text = connectorInfoResponceModel!.referenceName!;
+                      if (updateData) {
+                        _firstNameController.text =
+                            connectorInfoResponceModel!.fullName!;
+                        _fatherNameController.text =
+                            connectorInfoResponceModel!.fatherName!;
+                        slectedDate = Utils.dateFormate(
+                            context, connectorInfoResponceModel!.dob!);
+                        _ageController.text =
+                            connectorInfoResponceModel!.age.toString();
+                        _addreshController.text =
+                            connectorInfoResponceModel!.address!;
+
+                        if (connectorInfoResponceModel?.referenceName != null) {
+                          _refranceNameController.text =
+                              connectorInfoResponceModel!.referenceName!;
+                        }
+
+                        if (connectorInfoResponceModel!.referneceContact !=
+                            null) {
+                          _refranceContectController.text =
+                              connectorInfoResponceModel!.referneceContact!;
+                        }
+
+                        if (connectorInfoResponceModel!.languagesKnown !=
+                            null) {
+                          _LanguagesController.text =
+                              connectorInfoResponceModel!.languagesKnown!;
+                        }
+
+                        if (connectorInfoResponceModel!.workingLocation !=
+                            null) {
+                          _refranceLocationController.text =
+                              connectorInfoResponceModel!.workingLocation!;
+                        }
+
+                        if (connectorInfoResponceModel!.presentEmployment !=
+                            null) {
+                          _presentEmpolymentController.text =
+                              connectorInfoResponceModel!.presentEmployment!;
+                        }
+
+                        if (connectorInfoResponceModel!.emailId != null) {
+                          _emailIDController.text =
+                              connectorInfoResponceModel!.emailId!;
+                        }
+
+                        if (connectorInfoResponceModel!.emailId != null) {
+                          _alternetMobileNumberController.text =
+                              connectorInfoResponceModel!.alternatePhoneNo!;
+                        }
+
+                        if (connectorInfoResponceModel!.state != null) {
+                          _satateController.text =
+                              connectorInfoResponceModel!.state!;
+                        }
+
+                        if (connectorInfoResponceModel!.city != null) {
+                          _cityController.text =
+                              connectorInfoResponceModel!.city!;
+                        }
+
+                        if (connectorInfoResponceModel!.pincode != null) {
+                          _pincodeController.text =
+                              connectorInfoResponceModel!.pincode!.toString();
+                        }
+                        updateData = false;
                       }
-
-                      if(connectorInfoResponceModel!.referneceContact!=null) {
-                        _refranceContectController.text = connectorInfoResponceModel!.referneceContact!;
-                      }
-
-                      if(connectorInfoResponceModel!.languagesKnown!=null) {
-                        _LanguagesController.text = connectorInfoResponceModel!.languagesKnown!;
-                      }
-
-                      if(connectorInfoResponceModel!.workingLocation!=null) {
-                        _refranceLocationController.text = connectorInfoResponceModel!.workingLocation!;
-                      }
-
-                      if(connectorInfoResponceModel!.presentEmployment!=null) {
-                        _presentEmpolymentController.text = connectorInfoResponceModel!.presentEmployment!;
-                      }
-
-                     if(connectorInfoResponceModel!.emailId!=null) {
-                      _emailIDController.text = connectorInfoResponceModel!.emailId!;
-                     }
-
-                      if(connectorInfoResponceModel!.emailId!=null) {
-                        _alternetMobileNumberController.text = connectorInfoResponceModel!.alternatePhoneNo!;
-                      }
-
-                      if(connectorInfoResponceModel!.state!=null) {
-                        _satateController.text = connectorInfoResponceModel!.state!;
-                      }
-
-                      if(connectorInfoResponceModel!.city!=null) {
-                        _cityController.text = connectorInfoResponceModel!.city!;
-                      }
-
-                      if(connectorInfoResponceModel!.pincode!=null) {
-                        _pincodeController.text = connectorInfoResponceModel!.pincode!.toString();
-                      }
-
-
                     },
                     failure: (exception) {
                       if (exception is ApiException) {
@@ -235,20 +256,20 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 30),
                     CommonTextField(
                       controller: _firstNameController,
-                      enabled: updateData,
+                      enabled: false,
                       hintText: "Full Name",
                       labelText: "Full Name",
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _fatherNameController,
-                      enabled: updateData,
+                      enabled: false,
                       hintText: "Father Name ",
                       labelText: "Father Name",
                     ),
                     SizedBox(height: 20),
                     InkWell(
-                      onTap: updateData
+                      onTap: false
                           ? () {
                               _showDatePicker(context);
                             }
@@ -285,11 +306,10 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _ageController,
-                      enabled: updateData,
+                      enabled: false,
                       keyboardType: TextInputType.number,
                       inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[0-9]'))),
+                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                       ],
                       hintText: "Age",
                       labelText: "Age",
@@ -297,17 +317,16 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _addreshController,
-                      enabled: updateData,
+                      enabled: false,
                       hintText: "Address",
                       labelText: "Address",
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _pincodeController,
-                      enabled: updateData,
+                      enabled: false,
                       inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[0-9]'))),
+                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                         LengthLimitingTextInputFormatter(6)
                       ],
                       keyboardType: TextInputType.number,
@@ -317,25 +336,28 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _satateController,
-                      enabled: updateData,
+                      enabled: false,
                       hintText: "State",
                       labelText: "State",
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _cityController,
-                      enabled: updateData,
+                      enabled: false,
                       hintText: "City",
                       labelText: "City",
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _alternetMobileNumberController,
-                      enabled: updateData,
+                      enabled: true,
                       inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[0-9]'))),
-                        LengthLimitingTextInputFormatter(10)
+                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                        LengthLimitingTextInputFormatter(10),
+                        FilteringTextInputFormatter.deny(
+                          RegExp(
+                              r'^0+'), //users can't type 0 at 1st position
+                        ),
                       ],
                       keyboardType: TextInputType.number,
                       hintText: "Alternate Contact Number",
@@ -344,7 +366,7 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _emailIDController,
-                      enabled: updateData,
+                      enabled: true,
                       keyboardType: TextInputType.emailAddress,
                       hintText: "E Mail id",
                       labelText: "E Mail id",
@@ -361,23 +383,37 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 25),
                     CommonTextField(
                       controller: _presentEmpolymentController,
-                      enabled: updateData,
+                      enabled: true,
                       hintText: "Present Employment",
                       labelText: "Present Employment",
+                      keyboardType: TextInputType.text,
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[A-Za-z ]'))),
+                      ],
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _LanguagesController,
-                      enabled: updateData,
+                      enabled: true,
                       hintText: "Languages Known",
                       labelText: "Languages Known",
+                      keyboardType: TextInputType.text,
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[A-Za-z, ]'))),
+                      ],
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _refranceLocationController,
-                      enabled: updateData,
+                      enabled: true,
                       hintText: "Location",
                       labelText: "Location",
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp((r'[A-Za-z,0-9 ]'))),
+                      ],
                     ),
                     SizedBox(height: 20),
                     Text(
@@ -423,18 +459,21 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _refranceNameController,
-                      enabled: updateData,
+                      enabled: true,
                       hintText: "Name",
                       labelText: "Name",
                     ),
                     SizedBox(height: 20),
                     CommonTextField(
                       controller: _refranceContectController,
-                      enabled: updateData,
+                      enabled: true,
                       inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[0-9]'))),
-                        LengthLimitingTextInputFormatter(10)
+                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                        LengthLimitingTextInputFormatter(10),
+                        FilteringTextInputFormatter.deny(
+                          RegExp(
+                              r'^0+'), //users can't type 0 at 1st position
+                        ),
                       ],
                       keyboardType: TextInputType.number,
                       hintText: "Contact No",
@@ -486,7 +525,8 @@ class ConnectorSignup extends State<Connector_signup> {
       Utils.showToast("Please Enter City", context);
     } else if (_alternetMobileNumberController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Alternate Mobile Number", context);
-    } else if (!Utils.isPhoneNoValid(_alternetMobileNumberController.text.trim())) {
+    } else if (!Utils.isPhoneNoValid(
+        _alternetMobileNumberController.text.trim())) {
       Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
     } else if (_emailIDController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Email ID", context);
@@ -502,6 +542,8 @@ class ConnectorSignup extends State<Connector_signup> {
       Utils.showToast("Please Enter Reference Name ", context);
     } else if (_refranceContectController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Reference Contact No ", context);
+    } else if (!Utils.isPhoneNoValid(_refranceContectController.text.trim())) {
+      Utils.showToast("Please Enter Valid Reference Contact No", context);
     } else if (_refranceLocationController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Reference Location", context);
     } else {
@@ -529,7 +571,11 @@ class ConnectorSignup extends State<Connector_signup> {
           referneceContact: _refranceContectController.text.toString(),
           WorkingLocation: _refranceLocationController.text.toString(),
           currentAddressId: 0,
-          mobileNo: loginMobilNumber,City: connectorInfoResponceModel!.cityId.toString(),State: connectorInfoResponceModel!.stateId!.toString(),Pincode:connectorInfoResponceModel!.pincode!.toString() ,Address: connectorInfoResponceModel!.address!);
+          mobileNo: loginMobilNumber,
+          City: connectorInfoResponceModel!.cityId.toString(),
+          State: connectorInfoResponceModel!.stateId!.toString(),
+          Pincode: connectorInfoResponceModel!.pincode!.toString(),
+          Address: connectorInfoResponceModel!.address!);
       print(submitModel.toJson().toString());
       await productProvider.submitConnectorData(submitModel);
       Navigator.of(context, rootNavigator: true).pop();
@@ -544,8 +590,8 @@ class ConnectorSignup extends State<Connector_signup> {
           },
           failure: (exception) {
             if (exception is ApiException) {
-              if(exception.statusCode==401){
-                Utils.showToast(exception.errorMessage,context);
+              if (exception.statusCode == 401) {
+                Utils.showToast(exception.errorMessage, context);
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
               }

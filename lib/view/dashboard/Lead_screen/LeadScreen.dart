@@ -63,6 +63,7 @@ class _LeadScreenState extends State<LeadScreen> {
   bool isAgentSelected = false;
   bool providerNull = false;
   var type = "";
+  var  isGetDSASalesAgentList=true;
 
 
 
@@ -136,7 +137,11 @@ class _LeadScreenState extends State<LeadScreen> {
                   isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
-                getDSASalesAgentList(context, productProvider);
+                if(isGetDSASalesAgentList){
+                  getDSASalesAgentList(context, productProvider);
+
+                }
+                isGetDSASalesAgentList=false;
               }
 
                   if (productProvider.getDSADashboardLeadListData != null) {
@@ -174,7 +179,7 @@ class _LeadScreenState extends State<LeadScreen> {
                     child:RefreshIndicator(
                         key: _refreshIndicatorKey,
                         onRefresh: () async {
-                          isLoading = true;
+                          isLoading=true;
                           dsaDashboardLeadFinal.clear();
                           loading=false;
                           skip = 0;
@@ -268,6 +273,7 @@ class _LeadScreenState extends State<LeadScreen> {
                               selecteddsaSalesAgentValue = value;
                               setState(() {
                                 dsaDashboardLeadFinal.clear();
+                                skip = 0;
                                 productProvider.disposeLeadScreenData();
                                 isAgentSelected=true;
                               });
@@ -324,7 +330,6 @@ class _LeadScreenState extends State<LeadScreen> {
         dsaSalesAgentList.forEach((agent) {
           if (agent.fullName == selecteddsaSalesAgentValue!.fullName.toString()) {
             setState(() {
-              skip = 0;
               agentUserId = agent.userId!;
             });
           }

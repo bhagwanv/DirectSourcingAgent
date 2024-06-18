@@ -91,7 +91,11 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                 controller: _MobileNumberController,
                 inputFormatter: [
                   FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
-                  LengthLimitingTextInputFormatter(10)
+                  LengthLimitingTextInputFormatter(10),
+                  FilteringTextInputFormatter.deny(
+                    RegExp(
+                        r'^0+'), //users can't type 0 at 1st position
+                  ),
                 ],
                 keyboardType: TextInputType.number,
                 hintText: "Mobile Number",
@@ -130,6 +134,8 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                           Utils.showToast("Please enter user Name", context);
                         } else if (_EmailController.text.trim().toString().isEmpty) {
                           Utils.showToast("Please enter email ID", context);
+                        } else if (!Utils.validateEmail(_EmailController.text)) {
+                          Utils.showToast("Please enter Valid Email ID", context);
                         } else if (_MobileNumberController.text.trim().toString().isEmpty) {
                           Utils.showToast(
                               "Please enter mobile number", context);
