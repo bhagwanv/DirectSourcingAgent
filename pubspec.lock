@@ -237,10 +237,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
+      sha256: "11e40df547d418cc0c4900a9318b26304e665da6fa4755399a9ff9efd09034b5"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "5.4.3+1"
   dropdown_button2:
     dependency: "direct main"
     description:
@@ -385,14 +385,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.9"
-  fixnum:
-    dependency: transitive
-    description:
-      name: fixnum
-      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -418,10 +410,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_download_manager
-      sha256: "287976e0cba0047925cec247fbb88e1924ed18cae78b69af85ffd6b55d590b32"
+      sha256: f0e604be623f2559a2dc2ccb0918e4e5224ff28a02b864ba0c27a3c6aca6c154
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.4"
+    version: "0.5.5"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -518,14 +510,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.3+2"
-  flutter_pdfview:
-    dependency: "direct main"
-    description:
-      name: flutter_pdfview
-      sha256: a9055bf920c7095bf08c2781db431ba23577aa5da5a056a7152dc89a18fbec6f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -888,6 +872,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  open_file:
+    dependency: "direct main"
+    description:
+      name: open_file
+      sha256: a5a32d44acb7c899987d0999e1e3cbb0a0f1adebbf41ac813ec6d2d8faa0af20
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.2"
   package_info_plus:
     dependency: transitive
     description:
@@ -1181,14 +1173,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  sprintf:
-    dependency: transitive
-    description:
-      name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
   sqflite:
     dependency: transitive
     description:
@@ -1361,10 +1345,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "3.0.7"
   vector_graphics:
     dependency: transitive
     description:

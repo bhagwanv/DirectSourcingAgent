@@ -46,7 +46,7 @@ dependencies:
   intl: ^0.19.0
   image_picker: ^1.0.7
   fluttertoast: ^8.0.6
-  dio: ^4.0.0
+  dio: ^5.1.2
   sms_autofill: ^2.3.1
   file_picker: ^8.0.2
 
@@ -75,8 +75,7 @@ dependencies:
   firebase_remote_config: ^5.0.1
   firebase_analytics: ^11.0.1
   flutter_automation: ^2.0.0
-  flutter_pdfview: ^1.2.7
-
+  open_file: ^3.3.1
 
 
 dependency_overrides:

@@ -18,15 +18,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as Path;
 
+import '../../../utils/directory_path.dart';
 
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
@@ -62,13 +64,18 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   int? user_payout;
   String? doc_sign_url;
   var savedDir = "";
-
+  bool dowloading = false;
+  bool fileExists = false;
+  double progress = 0;
+  String fileName = "";
+  late String filePath;
+  late CancelToken cancelToken;
+  var getPathFile = DirectoryPath();
 
   @override
   void initState() {
     super.initState();
     getApplicationSupportDirectory().then((value) => savedDir = value.path);
-
 
     getUserData(
         _MobileNoController,
@@ -115,35 +122,38 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                           ),
                           Spacer(),
                           (type == "DSA")
-                              ?  Container(
-                            height: 40,
-                            width: 110,
-                            child: CommonElevatedButton(
-                              onPressed: () async {
-
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.white,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                                      ),
-                                      child: SingleChildScrollView(
-                                        child: Container(
-                                          padding: EdgeInsets.all(16.0), // Adjust the padding as needed
-                                          child: CreateUserWidgets(user_payout: user_payout),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              text: "Create",
-                              upperCase: true,
-                            ),
-                          )
+                              ? Container(
+                                  height: 40,
+                                  width: 110,
+                                  child: CommonElevatedButton(
+                                    onPressed: () async {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.white,
+                                        builder: (context) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom,
+                                            ),
+                                            child: SingleChildScrollView(
+                                              child: Container(
+                                                padding: EdgeInsets.all(16.0),
+                                                // Adjust the padding as needed
+                                                child: CreateUserWidgets(
+                                                    user_payout: user_payout),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    text: "Create",
+                                    upperCase: true,
+                                  ),
+                                )
                               : Container(),
                         ],
                       ),
@@ -166,21 +176,22 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                                   ),
                                 )
                               : Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(10),
-                              color: light_gry,
-                            ),
-                          ),
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: light_gry,
+                                  ),
+                                ),
                           Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 user_name != null
                                     ? Padding(
-                                        padding: const EdgeInsets.only(left: 10),
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
                                         child: Text(
                                           user_name!,
                                           style: GoogleFonts.urbanist(
@@ -272,76 +283,48 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                       const SizedBox(
                         height: 30.0,
                       ),
-                      type == "DSA" ?
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: kPrimaryColor,
-                            // text color
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () async {
-                            /*if(doc_sign_url!=null) {
-                              downloadFile(doc_sign_url!);
-                            }else{
-                              Utils.showToast("Document Not Availble", context);
-                            }*/
-                            const url =
-                                "http://www.pdf995.com/samples/pdf.pdf";
-                            final file = await downloadFile(url);
-                           // openPdf(context, file, url);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.download, size: 24),
-                              SizedBox(height: 0, width: 10),
-                              Text(
-                                'Download Agreement',
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          )) : Container(),
+                      type == "DSA"
+                          ? TileList(
+                          fileUrl: doc_sign_url != null ? doc_sign_url! : "")
+                          : Container(),
                       const SizedBox(
                         height: 30.0,
                       ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            // text color
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            logOut();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.logout, size: 24),
-                              SizedBox(height: 0, width: 10),
-                              Text(
-                                'Log out',
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.red,
+                              // text color
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ],
-                          )),
+                            ),
+                            onPressed: () {
+                              logOut();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.logout, size: 24),
+                                  SizedBox(height: 0, width: 10),
+                                  Text(
+                                    'Log out',
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ),
                       SizedBox(
                         height: 30.0,
                       ),
@@ -355,8 +338,9 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   Future<void> logOut() async {
     final prefsUtil = await SharedPref.getInstance();
     prefsUtil.clear();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (context) => SplashScreen()), (Route route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => SplashScreen()),
+        (Route route) => false);
   }
 
   Future<void> _showProgressNotification() async {
@@ -442,130 +426,167 @@ class _UserProfileScreenState extends State<UserProfileClass> {
       directory = "/storage/emulated/0/Download/";
 
       dirDownloadExists = await Directory(directory).exists();
-      if(dirDownloadExists){
+      if (dirDownloadExists) {
         directory = "/storage/emulated/0/Download/";
-      }else{
+      } else {
         directory = "/storage/emulated/0/Downloads/";
       }
     }
 
-    var currentDate = "Scaleup_dsa"+convertCurrentDateTimeToString();
+    var currentDate = "Scaleup_dsa" + convertCurrentDateTimeToString();
     final path = '$directory$currentDate.pdf';
     dl.addDownload(docUrl, path);
     Utils.showBottomToast("$path");
     await dl.whenDownloadComplete(docUrl);
-  //  _showProgressNotification();
+    //  _showProgressNotification();
   }
 
   String convertCurrentDateTimeToString() {
     return DateFormat('yyyyMMdd_kkmmss').format(DateTime.now());
   }
-
-  //final file = File('example.pdf');
-  //await file.writeAsBytes(await pdf.save());
-
-  void openPdf(BuildContext context, File file, String url) =>
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PdfViewerPage(
-            file: file,
-            url: url,
-          ),
-        ),
-      );
 }
 
-class PdfViewerPage extends StatefulWidget {
-  final File file;
-  final String url;
+class TileList extends StatefulWidget {
+  TileList({super.key, required this.fileUrl});
 
-  const PdfViewerPage({
-    Key? key,
-    required this.file,
-    required this.url,
-  }) : super(key: key);
+  final String fileUrl;
 
   @override
-  State<PdfViewerPage> createState() => _PdfViewerPageState();
+  State<TileList> createState() => _TileListState();
 }
 
-class _PdfViewerPageState extends State<PdfViewerPage> {
+class _TileListState extends State<TileList> {
+  bool dowloading = false;
+  bool fileExists = false;
+  double progress = 0;
+  String fileName = "";
+  late String filePath;
+  late CancelToken cancelToken;
+  var getPathFile = DirectoryPath();
+
+  startDownload() async {
+    cancelToken = CancelToken();
+    var storePath = await getPathFile.getPath();
+    filePath = '$storePath/$fileName';
+    setState(() {
+      dowloading = true;
+      progress = 0;
+    });
+
+    try {
+      await Dio().download(widget.fileUrl, filePath,
+          onReceiveProgress: (count, total) {
+        setState(() {
+          progress = (count / total);
+        });
+      }, cancelToken: cancelToken);
+      setState(() {
+        dowloading = false;
+        fileExists = true;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        dowloading = false;
+      });
+    }
+  }
+
+  cancelDownload() {
+    cancelToken.cancel();
+    setState(() {
+      dowloading = false;
+    });
+  }
+
+  checkFileExit() async {
+    var storePath = await getPathFile.getPath();
+    filePath = '$storePath/$fileName';
+    bool fileExistCheck = await File(filePath).exists();
+    setState(() {
+      fileExists = fileExistCheck;
+    });
+  }
+
+  openfile() {
+    OpenFile.open(filePath);
+    print("fff $filePath");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      fileName = Path.basename(widget.fileUrl);
+    });
+    checkFileExit();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final name = widget.file.path;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(name),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await saveFile(widget.url, "sample.pdf");
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'successfully saved to internal storage "PDF_Download" folder',
-                    style: TextStyle(color: Colors.white),
+    return Card(
+      color: kPrimaryColor,
+      elevation: 1,
+      shadowColor: kPrimaryColor,
+      child: ListTile(
+          title: fileExists
+              ? Text(
+                  'Open Agreement',
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              : Text(
+                  'Download Agreement',
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              );
-            },
-            icon: const Icon(Icons.download_rounded),
-          ),
-        ],
-      ),
-      body: PDFView(
-        filePath: widget.file.path,
-      ),
+          leading: IconButton(
+              onPressed: () {
+                fileExists && dowloading == false
+                    ? openfile()
+                    : cancelDownload();
+              },
+              icon: fileExists && dowloading == false
+                  ? const Icon(
+                      Icons.picture_as_pdf,
+                      color: Colors.white,
+                    )
+                  : const Icon(Icons.close)),
+          trailing: IconButton(
+              onPressed: () {
+                fileExists && dowloading == false
+                    ? openfile()
+                    : widget.fileUrl.isNotEmpty ? startDownload() : Utils.showBottomToast("Document not found!!");
+              },
+              icon: fileExists
+                  ? const Icon(
+                      Icons.save,
+                      color: Colors.green,
+                    )
+                  : dowloading
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              value: progress,
+                              strokeWidth: 3,
+                              backgroundColor: Colors.grey,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.blue),
+                            ),
+                            Text(
+                              "${(progress * 100).toStringAsFixed(2)}",
+                              style: TextStyle(fontSize: 12),
+                            )
+                          ],
+                        )
+                      : const Icon(Icons.download))),
     );
-  }
-
-  Future<bool> saveFile(String url, String fileName) async {
-    try {
-      if (await _requestPermission(Permission.storage)) {
-        Directory? directory;
-        directory = await getExternalStorageDirectory();
-        String newPath = "";
-        List<String> paths = directory!.path.split("/");
-        for (int x = 1; x < paths.length; x++) {
-          String folder = paths[x];
-          if (folder != "Android") {
-            newPath += "/" + folder;
-          } else {
-            break;
-          }
-        }
-        newPath = newPath + "/PDF_Download";
-        directory = Directory(newPath);
-
-        File saveFile = File(directory.path + "/$fileName");
-        if (kDebugMode) {
-          print(saveFile.path);
-        }
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
-        }
-        if (await directory.exists()) {
-          await Dio().download(
-            url,
-            saveFile.path,
-          );
-        }
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _requestPermission(Permission permission) async {
-    if (await permission.isGranted) {
-      return true;
-    } else {
-      var result = await permission.request();
-      if (result == PermissionStatus.granted) {
-        return true;
-      }
-    }
-    return false;
   }
 }
