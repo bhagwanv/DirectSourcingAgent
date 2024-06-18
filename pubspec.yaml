@@ -75,6 +75,7 @@ dependencies:
   firebase_remote_config: ^5.0.1
   firebase_analytics: ^11.0.1
   flutter_automation: ^2.0.0
+  flutter_pdfview: ^1.2.7
 
 
 

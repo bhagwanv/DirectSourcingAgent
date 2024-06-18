@@ -320,8 +320,8 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
-          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
       customerSequence(

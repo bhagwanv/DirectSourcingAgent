@@ -349,7 +349,16 @@ class ConnectorSignup extends State<Connector_signup> {
                       hintText: "E Mail id",
                       labelText: "E Mail id",
                     ),
-                    SizedBox(height: 20),
+                    Text(
+                      "*Please enter correct email, we will send the agreement document on this email.",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 10,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    SizedBox(height: 25),
                     CommonTextField(
                       controller: _presentEmpolymentController,
                       enabled: updateData,
@@ -481,6 +490,8 @@ class ConnectorSignup extends State<Connector_signup> {
       Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
     } else if (_emailIDController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Email ID", context);
+    } else if (!Utils.validateEmail(_emailIDController.text)) {
+      Utils.showToast("Please enter Valid Email ID", context);
     } else if (_presentEmpolymentController.text.trim().isEmpty) {
       Utils.showToast("Please Enter present Employment", context);
     } else if (_LanguagesController.text.trim().isEmpty) {
@@ -568,8 +579,8 @@ class ConnectorSignup extends State<Connector_signup> {
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
-          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
       customerSequence(
