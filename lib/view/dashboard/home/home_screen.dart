@@ -319,6 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       await getDSADashboardDetails(context);
                                       setState(() {
                                         isAgentSelected = true;
+                                        leadOverviewSuccessRate = 0.0;
+                                         leadOverviewProgrssSuccessRate = 0.0;
+                                         loanOverviewSuccessRate = 0.0;
+                                         loanOverviewProgrssSuccessRate = 0.0;
                                       });
                                     },
                                     buttonStyleData: const ButtonStyleData(
@@ -984,6 +988,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 .format(startOfMonth.toUtc());
             endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
                 .format(endOfMonth.toUtc());
+            isAgentSelected = true;
+            leadOverviewSuccessRate = 0.0;
+            leadOverviewProgrssSuccessRate = 0.0;
+            loanOverviewSuccessRate = 0.0;
+            loanOverviewProgrssSuccessRate = 0.0;
           });
 
           getDSADashboardDetails(context);
