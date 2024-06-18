@@ -816,6 +816,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         inputFormatter: [
                           FilteringTextInputFormatter.allow(
                               RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(3)
                         ],
                         hintText: "No of years in current employment",
                         labelText: "No of years in current employment",
