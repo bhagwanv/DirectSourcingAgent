@@ -454,6 +454,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                 setState(() {
                                   isImageDelete = true;
                                   image = "";
+                                  isDataClear=true;
+
                                 });
                               },
                               child: image.isNotEmpty
@@ -471,6 +473,9 @@ class _PancardScreenState extends State<PancardScreen> {
                         CommonCheckBox(
                           onChanged: (bool isChecked) async {
                             if (isChecked) {
+                             setState(() {
+                               isDataClear=true;
+                             });
                               Utils.hideKeyBored(context);
                               final result = await Navigator.push(
                                 context,
@@ -503,6 +508,9 @@ class _PancardScreenState extends State<PancardScreen> {
                                 text: 'T&C  & Privacy Policy',
                                 onClick: () async {
                                   Utils.hideKeyBored(context);
+                                  setState(() {
+                                    isDataClear=true;
+                                  });
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
