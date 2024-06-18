@@ -74,6 +74,10 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                 controller: _UserNameController,
                 hintText: "User Name",
                 labelText: "User Name ",
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp((r'[A-Za-z ]'))),
+                ],
               ),
               SizedBox(
                 height: 16.0,
@@ -144,7 +148,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                               "Please enter valid mobile number", context);
                         } else if (_PayOutController.text.trim().toString().isEmpty) {
                           Utils.showToast("Please enter Pay Out", context);
-                        } else if (int.parse(_PayOutController.text.trim().toString()) > widget.user_payout!) {
+                        } else if (double.parse(_PayOutController.text.trim().toString()) > widget.user_payout!) {
                           Utils.showToast(
                               "Value cannot be greater than pay out amount",
                               context);

@@ -288,6 +288,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await remoteConfig.fetchAndActivate();
     String Url =remoteConfig.getString('Base_url');
+    print("Base Url "+Url);
     await prefsUtil.saveString(BASE_URL, Url);
     _checkLoginStatus();
     return 'Fetched: ${remoteConfig.getString('Base_url')}';

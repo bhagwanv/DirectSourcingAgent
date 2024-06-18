@@ -123,8 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (getDSADashboardDetailsData.response != null) {
                           if (getDSADashboardDetailsData.response!.leadOverviewData!.successRate != null) {
                             if(getDSADashboardDetailsData.response!.leadOverviewData!.successRate!=0){
-                              leadOverviewSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!;
-                              leadOverviewProgrssSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!;
+                              leadOverviewSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!.toDouble();
+                              leadOverviewProgrssSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!.toDouble();
                             }
 
                           }
@@ -162,11 +162,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             if(getDSADashboardDetailsData
                                 .response!.loanOverviewData!.successRate!=0){
                               loanOverviewSuccessRate = getDSADashboardDetailsData
-                                  .response!.loanOverviewData!.successRate!;
+                                  .response!.loanOverviewData!.successRate!.toDouble();
                               loanOverviewProgrssSuccessRate =
                               getDSADashboardDetailsData
-                                  .response!.loanOverviewData!.successRate!;
-                              print("111$loanOverviewProgrssSuccessRate");
+                                  .response!.loanOverviewData!.successRate!.toDouble();
                             }
 
                           }
@@ -808,8 +807,7 @@ class _HomeScreenState extends State<HomeScreen> {
         agentUserId: agentUserId, startDate: startDate, endDate: endDate);
 
     if (isLoading) {
-      await Provider.of<DataProvider>(context, listen: false)
-          .getDSADashboardDetails(model);
+      await Provider.of<DataProvider>(context, listen: false).getDSADashboardDetails(model);
     } else {
       Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false)

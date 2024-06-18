@@ -280,7 +280,7 @@ class ConnectorSignup extends State<Connector_signup> {
                         decoration: BoxDecoration(
                           color: textFiledBackgroundColour,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: kPrimaryColor),
+                          border: Border.all(color: kPrimaryLightColor),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
