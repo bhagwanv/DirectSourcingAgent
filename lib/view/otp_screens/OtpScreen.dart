@@ -467,8 +467,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           userLoginMobile,
-          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData,
           "pushReplacement");

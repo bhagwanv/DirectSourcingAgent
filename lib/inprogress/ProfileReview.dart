@@ -304,8 +304,8 @@ class _ProfileReviewState extends State<ProfileReview> {
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           userLoginMobile,
-          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData,
           "pushReplacement");

@@ -799,6 +799,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                           ),
                         ],
                       ),
+                      Text(
+                        "*Please enter correct email, we will send the agreement document on this email.",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 10,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
                       SizedBox(height: 16),
                       CommonTextField(
                         controller: _presentOccupationCl,
@@ -1582,8 +1591,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
       final getLeadData = await ApiService().getLeads(
         prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
-        prefsUtil.getInt(COMPANY_ID)!,
         prefsUtil.getInt(PRODUCT_ID)!,
+        prefsUtil.getInt(COMPANY_ID)!,
         prefsUtil.getInt(LEADE_ID)!,
       ) as GetLeadResponseModel?;
 

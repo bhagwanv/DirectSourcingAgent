@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
@@ -9,17 +10,23 @@ import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/CreateUserWidgets.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
 
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
@@ -277,12 +284,16 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {
-                            if(doc_sign_url!=null) {
+                          onPressed: () async {
+                            /*if(doc_sign_url!=null) {
                               downloadFile(doc_sign_url!);
                             }else{
                               Utils.showToast("Document Not Availble", context);
-                            }
+                            }*/
+                            const url =
+                                "http://www.pdf995.com/samples/pdf.pdf";
+                            final file = await downloadFile(url);
+                           // openPdf(context, file, url);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -445,7 +456,116 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     await dl.whenDownloadComplete(docUrl);
   //  _showProgressNotification();
   }
+
   String convertCurrentDateTimeToString() {
     return DateFormat('yyyyMMdd_kkmmss').format(DateTime.now());
+  }
+
+  //final file = File('example.pdf');
+  //await file.writeAsBytes(await pdf.save());
+
+  void openPdf(BuildContext context, File file, String url) =>
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PdfViewerPage(
+            file: file,
+            url: url,
+          ),
+        ),
+      );
+}
+
+class PdfViewerPage extends StatefulWidget {
+  final File file;
+  final String url;
+
+  const PdfViewerPage({
+    Key? key,
+    required this.file,
+    required this.url,
+  }) : super(key: key);
+
+  @override
+  State<PdfViewerPage> createState() => _PdfViewerPageState();
+}
+
+class _PdfViewerPageState extends State<PdfViewerPage> {
+  @override
+  Widget build(BuildContext context) {
+    final name = widget.file.path;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(name),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await saveFile(widget.url, "sample.pdf");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'successfully saved to internal storage "PDF_Download" folder',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.download_rounded),
+          ),
+        ],
+      ),
+      body: PDFView(
+        filePath: widget.file.path,
+      ),
+    );
+  }
+
+  Future<bool> saveFile(String url, String fileName) async {
+    try {
+      if (await _requestPermission(Permission.storage)) {
+        Directory? directory;
+        directory = await getExternalStorageDirectory();
+        String newPath = "";
+        List<String> paths = directory!.path.split("/");
+        for (int x = 1; x < paths.length; x++) {
+          String folder = paths[x];
+          if (folder != "Android") {
+            newPath += "/" + folder;
+          } else {
+            break;
+          }
+        }
+        newPath = newPath + "/PDF_Download";
+        directory = Directory(newPath);
+
+        File saveFile = File(directory.path + "/$fileName");
+        if (kDebugMode) {
+          print(saveFile.path);
+        }
+        if (!await directory.exists()) {
+          await directory.create(recursive: true);
+        }
+        if (await directory.exists()) {
+          await Dio().download(
+            url,
+            saveFile.path,
+          );
+        }
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
   }
 }
