@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_month_year_picker/simple_month_year_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
@@ -148,15 +149,9 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         }
                       }else{
                         loading = false;
-                        print("sdfsh");
                       }
                     } else {
-                     /* loanPayoutDetailList.clear();
-                      loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "2024-06-01T18:30:00.000Z",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: "",fullName: "atul"));
-                      loanPayoutDetailList.add(LoanPayoutDetailList(loanId: "AMLAAYAIR100000006422",disbursmentAmount: 10,disbursmentDate: "2024-06-01T18:30:00.000Z",status: "pending",mobileNo: "12345 67890",payoutAmount: 100,profileImage: "",fullName: "Mukesh Kumar PAtel dfdfgd fdsfdfd fdsfd fdfdf fdfgd fgdgdg dgdgd "));
-                      loanPayoutDetailfinalList.addAll(loanPayoutDetailList);*/
                       loading = false;
-                      print("sdfsh");
                     }
                   },
                   failure: (exception) {
@@ -179,7 +174,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
                       loanPayoutDetailfinalList.clear();
                       loading=false;
                       skip = 0;
-                      agentUserId="";
                       productProvider.disposePayOutScreenData();
                       await  getDSADashboardPayoutList(context);
                     },
@@ -270,6 +264,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                             getDSADashboardPayoutList(context);
                             setState(() {
                               loanPayoutDetailfinalList.clear();
+                              loading=false;
                               productProvider.disposePayOutScreenData();
                               isAgentSelected = true;
                               skip = 0;
@@ -399,9 +394,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue!.fullName.toString()) {
           setState(() {
-
-            print("sdfsdf");
             agentUserId = agent.userId!;
+            isAgentSelected=false;
           });
         }
       });
@@ -652,12 +646,18 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                       'assets/icons/ic_call_calling.svg',
                                       semanticsLabel: 'Edit Icon SVG',
                                     ),
-                                    Text(" +91 $mobile",
+
+                                    GestureDetector(onTap: (){
+                                      _makePhoneCall("tel:${mobile}");
+                                    },child: Text(
+                                        " +91 $mobile",
                                         style: GoogleFonts.urbanist(
                                           fontSize: 12,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                        )),
+                                          fontWeight: FontWeight
+                                              .w600,
+                                        )),)
+
                                   ],
                                 ),
                               ],
@@ -808,11 +808,9 @@ class _PayOutScreenState extends State<PayOutScreen> {
 
         if (isOk) {
           setState(() {
-            agentUserId = "";
             isAgentSelected = false;
             loanPayoutDetailfinalList.clear();
             productProvider.disposePayOutScreenData();
-            selecteddsaSalesAgentValue=null;
             skip = 0;
             startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
                 .format(startOfMonth.toUtc());
@@ -823,6 +821,13 @@ class _PayOutScreenState extends State<PayOutScreen> {
           getDSADashboardPayoutList(context);
         }
       }
+    }
+  }
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

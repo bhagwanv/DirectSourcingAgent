@@ -983,7 +983,6 @@ class _HomeScreenState extends State<HomeScreen> {
         if (isOk) {
           setState(() {
             isAgentSelected =false;
-            agentUserId = "";
             startDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
                 .format(startOfMonth.toUtc());
             endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
