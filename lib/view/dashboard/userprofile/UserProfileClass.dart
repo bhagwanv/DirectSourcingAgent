@@ -122,38 +122,54 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                           ),
                           Spacer(),
                           (type == "DSA")
-                              ? Container(
-                                  height: 40,
-                                  width: 110,
-                                  child: CommonElevatedButton(
-                                    onPressed: () async {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.white,
-                                        builder: (context) {
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom,
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Container(
-                                                padding: EdgeInsets.all(16.0),
-                                                // Adjust the padding as needed
-                                                child: CreateUserWidgets(
-                                                    user_payout: user_payout),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    text: "Create",
-                                    upperCase: true,
+                              ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: kPrimaryColor,
+                                // text color
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () async {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.white,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom,
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          // Adjust the padding as needed
+                                          child: CreateUserWidgets(
+                                              user_payout: user_payout),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Create user',
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                )
+                                ],
+                              ))
                               : Container(),
                         ],
                       ),
