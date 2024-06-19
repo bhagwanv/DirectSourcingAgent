@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/view/connector/model/CommanResponceModel.d
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoReqModel.dart';
 import 'package:direct_sourcing_agent/view/connector/model/ConnectorInfoResponce.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:direct_sourcing_agent/view/dashboard/leadcreate/model/LeadCreatePermissionModel.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateDSAUserReqModel.dart';
 import 'package:direct_sourcing_agent/view/dashboard/userprofile/model/CreateUserModel.dart';
 import 'package:direct_sourcing_agent/view/profile_type/model/ChooseUserTypeRequestModel.dart';
@@ -316,6 +317,10 @@ class DataProvider extends ChangeNotifier {
 
   Result<GetDsaDashboardPayoutListResModel,Exception>? _getDSADashboardPayoutListData;
   Result<GetDsaDashboardPayoutListResModel,Exception>? get getDSADashboardPayoutListData => _getDSADashboardPayoutListData;
+
+  Result<LeadCreatePermissionModel,Exception>? _getLeadCreatePermission;
+  Result<LeadCreatePermissionModel,Exception>? get getLeadCreatePermission => _getLeadCreatePermission;
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -766,6 +771,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getCheckLeadCreatePermission(String mobileNo) async {
+    _getLeadCreatePermission = await apiService.getCheckLeadCreatePermission(mobileNo);
+    notifyListeners();
+  }
+
   Future<void> disposeAllProviderData() async {
     /*_getCustomerOrderSummaryData = null;
     _getCustomerTransactionListTwoData = null;
@@ -820,6 +830,7 @@ class DataProvider extends ChangeNotifier {
     _getConnectorSubmitData = null;
     _getConnectorInfoData = null;
     _getCreatDSAUserData = null;
+    _getLeadCreatePermission=null;
     /*_InProgressScreen = null;*/
     notifyListeners();
   }

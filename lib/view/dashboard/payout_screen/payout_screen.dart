@@ -429,8 +429,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
     DataProvider productProvider,
   ) async {
     // Loader();
-    await Provider.of<DataProvider>(context, listen: false)
-        .getDSASalesAgentList();
+    await Provider.of<DataProvider>(context, listen: false).getDSASalesAgentList();
     //Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getDSASalesAgentListData != null) {
       productProvider.getDSASalesAgentListData!.when(
