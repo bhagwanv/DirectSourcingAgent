@@ -1,4 +1,6 @@
 
+import 'package:direct_sourcing_agent/api/ApiService.dart';
+import 'package:direct_sourcing_agent/api/FailureException.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
@@ -102,13 +104,28 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                         } else if (!Utils.isPhoneNoValid(_MobileNumberController.text.trim())) {
                           Utils.showToast("Please enter valid mobile number", context);
                         }else {
-                          openInAppBrowser(UserToken!,context);
-
-                         /* Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) =>  WebViewExample(mobileNumber: _MobileNumberController.text.toString(),companyID: companyID,productID: productCode,token: UserToken,)),
-                          );*/
-
+                          await Provider.of<DataProvider>(context, listen: false).getCheckLeadCreatePermission(_MobileNumberController.text.trim());
+                          //Navigator.of(context, rootNavigator: true).pop();
+                          if (productProvider.getLeadCreatePermission != null) {
+                            productProvider.getLeadCreatePermission!.when(
+                              success: (data) {
+                                if(data.status!){
+                                  openInAppBrowser(UserToken!,context);
+                                }else{
+                                  Utils.showToast(data.message!, context);
+                                }
+                              },
+                              failure: (exception) {
+                                // Handle failure
+                                if (exception is ApiException) {
+                                  if (exception.statusCode == 401) {
+                                    productProvider.disposeAllProviderData();
+                                    ApiService().handle401(context);
+                                  }
+                                }
+                              },
+                            );
+                          }
 
                         }
                       },
