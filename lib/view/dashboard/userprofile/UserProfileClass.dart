@@ -61,7 +61,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   String? user_address;
   String? user_workingLocation;
   String? user_selfie;
-  int? user_payout;
+  double? user_payout;
   String? doc_sign_url;
   var savedDir = "";
   bool dowloading = false;
@@ -178,7 +178,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                       ),
                       Row(
                         children: [
-                          user_selfie != null
+                          user_selfie != null&&user_selfie!.isNotEmpty
                               ? Container(
                                   width: 90,
                                   height: 90,
@@ -407,7 +407,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     user_address = prefsUtil.getString(USER_ADDRESS);
     user_workingLocation = prefsUtil.getString(USER_WORKING_LOCTION);
     user_selfie = prefsUtil.getString(USER_SELFI);
-    user_payout = prefsUtil.getInt(USER_PAY_OUT);
+    user_payout = prefsUtil.getDouble(USER_PAY_OUT);
     doc_sign_url = prefsUtil.getString(USER_DOC_SiGN_URL);
 
     if (user_mobile != null) {

@@ -12,7 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class CreateUserWidgets extends StatefulWidget {
-  int? user_payout;
+  double? user_payout;
 
   CreateUserWidgets({required this.user_payout});
 

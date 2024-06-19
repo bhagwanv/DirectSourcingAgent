@@ -396,13 +396,13 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 if (data.userData?.selfie != null) {
                   prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                 }
-                prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!);
                 if (data.userData?.docSignedUrl != null) {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
                   );
                 }
-                prefsUtil.saveInt(USER_PAY_OUT, data.userData!.payout!);
+                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!);
                 if( data.userData!.docSignedUrl!=null) {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);

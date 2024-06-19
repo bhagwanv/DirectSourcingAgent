@@ -1,4 +1,3 @@
-
 import 'package:direct_sourcing_agent/api/ApiService.dart';
 import 'package:direct_sourcing_agent/api/FailureException.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-
 class CreateLeadWidgets extends StatefulWidget {
   @override
   State<CreateLeadWidgets> createState() => _CreateLeadWidgetsState();
@@ -32,13 +30,16 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final settings = InAppBrowserClassSettings(
       browserSettings: InAppBrowserSettings(hideUrlBar: true),
       webViewSettings: InAppWebViewSettings(
-          javaScriptEnabled: true, isInspectable: kDebugMode,clearCache:true));
+          javaScriptEnabled: true,
+          isInspectable: kDebugMode,
+          clearCache: true));
 
   @override
   void initState() {
     // TODO: implement initState
     getUserData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(builder: (context, productProvider, child) {
@@ -84,11 +85,10 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                 hintText: "Mobile Number",
                 labelText: "Mobile Number ",
                 inputFormatter: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp((r'[0-9]'))),
+                  FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                   LengthLimitingTextInputFormatter(10)
                 ],
-                  keyboardType: TextInputType.number,
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(
                 height: 16.0,
@@ -99,19 +99,30 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                   children: [
                     CommonElevatedButton(
                       onPressed: () async {
-                        if (_MobileNumberController.text.trim().toString().isEmpty || _MobileNumberController.text.trim().length < 10 ) {
-                          Utils.showToast("Please enter valid mobile number", context);
-                        } else if (!Utils.isPhoneNoValid(_MobileNumberController.text.trim())) {
-                          Utils.showToast("Please enter valid mobile number", context);
-                        }else {
-                          await Provider.of<DataProvider>(context, listen: false).getCheckLeadCreatePermission(_MobileNumberController.text.trim());
-                          //Navigator.of(context, rootNavigator: true).pop();
+                        if (_MobileNumberController.text
+                                .trim()
+                                .toString()
+                                .isEmpty ||
+                            _MobileNumberController.text.trim().length < 10) {
+                          Utils.showToast(
+                              "Please enter valid mobile number", context);
+                        } else if (!Utils.isPhoneNoValid(
+                            _MobileNumberController.text.trim())) {
+                          Utils.showToast(
+                              "Please enter valid mobile number", context);
+                        } else {
+                          Utils.onLoading(context, "");
+                          await Provider.of<DataProvider>(context,
+                                  listen: false)
+                              .getCheckLeadCreatePermission(
+                                  _MobileNumberController.text.trim());
+                          Navigator.of(context, rootNavigator: true).pop();
                           if (productProvider.getLeadCreatePermission != null) {
                             productProvider.getLeadCreatePermission!.when(
                               success: (data) {
-                                if(data.status!){
-                                  openInAppBrowser(UserToken!,context);
-                                }else{
+                                if (data.status!) {
+                                  openInAppBrowser(UserToken!, context);
+                                } else {
                                   Utils.showToast(data.message!, context);
                                 }
                               },
@@ -126,7 +137,6 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                               },
                             );
                           }
-
                         }
                       },
                       text: "Create Lead",
@@ -142,21 +152,19 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     });
   }
 
-  Future<void> getUserData()async {
+  Future<void> getUserData() async {
     final prefsUtil = await SharedPref.getInstance();
     companyID = prefsUtil.getString(COMPANY_CODE);
     productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
-
   }
 
   void openInAppBrowser(String token, BuildContext _context) {
-    browser.token=token;
-    browser.context=_context;
+    browser.token = token;
+    browser.context = _context;
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl())),
       settings: settings,
-
     );
   }
 
@@ -167,15 +175,14 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     String productId = productCode?.toString() ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
   }
-
 }
 
 class MyInAppBrowser extends InAppBrowser {
   var token;
   var context;
 
-
   MyInAppBrowser();
+
   @override
   Future onBrowserCreated() async {
     Navigator.of(context, rootNavigator: true).pop();
@@ -190,7 +197,8 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   Future onLoadStop(url) async {
     print("Stopped $token");
-    await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
+    await webViewController?.evaluateJavascript(
+        source: "_callJavaScriptFunction('${token}')");
   }
 
   @override
@@ -200,6 +208,6 @@ class MyInAppBrowser extends InAppBrowser {
 
   @override
   void onExit() {
-   print("Browser  closed!");
+    print("Browser  closed!");
   }
 }

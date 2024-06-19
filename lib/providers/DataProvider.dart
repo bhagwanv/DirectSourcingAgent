@@ -322,10 +322,8 @@ class DataProvider extends ChangeNotifier {
   Result<LeadCreatePermissionModel,Exception>? get getLeadCreatePermission => _getLeadCreatePermission;
 
 
-  Future<void> productCompanyDetail(
-      String product, String company) async {
-    _ProductCompanyDetailResponseModel =
-    await apiService.productCompanyDetail(product, company);
+  Future<void> productCompanyDetail(String product, String company) async {
+    _ProductCompanyDetailResponseModel = await apiService.productCompanyDetail(product, company);
     notifyListeners();
   }
 

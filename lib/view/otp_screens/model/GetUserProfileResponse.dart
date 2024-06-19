@@ -71,7 +71,7 @@ class UserData {
   String? address;
   String? workingLocation;
   String? selfie;
-  int? payout;
+  double? payout;
   String? docSignedUrl;
   String? startedOn;
   String? expiredOn;
