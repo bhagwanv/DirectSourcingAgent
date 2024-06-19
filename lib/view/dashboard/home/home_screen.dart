@@ -314,15 +314,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         (DsaSalesAgentList? value) async {
                                       selecteddsaSalesAgentValue =
                                           value!.fullName;
-                                      await dateTime(context);
-                                      await getDSADashboardDetails(context);
                                       setState(() {
                                         isAgentSelected = true;
                                         leadOverviewSuccessRate = 0.0;
-                                         leadOverviewProgrssSuccessRate = 0.0;
-                                         loanOverviewSuccessRate = 0.0;
-                                         loanOverviewProgrssSuccessRate = 0.0;
+                                        leadOverviewProgrssSuccessRate = 0.0;
+                                        loanOverviewSuccessRate = 0.0;
+                                        loanOverviewProgrssSuccessRate = 0.0;
                                       });
+                                      await dateTime(context);
+                                      await getDSADashboardDetails(context);
+
                                     },
                                     buttonStyleData: const ButtonStyleData(
                                       padding: EdgeInsets.only(right: 8),
@@ -792,11 +793,16 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefsUtil = await SharedPref.getInstance();
     userType = prefsUtil.getString(TYPE);
     if (selecteddsaSalesAgentValue != null) {
+      print("atul $isAgentSelected");
     if (isAgentSelected) {
+
       dsaSalesAgentList.forEach((agent) {
         if (agent.fullName == selecteddsaSalesAgentValue) {
           setState(() {
+
             agentUserId = agent.userId!;
+
+            print("atul $agentUserId");
           });
         }
       });

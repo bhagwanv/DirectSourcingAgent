@@ -258,10 +258,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
                           ),
                           items:
                               _addDividersAfterItems(dsaSalesAgentList),
-                          onChanged: (DsaSalesAgentList? value) {
+                          onChanged: (DsaSalesAgentList? value) async {
                             selecteddsaSalesAgentValue = value!;
-                            dateTime(context);
-                            getDSADashboardPayoutList(context);
                             setState(() {
                               loanPayoutDetailfinalList.clear();
                               loading=false;
@@ -269,6 +267,9 @@ class _PayOutScreenState extends State<PayOutScreen> {
                               isAgentSelected = true;
                               skip = 0;
                             });
+                            await dateTime(context);
+                            await getDSADashboardPayoutList(context);
+
                             //getDSADashboardDetails(context);
                             /*   setState(() {
 
