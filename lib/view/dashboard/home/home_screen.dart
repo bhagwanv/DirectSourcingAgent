@@ -122,10 +122,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         if (getDSADashboardDetailsData.response != null) {
                           if (getDSADashboardDetailsData.response!.leadOverviewData!.successRate != null) {
-                            if(getDSADashboardDetailsData.response!.leadOverviewData!.successRate!=0){
+
                               leadOverviewSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!.toDouble();
                               leadOverviewProgrssSuccessRate = getDSADashboardDetailsData.response!.leadOverviewData!.successRate!.toDouble();
-                            }
 
                           }
                           if (getDSADashboardDetailsData
@@ -159,14 +158,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (getDSADashboardDetailsData
                                   .response!.loanOverviewData!.successRate !=
                               null) {
-                            if(getDSADashboardDetailsData
-                                .response!.loanOverviewData!.successRate!=0){
                               loanOverviewSuccessRate = getDSADashboardDetailsData
                                   .response!.loanOverviewData!.successRate!.toDouble();
                               loanOverviewProgrssSuccessRate =
                               getDSADashboardDetailsData
                                   .response!.loanOverviewData!.successRate!.toDouble();
-                            }
 
                           }
                           if (getDSADashboardDetailsData
