@@ -1020,7 +1020,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                   setCityListFirstTime = false;
                                   _gstController.text = "";
                                   _businessDocumentNumberController.text = "";
-                                  selectedDate = "";
                                   businessProofDocId = null;
                                   selectedFirmTypeValue = null;
                                   selectedStateValue = null;
