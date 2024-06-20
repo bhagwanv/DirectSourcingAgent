@@ -97,7 +97,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     setState(() {
       isGstStatusChange = true;
       _companyNameCl.clear();
+      _companyAddressCl.clear();
       isGSTRegistered = value;
+      companyCityId = null;
+      companyStateId = null;
     });
   }
   void _handleRadioValueWorkingWithOtherChanged(String value) {
