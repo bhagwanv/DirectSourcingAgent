@@ -19,6 +19,7 @@ import '../../utils/ImagePicker.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/common_text_field.dart';
 import '../../utils/constant.dart';
+import '../../utils/custom_radio_button.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
@@ -76,12 +77,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   final TextEditingController _businessDocumentNumberController =
       TextEditingController();
 
-  bool _isSelected1 = false;
-  bool _isSelected2 = false;
-  bool _isGstSelected1 = false;
-  bool _isGstSelected2 = false;
-  var isPresentlyworking = "";
-  var isGSTRegistered = "";
+  var isPresentlyworking = "No";
+  var isGSTRegistered = "Yes";
   var isValidEmail = false;
   var isEmailClear = false;
   var isLoading = false;
@@ -96,34 +93,17 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   var isWorkingWithOtherChange = false;
   var isGstStatusChange = false;
 
-  void _handleCheckboxChange(int index, bool? value) {
-    setState(() {
-      isWorkingWithOtherChange = true;
-      if (index == 1) {
-        isPresentlyworking = "Yes";
-        _isSelected1 = value!;
-        _isSelected2 = !value;
-      } else if (index == 2) {
-        isPresentlyworking = "No";
-        _isSelected2 = value!;
-        _isSelected1 = !value;
-      }
-    });
-  }
-
-  void _handleGstCheckboxChange(int index, bool? value) {
+  void _handleRadioValueChanged(String value) {
     setState(() {
       isGstStatusChange = true;
-      if (index == 1) {
-        isGSTRegistered = "Yes";
-        _isGstSelected1 = value!;
-        _isGstSelected2 = !value;
-      } else if (index == 2) {
-        isGSTRegistered = "No";
-        _gstController.text = "";
-        _isGstSelected2 = value!;
-        _isGstSelected1 = !value;
-      }
+      _companyNameCl.clear();
+      isGSTRegistered = value;
+    });
+  }
+  void _handleRadioValueWorkingWithOtherChanged(String value) {
+    setState(() {
+      isWorkingWithOtherChange = true;
+      isPresentlyworking = value;
     });
   }
 
@@ -883,25 +863,22 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Expanded(
-                            child: CheckboxTerm(
-                              content: "Yes",
-                              isChecked: _isSelected1,
-                              onChanged: (bool? value) {
-                                isWorkingWithOtherChange = true;
-                                _handleCheckboxChange(1, value);
-                              },
+                            child: CustomRadioButton(
+                              value: 'Yes',
+                              groupValue: isPresentlyworking,
+                              onChanged: _handleRadioValueWorkingWithOtherChanged,
+                              text: "Yes",
                             ),
                           ),
+                          SizedBox(height: 20),
                           Expanded(
-                            child: CheckboxTerm(
-                              content: "No",
-                              isChecked: _isSelected2,
-                              onChanged: (bool? value) {
-                                isWorkingWithOtherChange = true;
-                                _handleCheckboxChange(2, value);
-                              },
+                            child: CustomRadioButton(
+                              value: 'No',
+                              groupValue: isPresentlyworking,
+                              onChanged: _handleRadioValueWorkingWithOtherChanged,
+                              text: "No",
                             ),
                           ),
                         ],
@@ -954,37 +931,38 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
                           )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "GST Registered",
-                              isChecked: _isGstSelected1,
-                              onChanged: (bool? value) {
-                                isGstStatusChange = true;
-                                _handleGstCheckboxChange(1, value);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: CheckboxTerm(
-                              content: "Not GST Registered",
-                              isChecked: _isGstSelected2,
-                              onChanged: (bool? value) {
-                                isGstStatusChange = true;
-                                _handleGstCheckboxChange(2, value);
-                              },
-                            ),
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 8.0,
                       ),
+                      Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: CustomRadioButton(
+                                  value: 'Yes',
+                                  groupValue: isGSTRegistered,
+                                  onChanged: _handleRadioValueChanged,
+                                  text: "GST Registered",
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Expanded(
+                                child: CustomRadioButton(
+                                  value: 'No',
+                                  groupValue: isGSTRegistered,
+                                  onChanged: _handleRadioValueChanged,
+                                  text: "Not GST Registered",
+                                ),
+                              ),
+                            ],
+                          ),
                       const SizedBox(
                         height: 16.0,
                       ),
                       Stack(
                         children: [
-                          CommonTextField(
+                          isGSTRegistered == "No" ? Container()
+                          :CommonTextField(
                               controller: _gstController,
                               hintText: "GST Number",
                               keyboardType: TextInputType.text,
