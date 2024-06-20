@@ -123,53 +123,53 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                           Spacer(),
                           (type == "DSA")
                               ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: kPrimaryColor,
-                                // text color
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              onPressed: () async {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.white,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom,
-                                      ),
-                                      child: SingleChildScrollView(
-                                        child: Container(
-                                          padding: EdgeInsets.all(16.0),
-                                          // Adjust the padding as needed
-                                          child: CreateUserWidgets(
-                                              user_payout: user_payout),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Create user',
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: kPrimaryColor,
+                                    // text color
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                ],
-                              ))
+                                  onPressed: () async {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.white,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom,
+                                          ),
+                                          child: SingleChildScrollView(
+                                            child: Container(
+                                              padding: EdgeInsets.all(16.0),
+                                              // Adjust the padding as needed
+                                              child: CreateUserWidgets(
+                                                  user_payout: user_payout),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Create user',
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ))
                               : Container(),
                         ],
                       ),
@@ -178,7 +178,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                       ),
                       Row(
                         children: [
-                          user_selfie != null&&user_selfie!.isNotEmpty
+                          user_selfie != null && user_selfie!.isNotEmpty
                               ? Container(
                                   width: 90,
                                   height: 90,
@@ -301,46 +301,44 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                       ),
                       type == "DSA"
                           ? TileList(
-                          fileUrl: doc_sign_url != null ? doc_sign_url! : "")
+                              fileUrl:
+                                  doc_sign_url != null ? doc_sign_url! : "")
                           : Container(),
                       const SizedBox(
                         height: 30.0,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.red,
-                              // text color
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.red,
+                            // text color
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            onPressed: () {
-                              logOut();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.logout, size: 24),
-                                  SizedBox(height: 0, width: 10),
-                                  Text(
-                                    'Log out',
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                          ),
+                          onPressed: () {
+                            logOut();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.logout, size: 24),
+                                SizedBox(height: 0, width: 10),
+                                Text(
+                                  'Log out',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
-                              ),
-                            )),
-                      ),
+                                ),
+                              ],
+                            ),
+                          )),
                       SizedBox(
                         height: 30.0,
                       ),
@@ -540,69 +538,72 @@ class _TileListState extends State<TileList> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: kPrimaryColor,
-      elevation: 1,
-      shadowColor: kPrimaryColor,
-      child: ListTile(
-          title: fileExists
-              ? Text(
-                  'Open Agreement',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )
-              : Text(
-                  'Download Agreement',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: kPrimaryColor,
+        // text color
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      onPressed: () {
+        fileExists && dowloading == false
+            ? openfile()
+            : widget.fileUrl.isNotEmpty
+                ? startDownload()
+                : Utils.showBottomToast("Document not found!!");
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fileExists
+                ? const Icon(
+              Icons.picture_as_pdf,
+              color: Colors.white,
+            )
+                : dowloading
+                ? Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: progress,
+                  strokeWidth: 3,
+                  backgroundColor: Colors.grey,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      Colors.blue),
                 ),
-          leading: IconButton(
-              onPressed: () {
-                fileExists && dowloading == false
-                    ? openfile()
-                    : cancelDownload();
-              },
-              icon: fileExists && dowloading == false
-                  ? const Icon(
-                      Icons.picture_as_pdf,
+                Text(
+                  "${(progress * 100).toStringAsFixed(2)}",
+                  style: TextStyle(fontSize: 12),
+                )
+              ],
+            )
+                : const Icon(Icons.download),
+            SizedBox(width: 12.0,),
+            fileExists
+                ? Text(
+                    'Open Agreement',
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
                       color: Colors.white,
-                    )
-                  : const Icon(Icons.close)),
-          trailing: IconButton(
-              onPressed: () {
-                fileExists && dowloading == false
-                    ? openfile()
-                    : widget.fileUrl.isNotEmpty ? startDownload() : Utils.showBottomToast("Document not found!!");
-              },
-              icon: fileExists
-                  ? const Icon(
-                      Icons.save,
-                      color: Colors.green,
-                    )
-                  : dowloading
-                      ? Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              value: progress,
-                              strokeWidth: 3,
-                              backgroundColor: Colors.grey,
-                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                  Colors.blue),
-                            ),
-                            Text(
-                              "${(progress * 100).toStringAsFixed(2)}",
-                              style: TextStyle(fontSize: 12),
-                            )
-                          ],
-                        )
-                      : const Icon(Icons.download))),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : Text(
+                    'Download Agreement',
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+          ],
+        ),
+      ),
     );
   }
 }
