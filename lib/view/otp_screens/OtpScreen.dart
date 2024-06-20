@@ -60,7 +60,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   void codeUpdated() {
     setState(() {
       otpCode = code;
-      print("Code ######## " + otpCode!);
+      print("Code ######## ${otpCode!}");
     });
   }
 
@@ -73,7 +73,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     SmsAutoFill().getAppSignature.then((signature) {
       setState(() {
         appSignature = signature;
-        print("MUkesh " + appSignature!);
+        print("MUkesh ${appSignature!}");
       });
     });
   }
@@ -396,7 +396,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 if (data.userData?.selfie != null) {
                   prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                 }
-                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!.toDouble());
                 if (data.userData?.docSignedUrl != null) {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!

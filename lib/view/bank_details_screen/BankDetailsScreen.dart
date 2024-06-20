@@ -157,7 +157,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         bottom: true,
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          body: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
             if (productProvider.getBankDetailsData == null && isLoading) {
               return const Loader();
             } else {
@@ -173,18 +174,22 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
                     if (bankDetailsResponceModel != null) {
                       if (bankDetailsResponceModel!.result != null) {
-
-                        if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null) {
+                        if (bankDetailsResponceModel!
+                                .result!.leadBankDetailDTOs !=
+                            null) {
                           if (bankDetailsResponceModel!.isSuccess!) {
                             _accountHolderController.text =
-                            bankDetailsResponceModel!.result!
-                                .leadBankDetailDTOs!.first.accountHolderName!;
+                                bankDetailsResponceModel!
+                                    .result!
+                                    .leadBankDetailDTOs!
+                                    .first
+                                    .accountHolderName!;
                             if (bankDetailsResponceModel!.result!
-                                .leadBankDetailDTOs!.first.accountNumber !=
+                                    .leadBankDetailDTOs!.first.accountNumber !=
                                 null) {
                               _bankAccountNumberCl.text =
-                              bankDetailsResponceModel!.result!
-                                  .leadBankDetailDTOs!.first.accountNumber!;
+                                  bankDetailsResponceModel!.result!
+                                      .leadBankDetailDTOs!.first.accountNumber!;
                             }
                             _ifsccodeCl.text = bankDetailsResponceModel!
                                 .result!.leadBankDetailDTOs!.first.ifscCode!;
@@ -193,13 +198,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                             _accountTypeCl.text = bankDetailsResponceModel!
                                 .result!.leadBankDetailDTOs!.first.accountType!;
                             _bankStatmentPassworedController.text =
-                            bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
+                                bankDetailsResponceModel!.result!
+                                    .leadBankDetailDTOs!.first.pdfPassword!;
                             if (!isEditableStatement) {
                               for (int i = 0;
-                              i <
-                                  bankDetailsResponceModel!
-                                      .result!.bankDocs!.length;
-                              i++) {
+                                  i <
+                                      bankDetailsResponceModel!
+                                          .result!.bankDocs!.length;
+                                  i++) {
                                 print("bankDocsDAta " + i.toString());
                                 documentList!.add(bankDetailsResponceModel!
                                     .result!.bankDocs![i].fileURL);
@@ -269,11 +275,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       CommonTextField(
                         inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[0-9]'))),
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(17)
                         ],
-                        enableinteractiveSelection:false,
+                        enableinteractiveSelection: false,
                         keyboardType: TextInputType.number,
                         controller: _bankAccountNumberCl,
                         maxLines: 1,
@@ -288,18 +293,16 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         height: 16.0,
                       ),
                       CommonTextField(
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
-                          LengthLimitingTextInputFormatter(11)
-                        ],
-                        controller: _ifsccodeCl,
-                        hintText: "IFSC Code",
-                        labelText: "IFSC Code",
-                        textCapitalization: TextCapitalization.characters,
-                          onChanged: (value) {
-
-                          }),
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp((r'[A-Z0-9]'))),
+                            LengthLimitingTextInputFormatter(11)
+                          ],
+                          controller: _ifsccodeCl,
+                          hintText: "IFSC Code",
+                          labelText: "IFSC Code",
+                          textCapitalization: TextCapitalization.characters,
+                          onChanged: (value) {}),
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -332,8 +335,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                       listen: false)
                                   .postBusineesDoumentSingleFile(
                                       file, true, "", "");
-                              if (productProvider.getpostBusineesDoumentSingleFileData != null) {
-                                documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                              if (productProvider
+                                      .getpostBusineesDoumentSingleFileData !=
+                                  null) {
+                                documentList!.add(productProvider
+                                    .getpostBusineesDoumentSingleFileData!
+                                    .filePath);
                               }
                               setState(() {
                                 Navigator.pop(context);
@@ -354,7 +361,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset('assets/images/gallery.svg'),
-                                 Text(
+                                Text(
                                   'Upload Bank Proof',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 12,
@@ -362,12 +369,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                                Text('Supports : PDF',
+                                Text(
+                                  'Supports : PDF',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 12,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w400,
-                                  ),),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -465,9 +474,15 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs != null) {
-          if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName != null) {
-
-            var data = liveBankList!.where((element) => element?.bankName == bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!).toList();
+          if (bankDetailsResponceModel!
+                  .result!.leadBankDetailDTOs!.first.bankName !=
+              null) {
+            var data = liveBankList!
+                .where((element) =>
+                    element?.bankName ==
+                    bankDetailsResponceModel!
+                        .result!.leadBankDetailDTOs!.first.bankName!)
+                .toList();
             if (data.isNotEmpty) {
               selectedBankValue = data.first!.bankName!.toString();
               initialData = data.first;
@@ -843,9 +858,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       Utils.showToast("Please Enter IFSC code", context);
     } else if (!Utils.isValidIFSCode(_ifsccodeCl.text)) {
       Utils.showToast("IFSC code should be Proper format", context);
-    } else if(documentList!.isEmpty){
+    } else if (documentList!.isEmpty) {
       Utils.showToast("Please upload Bank Statement", context);
-    }else {
+    } else {
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
 

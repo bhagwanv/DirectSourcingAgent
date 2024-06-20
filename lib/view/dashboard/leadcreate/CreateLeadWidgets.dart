@@ -22,6 +22,7 @@ class CreateLeadWidgets extends StatefulWidget {
 
 class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final TextEditingController _MobileNumberController = TextEditingController();
+  String? createLeadBaseUrl;
   String? companyID;
   String? productCode;
   String? UserToken;
@@ -154,6 +155,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
 
   Future<void> getUserData() async {
     final prefsUtil = await SharedPref.getInstance();
+    createLeadBaseUrl = prefsUtil.getString(CREATE_LEAD_BASE_URL);
     companyID = prefsUtil.getString(COMPANY_CODE);
     productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
@@ -169,7 +171,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   }
 
   String _constructUrl() {
-    String baseUrl = "https://customer-qa.scaleupfin.com/#/lead";
+    String baseUrl = createLeadBaseUrl?.toString()??"";
     String mobileNumber = _MobileNumberController.text.toString() ?? "";
     String companyId = companyID?.toString() ?? "";
     String productId = productCode?.toString() ?? "";

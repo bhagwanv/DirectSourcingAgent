@@ -271,8 +271,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                       isPanProgressDilog = true;
                                     });
 
-                                    await getLeadValidPanCard(context,
-                                        _panNumberCl.text, productProvider);
+                                    await getLeadValidPanCard(context, _panNumberCl.text, productProvider);
                                   } else {
                                     isPanProgressDilog = false;
                                   }
@@ -693,6 +692,7 @@ class _PancardScreenState extends State<PancardScreen> {
         } else {
           Utils.showToast(validPanCardResponsModel.message!, context);
           isPanProgressDilog=false;
+          _panNumberCl.clear();
           _nameAsPanCl.clear();
           _dOBAsPanCl.clear();
           _fatherNameAsPanCl.clear();
@@ -766,6 +766,8 @@ class _PancardScreenState extends State<PancardScreen> {
           postLeadPanResponseModel = PostLeadPanResponseModel;
           if (postLeadPanResponseModel.isSuccess!) {
             fetchData(context);
+          }else{
+            Utils.showToast(postLeadPanResponseModel.message!, context);
           }
         },
         failure: (exception) {

@@ -555,7 +555,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text("Lead ID: $leadID",
+                            Text("Loan ID: $leadID",
                                 style: GoogleFonts.urbanist(
                                   fontSize: 12,
                                   color: Colors.black,

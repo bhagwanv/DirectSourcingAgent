@@ -966,7 +966,7 @@ class _HomeScreenState extends State<HomeScreen> {
       int selectedMonth = selectedDate.month;
       if (selectedYear > now.year ||
           (selectedYear == now.year && selectedMonth > now.month)) {
-        Utils.showToast("Future dates are disabled", context);
+        Utils.showToast("Future dates are not allowed", context);
       } else {
         DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
         DateTime endOfMonth;
