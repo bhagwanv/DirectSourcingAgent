@@ -199,8 +199,7 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   Future onLoadStop(url) async {
     print("Stopped $token");
-    await webViewController?.evaluateJavascript(
-        source: "_callJavaScriptFunction('${token}')");
+    await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
   }
 
   @override

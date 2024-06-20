@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum ImageSourceType { gallery, camera }
 
@@ -68,6 +69,9 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
 
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -80,10 +84,17 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
           children: [
             Container(
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
                   print("click Camera");
-                  _handleURLButtonPress(context, ImageSourceType.camera);
+
+                  var status = await Permission.camera.status;
+                  if (status.isPermanentlyDenied) {
+                    openAppSettings();
+                  }else {
+                    _handleURLButtonPress(context, ImageSourceType.camera);
+                  }
+
                 },
                 child: Column(
                   children: [
@@ -132,6 +143,8 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
 
   }
 
+
+
   @override
   void initState() {
     super.initState();
@@ -143,4 +156,5 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
     }
     return File(croppedFile.path);
   }
+
 }
