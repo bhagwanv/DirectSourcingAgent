@@ -20,7 +20,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/constant.dart';
-import '../aadhaar_screen/components/CheckboxTerm.dart';
+import '../../utils/custom_radio_button.dart';
 
 class Connector_signup extends StatefulWidget {
   int? activityId;
@@ -62,25 +62,22 @@ class ConnectorSignup extends State<Connector_signup> {
   String initDateTime = '2021-08-31';
 
   final bool _showTitle = true;
+  bool isWorkingWithParty = false;
   final DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
   final String _format = 'yyyy-MMMM-dd';
-  String workingWithParty = "";
+  String workingWithParty = "No";
 
   DateTime? _dateTime;
   String? slectedDate = "";
   ConnectorInfoResponce? connectorInfoResponceModel;
 
-  void _handleCheckboxChange(int index, bool? value) {
+  void _handleRadioValueWorkingWithPartyChanged(String value) {
     setState(() {
-      if (index == 1) {
-        _isSelected1 = value!;
-        _isSelected2 = !value;
-      } else if (index == 2) {
-        _isSelected2 = value!;
-        _isSelected1 = !value;
-      }
+      isWorkingWithParty = true;
+      workingWithParty = value;
     });
   }
+
 
   void _showDatePicker(BuildContext context) {
     DatePicker.showDatePicker(
@@ -212,6 +209,9 @@ class ConnectorSignup extends State<Connector_signup> {
                         if (connectorInfoResponceModel!.pincode != null) {
                           _pincodeController.text =
                               connectorInfoResponceModel!.pincode!.toString();
+                        }
+                        if (connectorInfoResponceModel!.workingWithOther != null && !isWorkingWithParty) {
+                          workingWithParty = connectorInfoResponceModel!.workingWithOther!.toString();
                         }
                         updateData = false;
                       }
@@ -426,25 +426,22 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Expanded(
-                          child: CheckboxTerm(
-                            content: "Yes",
-                            isChecked: _isSelected1,
-                            onChanged: (bool? value) {
-                              workingWithParty = "Yes";
-                              _handleCheckboxChange(1, value);
-                            },
+                          child: CustomRadioButton(
+                            value: 'Yes',
+                            groupValue: workingWithParty,
+                            onChanged: _handleRadioValueWorkingWithPartyChanged,
+                            text: "Yes",
                           ),
                         ),
+                        SizedBox(height: 20),
                         Expanded(
-                          child: CheckboxTerm(
-                            content: "NO",
-                            isChecked: _isSelected2,
-                            onChanged: (bool? value) {
-                              workingWithParty = "NO";
-                              _handleCheckboxChange(2, value);
-                            },
+                          child: CustomRadioButton(
+                            value: 'No',
+                            groupValue: workingWithParty,
+                            onChanged: _handleRadioValueWorkingWithPartyChanged,
+                            text: "No",
                           ),
                         ),
                       ],
