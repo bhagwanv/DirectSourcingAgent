@@ -166,7 +166,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (data.userData?.selfie != null) {
                   prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                 }
-                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!);
                 if (data.userData?.docSignedUrl != null) {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
@@ -288,8 +287,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await remoteConfig.fetchAndActivate();
     String Url =remoteConfig.getString('Base_url');
+    String createLeadUrl =remoteConfig.getString('Create_lead_url');
     print("Base Url "+Url);
+    print("Create_lead_url Url "+createLeadUrl);
     await prefsUtil.saveString(BASE_URL, Url);
+    await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
     _checkLoginStatus();
     return 'Fetched: ${remoteConfig.getString('Base_url')}';
 
