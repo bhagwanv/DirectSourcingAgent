@@ -446,7 +446,8 @@ class _LeadScreenState extends State<LeadScreen> {
           DsaDashboardLeadList dsaDashboardLead = dsaDashboardLeadList![index];
 
           // Null check for each property before accessing it
-          String? leadID = dsaDashboardLead.leadId.toString() ?? ''; // Default value if anchorName is null
+          String? leadID = dsaDashboardLead.leadCode.toString() ?? ''; // Default value if anchorName is null
+          String? agentFullName = dsaDashboardLead.agentFullName.toString() ?? ''; // Default value if anchorName is null
           String createdDate = dsaDashboardLead.createdDate != null ? Utils.dateMonthAndYearFormat(dsaDashboardLead.createdDate.toString()) : "";
           String name = dsaDashboardLead.fullName ?? '';
           String status = dsaDashboardLead.status.toString() ?? '';
@@ -480,11 +481,20 @@ class _LeadScreenState extends State<LeadScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            Text(
+                              "Agent Name: $agentFullName",
+                              style: GoogleFonts.urbanist(
+                                fontSize: 12,
+                                color: Colors.black,
+                                fontWeight: FontWeight
+                                    .w500,
+                              )),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                    "Lead ID : $leadID",
+                                    "Lead Code : $leadID",
                                     style: GoogleFonts.urbanist(
                                       fontSize: 12,
                                       color: Colors.black,
