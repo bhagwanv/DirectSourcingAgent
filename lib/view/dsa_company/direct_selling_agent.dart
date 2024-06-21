@@ -74,8 +74,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   final TextEditingController _companyStateCl = TextEditingController();
   final TextEditingController _companyCityCl = TextEditingController();
   final TextEditingController _presentOccupationCl = TextEditingController();
-  final TextEditingController _businessDocumentNumberController =
-      TextEditingController();
 
   var isPresentlyworking = "No";
   var isGSTRegistered = "Yes";
@@ -89,18 +87,34 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   var isImageDelete = false;
   var isGstFilled = false;
   var updateData = true;
-  var updateDataGst = true;
   var isWorkingWithOtherChange = false;
   var isGstStatusChange = false;
 
   void _handleRadioValueChanged(String value) {
     setState(() {
       isGstStatusChange = true;
+      _gstController.clear();
       _companyNameCl.clear();
       _companyAddressCl.clear();
+      _companyPinCodeCodeCl.clear();
       isGSTRegistered = value;
       companyCityId = null;
       companyStateId = null;
+      selectedCompanyCity = null;
+      selectedCompanyState = null;
+
+      isImageDelete = true;
+      gstUpdate = true;
+      setCityListFirstTime = false;
+      businessProofDocId = null;
+      selectedFirmTypeValue = null;
+      selectedStateValue = null;
+      selectedCityValue = null;
+      selectedBusinessTypeValue = null;
+      isClearData = true;
+      gstNumber = "";
+      image = "";
+      isGstFilled = false;
     });
   }
   void _handleRadioValueWorkingWithOtherChanged(String value) {
@@ -184,7 +198,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     'Trade License',
     'Others'
   ];
-  String? selectedChooseBusinessProofValue = null;
 
   var gstUpdate = true;
   var setStateListFirstTime = true;
@@ -690,10 +703,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             hintText: "Date of Birth",
                             labelText: "Date of Birth",
                           ),
-                          Padding(
+                          const Padding(
                             padding:
-                                const EdgeInsets.only(top: 16.0, right: 8.0),
-                            child: const Align(
+                                EdgeInsets.only(top: 16.0, right: 8.0),
+                            child: Align(
                               alignment: Alignment.centerRight,
                               child: Icon(
                                 Icons.date_range,
@@ -995,23 +1008,28 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  updateDataGst = true;
+                                  isGstStatusChange = true;
+                                  _gstController.clear();
+                                  _companyNameCl.clear();
+                                  _companyAddressCl.clear();
+                                  _companyPinCodeCodeCl.clear();
+                                  companyCityId = null;
+                                  companyStateId = null;
+                                  selectedCompanyCity = null;
+                                  selectedCompanyState = null;
+
                                   isImageDelete = true;
                                   gstUpdate = true;
                                   setCityListFirstTime = false;
-                                  _gstController.text = "";
-                                  _businessDocumentNumberController.text = "";
                                   businessProofDocId = null;
                                   selectedFirmTypeValue = null;
                                   selectedStateValue = null;
                                   selectedCityValue = null;
-                                  selectedChooseBusinessProofValue = null;
+                                  selectedBusinessTypeValue = null;
                                   isClearData = true;
                                   gstNumber = "";
                                   image = "";
                                   isGstFilled = false;
-                                  companyCityId = null;
-                                  companyStateId = null;
                                 });
                               },
                               child: Container(
@@ -1281,7 +1299,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             Utils.showToast("Please enter State", context);
                           } else if (_alternetMobileNumberCl.text.trim().isEmpty) {
                             Utils.showToast(
-                                "Please enter AlterNet Mobile Number ",
+                                "Please enter Alternate Mobile Number ",
                                 context);
                           } else if (_emailIDCl.text.trim().isEmpty) {
                             Utils.showToast("Enter email address", context);
@@ -1309,13 +1327,17 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                           } else if (_referenceNames.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please enter Reference Name", context);
-                          } else if (_referenceContactNoCl.text.isEmpty) {
+                          } else if (!Utils.isPhoneNoValid(_referenceContactNoCl.text.trim())) {
                             Utils.showToast(
-                                "Please enter Reference Contact Number",
+                                "Please enter valid reference contact number",
                                 context);
                           } else if (isGSTRegistered.isEmpty) {
                             Utils.showToast(
                                 "Please select GST Registered or Non GST Registered ",
+                                context);
+                          }else if (isGSTRegistered == "Yes" && !isGstFilled) {
+                            Utils.showToast(
+                                "Please enter valid GST number",
                                 context);
                           } else if (selectedFirmTypeValue == null) {
                             Utils.showToast("Please Select Firm Type", context);
@@ -1445,9 +1467,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             _companyStateCl.text =
                 getCustomerDetailUsingGSTData!.stateId.toString();
             isGstFilled = true;
-            selectedChooseBusinessProofValue = "GST Certificate";
-            _businessDocumentNumberController.text =
-                getCustomerDetailUsingGSTData!.busGSTNO!;
+            selectedBusinessTypeValue = "GST Certificate";
             companyStateId = getCustomerDetailUsingGSTData!.stateId.toString();
             companyCityId = getCustomerDetailUsingGSTData!.cityId.toString();
           } else {
@@ -1518,7 +1538,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-     Utils.onLoading(context, "");
+    /* Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -1543,7 +1563,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           }
         },
       );
-    }
+    }*/
   }
 
   Future<void> fetchData(BuildContext context) async {
