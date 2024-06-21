@@ -183,7 +183,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   ];
   String? selectedChooseBusinessProofValue = null;
 
-  var gstUpdate = false;
+  var gstUpdate = true;
   var setStateListFirstTime = true;
   var setCityListFirstTime = true;
   CustomerDetailUsingGstResponseModel? getCustomerDetailUsingGSTData;
