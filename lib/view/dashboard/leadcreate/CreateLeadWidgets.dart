@@ -220,7 +220,7 @@ class MyInAppBrowser extends InAppBrowser {
   void onConsoleMessage(ConsoleMessage consoleMessage) {
     print('Console message: ${consoleMessage.message}');
 
-    if(consoleMessage.message=="Lead Data"){
+    if(consoleMessage.message=="closeDSALeadScreen"){
       print('Bhagwan message: ${consoleMessage.message}');
     }
     super.onConsoleMessage(consoleMessage);
