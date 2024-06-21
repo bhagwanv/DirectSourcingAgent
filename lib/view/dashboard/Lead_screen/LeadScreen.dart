@@ -770,9 +770,6 @@ class _LeadScreenState extends State<LeadScreen> {
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl(mobile))),
       settings: settings,
-
-
-
     );
   }
   Future<void> getUserData()async {
@@ -811,14 +808,29 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   Future onLoadStop(url) async {
     print("Stopped $token");
+
     await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
   }
 
   @override
   void onProgressChanged(progress) {
     print("Progress: $progress");
+
   }
 
+
+  @override
+  void onConsoleMessage(ConsoleMessage consoleMessage){
+    if(consoleMessage.messageLevel==1 && consoleMessage.message=="Back To Flutter App"){
+      print("ShopKirna ${consoleMessage.message}");
+       Utils.showBottomToast(consoleMessage.message);
+
+    }else{
+
+    }
+
+    super.onConsoleMessage(consoleMessage);
+  }
   @override
   void onExit() {
     print("Browser  closed!");

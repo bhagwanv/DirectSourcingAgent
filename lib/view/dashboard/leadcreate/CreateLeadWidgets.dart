@@ -1,3 +1,4 @@
+
 import 'package:direct_sourcing_agent/api/ApiService.dart';
 import 'package:direct_sourcing_agent/api/FailureException.dart';
 import 'package:direct_sourcing_agent/providers/DataProvider.dart';
@@ -7,7 +8,6 @@ import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -167,13 +167,13 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl())),
       settings: settings,
-    );
 
+    );
 
   }
 
   String _constructUrl() {
-    String baseUrl = createLeadBaseUrl?.toString()??"";
+    String baseUrl = createLeadBaseUrl?.toString() ?? "";
     String mobileNumber = _MobileNumberController.text.toString() ?? "";
     String companyId = companyID?.toString() ?? "";
     String productId = productCode?.toString() ?? "";
@@ -193,11 +193,22 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  Future onLoadStart(url) async {
-    print("Started $url");
-    Loader();
+  void onConsoleMessage(ConsoleMessage consoleMessage) {
+    super.onConsoleMessage(consoleMessage);
+
+    webViewController!.addWebMessageListener(WebMessageListener(
+      jsObjectName: "closeDSALeadScreen",
+      onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) {
+        print("Bhagwan"+message.toString());
+      },
+    ));
   }
 
+  @override
+  Future onLoadStart(url) async {
+    print("Started $url");
+    const Loader();
+  }
 
   @override
   Future onLoadStop(url) async {
@@ -216,13 +227,4 @@ class MyInAppBrowser extends InAppBrowser {
     print("Browser  closed!");
   }
 
-  @override
-  void onConsoleMessage(ConsoleMessage consoleMessage) {
-    print('Console message: ${consoleMessage.message}');
-
-    if(consoleMessage.message=="closeDSALeadScreen"){
-      print('Bhagwan message: ${consoleMessage.message}');
-    }
-    super.onConsoleMessage(consoleMessage);
-  }
 }
