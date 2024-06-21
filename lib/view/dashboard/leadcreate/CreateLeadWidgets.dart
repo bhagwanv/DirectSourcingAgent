@@ -168,6 +168,8 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
       urlRequest: URLRequest(url: WebUri(_constructUrl())),
       settings: settings,
     );
+
+
   }
 
   String _constructUrl() {
@@ -196,10 +198,12 @@ class MyInAppBrowser extends InAppBrowser {
     Loader();
   }
 
+
   @override
   Future onLoadStop(url) async {
     print("Stopped $token");
     await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
+
   }
 
   @override
@@ -210,5 +214,15 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onExit() {
     print("Browser  closed!");
+  }
+
+  @override
+  void onConsoleMessage(ConsoleMessage consoleMessage) {
+    print('Console message: ${consoleMessage.message}');
+
+    if(consoleMessage.message=="Lead Data"){
+      print('Bhagwan message: ${consoleMessage.message}');
+    }
+    super.onConsoleMessage(consoleMessage);
   }
 }
