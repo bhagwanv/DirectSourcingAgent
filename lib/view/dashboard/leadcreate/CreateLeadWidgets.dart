@@ -203,7 +203,6 @@ class MyInAppBrowser extends InAppBrowser {
   Future onLoadStop(url) async {
     print("Stopped $token");
     await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
-
   }
 
   @override
@@ -217,11 +216,12 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  void onConsoleMessage(ConsoleMessage consoleMessage) {
-    print('Console message: ${consoleMessage.message}');
+  void onConsoleMessage(ConsoleMessage consoleMessage) async {
+    print('Mukesh: ${consoleMessage.message}');
 
-    if(consoleMessage.message=="closeDSALeadScreen"){
+    if(consoleMessage.message=="Back To Flutter App"){
       print('Bhagwan message: ${consoleMessage.message}');
+
     }
     super.onConsoleMessage(consoleMessage);
   }

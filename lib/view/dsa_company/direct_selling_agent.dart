@@ -786,13 +786,50 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       SizedBox(height: 16),
                       Stack(
                         children: [
-                          CommonTextField(
-                            controller: _emailIDCl,
-                            enabled: true,
+                          TextField(
+                            enabled: !isValidEmail,
                             keyboardType: TextInputType.emailAddress,
-                            hintText: "E Mail id",
-                            labelText: "E Mail id",
+                            textInputAction: TextInputAction.next,
+                            controller: _emailIDCl,
+                            maxLines: 1,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                              hintText: "E-mail ID",
+                              labelText: "E-mail ID",
+                              fillColor: textFiledBackgroundColour,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                            ),
                           ),
+                          _emailIDCl.text.isNotEmpty
+                              ? Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              child: IconButton(
+                                onPressed: () => setState(() {
+                                  isEmailClear = false;
+                                  isValidEmail = false;
+                                  _emailIDCl.clear();
+                                }),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/email_cross.svg',
+                                  semanticsLabel: 'My SVG Image',
+                                ),
+                              ),
+                            ),
+                          )
+                              : Container(),
                         ],
                       ),
                       Text(
@@ -804,6 +841,44 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         ),
                         textAlign: TextAlign.justify,
                       ),
+                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
+                          ? Container(
+                        child: Row(
+                          children: [
+                            Text(
+                              'VERIFIED',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            SvgPicture.asset('assets/icons/tick_square.svg'),
+                          ],
+                        ),
+                      )
+                          : Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () async {
+                              if (_emailIDCl.text.isEmpty) {
+                                Utils.showToast("Please Enter Email ID", context);
+                              } else if (!Utils.validateEmail(_emailIDCl.text)) {
+                                Utils.showToast("Please Enter Valid Email ID", context);
+                              } else {
+                                callEmailIDExist(context, _emailIDCl.text);
+                              }
+                            },
+                            child: Text(
+                              'Click here to Verify',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue),
+                            ),
+                          )),
                       SizedBox(height: 16),
                       CommonTextField(
                         controller: _presentOccupationCl,
@@ -1425,8 +1500,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID) as EmailExistRespoce;
     if (data.isSuccess!) {
-      Utils.showToast(data.message!, context);
       Navigator.of(context, rootNavigator: true).pop();
+      Utils.showToast(data.message!, context);
     } else {
       callSendOptEmail(context, _emailIDCl.text);
     }

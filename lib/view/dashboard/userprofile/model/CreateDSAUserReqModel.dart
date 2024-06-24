@@ -2,7 +2,7 @@ class CreateDSAUserReqModel {
   String? mobileNumber;
   String? fullName;
   String? emailId;
-  int? payoutPercenatge;
+  double? payoutPercenatge;
 
   CreateDSAUserReqModel(
       {this.mobileNumber, this.fullName, this.emailId, this.payoutPercenatge});

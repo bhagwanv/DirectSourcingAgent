@@ -158,8 +158,7 @@ class _CreateUserWidgetsState extends State<CreateUserWidgets> {
                               mobileNumber: _MobileNumberController.text.toString(),
                               fullName: _UserNameController.text.toString(),
                               emailId: _EmailController.text.toString(),
-                              payoutPercenatge:
-                                  int.parse(_PayOutController.text.toString()));
+                              payoutPercenatge:double.parse(_PayOutController.text.toString()));
                           await Provider.of<DataProvider>(context,
                                   listen: false)
                               .createDSAUser(model);
