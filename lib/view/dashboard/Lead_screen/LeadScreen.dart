@@ -770,9 +770,6 @@ class _LeadScreenState extends State<LeadScreen> {
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl(mobile))),
       settings: settings,
-
-
-
     );
   }
   Future<void> getUserData()async {

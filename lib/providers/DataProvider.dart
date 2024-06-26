@@ -493,8 +493,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> isEmailExist(String UserID,String Emailid) async {
-    _getEmailExistData = await apiService.emailExist(UserID,Emailid);
+  Future<void> isEmailExist(String UserID,String Emailid, String productCode) async {
+    _getEmailExistData = await apiService.emailExist(UserID,Emailid, productCode);
     notifyListeners();
   }
 

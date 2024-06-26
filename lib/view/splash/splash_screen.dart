@@ -133,60 +133,59 @@ class _SplashScreenState extends State<SplashScreen> {
         if (productProvider.getUserProfileResponse != null) {
           productProvider.getUserProfileResponse!.when(
             success: (data) async {
-              final prefsUtil = await SharedPref.getInstance();
-              prefsUtil.saveString(USER_ID, data.userId!);
-              prefsUtil.saveString(TOKEN, data.userToken!);
-              prefsUtil.saveInt(COMPANY_ID, data.companyId!);
-              prefsUtil.saveInt(PRODUCT_ID, data.productId!);
-              prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-              if (data.companyCode != null) {
-                prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
-              }
-              if (data.role != null) {
-                prefsUtil.saveString(ROLE, data.role!);
-              }
-              if (data.type != null) {
-                prefsUtil.saveString(TYPE, data.type!);
-              }
+              if(data.status!) {
+                final prefsUtil = await SharedPref.getInstance();
+                prefsUtil.saveString(USER_ID, data.userId!);
+                prefsUtil.saveString(TOKEN, data.userToken!);
+                prefsUtil.saveInt(COMPANY_ID, data.companyId!);
+                prefsUtil.saveInt(PRODUCT_ID, data.productId!);
+                prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
+                if( data.companyCode!=null) {
+                  prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+                }
+                if( data.role!=null) {
+                  prefsUtil.saveString(ROLE, data.role!);
+                } if( data.type!=null) {
+                  prefsUtil.saveString(TYPE, data.type!);
+                }
 
-              if (data.userData != null) {
-                prefsUtil.saveString(USER_NAME, data.userData!.name!);
-                prefsUtil.saveString(
-                    USER_PAN_NUMBER, data.userData!.panNumber!);
-                prefsUtil.saveString(
-                    USER_ADHAR_NO, data.userData!.aadharNumber!);
-                if (data.userData!.mobile != null) prefsUtil.saveString(
-                    USER_MOBILE_NO, data.userData!.mobile!);
-                if (data.userData?.address != null) {
-                  prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
+                if(data.userData!=null){
+                  prefsUtil.saveString(USER_NAME, data.userData!.name!);
+                  prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
+                  prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
+                  if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                  if (data.userData?.address != null) {
+                    prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
+                  }
+                  if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                  if (data.userData?.selfie != null) {
+                    prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
+                  }
+                  if (data.userData?.docSignedUrl != null) {
+                    prefsUtil.saveString(
+                        USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
+                    );
+                  }
+                  prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!.toDouble());
+                  if( data.userData!.docSignedUrl!=null) {
+                    prefsUtil.saveString(
+                        USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
+                  }
+
                 }
-                if (data.userData!.workingLocation != null) prefsUtil
-                    .saveString(
-                    USER_WORKING_LOCTION, data.userData!.workingLocation!);
-                if (data.userData?.selfie != null) {
-                  prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
-                }
-                if (data.userData?.docSignedUrl != null) {
-                  prefsUtil.saveString(
-                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
+
+                prefsUtil.saveBool(IS_LOGGED_IN, true);
+                if (data.isActivated!) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) =>  BottomNav()),
                   );
+                } else {
+                  GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
                 }
-                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!.toDouble());
-                if (data.userData!.docSignedUrl != null) {
-                  prefsUtil.saveString(
-                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
-                }
-              }
-
-
-              prefsUtil.saveBool(IS_LOGGED_IN, true);
-              if (data.isActivated!) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => BottomNav()),
-                );
               } else {
-                GetLeadByMobileNo(
-                    context, productProvider, userLoginMobile, userId);
+                Utils.showBottomToast(data.message!);
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
               }
             },
             failure: (exception) {

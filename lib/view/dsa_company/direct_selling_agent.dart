@@ -1497,13 +1497,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     EmailExistRespoce data;
-    data = await ApiService().emailExist(userId!, emailID) as EmailExistRespoce;
+    data = await ApiService().emailExist(userId!, emailID, productCode!) as EmailExistRespoce;
     if (data.isSuccess!) {
       Navigator.of(context, rootNavigator: true).pop();
       Utils.showToast(data.message!, context);
     } else {
-      callSendOptEmail(context, _emailIDCl.text);
+    //  callSendOptEmail(context, _emailIDCl.text);
+      isValidEmail = true;
     }
   }
 

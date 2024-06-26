@@ -761,13 +761,13 @@ class ApiService {
     }
   }
 
-  Future<EmailExistRespoce> emailExist(String userID, String EmailId) async {
+  Future<EmailExistRespoce> emailExist(String userID, String EmailId, String productCode) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(
         Uri.parse(
-            '${base_url! + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
+            '${base_url! + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId&productCode=$productCode'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },

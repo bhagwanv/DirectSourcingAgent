@@ -619,8 +619,9 @@ class ConnectorSignup extends State<Connector_signup> {
     Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     EmailExistRespoce data;
-    data = await ApiService().emailExist(userId!, emailID) as EmailExistRespoce;
+    data = await ApiService().emailExist(userId!, emailID, productCode!) as EmailExistRespoce;
     if (data.isSuccess!) {
       Utils.showToast(data.message!, context);
       Navigator.of(context, rootNavigator: true).pop();
