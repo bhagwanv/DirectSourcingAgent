@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -11,9 +12,11 @@ enum ImageSourceType { gallery, camera }
 
 class ImagePickerWidgets extends StatefulWidget {
   late Function(File) onImageSelected;
-  ImagePickerWidgets({
-    super.key,  required this.onImageSelected
-  });
+  final bool? camera;
+  final bool? gallery;
+  final bool? pdf;
+
+  ImagePickerWidgets({super.key,  required this.onImageSelected, this.camera = true,this.gallery = true,this.pdf = false});
 
   @override
   State<ImagePickerWidgets> createState() => _ImagePickerWidgetsState();
@@ -80,8 +83,10 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
         height: 100,
         width: double.infinity,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Spacer(),
+            widget.camera!?
             Container(
               child: GestureDetector(
                 onTap: () async {
@@ -111,7 +116,9 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
                   ],
                 ),
               ),
-            ),
+            ):Container(),
+            widget.camera!?Spacer(): Container(),
+            widget.gallery!?
             Container(
               child: GestureDetector(
                 onTap: () {
@@ -134,7 +141,40 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
                   ],
                 ),
               ),
-            ),
+            ):Container(),
+            widget.gallery!?Spacer(): Container(),
+            widget.pdf!?
+            Container(
+              child: GestureDetector(
+                onTap: () async {
+                  Navigator.pop(context);
+                  print("File");
+                  FilePickerResult? result = await FilePicker.platform.pickFiles();
+                  if (result != null) {
+                    File file = File(result.files.single.path!);
+                    print("filePath-${file.path}");
+                    widget.onImageSelected(file);
+                  } else {
+                    // User canceled the picker
+                  }
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/ic_file.svg',
+                      width: 50,
+                      height: 50,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "File",
+                      style: TextStyle(color: Colors.black),
+                    )
+                  ],
+                ),
+              ),
+            ):Container(),
+            widget.pdf!?Spacer(): Container(),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -44,7 +45,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      callApi(context, isSubmit);
+     // callApi(context, isSubmit);
     });
   }
 
@@ -99,84 +100,73 @@ class _AgreementScreenState extends State<AgreementScreen> {
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
             return isSubmit
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 0.0),
-                    child: SingleChildScrollView(
+                ? Stack(
+                  children: [
+                    Positioned.fill(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          const Center(
+                          Center(
                             child: Text(
                               "Agreement",
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w100,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 30,
+                                color: blackSmall,
+                                fontWeight: FontWeight.w400,
                               ),
                               textAlign: TextAlign.start,
                             ),
                           ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                          dataProvider.dSAGenerateAgreementData == null ||
-                                  content.isEmpty
-                              ? Container()
-                              : SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height - 250,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: WebViewWidget(
-                                      controller: WebViewController()
-                                        ..setJavaScriptMode(
-                                            JavaScriptMode.unrestricted)
-                                        ..setBackgroundColor(
-                                            const Color(0x00000000))
-                                        ..setNavigationDelegate(
-                                          NavigationDelegate(
-                                            onProgress: (int progress) {
-                                              CircularProgressIndicator();
-                                            },
-                                            onPageStarted: (String url) {},
-                                            onPageFinished: (String url) {},
-                                            onWebResourceError:
-                                                (WebResourceError error) {},
-                                          ),
-                                        )
-                                        ..loadRequest(Uri.parse(content))),
-                                ),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          CommonElevatedButton(
-                            onPressed: () async {
-                              isCheckStatus = true;
-                              await checkESignDocumentStatus(
-                                  context, productProvider);
-                            },
-                            text: 'Next',
-                            upperCase: true,
-                          ),
-                          const SizedBox(
-                            height: 16.0,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 74.0),
+                              child: WebViewWidget(
+                                controller: WebViewController()
+                                  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                                  ..setBackgroundColor(const Color(0x00000000))
+                                  ..setNavigationDelegate(
+                                    NavigationDelegate(
+                                      onProgress: (int progress) {
+                                        // Show a progress indicator while the page is loading
+                                        CircularProgressIndicator();
+                                      },
+                                      onPageStarted: (String url) {},
+                                      onPageFinished: (String url) {},
+                                      onWebResourceError: (WebResourceError error) {},
+                                    ),
+                                  )
+                                  ..loadRequest(Uri.parse(content)),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  )
+                    Positioned(
+                      bottom: 8.0, // Adjust this value if you need more or less space
+                      left: 16.0, // Adjust these values to position the button horizontally
+                      right: 16.0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CommonElevatedButton(
+                            onPressed: () async {
+                              isCheckStatus = true;
+                              await checkESignDocumentStatus(context, productProvider);
+                            },
+                            text: 'Next',
+                            upperCase: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
                 : Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30.0, vertical: 0.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: 16.0,
-                        ),
                         Center(
                           child: Text(
                             "Agreement",
@@ -194,12 +184,12 @@ class _AgreementScreenState extends State<AgreementScreen> {
                         Expanded(
                           child: SingleChildScrollView(
                             child: HtmlWidget(
-                              content, // If HtmlWidget supports webView
+                              content// If HtmlWidget supports webView
                             ),
                           ),
                         ),
                         const SizedBox(
-                          height: 16.0,
+                          height: 8.0,
                         ),
                         Container(
                           child: CommonElevatedButton(
@@ -215,7 +205,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 16.0,
+                          height: 8.0,
                         ),
                       ],
                     ),

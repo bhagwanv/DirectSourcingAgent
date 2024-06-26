@@ -14,6 +14,7 @@ import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
+import '../../utils/ImagePicker.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/common_text_field.dart';
 import '../../utils/constant.dart';
@@ -57,6 +58,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   BankDetailsResponceModel? bankDetailsResponceModel = null;
   List<String?>? documentList = [];
   var isEditableStatement = false;
+  var isImageAdd = false;
 
   @override
   void initState() {
@@ -64,6 +66,16 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     callAPI(context);
   }
 
+  void _onImageSelected(File imageFile) async {
+    isImageAdd = true;
+    isEditableStatement = true;
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context,
+        listen: false)
+        .postBusineesDoumentSingleFile(
+        imageFile, true, "", "");
+    Navigator.of(context, rootNavigator: true).pop();
+  }
   List<String> accountTypeList = ['Saving', 'Current', 'Other'];
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
@@ -250,6 +262,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         liveBankList = productProvider.getBankListData!.liveBankList!;
                       }
                     }
+
+                    if (productProvider.getpostBusineesDoumentSingleFileData != null &&isImageAdd) {
+                      documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+
+                        isImageAdd=false;
+                      print("dhfks");
+                    }
+
                     return Padding(
                       padding:
                       const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
@@ -326,7 +346,52 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                             const SizedBox(
                               height: 16.0,
                             ),
-                            Container(
+                            Stack(
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border:
+                                        Border.all(color: const Color(0xff0196CE))),
+                                    width: double.infinity,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        bottomSheetMenu(context,true, true, true);
+                                      },
+                                      child: Container(
+                                        height: 148,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffEFFAFF),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/images/gallery.svg'),
+                                            const Text(
+                                              'Upload Bank Proof',
+                                              style: TextStyle(
+                                                  color: Color(0xff0196CE),
+                                                  fontSize: 12),
+                                            ),
+                                            const Text(
+                                                'Supports : JPEG, PNG, PDF',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color:
+                                                    Color(0xffCACACA))),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          /*  Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: const Color(0xff0196CE))),
@@ -392,7 +457,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                   ),
                                 ),
                               ),
-                            ),
+                            ),*/
                             const SizedBox(
                               height: 16.0,
                             ),
@@ -417,7 +482,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                         children: [
                                           Text("${index + 1}"),
                                           Spacer(),
-                                          Icon(Icons.picture_as_pdf),
+                                          documentList![index]!.contains(".pdf") ?
+                                          Icon(Icons.picture_as_pdf) : Icon(Icons.photo),
                                           Spacer(),
                                           InkWell(
                                             onTap: () {
@@ -977,4 +1043,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       }
     }
   }
+  void bottomSheetMenu(BuildContext context, bool camera, bool gallery, bool pdf) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return ImagePickerWidgets(onImageSelected: _onImageSelected, camera: true, gallery: true, pdf: true,);
+        });
+  }
+
 }

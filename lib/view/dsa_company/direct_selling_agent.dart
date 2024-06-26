@@ -78,7 +78,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   var isPresentlyworking = "No";
   var isGSTRegistered = "Yes";
   var isValidEmail = false;
-  var isEmailClear = false;
   var isLoading = false;
   var gstNumber = "";
   var image = "";
@@ -529,6 +528,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       }
                       if (data.emailId != null) {
                         _emailIDCl.text = data.emailId!;
+                        isValidEmail=true;
                       }
                       if (data.presentOccupation != null) {
                         _presentOccupationCl.text = data.presentOccupation!;
@@ -786,29 +786,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       SizedBox(height: 16),
                       Stack(
                         children: [
-                          TextField(
-                            enabled: !isValidEmail,
+                          CommonTextField(
+                            controller: _emailIDCl,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
-                            controller: _emailIDCl,
+                            enabled: !isValidEmail,
+                            hintText: "E-mail ID",
+                            labelText: "E-mail ID",
                             maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: kPrimaryColor,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              ),
-                              hintText: "E-mail ID",
-                              labelText: "E-mail ID",
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              ),
-                            ),
+
                           ),
                           _emailIDCl.text.isNotEmpty
                               ? Positioned(
@@ -818,7 +804,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             child: Container(
                               child: IconButton(
                                 onPressed: () => setState(() {
-                                  isEmailClear = false;
                                   isValidEmail = false;
                                   _emailIDCl.clear();
                                 }),
@@ -841,7 +826,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         ),
                         textAlign: TextAlign.justify,
                       ),
-                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
+                      (isValidEmail)
                           ? Container(
                         child: Row(
                           children: [
@@ -1192,12 +1177,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             borderSide: const BorderSide(
                                 color: kPrimaryColor, width: 1),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: gstUpdate?OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
                                 color: kPrimaryColor, width: 1),
-                          ),
-                        ),
+                          ):OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: gryColor, width: 1),
+                        ),),
                         hint: const Text(
                           'Business Document',
                           style: TextStyle(
@@ -1208,9 +1196,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         ),
                         items: _addDividersAfterItems(chooseBusinessProofList),
                         value: selectedBusinessTypeValue,
-                        onChanged: (String? value) {
+                        onChanged: gstUpdate?(String? value) {
                           selectedBusinessTypeValue = value;
-                        },
+                        }:null,
                         buttonStyleData: const ButtonStyleData(
                           padding: EdgeInsets.only(right: 8),
                         ),
@@ -1230,6 +1218,101 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         height: 30,
                       ),
                       Stack(
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                  Border.all(color: const Color(0xff0196CE))),
+                              width: double.infinity,
+                              child: GestureDetector(
+                                onTap: () {
+                                  bottomSheetMenu(context,true, true, true);
+                                },
+                                child: Container(
+                                  height: 148,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xffEFFAFF),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Container(
+                                    child: (image.isNotEmpty)
+                                        ? image.contains(".pdf")
+                                        ? Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.picture_as_pdf),
+                                      ],
+                                    )
+                                        : ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                        : (image.isNotEmpty)
+                                        ? ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                        : Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload Document',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE),
+                                              fontSize: 12),
+                                        ),
+                                        const Text(
+                                            'Supports : JPEG, PNG, PDF',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color:
+                                                Color(0xffCACACA))),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isImageDelete = true;
+                                image = "";
+                              });
+                            },
+                            child: image.isNotEmpty
+                                ? Container(
+                              padding: const EdgeInsets.all(4),
+                              alignment: Alignment.topRight,
+                              child: SvgPicture.asset(
+                                  'assets/icons/delete_icon.svg'),
+                            )
+                                : Container(),
+                          ),
+                        ],
+                      ),
+                     /* Stack(
                         children: [
                           Container(
                               decoration: BoxDecoration(
@@ -1310,7 +1393,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                 : Container(),
                           )
                         ],
-                      ),
+                      ),*/
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -1378,7 +1461,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                 context);
                           } else if (_emailIDCl.text.trim().isEmpty) {
                             Utils.showToast("Enter email address", context);
-                          } else if (!Utils.validateEmail(_emailIDCl.text)) {
+                          } else if (!Utils.validateEmail(_emailIDCl.text) || !isValidEmail) {
                             Utils.showToast("Please enter Valid Email ID", context);
                           } else if (_presentOccupationCl.text.trim().isEmpty) {
                             Utils.showToast(
@@ -1457,11 +1540,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     );
   }
 
-  void bottomSheetMenu(BuildContext context) {
+  void bottomSheetMenu(BuildContext context, bool camera, bool gallery, bool pdf) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return ImagePickerWidgets(onImageSelected: _onImageSelected);
+          return ImagePickerWidgets(onImageSelected: _onImageSelected, camera: true, gallery: true, pdf: true,);
         });
   }
 
@@ -1500,12 +1583,16 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID, productCode!) as EmailExistRespoce;
+    Navigator.of(context, rootNavigator: true).pop();
     if (data.isSuccess!) {
-      Navigator.of(context, rootNavigator: true).pop();
+      isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
     //  callSendOptEmail(context, _emailIDCl.text);
-      isValidEmail = true;
+     setState(() {
+       isValidEmail = true;
+     });
+
     }
   }
 
@@ -1615,10 +1702,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-     Utils.onLoading(context, "");
+    /* Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
-    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.of(context, rootNavigator: true).pop();*/
     if (productProvider.getpostLeadDSAPersonalDetailData != null) {
       productProvider.getpostLeadDSAPersonalDetailData!.when(
         success: (data) {

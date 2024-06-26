@@ -74,7 +74,7 @@ class ConnectorSignup extends State<Connector_signup> {
   ConnectorInfoResponce? connectorInfoResponceModel;
 
   var isValidEmail = false;
-  var isEmailClear = false;
+
 
   void _handleRadioValueWorkingWithPartyChanged(String value) {
     setState(() {
@@ -194,6 +194,7 @@ class ConnectorSignup extends State<Connector_signup> {
                         if (connectorInfoResponceModel!.emailId != null) {
                           _emailIDController.text =
                               connectorInfoResponceModel!.emailId!;
+                          isValidEmail=true;
                         }
 
                         if (connectorInfoResponceModel!.emailId != null) {
@@ -371,29 +372,15 @@ class ConnectorSignup extends State<Connector_signup> {
                     SizedBox(height: 20),
                     Stack(
                       children: [
-                        TextField(
-                          enabled: !isValidEmail,
+                        CommonTextField(
+                          controller: _emailIDController,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          controller: _emailIDController,
+                          enabled: !isValidEmail,
+                          hintText: "E-mail ID",
+                          labelText: "E-mail ID",
                           maxLines: 1,
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: kPrimaryColor,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            hintText: "E-mail ID",
-                            labelText: "E-mail ID",
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                          ),
+
                         ),
                         _emailIDController.text.isNotEmpty
                             ? Positioned(
@@ -403,7 +390,6 @@ class ConnectorSignup extends State<Connector_signup> {
                           child: Container(
                             child: IconButton(
                               onPressed: () => setState(() {
-                                isEmailClear = false;
                                 isValidEmail = false;
                                 _emailIDController.clear();
                               }),
@@ -427,7 +413,7 @@ class ConnectorSignup extends State<Connector_signup> {
                       textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: 16),
-                    (!isEmailClear && _emailIDController.text.isNotEmpty)
+                    (isValidEmail )
                         ? Container(
                       child: Row(
                         children: [
@@ -622,11 +608,15 @@ class ConnectorSignup extends State<Connector_signup> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID, productCode!) as EmailExistRespoce;
+    Navigator.of(context, rootNavigator: true).pop();
     if (data.isSuccess!) {
+      isValidEmail = false;
       Utils.showToast(data.message!, context);
-      Navigator.of(context, rootNavigator: true).pop();
     } else {
-      callSendOptEmail(context, _emailIDController.text);
+     // callSendOptEmail(context, _emailIDController.text);
+      setState(() {
+        isValidEmail = true;
+      });
     }
   }
 
@@ -655,7 +645,7 @@ class ConnectorSignup extends State<Connector_signup> {
       Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
     } else if (_emailIDController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Email ID", context);
-    } else if (!Utils.validateEmail(_emailIDController.text)) {
+    } else if (!Utils.validateEmail(_emailIDController.text)|| !isValidEmail ) {
       Utils.showToast("Please enter Valid Email ID", context);
     } else if (_presentEmpolymentController.text.trim().isEmpty) {
       Utils.showToast("Please Enter present Employment", context);

@@ -110,58 +110,60 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 100,
-                ),
-                Container(
-                    height: 250,
-                    width: 250,
-                    alignment: Alignment.topCenter,
-                    child:
-                        SvgPicture.asset("assets/images/congratulation.svg")),
-                SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: Text(
-                    "Congratulation",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 100,
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Center(
+                  Container(
+                      height: 250,
+                      width: 250,
+                      alignment: Alignment.topCenter,
+                      child:
+                          SvgPicture.asset("assets/images/congratulation.svg")),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
                     child: Text(
-                      "Your Profile is up for Review Our Team Will Review it in 48 Hours and Activate Your Profile if No Additional Information is Required.",
-                      textAlign: TextAlign.justify,
+                      "Congratulation",
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.urbanist(
-                        fontSize: 15,
+                        fontSize: 18,
                         color: Colors.black,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 70),
-                CommonElevatedButton(
-                  onPressed: () async {
-                    getLoggedInUserData(context);
-                  },
-                  text: "Refresh   status",
-                  upperCase: true,
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Text(
+                        "Your Profile is up for Review Our Team Will Review it in 48 Hours and Activate Your Profile if No Additional Information is Required.",
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 70),
+                  CommonElevatedButton(
+                    onPressed: () async {
+                      getLoggedInUserData(context);
+                    },
+                    text: "Refresh   status",
+                    upperCase: true,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
