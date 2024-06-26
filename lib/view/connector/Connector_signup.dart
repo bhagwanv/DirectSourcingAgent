@@ -16,11 +16,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/constant.dart';
 import '../../utils/custom_radio_button.dart';
+import '../personal_info/EmailOtpScreen.dart';
+import '../personal_info/model/EmailExistRespoce.dart';
+import '../personal_info/model/SendOtpOnEmailResponce.dart';
 
 class Connector_signup extends StatefulWidget {
   int? activityId;
@@ -54,8 +58,6 @@ class ConnectorSignup extends State<Connector_signup> {
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _satateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-  bool _isSelected1 = false;
-  bool _isSelected2 = false;
 
   String minDateTime = '2010-05-12';
   String maxDateTime = '2030-11-25';
@@ -70,6 +72,9 @@ class ConnectorSignup extends State<Connector_signup> {
   DateTime? _dateTime;
   String? slectedDate = "";
   ConnectorInfoResponce? connectorInfoResponceModel;
+
+  var isValidEmail = false;
+  var isEmailClear = false;
 
   void _handleRadioValueWorkingWithPartyChanged(String value) {
     setState(() {
@@ -364,12 +369,53 @@ class ConnectorSignup extends State<Connector_signup> {
                       labelText: "Alternate Contact Number",
                     ),
                     SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _emailIDController,
-                      enabled: true,
-                      keyboardType: TextInputType.emailAddress,
-                      hintText: "E Mail id",
-                      labelText: "E Mail id",
+                    Stack(
+                      children: [
+                        TextField(
+                          enabled: !isValidEmail,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          controller: _emailIDController,
+                          maxLines: 1,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "E-mail ID",
+                            labelText: "E-mail ID",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                          ),
+                        ),
+                        _emailIDController.text.isNotEmpty
+                            ? Positioned(
+                          right: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: Container(
+                            child: IconButton(
+                              onPressed: () => setState(() {
+                                isEmailClear = false;
+                                isValidEmail = false;
+                                _emailIDController.clear();
+                              }),
+                              icon: SvgPicture.asset(
+                                'assets/icons/email_cross.svg',
+                                semanticsLabel: 'My SVG Image',
+                              ),
+                            ),
+                          ),
+                        )
+                            : Container(),
+                      ],
                     ),
                     Text(
                       "*Please enter correct email, we will send the agreement document on this email.",
@@ -378,8 +424,47 @@ class ConnectorSignup extends State<Connector_signup> {
                         color: Colors.red,
                         fontWeight: FontWeight.w400,
                       ),
-                      textAlign: TextAlign.start,
+                      textAlign: TextAlign.justify,
                     ),
+                    SizedBox(height: 16),
+                    (!isEmailClear && _emailIDController.text.isNotEmpty)
+                        ? Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            'VERIFIED',
+                            style: TextStyle(
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          SvgPicture.asset('assets/icons/tick_square.svg'),
+                        ],
+                      ),
+                    )
+                        : Align(
+                        alignment: Alignment.centerLeft,
+                        child: InkWell(
+                          onTap: () async {
+                            if (_emailIDController.text.isEmpty) {
+                              Utils.showToast("Please Enter Email ID", context);
+                            } else if (!Utils.validateEmail(_emailIDController.text)) {
+                              Utils.showToast("Please Enter Valid Email ID", context);
+                            } else {
+                              callEmailIDExist(context, _emailIDController.text);
+                            }
+                          },
+                          child: Text(
+                            'Click here to Verify',
+                            style: TextStyle(
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue),
+                          ),
+                        )),
                     SizedBox(height: 25),
                     CommonTextField(
                       controller: _presentEmpolymentController,
@@ -500,6 +585,49 @@ class ConnectorSignup extends State<Connector_signup> {
         ),
       ),
     );
+  }
+
+  void callSendOptEmail(BuildContext context, String emailID) async {
+    updateData = true;
+    SendOtpOnEmailResponce data;
+    data = await ApiService().sendOtpOnEmail(emailID);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (data != null && data.status!) {
+      final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EmailOtpScreen(
+                emailID: emailID,
+              )));
+
+      if (result != null &&
+          result.containsKey('isValid') &&
+          result.containsKey('Email')) {
+        setState(() {
+          isValidEmail = result['isValid'];
+          _emailIDController.text = result['Email'];
+        });
+      } else {
+        print('Result is null or does not contain expected keys');
+      }
+    } else {
+      Utils.showToast(data.message!, context);
+    }
+  }
+
+  void callEmailIDExist(BuildContext context, String emailID) async {
+    Utils.onLoading(context, "");
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    EmailExistRespoce data;
+    data = await ApiService().emailExist(userId!, emailID, productCode!) as EmailExistRespoce;
+    if (data.isSuccess!) {
+      Utils.showToast(data.message!, context);
+      Navigator.of(context, rootNavigator: true).pop();
+    } else {
+      callSendOptEmail(context, _emailIDController.text);
+    }
   }
 
   void submitConnectorApi(
