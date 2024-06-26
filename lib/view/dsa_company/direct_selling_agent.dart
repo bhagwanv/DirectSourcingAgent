@@ -1702,10 +1702,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-    /* Utils.onLoading(context, "");
+     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
-    Navigator.of(context, rootNavigator: true).pop();*/
+    Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getpostLeadDSAPersonalDetailData != null) {
       productProvider.getpostLeadDSAPersonalDetailData!.when(
         success: (data) {
