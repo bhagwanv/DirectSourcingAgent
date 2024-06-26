@@ -45,7 +45,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-     // callApi(context, isSubmit);
+      callApi(context, isSubmit);
     });
   }
 
