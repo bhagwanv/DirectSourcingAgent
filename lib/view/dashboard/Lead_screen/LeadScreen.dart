@@ -770,6 +770,9 @@ class _LeadScreenState extends State<LeadScreen> {
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl(mobile))),
       settings: settings,
+
+
+
     );
   }
   Future<void> getUserData()async {
@@ -822,11 +825,11 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onConsoleMessage(ConsoleMessage consoleMessage){
     if(consoleMessage.messageLevel==1 && consoleMessage.message=="Back To Flutter App"){
+      close();
       print("ShopKirna ${consoleMessage.message}");
        Utils.showBottomToast(consoleMessage.message);
-
-    }else{
-
+    }else if(consoleMessage.message=="DownloadEMIPDF"){
+ ///Dowlod code
     }
 
     super.onConsoleMessage(consoleMessage);

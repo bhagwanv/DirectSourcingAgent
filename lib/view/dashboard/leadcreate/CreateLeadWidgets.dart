@@ -113,10 +113,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                               "Please enter valid mobile number", context);
                         } else {
                           Utils.onLoading(context, "");
-                          await Provider.of<DataProvider>(context,
-                                  listen: false)
-                              .getCheckLeadCreatePermission(
-                                  _MobileNumberController.text.trim());
+                          await Provider.of<DataProvider>(context, listen: false).getCheckLeadCreatePermission(_MobileNumberController.text.trim());
                           Navigator.of(context, rootNavigator: true).pop();
                           if (productProvider.getLeadCreatePermission != null) {
                             productProvider.getLeadCreatePermission!.when(
@@ -193,16 +190,17 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  void onConsoleMessage(ConsoleMessage consoleMessage) {
-    super.onConsoleMessage(consoleMessage);
+  void onConsoleMessage(ConsoleMessage consoleMessage){
+    if(consoleMessage.messageLevel==1 && consoleMessage.message=="Back To Flutter App"){
+      close();
+      print("ShopKirna ${consoleMessage.message}");
+      Utils.showBottomToast(consoleMessage.message);
+    }else{
 
-    webViewController!.addWebMessageListener(WebMessageListener(
-      jsObjectName: "closeDSALeadScreen",
-      onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) {
-        print("Bhagwan"+message.toString());
-      },
-    ));
+    }
+    super.onConsoleMessage(consoleMessage);
   }
+
 
   @override
   Future onLoadStart(url) async {
