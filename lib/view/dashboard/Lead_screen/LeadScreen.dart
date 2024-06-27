@@ -16,6 +16,7 @@ import '../../../providers/DataProvider.dart';
 import '../../../shared_preferences/shared_pref.dart';
 import '../../../utils/CustomMonthYearPicker.dart';
 import '../../../utils/constant.dart';
+import '../../../utils/myWebBrowser.dart';
 import '../home/DsaSalesAgentList.dart';
 import 'model/DSADashboardLeadListReqModel.dart';
 import 'model/DsaDashboardLeadList.dart';
@@ -78,6 +79,8 @@ class _LeadScreenState extends State<LeadScreen> {
   String? productCode;
   String? UserToken;
   String? LeadCreateMobileNo;
+  String? createLeadBaseUrl;
+
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
   GlobalKey<RefreshIndicatorState>();
@@ -765,6 +768,7 @@ class _LeadScreenState extends State<LeadScreen> {
   }
   Future<void> getUserData()async {
     final prefsUtil = await SharedPref.getInstance();
+    createLeadBaseUrl = prefsUtil.getString(CREATE_LEAD_BASE_URL);
     companyID = prefsUtil.getString(COMPANY_CODE);
     productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
@@ -772,58 +776,10 @@ class _LeadScreenState extends State<LeadScreen> {
   }
 
   String _constructUrl(String mobile) {
-    String baseUrl = "https://customer-qa.scaleupfin.com/#/lead";
+    String baseUrl = createLeadBaseUrl?.toString() ?? "";
     String mobileNumber = mobile ?? "";
     String companyId = companyID?.toString() ?? "";
     String productId = productCode?.toString() ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
-  }
-}
-class MyInAppBrowser extends InAppBrowser {
-  var token;
-  var context;
-
-
-  MyInAppBrowser();
-  @override
-  Future onBrowserCreated() async {
-   // Navigator.of(context, rootNavigator: true).pop();
-  }
-
-  @override
-  Future onLoadStart(url) async {
-    print("Started $url");
-    Loader();
-  }
-
-  @override
-  Future onLoadStop(url) async {
-    print("Stopped $token");
-
-    await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
-  }
-
-  @override
-  void onProgressChanged(progress) {
-    print("Progress: $progress");
-
-  }
-
-
-  @override
-  void onConsoleMessage(ConsoleMessage consoleMessage){
-    if(consoleMessage.messageLevel==1 && consoleMessage.message=="Back To Flutter App"){
-      close();
-      print("ShopKirna ${consoleMessage.message}");
-       Utils.showBottomToast(consoleMessage.message);
-    }else if(consoleMessage.message=="DownloadEMIPDF"){
- ///Dowlod code
-    }
-
-    super.onConsoleMessage(consoleMessage);
-  }
-  @override
-  void onExit() {
-    print("Browser  closed!");
   }
 }

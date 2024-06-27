@@ -6,7 +6,6 @@ import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/common_elevted_button.dart';
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:direct_sourcing_agent/utils/constant.dart';
-import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import '../../../utils/myWebBrowser.dart';
 
 class CreateLeadWidgets extends StatefulWidget {
   @override
@@ -176,53 +177,4 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     String productId = productCode?.toString() ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
   }
-}
-
-class MyInAppBrowser extends InAppBrowser {
-  var token;
-  var context;
-
-  MyInAppBrowser();
-
-  @override
-  Future onBrowserCreated() async {
-    Navigator.of(context, rootNavigator: true).pop();
-  }
-
-  @override
-  void onConsoleMessage(ConsoleMessage consoleMessage){
-    if(consoleMessage.messageLevel==1 && consoleMessage.message=="Back To Flutter App"){
-      close();
-      print("ShopKirna ${consoleMessage.message}");
-      Utils.showBottomToast(consoleMessage.message);
-    }else{
-
-    }
-    super.onConsoleMessage(consoleMessage);
-  }
-
-
-  @override
-  Future onLoadStart(url) async {
-    print("Started $url");
-    const Loader();
-  }
-
-  @override
-  Future onLoadStop(url) async {
-    print("Stopped $token");
-    await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
-
-  }
-
-  @override
-  void onProgressChanged(progress) {
-    print("Progress: $progress");
-  }
-
-  @override
-  void onExit() {
-    print("Browser  closed!");
-  }
-
 }
