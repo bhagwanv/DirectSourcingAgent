@@ -29,6 +29,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as Path;
 
 import '../../../utils/directory_path.dart';
+import '../../../utils/notification_service.dart';
 
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
@@ -349,43 +350,30 @@ class _UserProfileScreenState extends State<UserProfileClass> {
             )));
   }
 
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+  int id = 0;
+
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidNotificationDetails =
+    AndroidNotificationDetails('your channel id', 'your channel name',
+        channelDescription: 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
+    const NotificationDetails notificationDetails =
+    NotificationDetails(android: androidNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        id++, 'plain title', 'plain body', notificationDetails,
+        payload: 'item x');
+  }
+
   Future<void> logOut() async {
     final prefsUtil = await SharedPref.getInstance();
     prefsUtil.clear();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => SplashScreen()),
         (Route route) => false);
-  }
-
-  Future<void> _showProgressNotification() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
-    const int maxProgress = 5;
-    for (int i = 0; i <= maxProgress; i++) {
-      await Future<void>.delayed(const Duration(seconds: 1), () async {
-        final AndroidNotificationDetails androidPlatformChannelSpecifics =
-            AndroidNotificationDetails('progress channel', 'progress channel',
-                channelShowBadge: false,
-                importance: Importance.max,
-                priority: Priority.high,
-                onlyAlertOnce: true,
-                showProgress: true,
-                maxProgress: maxProgress,
-                progress: i);
-        final NotificationDetails platformChannelSpecifics =
-            NotificationDetails(android: androidPlatformChannelSpecifics);
-        await flutterLocalNotificationsPlugin.show(
-            0,
-            'PDF file has been download',
-            'progress notification body',
-            platformChannelSpecifics,
-            payload: 'item x');
-      });
-    }
   }
 
   Future<void> getUserData(
