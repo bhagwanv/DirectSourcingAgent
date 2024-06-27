@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -65,7 +66,6 @@ class MyInAppBrowser extends InAppBrowser {
         await _showProgressNotification(progress, 100);
       },
     );
-
     // Show completion notification
     await flutterLocalNotificationsPlugin.show(
       0,
@@ -76,8 +76,6 @@ class MyInAppBrowser extends InAppBrowser {
             importance: Importance.max, priority: Priority.high),
       ),
     );
-
-    print('File downloaded at $filePath');
   }
 
   @override
@@ -89,16 +87,17 @@ class MyInAppBrowser extends InAppBrowser {
   void onConsoleMessage(ConsoleMessage consoleMessage){
     if(consoleMessage.messageLevel==1 && consoleMessage.message=="Back To Flutter App"){
       close();
-      print("ShopKirna ${consoleMessage.message}");
-      Utils.showBottomToast(consoleMessage.message);
+      if (kDebugMode) {
+        print("ShopKirana ${consoleMessage.message}");
+      }
     }else if(consoleMessage.messageLevel==1 && consoleMessage.message.contains("DownloadEMIPDF")){
-      print("pdf download ${consoleMessage.message}");
       String pdf = consoleMessage.message;
       const String removePdfPart = 'DownloadEMIPDF';
       final String finalPdfPart = pdf.replaceFirst(RegExp(r'^' + removePdfPart + r'\s*'), '').trim();
-      print('Final pdf part: $finalPdfPart');
+      if (kDebugMode) {
+        print('Final pdf part: $finalPdfPart');
+      }
       downloadFileFromServer(finalPdfPart);
-      Utils.showBottomToast(consoleMessage.message);
     }
     super.onConsoleMessage(consoleMessage);
   }

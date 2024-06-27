@@ -350,23 +350,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
             )));
   }
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  int id = 0;
 
-  Future<void> _showNotification() async {
-    const AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails('your channel id', 'your channel name',
-        channelDescription: 'your channel description',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker');
-    const NotificationDetails notificationDetails =
-    NotificationDetails(android: androidNotificationDetails);
-    await flutterLocalNotificationsPlugin.show(
-        id++, 'plain title', 'plain body', notificationDetails,
-        payload: 'item x');
-  }
 
   Future<void> logOut() async {
     final prefsUtil = await SharedPref.getInstance();
@@ -512,7 +496,6 @@ class _TileListState extends State<TileList> {
 
   openfile() {
     OpenFile.open(filePath);
-    print("fff $filePath");
   }
 
   @override
