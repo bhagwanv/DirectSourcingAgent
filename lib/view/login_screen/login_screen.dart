@@ -58,10 +58,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const SizedBox(height: 97),
+                    const SizedBox(height: 77),
                     Image.asset('assets/images/scaleup_logo_two.png'),
                     // Replace with your actual logo path
-                    const SizedBox(height: 87),
+                    const SizedBox(height: 77),
                     Text(
                       'Welcome',
                       style: GoogleFonts.urbanist(
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const SizedBox(height: 92),
+                    const SizedBox(height: 77),
                     Padding(
                       padding: const EdgeInsets.only(right: 15, left: 15),
                       child: CommonTextField(
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: "Enter Mobile Number",
                       ),
                     ),
-                    const SizedBox(height: 92),
+                    const SizedBox(height: 77),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         )),
                       ],
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 25),
                     Padding(
                       padding: const EdgeInsets.only(right: 15, left: 15),
                       child: CommonElevatedButton(

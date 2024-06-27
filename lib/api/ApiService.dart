@@ -38,6 +38,7 @@ import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../view/dsa_company/model/DSAGSTExistResModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
@@ -2421,6 +2422,33 @@ class ApiService {
     } else {
       throw Exception('No internet connection');
     }*/
+  }
+
+  Future<DsagstExistResModel> getDSAGSTExist(String userID, String gst, String productCode) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var base_url = prefsUtil.getString(BASE_URL);
+      final response = await interceptor.get(
+        Uri.parse(
+            '${base_url! + apiUrls.getDSAGSTExist}?UserId=$userID&gst=$gst&productCode=$productCode'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final DsagstExistResModel responseModel =
+        DsagstExistResModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
   }
 
 }

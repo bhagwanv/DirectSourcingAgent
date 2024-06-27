@@ -1,23 +1,13 @@
-import 'dart:ffi';
-
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:getwidget/colors/gf_color.dart';
-import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
-import 'package:getwidget/types/gf_progress_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_month_year_picker/simple_month_year_picker.dart';
 
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';

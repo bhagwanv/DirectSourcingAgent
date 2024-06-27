@@ -35,6 +35,7 @@ import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../view/dsa_company/model/DSAGSTExistResModel.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
@@ -182,8 +183,10 @@ class DataProvider extends ChangeNotifier {
   List<CityResponce?>? get getCurrentAllCityData => _getCurrentAllCityData;
 
   EmailExistRespoce? _getEmailExistData;
-
   EmailExistRespoce? get getEmailExistData => _getEmailExistData;
+
+  DsagstExistResModel? _getDsagstExistData;
+  DsagstExistResModel? get getDsagstExistData => _getDsagstExistData;
 
   SendOtpOnEmailResponce? _getOtpOnEmailData;
 
@@ -771,6 +774,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getCheckLeadCreatePermission(String mobileNo) async {
     _getLeadCreatePermission = await apiService.getCheckLeadCreatePermission(mobileNo);
+    notifyListeners();
+  }
+
+  Future<void> getDSAGSTExist(String UserID,String gst, String productCode) async {
+    _getDsagstExistData = await apiService.getDSAGSTExist(UserID,gst, productCode);
     notifyListeners();
   }
 
