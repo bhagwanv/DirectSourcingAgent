@@ -8,13 +8,15 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import '../main.dart';
 import 'loader.dart';
 
 class MyInAppBrowser extends InAppBrowser {
   var token;
   var context;
   ValueNotifier downloadProgressNotifier = ValueNotifier(0);
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+
   MyInAppBrowser();
 
   Future<void> _showProgressNotification(int progress, int maxProgress) async {
