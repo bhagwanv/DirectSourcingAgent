@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
+import '../../main.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/constant.dart';
@@ -34,6 +39,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body:
       Center(
-        child: Column(
+        child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(),
@@ -76,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: 12,
               ),
             ),
-            /*const Row(
+           /*const Row(
                 mainAxisAlignment:MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -101,6 +111,8 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
+
+
 
   _checkLoginStatus() async {
     final prefs = await SharedPref.getInstance();
