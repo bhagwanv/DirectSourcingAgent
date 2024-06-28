@@ -586,7 +586,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                               height: 70,
                                               width: 70,
                                               child: SvgPicture.asset(
-                                                'assets/icons/ user.svg',
+                                                'assets/icons/user.svg',
                                                 width: 70,
                                                 height: 70,
                                               ),

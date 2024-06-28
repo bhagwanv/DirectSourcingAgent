@@ -528,7 +528,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                             height: 70,
                                             width: 70,
                                             child: SvgPicture.asset(
-                                              'assets/icons/ user.svg',
+                                              'assets/icons/user.svg',
                                               width: 70,
                                               height: 70,
                                             ),
