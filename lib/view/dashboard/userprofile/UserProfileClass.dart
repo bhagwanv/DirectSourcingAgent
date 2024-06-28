@@ -29,7 +29,6 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as Path;
 
 import '../../../utils/directory_path.dart';
-import '../../../utils/notification_service.dart';
 
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
