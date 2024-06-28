@@ -581,10 +581,15 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             // Adjust the value to change the roundness
-                                            child: Container(
+                                            child: Container (
                                               color: light_gry,
                                               height: 70,
                                               width: 70,
+                                              child: SvgPicture.asset(
+                                                'assets/icons/ user.svg',
+                                                width: 70,
+                                                height: 70,
+                                              ),
                                             ),
                                           )),
                                 SizedBox(
