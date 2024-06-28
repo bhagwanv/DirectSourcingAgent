@@ -1618,7 +1618,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     DsagstExistResModel data;
     data = await ApiService().getDSAGSTExist(userId!, gst, productCode!) as DsagstExistResModel;
     Navigator.of(context, rootNavigator: true).pop();
-    if (data.isSuccess!) {
+    if (data.status!) {
       Utils.showToast(data.message!, context);
     } else {
       setState(() {

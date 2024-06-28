@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  SplashScreen(),
-     // home:  DirectSellingAgent(activityId: 0, subActivityId: 0,),
+      //home:  DirectSellingAgent(activityId: 0, subActivityId: 0,),
     );
   }
 }
