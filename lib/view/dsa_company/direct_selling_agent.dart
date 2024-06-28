@@ -32,6 +32,7 @@ import '../splash/model/GetLeadResponseModel.dart';
 import '../splash/model/LeadCurrentRequestModel.dart';
 import '../splash/model/LeadCurrentResponseModel.dart';
 import 'model/CustomerDetailUsingGSTResponseModel.dart';
+import 'model/DSAGSTExistResModel.dart';
 import 'model/GetDsaPersonalDetailResModel.dart';
 import 'model/PostLeadDSAPersonalDetailReqModel.dart';
 
@@ -78,6 +79,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   var isPresentlyworking = "No";
   var isGSTRegistered = "Yes";
   var isValidEmail = false;
+  var isValidGST = false;
   var isLoading = false;
   var gstNumber = "";
   var image = "";
@@ -1054,8 +1056,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                 if (text.length == 15) {
                                   try {
                                     Utils.hideKeyBored(context);
-                                    await getCustomerDetailUsingGST(context,
-                                        _gstController.text, dataProvider);
+
+
+                                   await callDSAGSTExist(context,_gstController.text,dataProvider);
+
+
                                   } catch (error) {
                                     debugPrint('Error: $error');
                                   }
@@ -1077,7 +1082,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                   companyStateId = null;
                                   selectedCompanyCity = null;
                                   selectedCompanyState = null;
-
+                                  isValidGST = false;
                                   isImageDelete = true;
                                   gstUpdate = true;
                                   setCityListFirstTime = false;
@@ -1493,6 +1498,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                             Utils.showToast(
                                 "Please select GST Registered or Non GST Registered ",
                                 context);
+                          }else if (isGSTRegistered == "Yes"&&_gstController.text.trim().isEmpty) {
+                            Utils.showToast(
+                                "Please enter valid GST number",
+                                context);
+                          }
+                          else if (isGSTRegistered == "Yes" &&!isValidGST) {
+                            Utils.showToast(
+                                "This GST number is already exist",
+                                context);
                           }else if (isGSTRegistered == "Yes" && !isGstFilled) {
                             Utils.showToast(
                                 "Please enter valid GST number",
@@ -1593,6 +1607,25 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
        isValidEmail = true;
      });
 
+    }
+  }
+
+  Future<void> callDSAGSTExist(BuildContext context, String gst, DataProvider dataProvider) async {
+    Utils.onLoading(context, "");
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    DsagstExistResModel data;
+    data = await ApiService().getDSAGSTExist(userId!, gst, productCode!) as DsagstExistResModel;
+    Navigator.of(context, rootNavigator: true).pop();
+    if (data.status!) {
+      Utils.showToast(data.message!, context);
+    } else {
+      setState(() {
+        isValidGST = true;
+      });
+      await getCustomerDetailUsingGST(context,
+          _gstController.text, dataProvider);
     }
   }
 

@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -10,19 +7,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_month_year_picker/simple_month_year_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../providers/DataProvider.dart';
 import '../../../shared_preferences/shared_pref.dart';
 import '../../../utils/CustomMonthYearPicker.dart';
 import '../../../utils/constant.dart';
-import '../Lead_screen/model/DSADashboardLeadListReqModel.dart';
-import '../Lead_screen/model/DsaDashboardLeadList.dart';
 import '../home/DsaSalesAgentList.dart';
 import 'model/GetDSADashboardPayoutListReqModel.dart';
 import 'model/LoanPayoutDetailList.dart';
@@ -589,10 +581,15 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             // Adjust the value to change the roundness
-                                            child: Container(
+                                            child: Container (
                                               color: light_gry,
                                               height: 70,
                                               width: 70,
+                                              child: SvgPicture.asset(
+                                                'assets/icons/ user.svg',
+                                                width: 70,
+                                                height: 70,
+                                              ),
                                             ),
                                           )),
                                 SizedBox(
