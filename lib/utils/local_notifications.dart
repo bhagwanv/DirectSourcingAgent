@@ -113,7 +113,11 @@ class LocalNotifications {
         onlyAlertOnce: true,
         showProgress: true,
         maxProgress: maxProgress,
-        progress: progress);
+        progress: progress,
+      actions: [
+        AndroidNotificationAction('action_1', 'Action 1', showsUserInterface: true),
+        AndroidNotificationAction('action_2', 'Action 2', showsUserInterface: true),
+      ]);
     final NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
     await _flutterLocalNotificationsPlugin.show(
