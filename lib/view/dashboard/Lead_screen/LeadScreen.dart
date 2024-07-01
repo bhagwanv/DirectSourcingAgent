@@ -574,8 +574,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                   child: Card(
                                     color: kPrimaryColor,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          8), // Set the card radius
+                                      borderRadius: BorderRadius.circular(8), // Set the card radius
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
