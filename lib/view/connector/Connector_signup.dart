@@ -146,10 +146,10 @@ class ConnectorSignup extends State<Connector_signup> {
           SystemNavigator.pop();
         }
       },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SingleChildScrollView(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Consumer<DataProvider>(
                 builder: (context, productProvider, child) {
               if (productProvider.getConnectorInfoData == null) {
@@ -161,7 +161,7 @@ class ConnectorSignup extends State<Connector_signup> {
                     productProvider.getConnectorInfoData!.when(
                       success: (data) {
                         connectorInfoResponceModel = data;
-
+          
                         if (updateData) {
                           _firstNameController.text =
                               connectorInfoResponceModel!.fullName!;
@@ -173,57 +173,57 @@ class ConnectorSignup extends State<Connector_signup> {
                               connectorInfoResponceModel!.age.toString();
                           _addreshController.text =
                               connectorInfoResponceModel!.address!;
-
+          
                           if (connectorInfoResponceModel?.referenceName != null) {
                             _refranceNameController.text =
                                 connectorInfoResponceModel!.referenceName!;
                           }
-
+          
                           if (connectorInfoResponceModel!.referneceContact !=
                               null) {
                             _refranceContectController.text =
                                 connectorInfoResponceModel!.referneceContact!;
                           }
-
+          
                           if (connectorInfoResponceModel!.languagesKnown !=
                               null) {
                             _LanguagesController.text =
                                 connectorInfoResponceModel!.languagesKnown!;
                           }
-
+          
                           if (connectorInfoResponceModel!.workingLocation !=
                               null) {
                             _refranceLocationController.text =
                                 connectorInfoResponceModel!.workingLocation!;
                           }
-
+          
                           if (connectorInfoResponceModel!.presentEmployment !=
                               null) {
                             _presentEmpolymentController.text =
                                 connectorInfoResponceModel!.presentEmployment!;
                           }
-
+          
                           if (connectorInfoResponceModel!.emailId != null) {
                             _emailIDController.text =
                                 connectorInfoResponceModel!.emailId!;
                             isValidEmail=true;
                           }
-
+          
                           if (connectorInfoResponceModel!.emailId != null) {
                             _alternetMobileNumberController.text =
                                 connectorInfoResponceModel!.alternatePhoneNo!;
                           }
-
+          
                           if (connectorInfoResponceModel!.state != null) {
                             _satateController.text =
                                 connectorInfoResponceModel!.state!;
                           }
-
+          
                           if (connectorInfoResponceModel!.city != null) {
                             _cityController.text =
                                 connectorInfoResponceModel!.city!;
                           }
-
+          
                           if (connectorInfoResponceModel!.pincode != null) {
                             _pincodeController.text =
                                 connectorInfoResponceModel!.pincode!.toString();
@@ -392,7 +392,7 @@ class ConnectorSignup extends State<Connector_signup> {
                             hintText: "E-mail ID",
                             labelText: "E-mail ID",
                             maxLines: 1,
-
+          
                           ),
                           _emailIDController.text.isNotEmpty
                               ? Positioned(
