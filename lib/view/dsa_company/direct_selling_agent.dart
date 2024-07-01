@@ -579,6 +579,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
                       if (data.buisnessDocImg != null && !isImageDelete) {
                         image = data.buisnessDocImg!;
+                        businessProofDocId = int.parse(data.documentId!.toString());
                       }
 
                       if (data.companyAddress != null) {
@@ -1516,7 +1517,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
                                 "Please Select Business Type", context);
-                          } else if (image.isEmpty) {
+                          } else if (businessProofDocId == 0 || businessProofDocId == null) {
                             Utils.showToast("Please Upload Document", context);
                           } else if (_companyNameCl.text.trim().isEmpty) {
                             Utils.showToast(

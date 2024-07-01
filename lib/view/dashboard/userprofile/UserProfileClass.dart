@@ -238,46 +238,51 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                         hintText: "Mobile Number",
                         labelText: "Mobile Number",
                       ),
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _PanCardNoController,
-                        hintText: "PAN number",
-                        labelText: "PAN number ",
-                        enabled: false,
-                        textCapitalization: TextCapitalization.characters,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
-                          LengthLimitingTextInputFormatter(10)
+                      (type != "DSAUser") ?
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          CommonTextField(
+                            controller: _PanCardNoController,
+                            hintText: "PAN number",
+                            labelText: "PAN number ",
+                            enabled: false,
+                            textCapitalization: TextCapitalization.characters,
+                            inputFormatter: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp((r'[A-Z0-9]'))),
+                              LengthLimitingTextInputFormatter(10)
+                            ],
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          CommonTextField(
+                            inputFormatter: [
+                              LengthLimitingTextInputFormatter(17),
+                              // Limit to 10 characters
+                            ],
+                            keyboardType: TextInputType.number,
+                            controller: _AdharcardNOController,
+                            maxLines: 1,
+                            hintText: "Aadhaar ",
+                            labelText: "Aadhaar",
+                            enabled: false,
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          CommonTextField(
+                            controller: _AddreshController,
+                            hintText: "Address",
+                            labelText: "Address",
+                            enabled: false,
+                            textCapitalization: TextCapitalization.characters,
+                          ),
                         ],
-                      ),
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        inputFormatter: [
-                          LengthLimitingTextInputFormatter(17),
-                          // Limit to 10 characters
-                        ],
-                        keyboardType: TextInputType.number,
-                        controller: _AdharcardNOController,
-                        maxLines: 1,
-                        hintText: "Aadhaar ",
-                        labelText: "Aadhaar",
-                        enabled: false,
-                      ),
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _AddreshController,
-                        hintText: "Address",
-                        labelText: "Address",
-                        enabled: false,
-                        textCapitalization: TextCapitalization.characters,
-                      ),
+                      ) : Container(),
                       SizedBox(
                         height: 16.0,
                       ),
