@@ -708,7 +708,7 @@ class DataProvider extends ChangeNotifier {
     _getDSAPersonalInfoData = await apiService.getDSAPersonalInfo(userId,productCode);
     _isLoading = false;
     notifyListeners();
-    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
   }
 
   Future<void> submitConnectorData(ConnectorInfoReqModel model) async {

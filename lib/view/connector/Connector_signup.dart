@@ -134,440 +134,453 @@ class ConnectorSignup extends State<Connector_signup> {
   @override
   Widget build(BuildContext context) {
     bool isTermsChecks = false;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
-            if (productProvider.getConnectorInfoData == null) {
-              return Container();
-            } else {
-              if (productProvider.getConnectorInfoData != null) {
-                //Navigator.of(context, rootNavigator: true).pop();
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        final bool shouldPop = await Utils().onback(context);
+        if (shouldPop) {
+          SystemNavigator.pop();
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: SingleChildScrollView(
+            child: Consumer<DataProvider>(
+                builder: (context, productProvider, child) {
+              if (productProvider.getConnectorInfoData == null) {
+                return Container();
+              } else {
                 if (productProvider.getConnectorInfoData != null) {
-                  productProvider.getConnectorInfoData!.when(
-                    success: (data) {
-                      connectorInfoResponceModel = data;
+                  //Navigator.of(context, rootNavigator: true).pop();
+                  if (productProvider.getConnectorInfoData != null) {
+                    productProvider.getConnectorInfoData!.when(
+                      success: (data) {
+                        connectorInfoResponceModel = data;
 
-                      if (updateData) {
-                        _firstNameController.text =
-                            connectorInfoResponceModel!.fullName!;
-                        _fatherNameController.text =
-                            connectorInfoResponceModel!.fatherName!;
-                        slectedDate = Utils.dateFormate(
-                            context, connectorInfoResponceModel!.dob!);
-                        _ageController.text =
-                            connectorInfoResponceModel!.age.toString();
-                        _addreshController.text =
-                            connectorInfoResponceModel!.address!;
+                        if (updateData) {
+                          _firstNameController.text =
+                              connectorInfoResponceModel!.fullName!;
+                          _fatherNameController.text =
+                              connectorInfoResponceModel!.fatherName!;
+                          slectedDate = Utils.dateFormate(
+                              context, connectorInfoResponceModel!.dob!);
+                          _ageController.text =
+                              connectorInfoResponceModel!.age.toString();
+                          _addreshController.text =
+                              connectorInfoResponceModel!.address!;
 
-                        if (connectorInfoResponceModel?.referenceName != null) {
-                          _refranceNameController.text =
-                              connectorInfoResponceModel!.referenceName!;
-                        }
+                          if (connectorInfoResponceModel?.referenceName != null) {
+                            _refranceNameController.text =
+                                connectorInfoResponceModel!.referenceName!;
+                          }
 
-                        if (connectorInfoResponceModel!.referneceContact !=
-                            null) {
-                          _refranceContectController.text =
-                              connectorInfoResponceModel!.referneceContact!;
-                        }
+                          if (connectorInfoResponceModel!.referneceContact !=
+                              null) {
+                            _refranceContectController.text =
+                                connectorInfoResponceModel!.referneceContact!;
+                          }
 
-                        if (connectorInfoResponceModel!.languagesKnown !=
-                            null) {
-                          _LanguagesController.text =
-                              connectorInfoResponceModel!.languagesKnown!;
-                        }
+                          if (connectorInfoResponceModel!.languagesKnown !=
+                              null) {
+                            _LanguagesController.text =
+                                connectorInfoResponceModel!.languagesKnown!;
+                          }
 
-                        if (connectorInfoResponceModel!.workingLocation !=
-                            null) {
-                          _refranceLocationController.text =
-                              connectorInfoResponceModel!.workingLocation!;
-                        }
+                          if (connectorInfoResponceModel!.workingLocation !=
+                              null) {
+                            _refranceLocationController.text =
+                                connectorInfoResponceModel!.workingLocation!;
+                          }
 
-                        if (connectorInfoResponceModel!.presentEmployment !=
-                            null) {
-                          _presentEmpolymentController.text =
-                              connectorInfoResponceModel!.presentEmployment!;
-                        }
+                          if (connectorInfoResponceModel!.presentEmployment !=
+                              null) {
+                            _presentEmpolymentController.text =
+                                connectorInfoResponceModel!.presentEmployment!;
+                          }
 
-                        if (connectorInfoResponceModel!.emailId != null) {
-                          _emailIDController.text =
-                              connectorInfoResponceModel!.emailId!;
-                          isValidEmail=true;
-                        }
+                          if (connectorInfoResponceModel!.emailId != null) {
+                            _emailIDController.text =
+                                connectorInfoResponceModel!.emailId!;
+                            isValidEmail=true;
+                          }
 
-                        if (connectorInfoResponceModel!.emailId != null) {
-                          _alternetMobileNumberController.text =
-                              connectorInfoResponceModel!.alternatePhoneNo!;
-                        }
+                          if (connectorInfoResponceModel!.emailId != null) {
+                            _alternetMobileNumberController.text =
+                                connectorInfoResponceModel!.alternatePhoneNo!;
+                          }
 
-                        if (connectorInfoResponceModel!.state != null) {
-                          _satateController.text =
-                              connectorInfoResponceModel!.state!;
-                        }
+                          if (connectorInfoResponceModel!.state != null) {
+                            _satateController.text =
+                                connectorInfoResponceModel!.state!;
+                          }
 
-                        if (connectorInfoResponceModel!.city != null) {
-                          _cityController.text =
-                              connectorInfoResponceModel!.city!;
-                        }
+                          if (connectorInfoResponceModel!.city != null) {
+                            _cityController.text =
+                                connectorInfoResponceModel!.city!;
+                          }
 
-                        if (connectorInfoResponceModel!.pincode != null) {
-                          _pincodeController.text =
-                              connectorInfoResponceModel!.pincode!.toString();
+                          if (connectorInfoResponceModel!.pincode != null) {
+                            _pincodeController.text =
+                                connectorInfoResponceModel!.pincode!.toString();
+                          }
+                          if (connectorInfoResponceModel!.workingWithOther != null && !isWorkingWithParty) {
+                            workingWithParty = connectorInfoResponceModel!.workingWithOther!.toString();
+                          }
+                          updateData = false;
                         }
-                        if (connectorInfoResponceModel!.workingWithOther != null && !isWorkingWithParty) {
-                          workingWithParty = connectorInfoResponceModel!.workingWithOther!.toString();
+                      },
+                      failure: (exception) {
+                        if (exception is ApiException) {
+                          if (exception.statusCode == 401) {
+                            productProvider.disposeAllProviderData();
+                            ApiService().handle401(context);
+                          }
                         }
-                        updateData = false;
-                      }
-                    },
-                    failure: (exception) {
-                      if (exception is ApiException) {
-                        if (exception.statusCode == 401) {
-                          productProvider.disposeAllProviderData();
-                          ApiService().handle401(context);
-                        }
-                      }
-                    },
-                  );
+                      },
+                    );
+                  }
                 }
-              }
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 30),
-                    Center(
-                      child: Text('Sign Up',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 30),
+                      Center(
+                        child: Text('Sign Up',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            )),
+                      ),
+                      SizedBox(height: 30),
+                      Center(
+                        child: Text('Please enter below details',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
+                      SizedBox(height: 30),
+                      CommonTextField(
+                        controller: _firstNameController,
+                        enabled: false,
+                        hintText: "Full Name",
+                        labelText: "Full Name",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _fatherNameController,
+                        enabled: false,
+                        hintText: "Father Name ",
+                        labelText: "Father Name",
+                      ),
+                      SizedBox(height: 20),
+                      InkWell(
+                        onTap: false
+                            ? () {
+                                _showDatePicker(context);
+                              }
+                            : null,
+                        // Set onTap to null when field is disabled
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: textFiledBackgroundColour,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: kPrimaryLightColor),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  slectedDate!.isNotEmpty
+                                      ? '$slectedDate'
+                                      : 'Date of Birth',
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                                const Icon(
+                                  Icons.date_range,
+                                  color: kPrimaryColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _ageController,
+                        enabled: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                        ],
+                        hintText: "Age",
+                        labelText: "Age",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _addreshController,
+                        enabled: false,
+                        hintText: "Address",
+                        labelText: "Address",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _pincodeController,
+                        enabled: false,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)
+                        ],
+                        keyboardType: TextInputType.number,
+                        hintText: "Pin Code",
+                        labelText: "Pin Code",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _satateController,
+                        enabled: false,
+                        hintText: "State",
+                        labelText: "State",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _cityController,
+                        enabled: false,
+                        hintText: "City",
+                        labelText: "City",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _alternetMobileNumberController,
+                        enabled: true,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(10),
+                          FilteringTextInputFormatter.deny(
+                            RegExp(
+                                r'^0+'), //users can't type 0 at 1st position
+                          ),
+                        ],
+                        keyboardType: TextInputType.number,
+                        hintText: "Alternate Contact Number",
+                        labelText: "Alternate Contact Number",
+                      ),
+                      SizedBox(height: 20),
+                      Stack(
+                        children: [
+                          CommonTextField(
+                            controller: _emailIDController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            enabled: !isValidEmail,
+                            hintText: "E-mail ID",
+                            labelText: "E-mail ID",
+                            maxLines: 1,
+
+                          ),
+                          _emailIDController.text.isNotEmpty
+                              ? Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              child: IconButton(
+                                onPressed: () => setState(() {
+                                  isValidEmail = false;
+                                  _emailIDController.clear();
+                                }),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/email_cross.svg',
+                                  semanticsLabel: 'My SVG Image',
+                                ),
+                              ),
+                            ),
+                          )
+                              : Container(),
+                        ],
+                      ),
+                      Text(
+                        "*Please enter correct email, we will send the agreement document on this email.",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 10,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                      SizedBox(height: 16),
+                      (isValidEmail )
+                          ? Container(
+                        child: Row(
+                          children: [
+                            Text(
+                              'VERIFIED',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            SvgPicture.asset('assets/icons/tick_square.svg'),
+                          ],
+                        ),
+                      )
+                          : Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () async {
+                              if (_emailIDController.text.isEmpty) {
+                                Utils.showToast("Please Enter Email ID", context);
+                              } else if (!Utils.validateEmail(_emailIDController.text)) {
+                                Utils.showToast("Please Enter Valid Email ID", context);
+                              } else {
+                                callEmailIDExist(context, _emailIDController.text);
+                              }
+                            },
+                            child: Text(
+                              'Click here to Verify',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue),
+                            ),
                           )),
-                    ),
-                    SizedBox(height: 30),
-                    Center(
-                      child: Text('Please enter below details',
-                          textAlign: TextAlign.center,
+                      SizedBox(height: 25),
+                      CommonTextField(
+                        controller: _presentEmpolymentController,
+                        enabled: true,
+                        hintText: "Present Employment",
+                        labelText: "Present Employment",
+                        keyboardType: TextInputType.text,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z ]'))),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _LanguagesController,
+                        enabled: true,
+                        hintText: "Languages Known",
+                        labelText: "Languages Known",
+                        keyboardType: TextInputType.text,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z, ]'))),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _refranceLocationController,
+                        enabled: true,
+                        hintText: "Location",
+                        labelText: "Location",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z,0-9 ]'))),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                          "Presently working with other Party/bank/NBFC \nFinancial Institute?",
                           style: GoogleFonts.urbanist(
-                            fontSize: 15,
+                            fontSize: 14,
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
                           )),
-                    ),
-                    SizedBox(height: 30),
-                    CommonTextField(
-                      controller: _firstNameController,
-                      enabled: false,
-                      hintText: "Full Name",
-                      labelText: "Full Name",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _fatherNameController,
-                      enabled: false,
-                      hintText: "Father Name ",
-                      labelText: "Father Name",
-                    ),
-                    SizedBox(height: 20),
-                    InkWell(
-                      onTap: false
-                          ? () {
-                              _showDatePicker(context);
-                            }
-                          : null,
-                      // Set onTap to null when field is disabled
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: textFiledBackgroundColour,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: kPrimaryLightColor),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                slectedDate!.isNotEmpty
-                                    ? '$slectedDate'
-                                    : 'Date of Birth',
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                              const Icon(
-                                Icons.date_range,
-                                color: kPrimaryColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _ageController,
-                      enabled: false,
-                      keyboardType: TextInputType.number,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
-                      ],
-                      hintText: "Age",
-                      labelText: "Age",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _addreshController,
-                      enabled: false,
-                      hintText: "Address",
-                      labelText: "Address",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _pincodeController,
-                      enabled: false,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
-                        LengthLimitingTextInputFormatter(6)
-                      ],
-                      keyboardType: TextInputType.number,
-                      hintText: "Pin Code",
-                      labelText: "Pin Code",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _satateController,
-                      enabled: false,
-                      hintText: "State",
-                      labelText: "State",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _cityController,
-                      enabled: false,
-                      hintText: "City",
-                      labelText: "City",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _alternetMobileNumberController,
-                      enabled: true,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
-                        LengthLimitingTextInputFormatter(10),
-                        FilteringTextInputFormatter.deny(
-                          RegExp(
-                              r'^0+'), //users can't type 0 at 1st position
-                        ),
-                      ],
-                      keyboardType: TextInputType.number,
-                      hintText: "Alternate Contact Number",
-                      labelText: "Alternate Contact Number",
-                    ),
-                    SizedBox(height: 20),
-                    Stack(
-                      children: [
-                        CommonTextField(
-                          controller: _emailIDController,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          enabled: !isValidEmail,
-                          hintText: "E-mail ID",
-                          labelText: "E-mail ID",
-                          maxLines: 1,
-
-                        ),
-                        _emailIDController.text.isNotEmpty
-                            ? Positioned(
-                          right: 0,
-                          top: 0,
-                          bottom: 0,
-                          child: Container(
-                            child: IconButton(
-                              onPressed: () => setState(() {
-                                isValidEmail = false;
-                                _emailIDController.clear();
-                              }),
-                              icon: SvgPicture.asset(
-                                'assets/icons/email_cross.svg',
-                                semanticsLabel: 'My SVG Image',
-                              ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: CustomRadioButton(
+                              value: 'Yes',
+                              groupValue: workingWithParty,
+                              onChanged: _handleRadioValueWorkingWithPartyChanged,
+                              text: "Yes",
                             ),
                           ),
-                        )
-                            : Container(),
-                      ],
-                    ),
-                    Text(
-                      "*Please enter correct email, we will send the agreement document on this email.",
-                      style: GoogleFonts.urbanist(
-                        fontSize: 10,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      textAlign: TextAlign.justify,
-                    ),
-                    SizedBox(height: 16),
-                    (isValidEmail )
-                        ? Container(
-                      child: Row(
-                        children: [
-                          Text(
-                            'VERIFIED',
-                            style: TextStyle(
-                                fontSize: 16,
-                                decoration: TextDecoration.underline,
-                                color: Colors.blue),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          SvgPicture.asset('assets/icons/tick_square.svg'),
-                        ],
-                      ),
-                    )
-                        : Align(
-                        alignment: Alignment.centerLeft,
-                        child: InkWell(
-                          onTap: () async {
-                            if (_emailIDController.text.isEmpty) {
-                              Utils.showToast("Please Enter Email ID", context);
-                            } else if (!Utils.validateEmail(_emailIDController.text)) {
-                              Utils.showToast("Please Enter Valid Email ID", context);
-                            } else {
-                              callEmailIDExist(context, _emailIDController.text);
-                            }
-                          },
-                          child: Text(
-                            'Click here to Verify',
-                            style: TextStyle(
-                                fontSize: 16,
-                                decoration: TextDecoration.underline,
-                                color: Colors.blue),
-                          ),
-                        )),
-                    SizedBox(height: 25),
-                    CommonTextField(
-                      controller: _presentEmpolymentController,
-                      enabled: true,
-                      hintText: "Present Employment",
-                      labelText: "Present Employment",
-                      keyboardType: TextInputType.text,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Za-z ]'))),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _LanguagesController,
-                      enabled: true,
-                      hintText: "Languages Known",
-                      labelText: "Languages Known",
-                      keyboardType: TextInputType.text,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Za-z, ]'))),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _refranceLocationController,
-                      enabled: true,
-                      hintText: "Location",
-                      labelText: "Location",
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp((r'[A-Za-z,0-9 ]'))),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                        "Presently working with other Party/bank/NBFC \nFinancial Institute?",
-                        style: GoogleFonts.urbanist(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: CustomRadioButton(
-                            value: 'Yes',
-                            groupValue: workingWithParty,
-                            onChanged: _handleRadioValueWorkingWithPartyChanged,
-                            text: "Yes",
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Expanded(
-                          child: CustomRadioButton(
-                            value: 'No',
-                            groupValue: workingWithParty,
-                            onChanged: _handleRadioValueWorkingWithPartyChanged,
-                            text: "No",
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text("Reference",
-                        style: GoogleFonts.urbanist(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _refranceNameController,
-                      enabled: true,
-                      hintText: "Name",
-                      labelText: "Name",
-                    ),
-                    SizedBox(height: 20),
-                    CommonTextField(
-                      controller: _refranceContectController,
-                      enabled: true,
-                      inputFormatter: [
-                        FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
-                        LengthLimitingTextInputFormatter(10),
-                        FilteringTextInputFormatter.deny(
-                          RegExp(
-                              r'^0+'), //users can't type 0 at 1st position
-                        ),
-                      ],
-                      keyboardType: TextInputType.number,
-                      hintText: "Contact No",
-                      labelText: "Contact No",
-                    ),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
-                      child: Column(
-                        children: [
-                          CommonElevatedButton(
-                            onPressed: () async {
-                              submitConnectorApi(context, productProvider);
-                            },
-                            text: "Next",
-                            upperCase: true,
+                          SizedBox(height: 20),
+                          Expanded(
+                            child: CustomRadioButton(
+                              value: 'No',
+                              groupValue: workingWithParty,
+                              onChanged: _handleRadioValueWorkingWithPartyChanged,
+                              text: "No",
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }
-          }),
+                      SizedBox(height: 10),
+                      Text("Reference",
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          )),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _refranceNameController,
+                        enabled: true,
+                        hintText: "Name",
+                        labelText: "Name",
+                      ),
+                      SizedBox(height: 20),
+                      CommonTextField(
+                        controller: _refranceContectController,
+                        enabled: true,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(10),
+                          FilteringTextInputFormatter.deny(
+                            RegExp(
+                                r'^0+'), //users can't type 0 at 1st position
+                          ),
+                        ],
+                        keyboardType: TextInputType.number,
+                        hintText: "Contact No",
+                        labelText: "Contact No",
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 20),
+                        child: Column(
+                          children: [
+                            CommonElevatedButton(
+                              onPressed: () async {
+                                submitConnectorApi(context, productProvider);
+                              },
+                              text: "Next",
+                              upperCase: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }),
+          ),
         ),
       ),
     );

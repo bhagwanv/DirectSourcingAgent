@@ -67,7 +67,6 @@ class _ProfileTypesState extends State<ProfileTypes> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.dsaType == "DSAPersonalInfo") {
       dSAPersonalInfoApi(context);
