@@ -80,6 +80,7 @@ class _LeadScreenState extends State<LeadScreen> {
   String? UserToken;
   String? LeadCreateMobileNo;
   String? createLeadBaseUrl;
+  String? UserID;
 
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -568,7 +569,7 @@ class _LeadScreenState extends State<LeadScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    openInAppBrowser(UserToken!,context, dsaDashboardLead.mobileNo.toString());
+                                    openInAppBrowser(UserToken!,context, dsaDashboardLead.mobileNo.toString(),UserID!);
                                   },
                                   child: Card(
                                     color: kPrimaryColor,
@@ -760,9 +761,10 @@ class _LeadScreenState extends State<LeadScreen> {
     }
   }
 
-  void openInAppBrowser(String token, BuildContext _context, String mobile) {
+  void openInAppBrowser(String token, BuildContext _context, String mobile,String userID) {
     browser.token=token;
     browser.context=_context;
+    browser.UserID = userID;
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl(mobile))),
       settings: settings,
@@ -777,6 +779,7 @@ class _LeadScreenState extends State<LeadScreen> {
     companyID = prefsUtil.getString(COMPANY_CODE);
     productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
+    UserID = prefsUtil.getString(USER_ID);
 
   }
 

@@ -27,6 +27,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   String? companyID;
   String? productCode;
   String? UserToken;
+  String? UserID;
   final browser = MyInAppBrowser();
 
   final settings = InAppBrowserClassSettings(
@@ -120,7 +121,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
                             productProvider.getLeadCreatePermission!.when(
                               success: (data) {
                                 if (data.status!) {
-                                  openInAppBrowser(UserToken!, context);
+                                  openInAppBrowser(UserToken!, context,UserID!);
                                 } else {
                                   Utils.showToast(data.message!, context);
                                 }
@@ -157,11 +158,13 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     companyID = prefsUtil.getString(COMPANY_CODE);
     productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
+    UserID = prefsUtil.getString(USER_ID);
   }
 
-  void openInAppBrowser(String token, BuildContext _context) {
+  void openInAppBrowser(String token, BuildContext _context,String userID) {
     browser.token = token;
     browser.context = _context;
+    browser.UserID = userID;
     browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri(_constructUrl())),
       settings: settings,

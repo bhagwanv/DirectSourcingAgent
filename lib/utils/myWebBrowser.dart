@@ -24,6 +24,7 @@ void onDidReceiveNotificationResponse(NotificationResponse notificationResponse)
 class MyInAppBrowser extends InAppBrowser {
   var token;
   var context;
+  var UserID;
   ValueNotifier downloadProgressNotifier = ValueNotifier(0);
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -100,12 +101,10 @@ class MyInAppBrowser extends InAppBrowser {
       if (kDebugMode) {
         print("ShopKirana ${consoleMessage.message}");
       }
-    } else if (consoleMessage.messageLevel == 1 &&
-        consoleMessage.message.contains("DownloadEMIPDF")) {
+    } else if (consoleMessage.messageLevel == 1 && consoleMessage.message.contains("DownloadEMIPDF")) {
       String pdf = consoleMessage.message;
       const String removePdfPart = 'DownloadEMIPDF';
-      final String finalPdfPart =
-          pdf.replaceFirst(RegExp(r'^' + removePdfPart + r'\s*'), '').trim();
+      final String finalPdfPart = pdf.replaceFirst(RegExp(r'^' + removePdfPart + r'\s*'), '').trim();
       if (kDebugMode) {
         print('Final pdf part: $finalPdfPart');
       }
@@ -123,8 +122,8 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   Future onLoadStop(url) async {
     print("Stopped $token");
-    await webViewController?.evaluateJavascript(
-        source: "_callJavaScriptFunction('${token}')");
+    await webViewController?.evaluateJavascript(source: "_callJavaScriptFunction('${token}')");
+    await webViewController?.evaluateJavascript(source: "_getUserIdFromFlutterApp('${UserID}')");
   }
 
   @override
