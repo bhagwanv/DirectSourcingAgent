@@ -99,7 +99,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
           bottom: true,
           child: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-            return isSubmit
+            return isSubmit&& content.isNotEmpty
                 ? Stack(
                   children: [
                     Positioned.fill(
@@ -116,6 +116,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                               textAlign: TextAlign.start,
                             ),
                           ),
+
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 74.0),
