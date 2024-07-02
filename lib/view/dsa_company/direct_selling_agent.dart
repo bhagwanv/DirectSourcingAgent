@@ -116,6 +116,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       gstNumber = "";
       image = "";
       isGstFilled = false;
+      if(value=="No") {
+        chooseBusinessProofList.removeAt(0);
+      }else{
+        chooseBusinessProofList.insert(0, 'GST Certificate');
+      }
     });
   }
   void _handleRadioValueWorkingWithOtherChanged(String value) {
@@ -1029,7 +1034,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                                   value: 'No',
                                   groupValue: isGSTRegistered,
                                   onChanged: _handleRadioValueChanged,
-                                  text: "Not GST Registered",
+                                  text: "GST UnRegistered",
                                 ),
                               ),
                             ],
@@ -1212,8 +1217,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         ),
                         menuItemStyleData: MenuItemStyleData(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(chooseBusinessProofList),
+                          customHeights: _getCustomItemsHeights(chooseBusinessProofList),
                         ),
                         iconStyleData: const IconStyleData(
                           openMenuIcon: Icon(Icons.arrow_drop_up),
