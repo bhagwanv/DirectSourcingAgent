@@ -46,9 +46,9 @@ class DirectSellingAgent extends StatefulWidget {
 
   DirectSellingAgent(
       {required this.activityId,
-        required this.subActivityId,
-        super.key,
-        this.pageType});
+      required this.subActivityId,
+      super.key,
+      this.pageType});
 
   @override
   State<DirectSellingAgent> createState() => _DirectSellingAgent();
@@ -216,15 +216,20 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       gstNumber = "";
       image = "";
       isGstFilled = false;
+      if (value == "No") {
+        chooseBusinessProofList.removeAt(0);
+      } else {
+        chooseBusinessProofList.insert(0, 'GST Certificate');
+      }
     });
   }
+
   void _handleRadioValueWorkingWithOtherChanged(String value) {
     setState(() {
       isWorkingWithOtherChange = true;
       isPresentlyworking = value;
     });
   }
-
 
   List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject?> items) {
     final List<DropdownMenuItem<ReturnObject>> menuItems = [];
@@ -266,7 +271,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     }
     return itemsHeights;
   }
-
 
   void _onImageSelected(File imageFile) async {
     isImageDelete = false;
@@ -324,7 +328,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         var allStates = productProvider.getAllStateData!.returnObject!;
         if (companyStateId != null) {
           selectedCompanyState = allStates.firstWhere(
-                  (element) => element?.id == int.parse(companyStateId!),
+              (element) => element?.id == int.parse(companyStateId!),
               orElse: () => null);
 
           if (cityCallInitial) {
@@ -406,7 +410,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       print("cityCallInitial:: ${cityCallInitial}");
       if (companyCityId != null) {
         selectedCompanyCity = citylist.firstWhere(
-                (element) => element?.id == int.parse(companyCityId!),
+            (element) => element?.id == int.parse(companyCityId!),
             orElse: () => CityResponce());
       }
       return DropdownButtonFormField2<CityResponce>(
@@ -473,20 +477,19 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addreshController = TextEditingController();
   final TextEditingController _alternetMobileNumberController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _emailIDController = TextEditingController();
   final TextEditingController _presentEmpolymentController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _LanguagesController = TextEditingController();
   final TextEditingController _refranceNameController = TextEditingController();
   final TextEditingController _refranceContectController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _refranceLocationController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _satateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-
 
   bool isWorkingWithParty = false;
   String workingWithParty = "No";
@@ -527,7 +530,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           top: true,
           bottom: true,
           child:
-          Consumer<DataProvider>(builder: (context, dataProvider, child) {
+              Consumer<DataProvider>(builder: (context, dataProvider, child) {
             if (dataProvider.getDSAPersonalInfoData != null) {
               dataProvider.getDSAPersonalInfoData!.when(
                 success: (data) {
@@ -550,18 +553,28 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               );
             }
 
-            return profileTypeDSA!.isNotEmpty ? profileTypeDSA == "DSA" ? Dsa(dataProvider): Connector(dataProvider) : Loader();
+            return profileTypeDSA!.isNotEmpty
+                ? profileTypeDSA == "DSA"
+                    ? Dsa(dataProvider)
+                    : Connector(dataProvider)
+                : Loader();
           }),
         ),
       ),
     );
   }
 
-  void bottomSheetMenu(BuildContext context, bool camera, bool gallery, bool pdf) {
+  void bottomSheetMenu(
+      BuildContext context, bool camera, bool gallery, bool pdf) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return ImagePickerWidgets(onImageSelected: _onImageSelected, camera: true, gallery: true, pdf: true,);
+          return ImagePickerWidgets(
+            onImageSelected: _onImageSelected,
+            camera: true,
+            gallery: true,
+            pdf: true,
+          );
         });
   }
 
@@ -575,8 +588,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
-                emailID: emailID,
-              )));
+                    emailID: emailID,
+                  )));
 
       if (result != null &&
           result.containsKey('isValid') &&
@@ -599,7 +612,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     EmailExistRespoce data;
-    data = await ApiService().emailExist(userId!, emailID, productCode!) as EmailExistRespoce;
+    data = await ApiService().emailExist(userId!, emailID, productCode!)
+        as EmailExistRespoce;
     Navigator.of(context, rootNavigator: true).pop();
     if (data.isSuccess!) {
       isValidEmail = false;
@@ -609,17 +623,18 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       setState(() {
         isValidEmail = true;
       });
-
     }
   }
 
-  Future<void> callDSAGSTExist(BuildContext context, String gst, DataProvider dataProvider) async {
+  Future<void> callDSAGSTExist(
+      BuildContext context, String gst, DataProvider dataProvider) async {
     Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     DsagstExistResModel data;
-    data = await ApiService().getDSAGSTExist(userId!, gst, productCode!) as DsagstExistResModel;
+    data = await ApiService().getDSAGSTExist(userId!, gst, productCode!)
+        as DsagstExistResModel;
     Navigator.of(context, rootNavigator: true).pop();
     if (data.status!) {
       Utils.showToast(data.message!, context);
@@ -627,8 +642,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       setState(() {
         isValidGST = true;
       });
-      await getCustomerDetailUsingGST(context,
-          _gstController.text, dataProvider);
+      await getCustomerDetailUsingGST(
+          context, _gstController.text, dataProvider);
     }
   }
 
@@ -651,7 +666,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             gstNumber = getCustomerDetailUsingGSTData!.busGSTNO!;
             _companyNameCl.text = getCustomerDetailUsingGSTData!.businessName!;
             _companyAddressCl.text =
-            getCustomerDetailUsingGSTData!.addressLineOne!;
+                getCustomerDetailUsingGSTData!.addressLineOne!;
             _companyPinCodeCodeCl.text =
                 getCustomerDetailUsingGSTData!.zipCode!.toString();
             _companyCityCl.text =
@@ -683,9 +698,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   Future<void> postLeadDSAPersonalDetail(
-      BuildContext context,
-      DataProvider productProvider,
-      ) async {
+    BuildContext context,
+    DataProvider productProvider,
+  ) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
@@ -783,7 +798,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
     } else if (_emailIDController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Email ID", context);
-    } else if (!Utils.validateEmail(_emailIDController.text)|| !isValidEmail ) {
+    } else if (!Utils.validateEmail(_emailIDController.text) || !isValidEmail) {
       Utils.showToast("Please enter Valid Email ID", context);
     } else if (_presentEmpolymentController.text.trim().isEmpty) {
       Utils.showToast("Please Enter present Employment", context);
@@ -875,8 +890,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       );
 
       final leadCurrentActivityAsyncData = await ApiService()
-          .leadCurrentActivityAsync(leadCurrentRequestModel, context)
-      as LeadCurrentResponseModel?;
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
 
       final getLeadData = await ApiService().getLeads(
         prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
@@ -899,7 +914,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     String? userId = prefsUtil.getString(USER_ID);
     Utils.onLoading(context, "");
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getDSAPersonalInfo(context, userId!, productCode!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getDSAPersonalInfo(context, userId!, productCode!);
   }
 
   void getDSAPersonalDetail(BuildContext) async {
@@ -924,7 +940,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   Widget Dsa(DataProvider dataProvider) {
-    if(DSAPersonalDetailAPICAll) {
+    if (DSAPersonalDetailAPICAll) {
       Navigator.of(context, rootNavigator: true).pop();
       getDSAPersonalDetail(context);
     }
@@ -932,7 +948,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       dataProvider.getDsaPersonalDetailData!.when(
         success: (data) {
           getDsaPersonalDetailData = data;
-          if(updateData){
+          if (updateData) {
             if (data.fullName != null) {
               _fullNameCl.text = data.fullName!;
             }
@@ -965,14 +981,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             }
             if (data.emailId != null) {
               _emailIDCl.text = data.emailId!;
-              isValidEmail=true;
+              isValidEmail = true;
             }
             if (data.presentOccupation != null) {
               _presentOccupationCl.text = data.presentOccupation!;
             }
             if (data.noOfYearsInCurrentEmployment != null) {
-              _currentEmploymentCl.text =
-              data.noOfYearsInCurrentEmployment!;
+              _currentEmploymentCl.text = data.noOfYearsInCurrentEmployment!;
             }
             if (data.qualification != null) {
               _qualificationCl.text = data.qualification!;
@@ -1053,9 +1068,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               }
             }
 
-            updateData=false;
+            updateData = false;
           }
-
         },
         failure: (exception) {
           if (exception is ApiException) {
@@ -1070,21 +1084,18 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         },
       );
     }
-    if (dataProvider.getpostDSABusineesDoumentSingleFileData !=
-        null && !isImageDelete) {
-      if (dataProvider
-          .getpostDSABusineesDoumentSingleFileData!.filePath !=
+    if (dataProvider.getpostDSABusineesDoumentSingleFileData != null &&
+        !isImageDelete) {
+      if (dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath !=
           null) {
-        image = dataProvider
-            .getpostDSABusineesDoumentSingleFileData!.filePath!;
-        businessProofDocId = dataProvider
-            .getpostDSABusineesDoumentSingleFileData!.docId!;
+        image = dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath!;
+        businessProofDocId =
+            dataProvider.getpostDSABusineesDoumentSingleFileData!.docId!;
       }
     }
 
     return Padding(
-      padding:
-      const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1142,8 +1153,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   labelText: "Date of Birth",
                 ),
                 const Padding(
-                  padding:
-                  EdgeInsets.only(top: 16.0, right: 8.0),
+                  padding: EdgeInsets.only(top: 16.0, right: 8.0),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Icon(
@@ -1180,8 +1190,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               controller: _pinCodeCl,
               enabled: false,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[0-9]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(6)
               ],
               keyboardType: TextInputType.number,
@@ -1213,8 +1222,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               controller: _alternetMobileNumberCl,
               enabled: true,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[0-9]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(10)
               ],
               keyboardType: TextInputType.number,
@@ -1232,26 +1240,25 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   hintText: "E-mail ID",
                   labelText: "E-mail ID",
                   maxLines: 1,
-
                 ),
                 _emailIDCl.text.isNotEmpty
                     ? Positioned(
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Container(
-                    child: IconButton(
-                      onPressed: () => setState(() {
-                        isValidEmail = false;
-                        _emailIDCl.clear();
-                      }),
-                      icon: SvgPicture.asset(
-                        'assets/icons/email_cross.svg',
-                        semanticsLabel: 'My SVG Image',
-                      ),
-                    ),
-                  ),
-                )
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          child: IconButton(
+                            onPressed: () => setState(() {
+                              isValidEmail = false;
+                              _emailIDCl.clear();
+                            }),
+                            icon: SvgPicture.asset(
+                              'assets/icons/email_cross.svg',
+                              semanticsLabel: 'My SVG Image',
+                            ),
+                          ),
+                        ),
+                      )
                     : Container(),
               ],
             ),
@@ -1266,42 +1273,43 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             (isValidEmail)
                 ? Container(
-              child: Row(
-                children: [
-                  Text(
-                    'VERIFIED',
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  SvgPicture.asset('assets/icons/tick_square.svg'),
-                ],
-              ),
-            )
+                    child: Row(
+                      children: [
+                        Text(
+                          'VERIFIED',
+                          style: TextStyle(
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        SvgPicture.asset('assets/icons/tick_square.svg'),
+                      ],
+                    ),
+                  )
                 : Align(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  onTap: () async {
-                    if (_emailIDCl.text.isEmpty) {
-                      Utils.showToast("Please Enter Email ID", context);
-                    } else if (!Utils.validateEmail(_emailIDCl.text)) {
-                      Utils.showToast("Please Enter Valid Email ID", context);
-                    } else {
-                      callEmailIDExist(context, _emailIDCl.text);
-                    }
-                  },
-                  child: Text(
-                    'Click here to Verify',
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  ),
-                )),
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () async {
+                        if (_emailIDCl.text.isEmpty) {
+                          Utils.showToast("Please Enter Email ID", context);
+                        } else if (!Utils.validateEmail(_emailIDCl.text)) {
+                          Utils.showToast(
+                              "Please Enter Valid Email ID", context);
+                        } else {
+                          callEmailIDExist(context, _emailIDCl.text);
+                        }
+                      },
+                      child: Text(
+                        'Click here to Verify',
+                        style: TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue),
+                      ),
+                    )),
             SizedBox(height: 16),
             CommonTextField(
               controller: _presentOccupationCl,
@@ -1317,8 +1325,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               keyboardType: TextInputType.number,
               enabled: true,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[0-9]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(3)
               ],
               hintText: "No of years in current employment",
@@ -1332,10 +1339,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               enabled: true,
               hintText: "Qualification",
               labelText: "Qualification",
-              keyboardType:TextInputType.text ,
+              keyboardType: TextInputType.text,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[A-Za-z ]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z ]'))),
               ],
             ),
             const SizedBox(
@@ -1347,8 +1353,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               hintText: "Languages Known",
               labelText: "Languages Known",
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[A-Za-z, ]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z, ]'))),
               ],
             ),
             const SizedBox(
@@ -1359,7 +1364,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               enabled: true,
               hintText: "Location",
               labelText: "Location",
-
             ),
             const SizedBox(
               height: 16.0,
@@ -1416,8 +1420,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               hintText: "Names",
               labelText: "Names",
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[A-Za-z ]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z ]'))),
               ],
             ),
             const SizedBox(
@@ -1427,8 +1430,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               controller: _referenceContactNoCl,
               enabled: true,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[0-9]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(10)
               ],
               keyboardType: TextInputType.number,
@@ -1475,33 +1477,32 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             Stack(
               children: [
-                isGSTRegistered == "No" ? Container()
-                    :CommonTextField(
-                    controller: _gstController,
-                    hintText: "GST Number",
-                    keyboardType: TextInputType.text,
-                    enabled: gstUpdate,
-                    labelText: "GST Number",
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatter: [
-                      FilteringTextInputFormatter.allow(
-                          RegExp((r'[A-Z0-9]'))),
-                      LengthLimitingTextInputFormatter(15)
-                    ],
-                    onChanged: (text) async {
-                      if (text.length == 15) {
-                        try {
-                          Utils.hideKeyBored(context);
+                isGSTRegistered == "No"
+                    ? Container()
+                    : CommonTextField(
+                        controller: _gstController,
+                        hintText: "GST Number",
+                        keyboardType: TextInputType.text,
+                        enabled: gstUpdate,
+                        labelText: "GST Number",
+                        textCapitalization: TextCapitalization.characters,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
+                          LengthLimitingTextInputFormatter(15)
+                        ],
+                        onChanged: (text) async {
+                          if (text.length == 15) {
+                            try {
+                              Utils.hideKeyBored(context);
 
-
-                          await callDSAGSTExist(context,_gstController.text,dataProvider);
-
-
-                        } catch (error) {
-                          debugPrint('Error: $error');
-                        }
-                      }
-                    }),
+                              await callDSAGSTExist(
+                                  context, _gstController.text, dataProvider);
+                            } catch (error) {
+                              debugPrint('Error: $error');
+                            }
+                          }
+                        }),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -1552,22 +1553,19 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               decoration: InputDecoration(
                 fillColor: textFiledBackgroundColour,
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 16, horizontal: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: kPrimaryColor, width: 1),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: kPrimaryColor, width: 1),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: kPrimaryColor, width: 1),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
                 ),
               ),
               hint: const Text(
@@ -1591,8 +1589,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ),
               menuItemStyleData: MenuItemStyleData(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                customHeights:
-                _getCustomItemsHeights(businessTypeList),
+                customHeights: _getCustomItemsHeights(businessTypeList),
               ),
               iconStyleData: const IconStyleData(
                 openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -1606,27 +1603,27 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               decoration: InputDecoration(
                 fillColor: textFiledBackgroundColour,
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 16, horizontal: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: kPrimaryColor, width: 1),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: kPrimaryColor, width: 1),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
                 ),
-                enabledBorder: gstUpdate?OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: kPrimaryColor, width: 1),
-                ):OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                      color: gryColor, width: 1),
-                ),),
+                enabledBorder: gstUpdate
+                    ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      )
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: gryColor, width: 1),
+                      ),
+              ),
               hint: const Text(
                 'Business Document',
                 style: TextStyle(
@@ -1637,9 +1634,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ),
               items: _addDividersAfterItems(chooseBusinessProofList),
               value: selectedBusinessTypeValue,
-              onChanged: gstUpdate?(String? value) {
-                selectedBusinessTypeValue = value;
-              }:null,
+              onChanged: gstUpdate
+                  ? (String? value) {
+                      selectedBusinessTypeValue = value;
+                    }
+                  : null,
               buttonStyleData: const ButtonStyleData(
                 padding: EdgeInsets.only(right: 8),
               ),
@@ -1648,8 +1647,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ),
               menuItemStyleData: MenuItemStyleData(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                customHeights:
-                _getCustomItemsHeights(chooseBusinessProofList),
+                customHeights: _getCustomItemsHeights(chooseBusinessProofList),
               ),
               iconStyleData: const IconStyleData(
                 openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -1663,12 +1661,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border:
-                        Border.all(color: const Color(0xff0196CE))),
+                        border: Border.all(color: const Color(0xff0196CE))),
                     width: double.infinity,
                     child: GestureDetector(
                       onTap: () {
-                        bottomSheetMenu(context,true, true, true);
+                        bottomSheetMenu(context, true, true, true);
                       },
                       child: Container(
                         height: 148,
@@ -1680,58 +1677,54 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         child: Container(
                           child: (image.isNotEmpty)
                               ? image.contains(".pdf")
-                              ? Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.center,
-                            mainAxisAlignment:
-                            MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.picture_as_pdf),
-                            ],
-                          )
-                              : ClipRRect(
-                            borderRadius:
-                            BorderRadius.circular(8.0),
-                            child: Image.network(
-                              image,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 148,
-                            ),
-                          )
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.picture_as_pdf),
+                                      ],
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
                               : (image.isNotEmpty)
-                              ? ClipRRect(
-                            borderRadius:
-                            BorderRadius.circular(8.0),
-                            child: Image.network(
-                              image,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 148,
-                            ),
-                          )
-                              : Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.center,
-                            mainAxisAlignment:
-                            MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                  'assets/images/gallery.svg'),
-                              const Text(
-                                'Upload Document',
-                                style: TextStyle(
-                                    color: Color(0xff0196CE),
-                                    fontSize: 12),
-                              ),
-                              const Text(
-                                  'Supports : JPEG, PNG, PDF',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color:
-                                      Color(0xffCACACA))),
-                            ],
-                          ),
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload Document',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE),
+                                              fontSize: 12),
+                                        ),
+                                        const Text('Supports : JPEG, PNG, PDF',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xffCACACA))),
+                                      ],
+                                    ),
                         ),
                       ),
                     )),
@@ -1744,11 +1737,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   },
                   child: image.isNotEmpty
                       ? Container(
-                    padding: const EdgeInsets.all(4),
-                    alignment: Alignment.topRight,
-                    child: SvgPicture.asset(
-                        'assets/icons/delete_icon.svg'),
-                  )
+                          padding: const EdgeInsets.all(4),
+                          alignment: Alignment.topRight,
+                          child:
+                              SvgPicture.asset('assets/icons/delete_icon.svg'),
+                        )
                       : Container(),
                 ),
               ],
@@ -1860,8 +1853,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               controller: _companyPinCodeCodeCl,
               enabled: true,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[0-9]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(6)
               ],
               keyboardType: TextInputType.number,
@@ -1882,8 +1874,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 if (_fullNameCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Full Name", context);
                 } else if (_fatherOrHusbandNameCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Father  Name", context);
+                  Utils.showToast("Please enter Father  Name", context);
                 } else if (selectedDate!.isEmpty) {
                   Utils.showToast("Please Select Date ", context);
                 } else if (_ageCl.text.trim().isEmpty) {
@@ -1898,25 +1889,22 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   Utils.showToast("Please enter State", context);
                 } else if (_alternetMobileNumberCl.text.trim().isEmpty) {
                   Utils.showToast(
-                      "Please enter Alternate Mobile Number ",
-                      context);
+                      "Please enter Alternate Mobile Number ", context);
                 } else if (_emailIDCl.text.trim().isEmpty) {
                   Utils.showToast("Enter email address", context);
-                } else if (!Utils.validateEmail(_emailIDCl.text) || !isValidEmail) {
+                } else if (!Utils.validateEmail(_emailIDCl.text) ||
+                    !isValidEmail) {
                   Utils.showToast("Please enter Valid Email ID", context);
                 } else if (_presentOccupationCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Present Occupation ", context);
+                  Utils.showToast("Please enter Present Occupation ", context);
                 } else if (_currentEmploymentCl.text.trim().isEmpty) {
                   Utils.showToast(
                       "Please enter No of years in current employment",
                       context);
                 } else if (_qualificationCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Qualification", context);
+                  Utils.showToast("Please enter Qualification", context);
                 } else if (_languagesKnownCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Languages Known", context);
+                  Utils.showToast("Please enter Languages Known", context);
                 } else if (_locationCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Location", context);
                 } else if (isPresentlyworking.isEmpty) {
@@ -1924,55 +1912,42 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
                       context);
                 } else if (_referenceNames.text.trim().isEmpty) {
+                  Utils.showToast("Please enter Reference Name", context);
+                } else if (!Utils.isPhoneNoValid(
+                    _referenceContactNoCl.text.trim())) {
                   Utils.showToast(
-                      "Please enter Reference Name", context);
-                } else if (!Utils.isPhoneNoValid(_referenceContactNoCl.text.trim())) {
-                  Utils.showToast(
-                      "Please enter valid reference contact number",
-                      context);
+                      "Please enter valid reference contact number", context);
                 } else if (isGSTRegistered.isEmpty) {
                   Utils.showToast(
                       "Please select GST Registered or Non GST Registered ",
                       context);
-                }else if (isGSTRegistered == "Yes"&&_gstController.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter valid GST number",
-                      context);
-                }
-                else if (isGSTRegistered == "Yes" &&!isValidGST) {
-                  Utils.showToast(
-                      "This GST number is already exist",
-                      context);
-                }else if (isGSTRegistered == "Yes" && !isGstFilled) {
-                  Utils.showToast(
-                      "Please enter valid GST number",
-                      context);
+                } else if (isGSTRegistered == "Yes" &&
+                    _gstController.text.trim().isEmpty) {
+                  Utils.showToast("Please enter valid GST number", context);
+                } else if (isGSTRegistered == "Yes" && !isValidGST) {
+                  Utils.showToast("This GST number is already exist", context);
+                } else if (isGSTRegistered == "Yes" && !isGstFilled) {
+                  Utils.showToast("Please enter valid GST number", context);
                 } else if (selectedFirmTypeValue == null) {
                   Utils.showToast("Please Select Firm Type", context);
                 } else if (selectedBusinessTypeValue == null) {
-                  Utils.showToast(
-                      "Please Select Business Type", context);
-                } else if (businessProofDocId == 0 || businessProofDocId == null) {
+                  Utils.showToast("Please Select Business Type", context);
+                } else if (businessProofDocId == 0 ||
+                    businessProofDocId == null) {
                   Utils.showToast("Please Upload Document", context);
                 } else if (_companyNameCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Company Name", context);
+                  Utils.showToast("Please enter Company Name", context);
                 } else if (_companyAddressCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Company Address", context);
+                  Utils.showToast("Please enter Company Address", context);
                 } else if (_companyPinCodeCodeCl.text.trim().isEmpty) {
                   Utils.showToast(
-                      "Please enter Company Address PinCode",
-                      context);
-                }  else if (_companyStateCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Company State", context);
+                      "Please enter Company Address PinCode", context);
+                } else if (_companyStateCl.text.trim().isEmpty) {
+                  Utils.showToast("Please enter Company State", context);
                 } else if (_companyCityCl.text.trim().isEmpty) {
-                  Utils.showToast(
-                      "Please enter Company City", context);
+                  Utils.showToast("Please enter Company City", context);
                 } else {
-                  await postLeadDSAPersonalDetail(
-                      context, dataProvider);
+                  await postLeadDSAPersonalDetail(context, dataProvider);
                 }
               },
               text: 'Next',
@@ -1986,7 +1961,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   Widget Connector(DataProvider productProvider) {
-    if(ConnectorPersonalDetailAPICAll) {
+    if (ConnectorPersonalDetailAPICAll) {
       Navigator.of(context, rootNavigator: true).pop();
       getConnectorInfoApi();
     }
@@ -1997,73 +1972,65 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             connectorInfoResponceModel = data;
 
             if (updateData) {
-              _firstNameController.text =
-              connectorInfoResponceModel!.fullName!;
+              _firstNameController.text = connectorInfoResponceModel!.fullName!;
               _fatherNameController.text =
-              connectorInfoResponceModel!.fatherName!;
-              slectedDate = Utils.dateFormate(
-                  context, connectorInfoResponceModel!.dob!);
-              _ageController.text =
-                  connectorInfoResponceModel!.age.toString();
-              _addreshController.text =
-              connectorInfoResponceModel!.address!;
+                  connectorInfoResponceModel!.fatherName!;
+              slectedDate =
+                  Utils.dateFormate(context, connectorInfoResponceModel!.dob!);
+              _ageController.text = connectorInfoResponceModel!.age.toString();
+              _addreshController.text = connectorInfoResponceModel!.address!;
 
               if (connectorInfoResponceModel?.referenceName != null) {
                 _refranceNameController.text =
-                connectorInfoResponceModel!.referenceName!;
+                    connectorInfoResponceModel!.referenceName!;
               }
 
-              if (connectorInfoResponceModel!.referneceContact !=
-                  null) {
+              if (connectorInfoResponceModel!.referneceContact != null) {
                 _refranceContectController.text =
-                connectorInfoResponceModel!.referneceContact!;
+                    connectorInfoResponceModel!.referneceContact!;
               }
 
-              if (connectorInfoResponceModel!.languagesKnown !=
-                  null) {
+              if (connectorInfoResponceModel!.languagesKnown != null) {
                 _LanguagesController.text =
-                connectorInfoResponceModel!.languagesKnown!;
+                    connectorInfoResponceModel!.languagesKnown!;
               }
 
-              if (connectorInfoResponceModel!.workingLocation !=
-                  null) {
+              if (connectorInfoResponceModel!.workingLocation != null) {
                 _refranceLocationController.text =
-                connectorInfoResponceModel!.workingLocation!;
+                    connectorInfoResponceModel!.workingLocation!;
               }
 
-              if (connectorInfoResponceModel!.presentEmployment !=
-                  null) {
+              if (connectorInfoResponceModel!.presentEmployment != null) {
                 _presentEmpolymentController.text =
-                connectorInfoResponceModel!.presentEmployment!;
+                    connectorInfoResponceModel!.presentEmployment!;
               }
 
               if (connectorInfoResponceModel!.emailId != null) {
-                _emailIDController.text =
-                connectorInfoResponceModel!.emailId!;
-                isValidEmail=true;
+                _emailIDController.text = connectorInfoResponceModel!.emailId!;
+                isValidEmail = true;
               }
 
               if (connectorInfoResponceModel!.emailId != null) {
                 _alternetMobileNumberController.text =
-                connectorInfoResponceModel!.alternatePhoneNo!;
+                    connectorInfoResponceModel!.alternatePhoneNo!;
               }
 
               if (connectorInfoResponceModel!.state != null) {
-                _satateController.text =
-                connectorInfoResponceModel!.state!;
+                _satateController.text = connectorInfoResponceModel!.state!;
               }
 
               if (connectorInfoResponceModel!.city != null) {
-                _cityController.text =
-                connectorInfoResponceModel!.city!;
+                _cityController.text = connectorInfoResponceModel!.city!;
               }
 
               if (connectorInfoResponceModel!.pincode != null) {
                 _pincodeController.text =
                     connectorInfoResponceModel!.pincode!.toString();
               }
-              if (connectorInfoResponceModel!.workingWithOther != null && !isWorkingWithParty) {
-                workingWithParty = connectorInfoResponceModel!.workingWithOther!.toString();
+              if (connectorInfoResponceModel!.workingWithOther != null &&
+                  !isWorkingWithParty) {
+                workingWithParty =
+                    connectorInfoResponceModel!.workingWithOther!.toString();
               }
               connectorUpdateData = false;
             }
@@ -2080,8 +2047,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       }
     }
     return Padding(
-      padding:
-      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2122,11 +2088,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             SizedBox(height: 20),
             InkWell(
-              onTap: false
-                  ? () {
-
-              }
-                  : null,
+              onTap: false ? () {} : null,
               // Set onTap to null when field is disabled
               child: Container(
                 width: double.infinity,
@@ -2136,8 +2098,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   border: Border.all(color: kPrimaryLightColor),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -2208,8 +2170,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(10),
                 FilteringTextInputFormatter.deny(
-                  RegExp(
-                      r'^0+'), //users can't type 0 at 1st position
+                  RegExp(r'^0+'), //users can't type 0 at 1st position
                 ),
               ],
               keyboardType: TextInputType.number,
@@ -2227,26 +2188,25 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   hintText: "E-mail ID",
                   labelText: "E-mail ID",
                   maxLines: 1,
-
                 ),
                 _emailIDController.text.isNotEmpty
                     ? Positioned(
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Container(
-                    child: IconButton(
-                      onPressed: () => setState(() {
-                        isValidEmail = false;
-                        _emailIDController.clear();
-                      }),
-                      icon: SvgPicture.asset(
-                        'assets/icons/email_cross.svg',
-                        semanticsLabel: 'My SVG Image',
-                      ),
-                    ),
-                  ),
-                )
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          child: IconButton(
+                            onPressed: () => setState(() {
+                              isValidEmail = false;
+                              _emailIDController.clear();
+                            }),
+                            icon: SvgPicture.asset(
+                              'assets/icons/email_cross.svg',
+                              semanticsLabel: 'My SVG Image',
+                            ),
+                          ),
+                        ),
+                      )
                     : Container(),
               ],
             ),
@@ -2260,44 +2220,46 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               textAlign: TextAlign.justify,
             ),
             SizedBox(height: 16),
-            (isValidEmail )
+            (isValidEmail)
                 ? Container(
-              child: Row(
-                children: [
-                  Text(
-                    'VERIFIED',
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  SvgPicture.asset('assets/icons/tick_square.svg'),
-                ],
-              ),
-            )
+                    child: Row(
+                      children: [
+                        Text(
+                          'VERIFIED',
+                          style: TextStyle(
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        SvgPicture.asset('assets/icons/tick_square.svg'),
+                      ],
+                    ),
+                  )
                 : Align(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  onTap: () async {
-                    if (_emailIDController.text.isEmpty) {
-                      Utils.showToast("Please Enter Email ID", context);
-                    } else if (!Utils.validateEmail(_emailIDController.text)) {
-                      Utils.showToast("Please Enter Valid Email ID", context);
-                    } else {
-                      callEmailIDExist(context, _emailIDController.text);
-                    }
-                  },
-                  child: Text(
-                    'Click here to Verify',
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  ),
-                )),
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () async {
+                        if (_emailIDController.text.isEmpty) {
+                          Utils.showToast("Please Enter Email ID", context);
+                        } else if (!Utils.validateEmail(
+                            _emailIDController.text)) {
+                          Utils.showToast(
+                              "Please Enter Valid Email ID", context);
+                        } else {
+                          callEmailIDExist(context, _emailIDController.text);
+                        }
+                      },
+                      child: Text(
+                        'Click here to Verify',
+                        style: TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue),
+                      ),
+                    )),
             SizedBox(height: 25),
             CommonTextField(
               controller: _presentEmpolymentController,
@@ -2306,8 +2268,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               labelText: "Present Employment",
               keyboardType: TextInputType.text,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[A-Za-z ]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z ]'))),
               ],
             ),
             SizedBox(height: 20),
@@ -2318,8 +2279,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               labelText: "Languages Known",
               keyboardType: TextInputType.text,
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[A-Za-z, ]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z, ]'))),
               ],
             ),
             SizedBox(height: 20),
@@ -2329,8 +2289,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               hintText: "Location",
               labelText: "Location",
               inputFormatter: [
-                FilteringTextInputFormatter.allow(
-                    RegExp((r'[A-Za-z,0-9 ]'))),
+                FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z,0-9 ]'))),
               ],
             ),
             SizedBox(height: 20),
@@ -2386,8 +2345,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(10),
                 FilteringTextInputFormatter.deny(
-                  RegExp(
-                      r'^0+'), //users can't type 0 at 1st position
+                  RegExp(r'^0+'), //users can't type 0 at 1st position
                 ),
               ],
               keyboardType: TextInputType.number,
@@ -2396,8 +2354,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             SizedBox(height: 20),
             Padding(
-              padding:
-              const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20),
               child: Column(
                 children: [
                   CommonElevatedButton(
