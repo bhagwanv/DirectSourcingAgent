@@ -156,7 +156,6 @@ class ConnectorSignup extends State<Connector_signup> {
                 return Container();
               } else {
                 if (productProvider.getConnectorInfoData != null) {
-                  //Navigator.of(context, rootNavigator: true).pop();
                   if (productProvider.getConnectorInfoData != null) {
                     productProvider.getConnectorInfoData!.when(
                       success: (data) {
@@ -562,7 +561,7 @@ class ConnectorSignup extends State<Connector_signup> {
                       SizedBox(height: 20),
                       Padding(
                         padding:
-                            const EdgeInsets.only(left: 10, right: 10, top: 20),
+                            const EdgeInsets.only(top: 20),
                         child: Column(
                           children: [
                             CommonElevatedButton(
@@ -584,34 +583,6 @@ class ConnectorSignup extends State<Connector_signup> {
         ),
       ),
     );
-  }
-
-  void callSendOptEmail(BuildContext context, String emailID) async {
-    updateData = true;
-    SendOtpOnEmailResponce data;
-    data = await ApiService().sendOtpOnEmail(emailID);
-    Navigator.of(context, rootNavigator: true).pop();
-    if (data != null && data.status!) {
-      final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EmailOtpScreen(
-                emailID: emailID,
-              )));
-
-      if (result != null &&
-          result.containsKey('isValid') &&
-          result.containsKey('Email')) {
-        setState(() {
-          isValidEmail = result['isValid'];
-          _emailIDController.text = result['Email'];
-        });
-      } else {
-        print('Result is null or does not contain expected keys');
-      }
-    } else {
-      Utils.showToast(data.message!, context);
-    }
   }
 
   void callEmailIDExist(BuildContext context, String emailID) async {
