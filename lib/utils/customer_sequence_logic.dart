@@ -10,7 +10,6 @@ import '../view/bank_details_screen/BankDetailsScreen.dart';
 import '../view/dashboard/bottom_navigation.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/pancard_screen/PancardScreen.dart';
-import '../view/personal_info/PersonalInformation.dart';
 import '../view/rejected/rejected_screen.dart';
 import '../view/splash/model/GetLeadResponseModel.dart';
 import '../view/splash/model/LeadCurrentResponseModel.dart';
@@ -75,13 +74,6 @@ ScreenType? customerSequence(
           );
           return ScreenType.bankDetail;
         } else if (leadCurrentActivity.activityName == "PersonalInfo") {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => PersonalInformation(
-                    activityId: leadCurrentActivity.activityMasterId!,
-                    subActivityId: leadCurrentActivity.subActivityMasterId!,
-                    pageType: pageType)),
-          );
           return ScreenType.personalInfo;
         } else if (leadCurrentActivity.activityName == "BusinessInfo") {
           /* Navigator.of(context).pushReplacement(
@@ -218,13 +210,6 @@ ScreenType? customerSequence(
           );
           return ScreenType.bankDetail;
         } else if (leadCurrentActivity.activityName == "PersonalInfo") {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => PersonalInformation(
-                    activityId: leadCurrentActivity.activityMasterId!,
-                    subActivityId: leadCurrentActivity.subActivityMasterId!,
-                    pageType: pageType)),
-          );
           return ScreenType.personalInfo;
         } else if (leadCurrentActivity.activityName == "BusinessInfo") {
           /*Navigator.of(context).push(

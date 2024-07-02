@@ -294,8 +294,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
-                                    items: _addDividersAfterItems(
-                                        dsaSalesAgentList),
+                                    items: _addDividersAfterItems(dsaSalesAgentList),
+
+
                                     onChanged:
                                         (DsaSalesAgentList? value) async {
                                       selecteddsaSalesAgentValue =
@@ -311,21 +312,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                       await getDSADashboardDetails(context);
 
                                     },
-                                    buttonStyleData: const ButtonStyleData(
-                                      padding: EdgeInsets.only(right: 8),
-                                    ),
-                                    dropdownStyleData: const DropdownStyleData(
-                                      maxHeight: 200,
-                                    ),
-                                    menuItemStyleData: MenuItemStyleData(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      customHeights: _getCustomItemsHeights3(
-                                          dsaSalesAgentList),
-                                    ),
-                                    iconStyleData: const IconStyleData(
-                                      openMenuIcon: Icon(Icons.arrow_drop_up),
-                                    ),
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 400,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              menuItemStyleData: const MenuItemStyleData(
+                                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                icon: Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(Icons.keyboard_arrow_down),
+                                ), // Down arrow icon when closed
+                                openMenuIcon: Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(Icons.keyboard_arrow_up),
+                                ), // Up arrow icon when open
+                              ),
                                   )
                                 : Container(),
                             const SizedBox(
@@ -890,14 +895,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          // If it's not the last item, add Divider after it.
+          /*// If it's not the last item, add Divider after it.
           if (item != list.last)
             const DropdownMenuItem<DsaSalesAgentList>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }

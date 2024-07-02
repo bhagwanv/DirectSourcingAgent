@@ -70,12 +70,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     isImageAdd = true;
     isEditableStatement = true;
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context,
-        listen: false)
-        .postBusineesDoumentSingleFile(
-        imageFile, true, "", "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .postBusineesDoumentSingleFile(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
   }
+
   List<String> accountTypeList = ['Saving', 'Current', 'Other'];
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
@@ -93,13 +92,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-          if (item != items.last)
+          /*if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -149,13 +148,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+          /*if (item != items.last)
             const DropdownMenuItem<LiveBankList>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -183,215 +182,228 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             backgroundColor: Colors.white,
             body: Consumer<DataProvider>(
                 builder: (context, productProvider, child) {
-                  if (productProvider.getBankDetailsData == null && isLoading) {
-                    return const Loader();
-                  } else {
-                    if (productProvider.getBankDetailsData != null && isLoading) {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      isLoading = false;
-                    }
+              if (productProvider.getBankDetailsData == null && isLoading) {
+                return const Loader();
+              } else {
+                if (productProvider.getBankDetailsData != null && isLoading) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  isLoading = false;
+                }
 
-                    if (productProvider.getBankDetailsData != null) {
-                      productProvider.getBankDetailsData!.when(
-                        success: (BankDetailsResponceModel) async {
-                          bankDetailsResponceModel = BankDetailsResponceModel;
+                if (productProvider.getBankDetailsData != null) {
+                  productProvider.getBankDetailsData!.when(
+                    success: (BankDetailsResponceModel) async {
+                      bankDetailsResponceModel = BankDetailsResponceModel;
 
-                          if (bankDetailsResponceModel != null) {
-                            if (bankDetailsResponceModel!.result != null) {
-                              if (bankDetailsResponceModel!
+                      if (bankDetailsResponceModel != null) {
+                        if (bankDetailsResponceModel!.result != null) {
+                          if (bankDetailsResponceModel!
                                   .result!.leadBankDetailDTOs !=
-                                  null) {
-                                if (bankDetailsResponceModel!.isSuccess!) {
-                                  _accountHolderController.text =
+                              null) {
+                            if (bankDetailsResponceModel!.isSuccess!) {
+                              _accountHolderController.text =
                                   bankDetailsResponceModel!
                                       .result!
                                       .leadBankDetailDTOs!
                                       .first
                                       .accountHolderName!;
-                                  if (bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs!.first.accountNumber !=
-                                      null) {
-                                    _bankAccountNumberCl.text =
-                                    bankDetailsResponceModel!.result!
-                                        .leadBankDetailDTOs!.first.accountNumber!;
-                                  }
-                                  _ifsccodeCl.text = bankDetailsResponceModel!
-                                      .result!.leadBankDetailDTOs!.first.ifscCode!;
-                                  _bankNameController.text = bankDetailsResponceModel!
-                                      .result!.leadBankDetailDTOs!.first.bankName!;
-                                  _accountTypeCl.text = bankDetailsResponceModel!
-                                      .result!.leadBankDetailDTOs!.first.accountType!;
-                                  _bankStatmentPassworedController.text =
+                              if (bankDetailsResponceModel!
+                                      .result!
+                                      .leadBankDetailDTOs!
+                                      .first
+                                      .accountNumber !=
+                                  null) {
+                                _bankAccountNumberCl.text =
+                                    bankDetailsResponceModel!
+                                        .result!
+                                        .leadBankDetailDTOs!
+                                        .first
+                                        .accountNumber!;
+                              }
+                              _ifsccodeCl.text = bankDetailsResponceModel!
+                                  .result!.leadBankDetailDTOs!.first.ifscCode!;
+                              _bankNameController.text =
+                                  bankDetailsResponceModel!.result!
+                                      .leadBankDetailDTOs!.first.bankName!;
+                              _accountTypeCl.text = bankDetailsResponceModel!
+                                  .result!
+                                  .leadBankDetailDTOs!
+                                  .first
+                                  .accountType!;
+                              _bankStatmentPassworedController.text =
                                   bankDetailsResponceModel!.result!
                                       .leadBankDetailDTOs!.first.pdfPassword!;
-                                  if (!isEditableStatement) {
-                                    for (int i = 0;
+                              if (!isEditableStatement) {
+                                for (int i = 0;
                                     i <
                                         bankDetailsResponceModel!
                                             .result!.bankDocs!.length;
                                     i++) {
-                                      print("bankDocsDAta " + i.toString());
-                                      documentList!.add(bankDetailsResponceModel!
-                                          .result!.bankDocs![i].fileURL);
-                                    }
-                                    isEditableStatement = true;
-                                  }
-                                } else {
-                                  Utils.showToast(
-                                      bankDetailsResponceModel!.message!, context);
+                                  print("bankDocsDAta " + i.toString());
+                                  documentList!.add(bankDetailsResponceModel!
+                                      .result!.bankDocs![i].fileURL);
                                 }
+                                isEditableStatement = true;
                               }
-                            }
-                          }
-                        },
-                        failure: (exception) {
-                          if (exception is ApiException) {
-                            if (exception.statusCode == 401) {
-                              productProvider.disposeAllProviderData();
-                              ApiService().handle401(context);
                             } else {
-                              Utils.showToast(exception.errorMessage, context);
+                              Utils.showToast(
+                                  bankDetailsResponceModel!.message!, context);
                             }
                           }
-                        },
-                      );
-                    }
-
-                    if (productProvider.getBankListData != null) {
-                      if (productProvider.getBankListData!.liveBankList != null) {
-                        liveBankList = productProvider.getBankListData!.liveBankList!;
+                        }
                       }
-                    }
+                    },
+                    failure: (exception) {
+                      if (exception is ApiException) {
+                        if (exception.statusCode == 401) {
+                          productProvider.disposeAllProviderData();
+                          ApiService().handle401(context);
+                        } else {
+                          Utils.showToast(exception.errorMessage, context);
+                        }
+                      }
+                    },
+                  );
+                }
 
-                    if (productProvider.getpostBusineesDoumentSingleFileData != null &&isImageAdd) {
-                      documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                if (productProvider.getBankListData != null) {
+                  if (productProvider.getBankListData!.liveBankList != null) {
+                    liveBankList =
+                        productProvider.getBankListData!.liveBankList!;
+                  }
+                }
 
-                        isImageAdd=false;
-                      print("dhfks");
-                    }
+                if (productProvider.getpostBusineesDoumentSingleFileData !=
+                        null &&
+                    isImageAdd) {
+                  documentList!.add(productProvider
+                      .getpostBusineesDoumentSingleFileData!.filePath);
 
-                    return Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  isImageAdd = false;
+                  print("dhfks");
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 0.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Center(
+                          child: Text(
+                            "Bank Details",
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30.0,
+                        ),
+                        bankListWidget(productProvider),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _accountHolderController,
+                          hintText: "Account Holder Name ",
+                          labelText: "Account Holder Name ",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          inputFormatter: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp((r'[0-9]'))),
+                            LengthLimitingTextInputFormatter(17)
+                          ],
+                          enableinteractiveSelection: false,
+                          keyboardType: TextInputType.number,
+                          controller: _bankAccountNumberCl,
+                          maxLines: 1,
+                          hintText: "Bank Acc Number ",
+                          labelText: "Bank Acc Number ",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        accountTypeWidget(productProvider),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                            inputFormatter: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp((r'[A-Z0-9]'))),
+                              LengthLimitingTextInputFormatter(11)
+                            ],
+                            controller: _ifsccodeCl,
+                            hintText: "IFSC Code",
+                            labelText: "IFSC Code",
+                            textCapitalization: TextCapitalization.characters,
+                            onChanged: (value) {}),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _bankStatmentPassworedController,
+                          hintText: "Bank Statement password(optional)",
+                          labelText: "Bank Statement password(optional)",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Stack(
                           children: [
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            Center(
-                              child: Text(
-                                "Bank Details",
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30.0,
-                            ),
-                            bankListWidget(productProvider),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            CommonTextField(
-                              controller: _accountHolderController,
-                              hintText: "Account Holder Name ",
-                              labelText: "Account Holder Name ",
-                            ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            CommonTextField(
-                              inputFormatter: [
-                                FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
-                                LengthLimitingTextInputFormatter(17)
-                              ],
-                              enableinteractiveSelection: false,
-                              keyboardType: TextInputType.number,
-                              controller: _bankAccountNumberCl,
-                              maxLines: 1,
-                              hintText: "Bank Acc Number ",
-                              labelText: "Bank Acc Number ",
-                            ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            accountTypeWidget(productProvider),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            CommonTextField(
-                                inputFormatter: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp((r'[A-Z0-9]'))),
-                                  LengthLimitingTextInputFormatter(11)
-                                ],
-                                controller: _ifsccodeCl,
-                                hintText: "IFSC Code",
-                                labelText: "IFSC Code",
-                                textCapitalization: TextCapitalization.characters,
-                                onChanged: (value) {}),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            CommonTextField(
-                              controller: _bankStatmentPassworedController,
-                              hintText: "Bank Statement password(optional)",
-                              labelText: "Bank Statement password(optional)",
-                            ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            Stack(
-                              children: [
-                                Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border:
-                                        Border.all(color: const Color(0xff0196CE))),
+                            Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: const Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    bottomSheetMenu(context, true, true, true);
+                                  },
+                                  child: Container(
+                                    height: 148,
                                     width: double.infinity,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        bottomSheetMenu(context,true, true, true);
-                                      },
-                                      child: Container(
-                                        height: 148,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffEFFAFF),
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffEFFAFF),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                          mainAxisAlignment:
+                                      mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                                'assets/images/gallery.svg'),
-                                            const Text(
-                                              'Upload Bank Proof',
-                                              style: TextStyle(
-                                                  color: Color(0xff0196CE),
-                                                  fontSize: 12),
-                                            ),
-                                            const Text(
-                                                'Supports : JPEG, PNG, PDF',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color:
-                                                    Color(0xffCACACA))),
-                                          ],
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload Bank Proof',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE),
+                                              fontSize: 12),
                                         ),
-                                      ),
-                                    )),
-                              ],
-                            ),
-                          /*  Container(
+                                        const Text('Supports : JPEG, PNG, PDF',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xffCACACA))),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        /*  Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: const Color(0xff0196CE))),
@@ -458,60 +470,63 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                 ),
                               ),
                             ),*/
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            documentList!.isNotEmpty
-                                ? Column(
-                              children:
-                              documentList!.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final document = entry.value;
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.grey[200],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: [
-                                          Text("${index + 1}"),
-                                          Spacer(),
-                                          documentList![index]!.contains(".pdf") ?
-                                          Icon(Icons.picture_as_pdf) : Icon(Icons.photo),
-                                          Spacer(),
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isEditableStatement = true;
-                                                documentList!.removeAt(index);
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                                'assets/icons/delete_icon.svg'),
-                                          ),
-                                        ],
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        documentList!.isNotEmpty
+                            ? Column(
+                                children:
+                                    documentList!.asMap().entries.map((entry) {
+                                  final index = entry.key;
+                                  final document = entry.value;
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text("${index + 1}"),
+                                            Spacer(),
+                                            documentList![index]!
+                                                    .contains(".pdf")
+                                                ? Icon(Icons.picture_as_pdf)
+                                                : Icon(Icons.photo),
+                                            Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isEditableStatement = true;
+                                                  documentList!.removeAt(index);
+                                                });
+                                              },
+                                              child: SvgPicture.asset(
+                                                  'assets/icons/delete_icon.svg'),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                            )
-                                : Container(),
-                            const SizedBox(
-                              height: 30.0,
-                            ),
-                            CommonElevatedButton(
-                              onPressed: () async {
-                                await submitBankDetailsApi(
-                                    context, productProvider, documentList!);
+                                  );
+                                }).toList(),
+                              )
+                            : Container(),
+                        const SizedBox(
+                          height: 30.0,
+                        ),
+                        CommonElevatedButton(
+                          onPressed: () async {
+                            await submitBankDetailsApi(
+                                context, productProvider, documentList!);
 
-                                /* Navigator.push(
+                            /* Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) {
@@ -519,19 +534,19 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               },
                             ),
                           );*/
-                              },
-                              text: 'Next',
-                              upperCase: true,
-                            ),
-                            const SizedBox(
-                              height: 30.0,
-                            ),
-                          ],
+                          },
+                          text: 'Next',
+                          upperCase: true,
                         ),
-                      ),
-                    );
-                  }
-                }),
+                        const SizedBox(
+                          height: 30.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            }),
           )),
     );
   }
@@ -605,18 +620,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         onChanged: (LiveBankList? value) {
           selectedBankValue = value!.bankName!;
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights1(liveBankList!),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+        iconStyleData: IconStyleData(
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -651,18 +672,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         onChanged: (LiveBankList? value) {
           selectedBankValue = value!.bankName!;
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights1(liveBankList!),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+        iconStyleData: IconStyleData(
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     }
@@ -716,18 +743,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               onChanged: (String? value) {
                 selectedAccountTypeValue = value!;
               },
-              buttonStyleData: const ButtonStyleData(
-                padding: EdgeInsets.only(right: 8),
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
-              dropdownStyleData: const DropdownStyleData(
-                maxHeight: 200,
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               ),
-              menuItemStyleData: MenuItemStyleData(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                customHeights: _getCustomItemsHeights(accountTypeList),
-              ),
-              iconStyleData: const IconStyleData(
-                openMenuIcon: Icon(Icons.arrow_drop_up),
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
               ),
             );
           } else {
@@ -762,18 +795,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               onChanged: (String? value) {
                 selectedAccountTypeValue = value!;
               },
-              buttonStyleData: const ButtonStyleData(
-                padding: EdgeInsets.only(right: 8),
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
-              dropdownStyleData: const DropdownStyleData(
-                maxHeight: 200,
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               ),
-              menuItemStyleData: MenuItemStyleData(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                customHeights: _getCustomItemsHeights(accountTypeList),
-              ),
-              iconStyleData: const IconStyleData(
-                openMenuIcon: Icon(Icons.arrow_drop_up),
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
               ),
             );
           }
@@ -809,18 +848,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             onChanged: (String? value) {
               selectedAccountTypeValue = value!;
             },
-            buttonStyleData: const ButtonStyleData(
-              padding: EdgeInsets.only(right: 8),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 400,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
-            dropdownStyleData: const DropdownStyleData(
-              maxHeight: 200,
+            menuItemStyleData: const MenuItemStyleData(
+              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
             ),
-            menuItemStyleData: MenuItemStyleData(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              customHeights: _getCustomItemsHeights(accountTypeList),
-            ),
-            iconStyleData: const IconStyleData(
-              openMenuIcon: Icon(Icons.arrow_drop_up),
+            iconStyleData: IconStyleData(
+              icon: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(Icons.keyboard_arrow_down),
+              ), // Down arrow icon when closed
+              openMenuIcon: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(Icons.keyboard_arrow_up),
+              ), // Up arrow icon when open
             ),
           );
         }
@@ -856,18 +901,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           onChanged: (String? value) {
             selectedAccountTypeValue = value!;
           },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 400,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
+          menuItemStyleData: const MenuItemStyleData(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
           ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights(accountTypeList),
-          ),
-          iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
+          iconStyleData: IconStyleData(
+            icon: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_down),
+            ), // Down arrow icon when closed
+            openMenuIcon: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_up),
+            ), // Up arrow icon when open
           ),
         );
       }
@@ -903,18 +954,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         onChanged: (String? value) {
           selectedAccountTypeValue = value!;
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights(accountTypeList),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+        iconStyleData: IconStyleData(
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     }
@@ -1043,12 +1100,18 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       }
     }
   }
-  void bottomSheetMenu(BuildContext context, bool camera, bool gallery, bool pdf) {
+
+  void bottomSheetMenu(
+      BuildContext context, bool camera, bool gallery, bool pdf) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return ImagePickerWidgets(onImageSelected: _onImageSelected, camera: true, gallery: true, pdf: true,);
+          return ImagePickerWidgets(
+            onImageSelected: _onImageSelected,
+            camera: true,
+            gallery: true,
+            pdf: true,
+          );
         });
   }
-
 }

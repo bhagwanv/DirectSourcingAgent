@@ -268,20 +268,24 @@ class _LeadScreenState extends State<LeadScreen> {
                               getDSADashboardLead(context);
 
                             },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 400,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
+                            menuItemStyleData: const MenuItemStyleData(
+                              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                             ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0),
-                              customHeights:
-                              _getCustomItemsHeights3(dsaSalesAgentList),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
+                            iconStyleData: IconStyleData(
+                              icon: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(Icons.keyboard_arrow_down),
+                              ), // Down arrow icon when closed
+                              openMenuIcon: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(Icons.keyboard_arrow_up),
+                              ), // Up arrow icon when open
                             ),
                           ):Container(),
                           const SizedBox(
@@ -399,13 +403,13 @@ class _LeadScreenState extends State<LeadScreen> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != list.last)
+          /*if (item != list.last)
             const DropdownMenuItem<DsaSalesAgentList>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }

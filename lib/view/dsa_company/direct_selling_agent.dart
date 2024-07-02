@@ -26,7 +26,6 @@ import '../../utils/utils_class.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
 import '../connector/model/ConnectorInfoReqModel.dart';
 import '../connector/model/ConnectorInfoResponce.dart';
-import '../personal_info/EmailOtpScreen.dart';
 import '../personal_info/model/CityResponce.dart';
 import '../personal_info/model/EmailExistRespoce.dart';
 import '../personal_info/model/ReturnObject.dart';
@@ -245,13 +244,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ),
             ),
           ),
-          if (item != items.last)
+          /*if (item != items.last)
             const DropdownMenuItem<ReturnObject>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -295,13 +294,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != list.last)
+         /* if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -382,19 +381,24 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             companyStateId = null;
           });
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights2(
-              productProvider.getAllStateData!.returnObject!),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -450,18 +454,24 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             companyCityId = null;
           });
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights3(citylist),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+        iconStyleData: IconStyleData(
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -576,34 +586,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             pdf: true,
           );
         });
-  }
-
-  void callSendOptEmail(BuildContext context, String emailID) async {
-    updateData = true;
-    SendOtpOnEmailResponce data;
-    data = await ApiService().sendOtpOnEmail(emailID);
-    Navigator.of(context, rootNavigator: true).pop();
-    if (data != null && data.status!) {
-      final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EmailOtpScreen(
-                    emailID: emailID,
-                  )));
-
-      if (result != null &&
-          result.containsKey('isValid') &&
-          result.containsKey('Email')) {
-        setState(() {
-          isValidEmail = result['isValid'];
-          _emailIDCl.text = result['Email'];
-        });
-      } else {
-        print('Result is null or does not contain expected keys');
-      }
-    } else {
-      Utils.showToast(data.message!, context);
-    }
   }
 
   void callEmailIDExist(BuildContext context, String emailID) async {
@@ -1576,23 +1558,41 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              items: _addDividersAfterItems(businessTypeList),
+              items: businessTypeList.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                );
+              }).toList(),
               value: selectedFirmTypeValue,
               onChanged: (String? value) {
                 selectedFirmTypeValue = value;
               },
-              buttonStyleData: const ButtonStyleData(
-                padding: EdgeInsets.only(right: 8),
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
-              dropdownStyleData: const DropdownStyleData(
-                maxHeight: 200,
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               ),
-              menuItemStyleData: MenuItemStyleData(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                customHeights: _getCustomItemsHeights(businessTypeList),
-              ),
-              iconStyleData: const IconStyleData(
-                openMenuIcon: Icon(Icons.arrow_drop_up),
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
               ),
             ),
             const SizedBox(
@@ -1632,25 +1632,43 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              items: _addDividersAfterItems(chooseBusinessProofList),
+              items: chooseBusinessProofList.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                );
+              }).toList(),
               value: selectedBusinessTypeValue,
               onChanged: gstUpdate
                   ? (String? value) {
                       selectedBusinessTypeValue = value;
                     }
                   : null,
-              buttonStyleData: const ButtonStyleData(
-                padding: EdgeInsets.only(right: 8),
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
-              dropdownStyleData: const DropdownStyleData(
-                maxHeight: 200,
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               ),
-              menuItemStyleData: MenuItemStyleData(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                customHeights: _getCustomItemsHeights(chooseBusinessProofList),
-              ),
-              iconStyleData: const IconStyleData(
-                openMenuIcon: Icon(Icons.arrow_drop_up),
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
               ),
             ),
             const SizedBox(

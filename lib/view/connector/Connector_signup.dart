@@ -22,9 +22,7 @@ import 'package:provider/provider.dart';
 
 import '../../utils/constant.dart';
 import '../../utils/custom_radio_button.dart';
-import '../personal_info/EmailOtpScreen.dart';
 import '../personal_info/model/EmailExistRespoce.dart';
-import '../personal_info/model/SendOtpOnEmailResponce.dart';
 
 class Connector_signup extends StatefulWidget {
   int? activityId;
