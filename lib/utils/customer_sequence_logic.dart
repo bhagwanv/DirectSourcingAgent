@@ -1,6 +1,7 @@
 import 'package:direct_sourcing_agent/inprogress/ProfileReview.dart';
 import 'package:direct_sourcing_agent/utils/screen_type.dart';
 import 'package:direct_sourcing_agent/view/agreement_screen/Agreementscreen.dart';
+import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/profile_type/ProfileTypes.dart';
 import 'package:flutter/material.dart';
 import '../view/CongratulationScreen.dart';
@@ -150,10 +151,15 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
-        } else if (leadCurrentActivity.activityName == "DSATypeSelection" || leadCurrentActivity.activityName == "DSAPersonalInfo") {
-          Navigator.of(context).pushReplacement(
+        } else if (leadCurrentActivity.activityName == "DSATypeSelection") {
+          Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
                 subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType, dsaType: leadCurrentActivity.activityName)),);
+          return ScreenType.DSATypeSelection;
+        } else if (leadCurrentActivity.activityName == "DSAPersonalInfo") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => DirectSellingAgent( activityId: leadCurrentActivity.activityMasterId!,
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
           return ScreenType.DSATypeSelection;
         }
       } else {
@@ -289,10 +295,15 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
-        } else if (leadCurrentActivity.activityName == "DSATypeSelection" || leadCurrentActivity.activityName == "DSAPersonalInfo") {
+        } else if (leadCurrentActivity.activityName == "DSATypeSelection") {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => ProfileTypes( activityId: leadCurrentActivity.activityMasterId!,
                 subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType, dsaType: leadCurrentActivity.activityName)),);
+          return ScreenType.DSATypeSelection;
+        } else if (leadCurrentActivity.activityName == "DSAPersonalInfo") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => DirectSellingAgent( activityId: leadCurrentActivity.activityMasterId!,
+                subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
           return ScreenType.DSATypeSelection;
         }
       } else {

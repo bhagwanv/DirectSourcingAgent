@@ -207,14 +207,14 @@ class _ProfileTypesState extends State<ProfileTypes> {
                                 ),
                               );
                             } else {
-                              Navigator.of(context).pushReplacement(
+                             /* Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => DirectSellingAgent(
                                     activityId: widget.activityId,
                                     subActivityId: widget.subActivityId,
                                   ),
                                 ),
-                              );
+                              );*/
                             }
                           });
                         }
