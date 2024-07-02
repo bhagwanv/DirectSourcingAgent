@@ -20,6 +20,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
+import '../../utils/custom_radio_button.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
 import 'model/ChooseUserTypeRequestModel.dart';
 
@@ -45,15 +46,18 @@ class _ProfileTypesState extends State<ProfileTypes> {
   bool _isSelected2 = false;
   String? userType;
   bool _isNavigated = false;
-  void _handleCheckboxChange(int index, bool? value) {
+  bool isTermsChecks = false;
+
+  void _handleCheckboxChange(int checkboxNumber, bool value) {
     setState(() {
-      if (index == 1) {
-        _isSelected1 = value!;
-        _isSelected2 = !value;
-      } else if (index == 2) {
-        _isSelected2 = value!;
-        _isSelected1 = !value;
+      if (checkboxNumber == 1) {
+        _isSelected1 = value;
+        _isSelected2 = false; // Ensure the other checkbox is deselected
+      } else if (checkboxNumber == 2) {
+        _isSelected2 = value;
+        _isSelected1 = false; // Ensure the other checkbox is deselected
       }
+      isTermsChecks = value;
     });
   }
 
@@ -67,7 +71,6 @@ class _ProfileTypesState extends State<ProfileTypes> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.dsaType == "DSAPersonalInfo") {
       dSAPersonalInfoApi(context);
@@ -76,7 +79,6 @@ class _ProfileTypesState extends State<ProfileTypes> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTermsChecks = false;
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -162,13 +164,14 @@ class _ProfileTypesState extends State<ProfileTypes> {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
                     child: Column(
                       children: [
                         CommonElevatedButton(
                           onPressed: () async {
-                            if(userType != null) {
+                            if(isTermsChecks) {
                               chooseUserTypeApi(context, productProvider,
                                   isTermsChecks, userType!);
                             } else {
@@ -190,29 +193,33 @@ class _ProfileTypesState extends State<ProfileTypes> {
                 productProvider.getDSAPersonalInfoData!.when(
                   success: (data) {
                     if (data.status!) {
-                      if (!_isNavigated) {
-                        _isNavigated = true;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (data.dsaType == "Connector") {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => Connector_signup(
-                                  activityId: widget.activityId,
-                                  subActivityId: widget.subActivityId,
+                      if(widget.dsaType == "DSAPersonalInfo") {
+                        if (!_isNavigated) {
+                          _isNavigated = true;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (data.dsaType == "Connector") {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => Connector_signup(
+                                    activityId: widget.activityId,
+                                    subActivityId: widget.subActivityId,
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => DirectSellingAgent(
-                                  activityId: widget.activityId,
-                                  subActivityId: widget.subActivityId,
+                              );
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => DirectSellingAgent(
+                                    activityId: widget.activityId,
+                                    subActivityId: widget.subActivityId,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                        });
+                              );
+                            }
+                          });
+                        }
+                      } else {
+
                       }
                     } else {
                       Utils.showToast(data.message!, context);
@@ -327,7 +334,6 @@ class _ProfileTypesState extends State<ProfileTypes> {
 
   void chooseUserTypeApi(BuildContext context, DataProvider productProvider,
       bool isTermsChecks, String userType) async {
-    Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     var model = ChooseUserTypeRequestModel(
         leadId: prefsUtil.getInt(LEADE_ID),
@@ -337,6 +343,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
         companyId: prefsUtil.getInt(COMPANY_ID),
         dsaType: userType);
     print(model.toJson().toString());
+    Utils.onLoading(context, "");
     await productProvider.getChooseUserType(model);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getChooseUserTypeData != null) {
