@@ -46,9 +46,9 @@ class DirectSellingAgent extends StatefulWidget {
 
   DirectSellingAgent(
       {required this.activityId,
-      required this.subActivityId,
-      super.key,
-      this.pageType});
+        required this.subActivityId,
+        super.key,
+        this.pageType});
 
   @override
   State<DirectSellingAgent> createState() => _DirectSellingAgent();
@@ -324,7 +324,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         var allStates = productProvider.getAllStateData!.returnObject!;
         if (companyStateId != null) {
           selectedCompanyState = allStates.firstWhere(
-              (element) => element?.id == int.parse(companyStateId!),
+                  (element) => element?.id == int.parse(companyStateId!),
               orElse: () => null);
 
           if (cityCallInitial) {
@@ -406,7 +406,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       print("cityCallInitial:: ${cityCallInitial}");
       if (companyCityId != null) {
         selectedCompanyCity = citylist.firstWhere(
-            (element) => element?.id == int.parse(companyCityId!),
+                (element) => element?.id == int.parse(companyCityId!),
             orElse: () => CityResponce());
       }
       return DropdownButtonFormField2<CityResponce>(
@@ -527,30 +527,30 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           top: true,
           bottom: true,
           child:
-              Consumer<DataProvider>(builder: (context, dataProvider, child) {
-                if (dataProvider.getDSAPersonalInfoData != null) {
-                  dataProvider.getDSAPersonalInfoData!.when(
-                    success: (data) {
-                      if (data.status!) {
-                        profileTypeDSA = data.dsaType!;
-                      } else {
-                        Utils.showToast(data.message!, context);
-                      }
-                    },
-                    failure: (exception) {
-                      if (exception is ApiException) {
-                        if (exception.statusCode == 401) {
-                          dataProvider.disposeAllProviderData();
-                          ApiService().handle401(context);
-                        } else {
-                          Utils.showToast(exception.errorMessage, context);
-                        }
-                      }
-                    },
-                  );
-                }
+          Consumer<DataProvider>(builder: (context, dataProvider, child) {
+            if (dataProvider.getDSAPersonalInfoData != null) {
+              dataProvider.getDSAPersonalInfoData!.when(
+                success: (data) {
+                  if (data.status!) {
+                    profileTypeDSA = data.dsaType!;
+                  } else {
+                    Utils.showToast(data.message!, context);
+                  }
+                },
+                failure: (exception) {
+                  if (exception is ApiException) {
+                    if (exception.statusCode == 401) {
+                      dataProvider.disposeAllProviderData();
+                      ApiService().handle401(context);
+                    } else {
+                      Utils.showToast(exception.errorMessage, context);
+                    }
+                  }
+                },
+              );
+            }
 
-                return profileTypeDSA!.isNotEmpty ? profileTypeDSA == "DSA" ? Dsa(dataProvider): Connector(dataProvider) : Loader();
+            return profileTypeDSA!.isNotEmpty ? profileTypeDSA == "DSA" ? Dsa(dataProvider): Connector(dataProvider) : Loader();
           }),
         ),
       ),
@@ -575,8 +575,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
-                    emailID: emailID,
-                  )));
+                emailID: emailID,
+              )));
 
       if (result != null &&
           result.containsKey('isValid') &&
@@ -605,10 +605,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
-    //  callSendOptEmail(context, _emailIDCl.text);
-     setState(() {
-       isValidEmail = true;
-     });
+      //  callSendOptEmail(context, _emailIDCl.text);
+      setState(() {
+        isValidEmail = true;
+      });
 
     }
   }
@@ -651,7 +651,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             gstNumber = getCustomerDetailUsingGSTData!.busGSTNO!;
             _companyNameCl.text = getCustomerDetailUsingGSTData!.businessName!;
             _companyAddressCl.text =
-                getCustomerDetailUsingGSTData!.addressLineOne!;
+            getCustomerDetailUsingGSTData!.addressLineOne!;
             _companyPinCodeCodeCl.text =
                 getCustomerDetailUsingGSTData!.zipCode!.toString();
             _companyCityCl.text =
@@ -683,9 +683,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   Future<void> postLeadDSAPersonalDetail(
-    BuildContext context,
-    DataProvider productProvider,
-  ) async {
+      BuildContext context,
+      DataProvider productProvider,
+      ) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
@@ -730,7 +730,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-     Utils.onLoading(context, "");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -875,8 +875,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       );
 
       final leadCurrentActivityAsyncData = await ApiService()
-              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
-          as LeadCurrentResponseModel?;
+          .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+      as LeadCurrentResponseModel?;
 
       final getLeadData = await ApiService().getLeads(
         prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
@@ -2124,7 +2124,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             InkWell(
               onTap: false
                   ? () {
-        
+
               }
                   : null,
               // Set onTap to null when field is disabled
@@ -2227,7 +2227,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   hintText: "E-mail ID",
                   labelText: "E-mail ID",
                   maxLines: 1,
-        
+
                 ),
                 _emailIDController.text.isNotEmpty
                     ? Positioned(
