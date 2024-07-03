@@ -890,8 +890,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(
               item!.fullName.toString(),
               // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 15,
+                color: blackSmall,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),

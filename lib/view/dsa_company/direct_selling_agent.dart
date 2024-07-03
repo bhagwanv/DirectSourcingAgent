@@ -141,8 +141,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             value: item,
             child: Text(
               item,
-              style: const TextStyle(
-                fontSize: 16,
+              style: GoogleFonts.urbanist(
+                fontSize: 15,
+                color: blackSmall,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -239,8 +241,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             value: item,
             child: Text(
               item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 15,
+                color: blackSmall,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -288,8 +292,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             value: item,
             child: Text(
               item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 15,
+                color: blackSmall,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
