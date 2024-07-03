@@ -152,7 +152,7 @@ ScreenType? customerSequence(
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => DirectSellingAgent( activityId: leadCurrentActivity.activityMasterId!,
                 subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
-          return ScreenType.DSATypeSelection;
+          return ScreenType.DSAPersonalInfo;
         }
       } else {
         return null;
@@ -289,7 +289,7 @@ ScreenType? customerSequence(
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => DirectSellingAgent( activityId: leadCurrentActivity.activityMasterId!,
                 subActivityId: leadCurrentActivity.subActivityMasterId!,pageType: pageType)),);
-          return ScreenType.DSATypeSelection;
+          return ScreenType.DSAPersonalInfo;
         }
       } else {
         return null;

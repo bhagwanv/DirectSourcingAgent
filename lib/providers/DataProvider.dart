@@ -865,4 +865,9 @@ class DataProvider extends ChangeNotifier {
     _getDSAPersonalInfoData=null;
     notifyListeners();
   }
+
+  Future<void> disposegetDSAPersonalInfo() async {
+    _getDSAPersonalInfoData=null;
+    notifyListeners();
+  }
 }

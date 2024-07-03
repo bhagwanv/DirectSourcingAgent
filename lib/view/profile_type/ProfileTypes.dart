@@ -72,9 +72,9 @@ class _ProfileTypesState extends State<ProfileTypes> {
   @override
   void initState() {
     super.initState();
-    if (widget.dsaType == "DSAPersonalInfo") {
+    /*if (widget.dsaType == "DSAPersonalInfo") {
       dSAPersonalInfoApi(context);
-    }
+    }*/
   }
 
   @override
@@ -346,6 +346,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
     Utils.onLoading(context, "");
     await productProvider.getChooseUserType(model);
     Navigator.of(context, rootNavigator: true).pop();
+    productProvider.disposegetDSAPersonalInfo();
     if (productProvider.getChooseUserTypeData != null) {
       productProvider.getChooseUserTypeData!.when(
         success: (data) {

@@ -786,8 +786,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       Utils.showToast("Please Enter Valid Alternate Mobile Number", context);
     } else if (_emailIDController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Email ID", context);
-    } else if (!Utils.validateEmail(_emailIDController.text) || !isValidEmail) {
+    } else if (!Utils.validateEmail(_emailIDController.text)) {
       Utils.showToast("Please enter Valid Email ID", context);
+    } else if (!isValidEmail) {
+      Utils.showToast("Please verify Email Id", context);
     } else if (_presentEmpolymentController.text.trim().isEmpty) {
       Utils.showToast("Please Enter present Employment", context);
     } else if (_LanguagesController.text.trim().isEmpty) {
@@ -1916,9 +1918,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       "Please enter Alternate Mobile Number ", context);
                 } else if (_emailIDCl.text.trim().isEmpty) {
                   Utils.showToast("Enter email address", context);
-                } else if (!Utils.validateEmail(_emailIDCl.text) ||
-                    !isValidEmail) {
+                }  else if (!Utils.validateEmail(_emailIDCl.text)) {
                   Utils.showToast("Please enter Valid Email ID", context);
+                } else if (!isValidEmail) {
+                  Utils.showToast("Please verify Email Id", context);
                 } else if (_presentOccupationCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Present Occupation ", context);
                 } else if (_currentEmploymentCl.text.trim().isEmpty) {
