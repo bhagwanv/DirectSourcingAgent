@@ -474,6 +474,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             if (isChecked) {
                              setState(() {
                                isDataClear=true;
+                               _acceptPermissions=true;
                              });
                               Utils.hideKeyBored(context);
                               final result = await Navigator.push(
@@ -483,7 +484,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                         const PermissionsScreen()),
                               );
                               // Handle the result from Screen B using the callback function
-                              _handlePermissionsAccepted(result ?? false);
+                              _handlePermissionsAccepted(result ?? true);
                             }
                           },
                           isChecked: _acceptPermissions,
@@ -517,7 +518,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                             PermissionsScreen()),
                                   );
                                   // Handle the result from Screen B using the callback function
-                                  _handlePermissionsAccepted(result ?? false);
+                                  _handlePermissionsAccepted(result ?? true);
                                 },
                               ),
                               TextSpan(
