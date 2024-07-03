@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'loader.dart';
 import 'local_notifications.dart';
@@ -26,8 +24,7 @@ class MyInAppBrowser extends InAppBrowser {
   var context;
   var UserID;
   ValueNotifier downloadProgressNotifier = ValueNotifier(0);
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   MyInAppBrowser();
 

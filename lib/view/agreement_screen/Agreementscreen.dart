@@ -128,7 +128,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
                                     NavigationDelegate(
                                       onProgress: (int progress) {
                                         // Show a progress indicator while the page is loading
-                                        CircularProgressIndicator();
+                                        const CircularProgressIndicator();
                                       },
                                       onPageStarted: (String url) {},
                                       onPageFinished: (String url) {},
