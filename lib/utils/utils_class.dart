@@ -1,4 +1,5 @@
 import 'package:direct_sourcing_agent/utils/constant.dart';
+import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,6 +51,54 @@ class Utils {
     // show the dialog
     showDialog(
       context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  static void internetConectivityDilog(String msg, BuildContext context) {
+
+    Widget okButton = TextButton(
+      child: Text("Retry", style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: kPrimaryColor,
+        fontWeight: FontWeight.w700,
+      ),),
+      onPressed: () {
+        Navigator.of(context).pop(false);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => SplashScreen(),
+          ),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Alert",
+        style: GoogleFonts.urbanist(
+          fontSize: 20,
+          color: Colors.black,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      content: Text(msg, textAlign: TextAlign.justify, style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+      ),),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return alert;
       },

@@ -142,12 +142,16 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         [
           DropdownMenuItem<LiveBankList>(
             value: item,
-            child: Text(
-              item!.bankName!, // Assuming 'name' is the property to display
-              style: GoogleFonts.urbanist(
-                fontSize: 15,
-                color: blackSmall,
-                fontWeight: FontWeight.w400,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                item!.bankName!,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),

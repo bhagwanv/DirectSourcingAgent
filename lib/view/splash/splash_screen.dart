@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -12,6 +11,7 @@ import '../../api/FailureException.dart';
 import '../../main.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
+import '../../utils/InternetConnectivity.dart';
 import '../../utils/constant.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
@@ -29,13 +29,13 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isLoggedIn = false;
-
+  final internetConnectivity = InternetConnectivity();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getFirebaseUrl();
+    getFirebaseUrl(context);
 
   }
 
@@ -287,28 +287,33 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  Future<String> getFirebaseUrl() async {
-    final prefsUtil = await SharedPref.getInstance();
-    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 1),
-      minimumFetchInterval: const Duration(seconds: 5),
+  Future<String> getFirebaseUrl(BuildContext context) async {
 
-    ));
+    if(await internetConnectivity.networkConnectivity()){
+      final prefsUtil = await SharedPref.getInstance();
+      final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 1),
+        minimumFetchInterval: const Duration(seconds: 5),
 
-    await remoteConfig.fetchAndActivate();
-    String Url =remoteConfig.getString('Base_url');
-    String createLeadUrl =remoteConfig.getString('Create_lead_url');
-    String TermsAndCondition =remoteConfig.getString('TermsAndCondition');
-    print("Base Url "+Url);
-    print("Create_lead_url Url "+createLeadUrl);
-    print("Create_lead_url Url "+TermsAndCondition);
-    await prefsUtil.saveString(BASE_URL, Url);
-    await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
-    await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
-    _checkLoginStatus();
-    return 'Fetched: ${remoteConfig.getString('Base_url')}';
+      ));
 
+      await remoteConfig.fetchAndActivate();
+      String Url =remoteConfig.getString('Base_url');
+      String createLeadUrl =remoteConfig.getString('Create_lead_url');
+      String TermsAndCondition =remoteConfig.getString('TermsAndCondition');
+      print("Base Url "+Url);
+      print("Create_lead_url Url "+createLeadUrl);
+      print("Create_lead_url Url "+TermsAndCondition);
+      await prefsUtil.saveString(BASE_URL, Url);
+      await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
+      await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
+      _checkLoginStatus();
+      return 'Fetched: ${remoteConfig.getString('Base_url')}';
+    }else{
+      Utils.internetConectivityDilog("No Internet connection",context);
+      return "No Internet connection";
+    }
   }
 }
 
