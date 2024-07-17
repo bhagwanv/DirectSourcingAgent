@@ -305,9 +305,15 @@ class _SplashScreenState extends State<SplashScreen> {
       print("Base Url "+Url);
       print("Create_lead_url Url "+createLeadUrl);
       print("Create_lead_url Url "+TermsAndCondition);
-      await prefsUtil.saveString(BASE_URL, Url);
-      await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
-      await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
+      if(kDebugMode) {
+        await prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com"); // UAT>> https://gateway-uat.scaleupfin.com
+        await prefsUtil.saveString(CREATE_LEAD_BASE_URL, "https://customer-qa.scaleupfin.com/#/lead"); // UAT>> https://customer-uat.scaleupfin.com/#/lead
+        await prefsUtil.saveString(Terms_And_Condition, "https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html"); // UAT>> https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html
+      } else {
+        await prefsUtil.saveString(BASE_URL, Url);
+        await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
+        await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
+      }
       _checkLoginStatus();
       return 'Fetched: ${remoteConfig.getString('Base_url')}';
     }else{
