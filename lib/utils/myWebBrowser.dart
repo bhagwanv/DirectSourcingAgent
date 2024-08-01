@@ -6,23 +6,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../PdfView.dart';
+import 'directory_path.dart';
 import 'loader.dart';
 import 'local_notifications.dart';
-
-void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
-  final String? payload = notificationResponse.payload;
-  if (notificationResponse.payload != null) {
-    debugPrint('notification payload: $payload');
-  }
-}
-
-
 
 class MyInAppBrowser extends InAppBrowser {
   var token;
   var context;
   var UserID;
+  String fileName = "";
+  late String filePath;
+  late CancelToken cancelToken;
+  var getPathFile = DirectoryPath();
   ValueNotifier downloadProgressNotifier = ValueNotifier(0);
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -74,7 +73,7 @@ class MyInAppBrowser extends InAppBrowser {
         downloadProgressNotifier.value = progress;
 
         // Show or update the progress notification
-        await LocalNotifications.showProgressNotification(progress, 100, filePath);
+        await OpenFile.open(filePath);
       },
     );
 
@@ -105,7 +104,12 @@ class MyInAppBrowser extends InAppBrowser {
       if (kDebugMode) {
         print('Final pdf part: $finalPdfPart');
       }
-      downloadFileFromServer(finalPdfPart);
+      /*Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => PdfView(data: finalPdfPart)));*/
+     // downloadFileFromServer(finalPdfPart);
+      Uri uri = Uri.parse(finalPdfPart);
+      onDownloadStart(uri);
+
     }
     super.onConsoleMessage(consoleMessage);
   }
@@ -126,6 +130,16 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onProgressChanged(progress) {
     print("Progress: $progress");
+  }
+
+  @override
+  void onDownloadStart(Uri url) {
+    super.onDownloadStart(url);
+    // print("onDownloadStart $url");
+    final String _url_files = "$url";
+    void _launchURL_files() async =>
+        await canLaunch(_url_files) ? await launch(_url_files) : throw 'Could not launch $_url_files';
+    _launchURL_files();
   }
 
   @override
