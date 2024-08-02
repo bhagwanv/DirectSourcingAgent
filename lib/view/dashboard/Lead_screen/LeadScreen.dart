@@ -485,17 +485,18 @@ class _LeadScreenState extends State<LeadScreen> {
                               )),
 
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                    "Lead Code : $leadID",
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight
-                                          .w500,
-                                    )),
-                                Spacer(),
+                                Flexible(
+                                  child: Text(
+                                      "Lead Code : $leadID",
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight
+                                            .w500,
+                                      )),
+                                ),
                                 Text(
                                     "Created Date: $createdDate",
                                     style: GoogleFonts.urbanist(
@@ -719,9 +720,6 @@ class _LeadScreenState extends State<LeadScreen> {
         barrierDismissible:false,
         onCancel: onCancel,
         onOk: onOk,
-
-
-
     );
 
     if (selectedDate != null) {
