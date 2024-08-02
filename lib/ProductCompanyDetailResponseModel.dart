@@ -30,8 +30,7 @@ class ProductCompanyDetailResponse {
   dynamic companyId;
   String? companyCode;
 
-  ProductCompanyDetailResponse(
-      {this.productId, this.productCode, this.companyId, this.companyCode});
+  ProductCompanyDetailResponse({this.productId, this.productCode, this.companyId, this.companyCode});
 
   ProductCompanyDetailResponse.fromJson(Map<String, dynamic> json) {
     productId = json['productId'];

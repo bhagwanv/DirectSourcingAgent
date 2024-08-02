@@ -10,7 +10,6 @@ import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
-import '../../utils/DateTextFormatter.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/common_check_box.dart';
 import '../../utils/common_elevted_button.dart';
@@ -33,7 +32,7 @@ class PancardScreen extends StatefulWidget {
   final int subActivityId;
   final String? pageType;
 
-  PancardScreen(
+  const PancardScreen(
       {super.key,
       required this.activityId,
       required this.subActivityId,
@@ -613,8 +612,7 @@ class _PancardScreenState extends State<PancardScreen> {
         });
   }
 
-  TextSpan _buildClickableTextSpan(
-      {required String text, required VoidCallback onClick}) {
+  TextSpan _buildClickableTextSpan({required String text, required VoidCallback onClick}) {
     return TextSpan(
       text: text,
       style: GoogleFonts.urbanist(

@@ -2,11 +2,8 @@ import 'package:direct_sourcing_agent/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../shared_preferences/shared_pref.dart';
-import '../../utils/common_elevted_button.dart';
 
 class PermissionsScreen extends StatefulWidget {
   const PermissionsScreen({super.key});
@@ -16,6 +13,7 @@ class PermissionsScreen extends StatefulWidget {
 }
 
 class _PermissionsScreenState extends State<PermissionsScreen> {
+
   String? termsAndConditonUrl;
 
   @override
@@ -24,6 +22,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
     super.initState();
     getUrl();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +54,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
               top: 10.0,
               right: 10.0,
               child: IconButton(
-                icon: Icon(Icons.close, color: Colors.black),
+                icon: const Icon(Icons.close, color: Colors.black),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

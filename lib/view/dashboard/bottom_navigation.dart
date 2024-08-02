@@ -46,7 +46,8 @@ class _BottomNavState extends State<BottomNav> {
           SystemNavigator.pop();
         }
       },
-      child: Scaffold(
+      child:
+      Scaffold(
           backgroundColor: Colors.white,
           body: _pages[selectedIndex],
           extendBody: true,
@@ -65,8 +66,7 @@ class _BottomNavState extends State<BottomNav> {
               semanticsLabel: 'home',
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomAppBar(
             surfaceTintColor: Colors.white,
             shadowColor: Colors.black,

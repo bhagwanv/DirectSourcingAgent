@@ -76,6 +76,9 @@ dependencies:
   firebase_analytics: ^11.0.1
   flutter_automation: ^2.0.0
   open_file: ^3.3.1
+  readsms: ^0.1.0+3
+  firebase_crashlytics: ^4.0.4
+  syncfusion_flutter_pdfviewer: any
 
 
 dependency_overrides:

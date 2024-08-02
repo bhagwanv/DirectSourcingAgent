@@ -334,4 +334,14 @@ class Utils {
 
     return exitApp ?? false;
   }
+
+  String? extractOTP(String message) {
+    RegExp otpRegExp = RegExp(r'\b\d{6}\b'); // Regex to match exactly 6 digits
+    Match? match = otpRegExp.firstMatch(message);
+    if (match != null) {
+      return match.group(0); // Extract the matched OTP
+    } else {
+      return null; // No OTP found
+    }
+  }
 }
