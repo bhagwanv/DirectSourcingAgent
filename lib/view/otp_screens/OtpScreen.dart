@@ -1,10 +1,11 @@
-import 'package:direct_sourcing_agent/view/otp_screens/model/GetUserProfileResponse.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -24,6 +25,7 @@ import '../splash/model/LeadCurrentRequestModel.dart';
 import '../splash/model/LeadCurrentResponseModel.dart';
 import 'model/GetUserProfileRequest.dart';
 import 'model/VarifayOtpRequest.dart';
+import 'package:readsms/readsms.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -55,6 +57,13 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       border: Border.all(color: kPrimaryColor),
     ),
   );
+  final _plugin = Readsms();
+  String sms = 'no sms received';
+  String sender = 'no sms received';
+  String time = 'no sms received';
+
+  String? otpNumberAutoFiled;
+
 
   @override
   void codeUpdated() {
@@ -67,15 +76,49 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   @override
   void initState() {
     super.initState();
+    getPermission().then((value) {
+      if (value) {
+        _plugin.read();
+        _plugin.smsStream.listen((event) {
+          setState(() {
+            sms = event.body;
+            sender = event.sender;
+            time = event.timeReceived.toString();
+            otpNumberAutoFiled = Utils().extractOTP(sms);
+            pinController.text=otpNumberAutoFiled.toString();
+          });
+        });
+      }
+    });
+
     listenOtp();
     _start = 30;
-    // startTimer();
     SmsAutoFill().getAppSignature.then((signature) {
       setState(() {
         appSignature = signature;
         print("MUkesh ${appSignature!}");
       });
     });
+  }
+
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _plugin.dispose();
+  }
+
+  Future<bool> getPermission() async {
+    if (await Permission.sms.status == PermissionStatus.granted) {
+      return true;
+    } else {
+      if (await Permission.sms.request() == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   Widget buildCountdown() {
@@ -106,11 +149,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     print("OTP listen  Called");
   }
 
-  @override
-  void dispose() {
-    SmsAutoFill().unregisterListener();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,8 +374,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
       productProvider.disposeAllProviderData();
       Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false)
-          .GetLeadByMobileNo(userId, userLoginMobile);
+      await Provider.of<DataProvider>(context, listen: false).GetLeadByMobileNo(userId, userLoginMobile);
       Navigator.of(context, rootNavigator: true).pop();
       if (productProvider.getLeadMobileNoData != null) {
         productProvider.getLeadMobileNoData!.when(
@@ -485,8 +522,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
-      String userLoginMobile, CountdownController controller) async {
+  Future<void> reSendOpt(BuildContext context, DataProvider productProvider, String userLoginMobile, CountdownController controller) async {
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .genrateOtp(context, userLoginMobile);

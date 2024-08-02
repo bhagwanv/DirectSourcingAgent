@@ -795,6 +795,9 @@ class _PayOutScreenState extends State<PayOutScreen> {
       int selectedMonth = selectedDate.month;
       if (selectedYear > now.year ||
           (selectedYear == now.year && selectedMonth > now.month)) {
+        setState(() {
+          loanPayoutDetailfinalList.clear();
+        });
         Utils.showToast("Future dates are not allowed", context);
       } else {
         DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
@@ -805,7 +808,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
         } else {
           // Otherwise, set it to the last day of the selected month
           endOfMonth = (selectedMonth < 12)
-              ? DateTime(selectedYear, selectedMonth + 1, 0)
+              ? DateTime(selectedYear, selectedMonth + 1, 1)
               : DateTime(selectedYear + 1, 1, 0);
         }
 

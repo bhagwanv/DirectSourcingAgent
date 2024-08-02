@@ -1,4 +1,3 @@
-
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,10 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getFirebaseUrl(context);
-
   }
 
   @override
@@ -44,14 +41,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body:
-      Center(
-        child:Column(
+      body: Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(),
@@ -86,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: 12,
               ),
             ),
-           /*const Row(
+            /*const Row(
                 mainAxisAlignment:MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -112,8 +107,6 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-
-
   _checkLoginStatus() async {
     final prefs = await SharedPref.getInstance();
     setState(() {
@@ -138,61 +131,69 @@ class _SplashScreenState extends State<SplashScreen> {
       var userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
       var userId = prefsUtil.getString(USER_ID);
       try {
-        await Provider.of<DataProvider>(context, listen: false).getUserData(
-            userId!, userLoginMobile!);
-        final productProvider = Provider.of<DataProvider>(
-            context, listen: false);
+        await Provider.of<DataProvider>(context, listen: false)
+            .getUserData(userId!, userLoginMobile!);
+        final productProvider =
+            Provider.of<DataProvider>(context, listen: false);
         if (productProvider.getUserProfileResponse != null) {
           productProvider.getUserProfileResponse!.when(
             success: (data) async {
-              if(data.status!) {
+              if (data.status!) {
                 final prefsUtil = await SharedPref.getInstance();
                 prefsUtil.saveString(USER_ID, data.userId!);
                 prefsUtil.saveString(TOKEN, data.userToken!);
                 prefsUtil.saveInt(COMPANY_ID, data.companyId!);
                 prefsUtil.saveInt(PRODUCT_ID, data.productId!);
                 prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-                if( data.companyCode!=null) {
+                if (data.companyCode != null) {
                   prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
                 }
-                if( data.role!=null) {
+                if (data.role != null) {
                   prefsUtil.saveString(ROLE, data.role!);
-                } if( data.type!=null) {
+                }
+                if (data.type != null) {
                   prefsUtil.saveString(TYPE, data.type!);
                 }
 
-                if(data.userData!=null){
+                if (data.userData != null) {
                   prefsUtil.saveString(USER_NAME, data.userData!.name!);
-                  prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
-                  prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-                  if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                  prefsUtil.saveString(
+                      USER_PAN_NUMBER, data.userData!.panNumber!);
+                  prefsUtil.saveString(
+                      USER_ADHAR_NO, data.userData!.aadharNumber!);
+                  if (data.userData!.mobile != null)
+                    prefsUtil.saveString(
+                        USER_MOBILE_NO, data.userData!.mobile!);
                   if (data.userData?.address != null) {
                     prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
                   }
-                  if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                  if (data.userData!.workingLocation != null)
+                    prefsUtil.saveString(
+                        USER_WORKING_LOCTION, data.userData!.workingLocation!);
                   if (data.userData?.selfie != null) {
                     prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                   }
                   if (data.userData?.docSignedUrl != null) {
                     prefsUtil.saveString(
-                        USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
-                    );
+                        USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
-                  prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!.toDouble());
-                  if( data.userData!.docSignedUrl!=null) {
+                  prefsUtil.saveDouble(
+                      USER_PAY_OUT, data.userData!.payout!.toDouble());
+                  if (data.userData!.docSignedUrl != null) {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
-
                 }
 
                 prefsUtil.saveBool(IS_LOGGED_IN, true);
+                //  prefsUtil.saveBool(USER_ACTIVE, data.isActivated!);
                 if (data.isActivated!) {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) =>  BottomNav()),
+                    MaterialPageRoute(builder: (context) => BottomNav()),
                   );
                 } else {
-                  GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+                  GetLeadByMobileNo(
+                      context, productProvider, userLoginMobile, userId);
                 }
               } else {
                 Utils.showBottomToast(data.message!);
@@ -224,7 +225,8 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  Future<void> GetLeadByMobileNo(BuildContext context,
+  Future<void> GetLeadByMobileNo(
+      BuildContext context,
       DataProvider productProvider,
       String userLoginMobile,
       String userId) async {
@@ -267,10 +269,9 @@ class _SplashScreenState extends State<SplashScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(
-          leadCurrentRequestModel, context)
-      as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService()
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           userLoginMobile,
@@ -288,30 +289,43 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<String> getFirebaseUrl(BuildContext context) async {
-
-    if(await internetConnectivity.networkConnectivity()){
+    if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 1),
         minimumFetchInterval: const Duration(seconds: 5),
-
       ));
 
       await remoteConfig.fetchAndActivate();
-      String Url =remoteConfig.getString('Base_url');
-      String createLeadUrl =remoteConfig.getString('Create_lead_url');
-      String TermsAndCondition =remoteConfig.getString('TermsAndCondition');
-      print("Base Url "+Url);
-      print("Create_lead_url Url "+createLeadUrl);
-      print("Create_lead_url Url "+TermsAndCondition);
-      await prefsUtil.saveString(BASE_URL, Url);
-      await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
-      await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
-      _checkLoginStatus();
-      return 'Fetched: ${remoteConfig.getString('Base_url')}';
-    }else{
-      Utils.internetConectivityDilog("No Internet connection",context);
+      if (kReleaseMode){
+        String Url = remoteConfig.getString('Base_url');
+        String createLeadUrl = remoteConfig.getString('Create_lead_url');
+        String TermsAndCondition = remoteConfig.getString('TermsAndCondition');
+        print("Base Url " + Url);
+        print("Create_lead_url Url " + createLeadUrl);
+        print("Create_lead_url Url " + TermsAndCondition);
+        await prefsUtil.saveString(BASE_URL, Url);
+        await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
+        await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
+        _checkLoginStatus();
+        return 'Fetched: ${remoteConfig.getString('Base_url')}';
+      }else{
+        String Url = "https://gateway-qa.scaleupfin.com";
+        String createLeadUrl = "https://customer-qa.scaleupfin.com/#/lead";
+        String TermsAndCondition = "https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html";
+        print("Base Url " + "Bhagwan");
+        print("Create_lead_url Url $createLeadUrl");
+        print("Create_lead_url Url $TermsAndCondition");
+        await prefsUtil.saveString(BASE_URL, Url);
+        await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
+        await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
+        _checkLoginStatus();
+        return 'Fetched: ${remoteConfig.getString('Base_url')}';
+      }
+
+    } else {
+      Utils.internetConectivityDilog("No Internet connection", context);
       return "No Internet connection";
     }
   }
@@ -325,7 +339,7 @@ class CustomCircularLoader extends StatelessWidget {
     return Container(
       width: 36,
       height: 36,
-      child: CircularProgressIndicator(
+      child: const CircularProgressIndicator(
         strokeWidth: 3,
         valueColor: AlwaysStoppedAnimation(kPrimaryColor),
       ),

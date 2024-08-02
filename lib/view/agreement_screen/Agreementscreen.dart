@@ -35,7 +35,6 @@ class AgreementScreen extends StatefulWidget {
 }
 
 class _AgreementScreenState extends State<AgreementScreen> {
-  bool ischeckBoxCheck = false;
   var isLoading = true;
   var content = "";
   var isSubmit = false;
@@ -51,7 +50,6 @@ class _AgreementScreenState extends State<AgreementScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     isCheckStatus = false;
   }
@@ -97,8 +95,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
+          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
             return isSubmit&& content.isNotEmpty
                 ? Stack(
                   children: [
@@ -217,16 +214,12 @@ class _AgreementScreenState extends State<AgreementScreen> {
     );
   }
 
-  Future<void> checkESignDocumentStatus(
-    BuildContext context,
-    DataProvider productProvider,
-  ) async {
+  Future<void> checkESignDocumentStatus(BuildContext context, DataProvider productProvider,) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .checkESignDocumentStatus(leadId.toString());
+    await Provider.of<DataProvider>(context, listen: false).checkESignDocumentStatus(leadId.toString());
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.checkESignResponseModelData != null) {
       productProvider.checkESignResponseModelData!.when(
@@ -255,7 +248,6 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? productId = prefsUtil.getInt(PRODUCT_ID);
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
-    final String? userMobileNumber = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
     Provider.of<DataProvider>(context, listen: false).dSAGenerateAgreement(
         context,
         leadId!.toString(),
@@ -280,9 +272,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData = await ApiService()
-              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
-          as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel, context) as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(

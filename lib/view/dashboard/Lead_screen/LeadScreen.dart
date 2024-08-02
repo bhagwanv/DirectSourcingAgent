@@ -52,10 +52,6 @@ class _LeadScreenState extends State<LeadScreen> {
   bool isAgentSelected = false;
   bool providerNull = false;
   var type = "";
-
-
-
-
   var payoutOverviewTotalDisbursedAmount = "";
   var payoutOverviewPayoutAmount = "";
 
@@ -731,8 +727,12 @@ class _LeadScreenState extends State<LeadScreen> {
     if (selectedDate != null) {
       int selectedYear = selectedDate.year;
       int selectedMonth = selectedDate.month;
-      if (selectedYear > now.year ||
-          (selectedYear == now.year && selectedMonth > now.month)) {
+      if (selectedYear > now.year || (selectedYear == now.year && selectedMonth > now.month)) {
+
+        setState(() {
+          dsaDashboardLeadFinal.clear();
+          dsaDashboardLead.clear();
+        });
         Utils.showToast("Future dates are not allowed", context);
       } else {
         DateTime startOfMonth = DateTime(selectedYear, selectedMonth, 1 + 1);
@@ -743,7 +743,7 @@ class _LeadScreenState extends State<LeadScreen> {
         } else {
           // Otherwise, set it to the last day of the selected month
           endOfMonth = (selectedMonth < 12)
-              ? DateTime(selectedYear, selectedMonth + 1, 0)
+              ? DateTime(selectedYear, selectedMonth + 1, 1)
               : DateTime(selectedYear + 1, 1, 0);
         }
 

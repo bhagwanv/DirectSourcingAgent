@@ -973,7 +973,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           // Otherwise, set it to the last day of the selected month
           endOfMonth = (selectedMonth < 12)
-              ? DateTime(selectedYear, selectedMonth + 1, 0)
+              ? DateTime(selectedYear, selectedMonth + 1, 1)
               : DateTime(selectedYear + 1, 1, 0);
         }
 

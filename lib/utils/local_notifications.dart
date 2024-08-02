@@ -2,111 +2,77 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:url_launcher/url_launcher.dart';
 
 class LocalNotifications {
-  static final FlutterLocalNotificationsPlugin
-      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
   static final onClickNotification = BehaviorSubject<String>();
 
-// on tap on any notification
+  // on tap on any notification
   static void onNotificationTap(NotificationResponse notificationResponse) {
-    onClickNotification.add(notificationResponse.payload!);
+    final payload = notificationResponse.payload;
+    if (payload != null && payload.isNotEmpty) {
+      print("Notification tapped with payload: $payload"); // For debugging
+      _openPdfFromUrl(payload);
+    } else {
+      print("No payload in the notification");
+    }
   }
 
-// initialize the local notifications
-  static Future init() async {
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+  // initialize the local notifications
+  static Future<void> init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (id, title, body, payload) =>null,
-    );
-    final LinuxInitializationSettings initializationSettingsLinux =
-        LinuxInitializationSettings(defaultActionName: 'Open notification');
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: initializationSettingsAndroid,
-            iOS: initializationSettingsDarwin,
-            linux: initializationSettingsLinux);
+    AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    // request notification permissions 
-    _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
-  
-    
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: onNotificationTap,
-        onDidReceiveBackgroundNotificationResponse: onNotificationTap);
+    final DarwinInitializationSettings initializationSettingsDarwin =
+    DarwinInitializationSettings(
+      onDidReceiveLocalNotification: (id, title, body, payload) => null,
+    );
+
+    final LinuxInitializationSettings initializationSettingsLinux =
+    LinuxInitializationSettings(defaultActionName: 'Open notification');
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+      linux: initializationSettingsLinux,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onNotificationTap,
+      onDidReceiveBackgroundNotificationResponse: onNotificationTap,
+    );
   }
 
   // show a simple notification
-  static Future showSimpleNotification({
+  static Future<void> showSimpleNotification({
     required String title,
     required String body,
     required String payload,
   }) async {
     const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('scaleup', 'scaleup',
-            channelDescription: 'scaleup',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
+    AndroidNotificationDetails(
+      'scaleup', 'scaleup',
+      channelDescription: 'scaleup',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+
     const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-    await _flutterLocalNotificationsPlugin
-        .show(0, title, body, notificationDetails, payload: payload);
+    NotificationDetails(android: androidNotificationDetails);
+
+    await _flutterLocalNotificationsPlugin.show(
+        0, title, body, notificationDetails, payload: payload);
   }
 
-  // to show periodic notification at regular interval
-  static Future showPeriodicNotifications({
-    required String title,
-    required String body,
-    required String payload,
-  }) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('channel 2', 'your channel name',
-            channelDescription: 'your channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-    await _flutterLocalNotificationsPlugin.periodicallyShow(
-        1, title, body, RepeatInterval.everyMinute, notificationDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: payload);
-  }
-
-  // to schedule a local notification
-  static Future showScheduleNotification({
-    required String title,
-    required String body,
-    required String payload,
-  }) async {
-    tz.initializeTimeZones();
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-        2,
-        title,
-        body,
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-        const NotificationDetails(
-            android: AndroidNotificationDetails(
-                'channel 3', 'your channel name',
-                channelDescription: 'your channel description',
-                importance: Importance.max,
-                priority: Priority.high,
-                ticker: 'ticker')),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        payload: payload);
-  }
-
-  static Future showProgressNotification(int progress, int maxProgress, String payload) async {
+  static Future<void> showProgressNotification(
+      int progress, int maxProgress, String payload) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails('scaleup', 'Progress Channel',
+    AndroidNotificationDetails(
+        'scaleup', 'Progress Channel',
         channelShowBadge: false,
         importance: Importance.max,
         priority: Priority.high,
@@ -114,24 +80,37 @@ class LocalNotifications {
         showProgress: true,
         maxProgress: maxProgress,
         progress: progress,
-      actions: [
-        AndroidNotificationAction('action_1', 'Action 1', showsUserInterface: true),
-        AndroidNotificationAction('action_2', 'Action 2', showsUserInterface: true),
-      ]);
+        actions: [
+          AndroidNotificationAction(
+              'action_1', 'Open', showsUserInterface: true
+          ),
+        ]);
+
     final NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
+
     await _flutterLocalNotificationsPlugin.show(
-        3, 'Downloading PDF file...', '$progress%', platformChannelSpecifics,
-        payload: payload);
+      3, 'Downloading PDF file...', '$progress%', platformChannelSpecifics,
+      payload: payload,
+    );
+  }
+
+  static Future<void> _openPdfFromUrl(String url) async {
+    if (await canLaunch(url)) {
+      print("Opening PDF from URL: $url"); // For debugging
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   // close a specific channel notification
-  static Future cancel(int id) async {
+  static Future<void> cancel(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
 
   // close all the notifications available
-  static Future cancelAll() async {
+  static Future<void> cancelAll() async {
     await _flutterLocalNotificationsPlugin.cancelAll();
   }
 }

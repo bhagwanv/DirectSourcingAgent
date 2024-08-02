@@ -838,8 +838,6 @@ class DataProvider extends ChangeNotifier {
     /*_InProgressScreen = null;*/
     notifyListeners();
   }
-
-
   Future<void> disposehomeScreenData() async {
     _getDSASalesAgentListData=null;
     _getDSADashboardDetailsData=null;
