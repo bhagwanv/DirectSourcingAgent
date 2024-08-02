@@ -120,7 +120,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         payoutOverviewTotalDisbursedAmount =
                             getDSADashboardPayoutListData
                                 .response!.totalDisbursedAmount!
-                                .toString();
+                                .toStringAsFixed(2).toString();
                       }
                       if (getDSADashboardPayoutListData
                               .response!.totalPayoutAmount !=
@@ -128,7 +128,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         payoutOverviewPayoutAmount =
                             getDSADashboardPayoutListData
                                 .response!.totalPayoutAmount!
-                                .toString();
+                                .toStringAsFixed(2).toString();
                       }
 
                       if (getDSADashboardPayoutListData.response!.loanPayoutDetailList != null) {
@@ -337,7 +337,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                 children: [
-                                  Text('₹${payoutOverviewPayoutAmount.toStringAsFixed(2).to}',
+                                  Text('₹${payoutOverviewPayoutAmount}',
                                       textAlign: TextAlign.left,
                                       style: GoogleFonts.urbanist(
                                         fontSize: 20,

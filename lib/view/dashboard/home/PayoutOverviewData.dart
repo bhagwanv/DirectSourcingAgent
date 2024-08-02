@@ -7,8 +7,8 @@ class PayoutOverviewData {
     totalDisbursedAmount = json['totalDisbursedAmount'];
     payoutAmount = json['payoutAmount'];
   }
-  int? totalDisbursedAmount;
-  int? payoutAmount;
+  dynamic totalDisbursedAmount;
+  dynamic payoutAmount;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
