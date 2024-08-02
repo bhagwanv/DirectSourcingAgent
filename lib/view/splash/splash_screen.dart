@@ -30,6 +30,10 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _isLoggedIn = false;
   final internetConnectivity = InternetConnectivity();
 
+  String BaseUrl = "";
+  String createLeadUrl = "";
+  String TermsAndCondition = "";
+
   @override
   void initState() {
     super.initState();
@@ -298,32 +302,26 @@ class _SplashScreenState extends State<SplashScreen> {
       ));
 
       await remoteConfig.fetchAndActivate();
-      if (kReleaseMode){
-        String Url = remoteConfig.getString('Base_url');
-        String createLeadUrl = remoteConfig.getString('Create_lead_url');
-        String TermsAndCondition = remoteConfig.getString('TermsAndCondition');
-        print("Base Url " + Url);
-        print("Create_lead_url Url " + createLeadUrl);
-        print("Create_lead_url Url " + TermsAndCondition);
-        await prefsUtil.saveString(BASE_URL, Url);
-        await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
-        await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
-        _checkLoginStatus();
-        return 'Fetched: ${remoteConfig.getString('Base_url')}';
-      }else{
-        String Url = "https://gateway-qa.scaleupfin.com";
-        String createLeadUrl = "https://customer-qa.scaleupfin.com/#/lead";
-        String TermsAndCondition = "https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html";
+      if (kReleaseMode) {
+        BaseUrl = remoteConfig.getString('Base_url');
+        createLeadUrl = remoteConfig.getString('Create_lead_url');
+        TermsAndCondition = remoteConfig.getString('TermsAndCondition');
+        print("Base Url $BaseUrl");
+        print("Create_lead_url Url $createLeadUrl");
+        print("Create_lead_url Url $TermsAndCondition");
+      } else {
+        BaseUrl = BASE_URL_QA;
+        createLeadUrl = CREATE_LEAD_URL_QA;
+        TermsAndCondition = TERMS_AND_CONDITON;
         print("Base Url " + "Bhagwan");
         print("Create_lead_url Url $createLeadUrl");
         print("Create_lead_url Url $TermsAndCondition");
-        await prefsUtil.saveString(BASE_URL, Url);
-        await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
-        await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
-        _checkLoginStatus();
-        return 'Fetched: ${remoteConfig.getString('Base_url')}';
       }
-
+      await prefsUtil.saveString(BASE_URL, BaseUrl);
+      await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
+      await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
+      _checkLoginStatus();
+      return 'Fetched: ${remoteConfig.getString('Base_url')}';
     } else {
       Utils.internetConectivityDilog("No Internet connection", context);
       return "No Internet connection";

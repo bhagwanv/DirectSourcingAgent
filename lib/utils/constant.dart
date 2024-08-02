@@ -29,6 +29,12 @@ const dark_blue = Color(0xFF00506D);
 
 const double defaultPadding = 16.0;
 
+const String BASE_URL_QA = "https://gateway-qa.scaleupfin.com";
+const String CREATE_LEAD_URL_QA = "https://customer-qa.scaleupfin.com/#/lead";
+const String BASE_URL_UAT = "https://gateway-uat.scaleupfin.com";
+const String CREATE_LEAD_URL_UAT = "https://customer-uat.scaleupfin.com/#/lead";
+const String TERMS_AND_CONDITON = "https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html";
+
 /*shared variable*/
 const String BASE_URL = "base_url";
 const String CREATE_LEAD_BASE_URL = "create_lead_base_url";
