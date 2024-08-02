@@ -18,9 +18,9 @@ class Response {
       });
     }
   }
-  int? totalDisbursedAmount;
-  int? totalPayoutAmount;
-  int? totalRecords;
+  dynamic totalDisbursedAmount;
+  dynamic totalPayoutAmount;
+  dynamic totalRecords;
   List<LoanPayoutDetailList>? loanPayoutDetailList;
 
   Map<String, dynamic> toJson() {

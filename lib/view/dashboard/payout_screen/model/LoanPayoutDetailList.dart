@@ -24,8 +24,8 @@ class LoanPayoutDetailList {
   String? fullName;
   String? status;
   String? mobileNo;
-  int? disbursmentAmount;
-  int? payoutAmount;
+  dynamic disbursmentAmount;
+  dynamic payoutAmount;
   String? profileImage;
 
   Map<String, dynamic> toJson() {
