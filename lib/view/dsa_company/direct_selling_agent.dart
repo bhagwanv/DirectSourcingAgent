@@ -390,6 +390,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -463,6 +464,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -1586,6 +1588,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 400,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
@@ -1662,6 +1665,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 400,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),

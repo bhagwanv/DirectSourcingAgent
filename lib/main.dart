@@ -5,6 +5,7 @@ import 'package:direct_sourcing_agent/providers/DataProvider.dart';
 import 'package:direct_sourcing_agent/providers/ThemeProvider.dart';
 import 'package:direct_sourcing_agent/utils/firebase_options.dart';
 import 'package:direct_sourcing_agent/utils/local_notifications.dart';
+import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Scaleup App',
       home:  const SplashScreen(),
-      //home:  CongratulationScreen(transactionReqNo: '', amount: null, mobileNo: '', loanAccountId: 0, creditDay: 0,),
+     // home:  DirectSellingAgent(activityId: 0, subActivityId: 0),
     );
 
   }

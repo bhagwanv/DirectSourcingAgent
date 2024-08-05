@@ -631,6 +631,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -683,6 +684,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -754,6 +756,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 400,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
@@ -806,6 +809,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 400,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
@@ -859,6 +863,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             dropdownStyleData: DropdownStyleData(
               maxHeight: 400,
               decoration: BoxDecoration(
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
@@ -912,6 +917,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           dropdownStyleData: DropdownStyleData(
             maxHeight: 400,
             decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
           ),
@@ -965,6 +971,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
