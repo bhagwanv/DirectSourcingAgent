@@ -9,10 +9,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../PdfView.dart';
 import 'directory_path.dart';
 import 'loader.dart';
-import 'local_notifications.dart';
 
 class MyInAppBrowser extends InAppBrowser {
   var token;

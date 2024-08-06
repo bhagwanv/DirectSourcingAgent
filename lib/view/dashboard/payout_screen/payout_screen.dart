@@ -120,7 +120,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         payoutOverviewTotalDisbursedAmount =
                             getDSADashboardPayoutListData
                                 .response!.totalDisbursedAmount!
-                                .toString();
+                                .toStringAsFixed(2).toString();
                       }
                       if (getDSADashboardPayoutListData
                               .response!.totalPayoutAmount !=
@@ -128,7 +128,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                         payoutOverviewPayoutAmount =
                             getDSADashboardPayoutListData
                                 .response!.totalPayoutAmount!
-                                .toString();
+                                .toStringAsFixed(2).toString();
                       }
 
                       if (getDSADashboardPayoutListData.response!.loanPayoutDetailList != null) {
@@ -337,7 +337,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                                 crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                 children: [
-                                  Text('₹$payoutOverviewPayoutAmount',
+                                  Text('₹${payoutOverviewPayoutAmount}',
                                       textAlign: TextAlign.left,
                                       style: GoogleFonts.urbanist(
                                         fontSize: 20,
@@ -524,8 +524,8 @@ class _PayOutScreenState extends State<PayOutScreen> {
           String? mobile = loanPayoutDetail.mobileNo ?? '';
           String? profileImage = loanPayoutDetail.profileImage.toString() ?? '';
           String? disbursmentAmount =
-              loanPayoutDetail.disbursmentAmount.toString() ?? '';
-          String? payoutAmount = loanPayoutDetail.payoutAmount.toString() ?? '';
+              loanPayoutDetail.disbursmentAmount.toStringAsFixed(2) ?? '';
+          String? payoutAmount = loanPayoutDetail.payoutAmount.toStringAsFixed(2) ?? '';
 
           return GestureDetector(
             onTap: () async {},

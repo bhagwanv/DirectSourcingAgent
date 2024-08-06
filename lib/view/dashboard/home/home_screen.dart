@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             payoutOverviewPayoutAmount =
                                 getDSADashboardDetailsData
                                     .response!.payoutOverviewData!.payoutAmount!
-                                    .toString();
+                                    .toStringAsFixed(2).toString();
                           }
                           if (getDSADashboardDetailsData.response!
                                   .payoutOverviewData!.totalDisbursedAmount !=
@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             payoutOverviewTotalDisbursedAmount =
                                 getDSADashboardDetailsData.response!
                                     .payoutOverviewData!.totalDisbursedAmount!
-                                    .toString();
+                                    .toStringAsFixed(2).toString();
                           }
                         }
                       },
