@@ -94,12 +94,152 @@ class _ProfileTypesState extends State<ProfileTypes> {
           SystemNavigator.pop();
         }
       },
-      child: Scaffold(body: SafeArea(
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getDSAPersonalInfoData == null) {
-            if (widget.dsaType == "DSAPersonalInfo") {
-              return Loader();
+      child: Scaffold(body: SingleChildScrollView(
+        child: SafeArea(
+          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+            if (productProvider.getDSAPersonalInfoData == null) {
+              if (widget.dsaType == "DSAPersonalInfo") {
+                return Loader();
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 40),
+                    const Center(
+                      child: Text(
+                        'Choose Profile Type',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 70),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: CheckboxTerm(
+                        content: "DSA (Direct Selling Agent):",
+                        isChecked: _isSelected1,
+                        onChanged: (bool? value) {
+                          isTermsChecks = value!;
+                          userType = "DSA";
+                          _handleCheckboxChange(1, isTermsChecks);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 52, right: 30),
+                      child: Text(
+                        "If you are representing a registered entity such as a Pvt Ltd Company, HUF, LLC, Proprietorship, or any other registered firm type, you can onboard with us as a DSA. As a DSA, you will facilitate loan applications and earn higher commissions based on successful disbursements.",
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: CheckboxTerm(
+                        content: "Connector",
+                        isChecked: _isSelected2,
+                        onChanged: (bool? value) {
+                          userType = "Connector";
+                          isTermsChecks = value!;
+                          _handleCheckboxChange(2, isTermsChecks);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 52, right: 30),
+                      child: Text(
+                        "If you are an individual without any formal firm registration, you can join us as a Connector. As a Connector, you can refer potential loan applicants and earn commissions based on successful disbursements.",
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+        
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
+                      child: Column(
+                        children: [
+                          CommonElevatedButton(
+                            onPressed: () async {
+                              if(isTermsChecks) {
+                                chooseUserTypeApi(context, productProvider,
+                                    isTermsChecks, userType!);
+                              } else {
+                                Utils.showToast("Please select user type", context);
+                              }
+                            },
+                            text: "Next",
+                            upperCase: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
             } else {
+              if (productProvider.getDSAPersonalInfoData != null) {
+                if (productProvider.getDSAPersonalInfoData != null) {
+                  productProvider.getDSAPersonalInfoData!.when(
+                    success: (data) {
+                      if (data.status!) {
+                        if(widget.dsaType == "DSAPersonalInfo") {
+                          if (!_isNavigated) {
+                            _isNavigated = true;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (data.dsaType == "Connector") {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => Connector_signup(
+                                      activityId: widget.activityId,
+                                      subActivityId: widget.subActivityId,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                               /* Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => DirectSellingAgent(
+                                      activityId: widget.activityId,
+                                      subActivityId: widget.subActivityId,
+                                    ),
+                                  ),
+                                );*/
+                              }
+                            });
+                          }
+                        } else {
+        
+                        }
+                      } else {
+                        Utils.showToast(data.message!, context);
+                      }
+                    },
+                    failure: (exception) {
+                      if (exception is ApiException) {
+                        if (exception.statusCode == 401) {
+                          productProvider.disposeAllProviderData();
+                          ApiService().handle401(context);
+                        } else {
+                          Utils.showToast(exception.errorMessage, context);
+                        }
+                      }
+                    },
+                  );
+                }
+              }
+        
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -164,18 +304,18 @@ class _ProfileTypesState extends State<ProfileTypes> {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
                     child: Column(
                       children: [
                         CommonElevatedButton(
                           onPressed: () async {
-                            if(isTermsChecks) {
-                              chooseUserTypeApi(context, productProvider,
-                                  isTermsChecks, userType!);
-                            } else {
-                              Utils.showToast("Please select user type", context);
+                            if(userType!.isEmpty){
+                              Utils.showToast("Please Select User Type", context);
+                            }else {
+                              chooseUserTypeApi(
+                                  context, productProvider, isTermsChecks,
+                                  userType!);
                             }
                           },
                           text: "Next",
@@ -187,146 +327,8 @@ class _ProfileTypesState extends State<ProfileTypes> {
                 ],
               );
             }
-          } else {
-            if (productProvider.getDSAPersonalInfoData != null) {
-              if (productProvider.getDSAPersonalInfoData != null) {
-                productProvider.getDSAPersonalInfoData!.when(
-                  success: (data) {
-                    if (data.status!) {
-                      if(widget.dsaType == "DSAPersonalInfo") {
-                        if (!_isNavigated) {
-                          _isNavigated = true;
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (data.dsaType == "Connector") {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => Connector_signup(
-                                    activityId: widget.activityId,
-                                    subActivityId: widget.subActivityId,
-                                  ),
-                                ),
-                              );
-                            } else {
-                             /* Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => DirectSellingAgent(
-                                    activityId: widget.activityId,
-                                    subActivityId: widget.subActivityId,
-                                  ),
-                                ),
-                              );*/
-                            }
-                          });
-                        }
-                      } else {
-
-                      }
-                    } else {
-                      Utils.showToast(data.message!, context);
-                    }
-                  },
-                  failure: (exception) {
-                    if (exception is ApiException) {
-                      if (exception.statusCode == 401) {
-                        productProvider.disposeAllProviderData();
-                        ApiService().handle401(context);
-                      } else {
-                        Utils.showToast(exception.errorMessage, context);
-                      }
-                    }
-                  },
-                );
-              }
-            }
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                const Center(
-                  child: Text(
-                    'Choose Profile Type',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 70),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: CheckboxTerm(
-                    content: "DSA (Direct Selling Agent):",
-                    isChecked: _isSelected1,
-                    onChanged: (bool? value) {
-                      isTermsChecks = value!;
-                      userType = "DSA";
-                      _handleCheckboxChange(1, isTermsChecks);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 52, right: 30),
-                  child: Text(
-                    "If you are representing a registered entity such as a Pvt Ltd Company, HUF, LLC, Proprietorship, or any other registered firm type, you can onboard with us as a DSA. As a DSA, you will facilitate loan applications and earn higher commissions based on successful disbursements.",
-                    textAlign: TextAlign.justify,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 12,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: CheckboxTerm(
-                    content: "Connector",
-                    isChecked: _isSelected2,
-                    onChanged: (bool? value) {
-                      userType = "Connector";
-                      isTermsChecks = value!;
-                      _handleCheckboxChange(2, isTermsChecks);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 52, right: 30),
-                  child: Text(
-                    "If you are an individual without any formal firm registration, you can join us as a Connector. As a Connector, you can refer potential loan applicants and earn commissions based on successful disbursements.",
-                    textAlign: TextAlign.justify,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 12,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 80),
-                  child: Column(
-                    children: [
-                      CommonElevatedButton(
-                        onPressed: () async {
-                          if(userType!.isEmpty){
-                            Utils.showToast("Please Select User Type", context);
-                          }else {
-                            chooseUserTypeApi(
-                                context, productProvider, isTermsChecks,
-                                userType!);
-                          }
-                        },
-                        text: "Next",
-                        upperCase: true,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }
-        }),
+          }),
+        ),
       )),
     );
 

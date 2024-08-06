@@ -610,9 +610,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     data = await ApiService().emailExist(userId!, emailID, productCode!)
         as EmailExistRespoce;
     if (data.isSuccess!) {
+      Navigator.of(context, rootNavigator: true).pop();
       isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
+      print("fsfsdfsd222222");
       callSendOptEmail(context, emailID);
     }
   }
