@@ -267,6 +267,7 @@ class _LeadScreenState extends State<LeadScreen> {
                             dropdownStyleData: DropdownStyleData(
                               maxHeight: 400,
                               decoration: BoxDecoration(
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),

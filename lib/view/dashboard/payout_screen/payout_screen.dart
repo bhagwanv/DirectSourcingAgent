@@ -270,6 +270,7 @@ class _PayOutScreenState extends State<PayOutScreen> {
                     dropdownStyleData: DropdownStyleData(
                       maxHeight: 400,
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),

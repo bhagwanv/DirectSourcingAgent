@@ -741,8 +741,7 @@ class ApiService {
         final PostPersonalDetailsResponseModel responseModel =
         PostPersonalDetailsResponseModel.fromJson(jsonData);
         return responseModel;
-      }
-      if (response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
         // Handle 401 unauthorized error
         await handle401(context);
         throw Exception('Failed to load products');
@@ -756,14 +755,16 @@ class ApiService {
   }
 
   Future<ValidEmResponce> otpValidateForEmail(
-      OtpValidateForEmailRequest model) async {
+      OtpValidateForEmailRequest model, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
           Uri.parse('${base_url! + apiUrls.OTPValidateForEmail}'),
           headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token' // Set the content type as JSON
           },
           body: json.encode(model));
       //print(json.encode(leadCurrentRequestModel));
@@ -774,6 +775,10 @@ class ApiService {
         final ValidEmResponce responseModel =
         ValidEmResponce.fromJson(jsonData);
         return responseModel;
+      }else if (response.statusCode == 401) {
+        // Handle 401 unauthorized error
+        await handle401(context);
+        throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
       }

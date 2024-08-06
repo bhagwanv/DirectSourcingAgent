@@ -33,6 +33,7 @@ import '../personal_info/model/SendOtpOnEmailResponce.dart';
 import '../splash/model/GetLeadResponseModel.dart';
 import '../splash/model/LeadCurrentRequestModel.dart';
 import '../splash/model/LeadCurrentResponseModel.dart';
+import 'EmailOtpScreen.dart';
 import 'model/CustomerDetailUsingGSTResponseModel.dart';
 import 'model/DSAGSTExistResModel.dart';
 import 'model/GetDsaPersonalDetailResModel.dart';
@@ -300,7 +301,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-         /* if (item != list.last)
+          /* if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
@@ -373,23 +374,26 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           ),
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: (ReturnObject? value) {
-          setState(() {
-            citylist.clear();
-            setStateListFirstTime = false;
-            Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(value!.id!);
-            selectedStateValue = value.id!.toString();
-            selectedCompanyCity = null;
-            selectedCompanyState = value;
-            _companyStateCl.text = value!.id.toString();
-            companyCityId = null;
-            companyStateId = null;
-          });
-        },
+        onChanged: isGstFilled
+            ? null
+            : (ReturnObject? value) {
+                setState(() {
+                  citylist.clear();
+                  setStateListFirstTime = false;
+                  Provider.of<DataProvider>(context, listen: false)
+                      .getAllCity(value!.id!);
+                  selectedStateValue = value.id!.toString();
+                  selectedCompanyCity = null;
+                  selectedCompanyState = value;
+                  _companyStateCl.text = value!.id.toString();
+                  companyCityId = null;
+                  companyStateId = null;
+                });
+              },
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -452,17 +456,20 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           ),
         ),
         items: getAllCity(citylist),
-        onChanged: (CityResponce? value) {
-          setState(() {
-            selectedCompanyCity = value;
-            setCityListFirstTime = false;
-            _companyCityCl.text = value!.id.toString();
-            companyCityId = null;
-          });
-        },
+        onChanged: isGstFilled
+            ? null
+            : (CityResponce? value) {
+                setState(() {
+                  selectedCompanyCity = value;
+                  setCityListFirstTime = false;
+                  _companyCityCl.text = value!.id.toString();
+                  companyCityId = null;
+                });
+              },
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -602,15 +609,39 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID, productCode!)
         as EmailExistRespoce;
-    Navigator.of(context, rootNavigator: true).pop();
     if (data.isSuccess!) {
       isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
-      //  callSendOptEmail(context, _emailIDCl.text);
-      setState(() {
-        isValidEmail = true;
-      });
+      callSendOptEmail(context, emailID);
+    }
+  }
+
+  void callSendOptEmail(BuildContext context, String emailID) async {
+    updateData = true;
+    SendOtpOnEmailResponce data;
+    data = await ApiService().sendOtpOnEmail(emailID);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (data != null && data.status!) {
+      final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EmailOtpScreen(
+                    emailID: emailID,
+                  )));
+
+      if (result != null &&
+          result.containsKey('isValid') &&
+          result.containsKey('Email')) {
+        setState(() {
+          isValidEmail = result['isValid'];
+          _emailIDCl.text = result['Email'];
+        });
+      } else {
+        print('Result is null or does not contain expected keys');
+      }
+    } else {
+      Utils.showToast(data.message!, context);
     }
   }
 
@@ -662,9 +693,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             _companyStateCl.text =
                 getCustomerDetailUsingGSTData!.stateId.toString();
             isGstFilled = true;
-            selectedBusinessTypeValue = "GST Certificate";
             companyStateId = getCustomerDetailUsingGSTData!.stateId.toString();
             companyCityId = getCustomerDetailUsingGSTData!.cityId.toString();
+            selectedBusinessTypeValue = "GST Certificate";
           } else {
             Utils.showToast(getCustomerDetailUsingGSTData!.message!, context);
           }
@@ -1586,6 +1617,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 400,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
@@ -1662,6 +1694,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 400,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
@@ -1859,7 +1892,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             CommonTextField(
               controller: _companyNameCl,
-              enabled: true,
+              enabled: !isGstFilled,
               hintText: "Company Name",
               labelText: "Company Name",
             ),
@@ -1868,7 +1901,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             CommonTextField(
               controller: _companyAddressCl,
-              enabled: true,
+              enabled: !isGstFilled,
               hintText: "Address",
               labelText: "Address",
             ),
@@ -1877,7 +1910,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             ),
             CommonTextField(
               controller: _companyPinCodeCodeCl,
-              enabled: true,
+              enabled: !isGstFilled,
               inputFormatter: [
                 FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                 LengthLimitingTextInputFormatter(6)
@@ -1918,7 +1951,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       "Please enter Alternate Mobile Number ", context);
                 } else if (_emailIDCl.text.trim().isEmpty) {
                   Utils.showToast("Enter email address", context);
-                }  else if (!Utils.validateEmail(_emailIDCl.text)) {
+                } else if (!Utils.validateEmail(_emailIDCl.text)) {
                   Utils.showToast("Please enter Valid Email ID", context);
                 } else if (!isValidEmail) {
                   Utils.showToast("Please verify Email Id", context);

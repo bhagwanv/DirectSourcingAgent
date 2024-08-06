@@ -295,8 +295,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     items: _addDividersAfterItems(dsaSalesAgentList),
-
-
                                     onChanged:
                                         (DsaSalesAgentList? value) async {
                                       selecteddsaSalesAgentValue =
@@ -315,6 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               dropdownStyleData: DropdownStyleData(
                                 maxHeight: 400,
                                 decoration: BoxDecoration(
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                               ),

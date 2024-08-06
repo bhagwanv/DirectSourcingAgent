@@ -506,8 +506,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> otpValidateForEmail(OtpValidateForEmailRequest model) async {
-    _getValidOtpEmailData = await apiService.otpValidateForEmail(model);
+  Future<void> otpValidateForEmail(OtpValidateForEmailRequest model, BuildContext context) async {
+    _getValidOtpEmailData = await apiService.otpValidateForEmail(model, context);
     notifyListeners();
   }
 

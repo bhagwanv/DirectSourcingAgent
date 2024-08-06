@@ -21,7 +21,9 @@ import 'package:provider/provider.dart';
 
 import '../../utils/constant.dart';
 import '../../utils/custom_radio_button.dart';
+import '../dsa_company/EmailOtpScreen.dart';
 import '../personal_info/model/EmailExistRespoce.dart';
+import '../personal_info/model/SendOtpOnEmailResponce.dart';
 
 class Connector_signup extends StatefulWidget {
   int? activityId;
@@ -596,15 +598,39 @@ class ConnectorSignup extends State<Connector_signup> {
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID, productCode!)
         as EmailExistRespoce;
-    Navigator.of(context, rootNavigator: true).pop();
     if (data.isSuccess!) {
       isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
-      // callSendOptEmail(context, _emailIDController.text);
-      setState(() {
-        isValidEmail = true;
-      });
+       callSendOptEmail(context, _emailIDController.text);
+    }
+  }
+
+  void callSendOptEmail(BuildContext context, String emailID) async {
+    updateData = true;
+    SendOtpOnEmailResponce data;
+    data = await ApiService().sendOtpOnEmail(emailID);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (data != null && data.status!) {
+      final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EmailOtpScreen(
+                emailID: emailID,
+              )));
+
+      if (result != null &&
+          result.containsKey('isValid') &&
+          result.containsKey('Email')) {
+        setState(() {
+          isValidEmail = result['isValid'];
+          _emailIDController.text = result['Email'];
+        });
+      } else {
+        print('Result is null or does not contain expected keys');
+      }
+    } else {
+      Utils.showToast(data.message!, context);
     }
   }
 
