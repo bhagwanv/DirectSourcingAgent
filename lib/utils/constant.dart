@@ -24,6 +24,7 @@ const light_gry = Color(0xFFE0E0E0);
 const dark_gry = Color(0xFF7F7F7F);
 const light_dark_gry = Color(0xFFD9D9D9);
 const dark_blue = Color(0xFF00506D);
+const green_varient = Color(0xFFE8F5FA);
 
 
 

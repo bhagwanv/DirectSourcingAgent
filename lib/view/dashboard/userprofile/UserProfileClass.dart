@@ -29,6 +29,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as Path;
 
 import '../../../utils/directory_path.dart';
+import '../../otp_screens/model/GetUserProfileResponse.dart';
 
 class UserProfileClass extends StatefulWidget {
   /*final int activityId;
@@ -62,6 +63,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   String? user_workingLocation;
   String? user_selfie;
   double? user_payout;
+  List<SalesAgentCommissions> loadedCommissions = [];
   String? doc_sign_url;
   var savedDir = "";
   bool dowloading = false;
@@ -88,35 +90,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
 
   @override
   Widget build(BuildContext context) {
-    List<NameOne> namelist =
-        []; //list of names, you can generate it using JSON as well
-    namelist.add(NameOne(
-        Slab: "30284",
-        MinDisAmt: "149661",
-        MaxDisAmt: "4969716",
-        Payout: "0.61%"));
-    namelist.add(NameOne(
-        Slab: "30284",
-        MinDisAmt: "149661",
-        MaxDisAmt: "4969716",
-        Payout: "0.61%"));
-    namelist.add(NameOne(
-        Slab: "30284",
-        MinDisAmt: "149661",
-        MaxDisAmt: "4969716",
-        Payout: "0.61%"));
-    namelist.add(NameOne(
-        Slab: "30284",
-        MinDisAmt: "149661",
-        MaxDisAmt: "4969716",
-        Payout: "0.61%"));
-    namelist.add(NameOne(
-        Slab: "30284",
-        MinDisAmt: "149661",
-        MaxDisAmt: "4969716",
-        Payout: "0.61%"));
 
-    final List<Map<String, dynamic>> data = [
+    /*final List<Map<String, dynamic>> data = [
       {
         'title': 'Business Loan',
         'rows': [
@@ -163,7 +138,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
           },
         ],
       },
-    ];
+    ];*/
 
     return SafeArea(
       top: true,
@@ -333,13 +308,13 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                     ],
                   ),
                 SizedBox(height: 16.0),
-                CommonTextField(
+               /* CommonTextField(
                   controller: _PayOutController,
                   hintText: "Payout %",
                   labelText: "Payout %",
                   enabled: false,
                 ),
-                SizedBox(height: 16.0),
+                SizedBox(height: 16.0),*/
                 CommonTextField(
                   controller: _WorkingLocationController,
                   hintText: "Working Location",
@@ -360,12 +335,11 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                 ListView.builder(
                   shrinkWrap: true, // Take up only necessary space
                   physics: NeverScrollableScrollPhysics(), // Prevent internal scrolling
-                  itemCount: data.length,
+                  itemCount: loadedCommissions.length,
                   itemBuilder: (context, index) {
-                    final tableData = data[index];
                     return DynamicTable(
-                      title: tableData['title'],
-                      rows: List<Map<String, String>>.from(tableData['rows']),
+                      title: "Business Loan",
+                      rows: loadedCommissions,
                     );
                   },
                 ),
@@ -438,7 +412,11 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     user_address = prefsUtil.getString(USER_ADDRESS);
     user_workingLocation = prefsUtil.getString(USER_WORKING_LOCTION);
     user_selfie = prefsUtil.getString(USER_SELFI);
-    user_payout = prefsUtil.getDouble(USER_PAY_OUT);
+    loadedCommissions = await prefsUtil.loadCommissions();
+
+    if(loadedCommissions.isNotEmpty) {
+      user_payout = loadedCommissions.map((commission) => commission.payoutPercentage).reduce((a, b) => a > b ? a : b);
+    }
     doc_sign_url = prefsUtil.getString(USER_DOC_SiGN_URL);
 
     if (user_mobile != null) {
@@ -642,34 +620,15 @@ class _TileListState extends State<TileList> {
   }
 }
 
-class NameOne {
-  String Slab, MinDisAmt, MaxDisAmt, Payout;
-
-  NameOne(
-      {required this.Slab,
-      required this.MinDisAmt,
-      required this.MaxDisAmt,
-      required this.Payout});
-
-  //constructor
-
-  factory NameOne.fromJSON(Map<String, dynamic> json) {
-    return NameOne(
-        Slab: json["sn"],
-        MinDisAmt: json["name"],
-        MaxDisAmt: json["address"],
-        Payout: json["phone"]);
-  }
-}
-
 class DynamicTable extends StatelessWidget {
   final String title;
-  final List<Map<String, String>> rows;
+  final List<SalesAgentCommissions> rows;
 
   DynamicTable({required this.title, required this.rows});
 
   @override
   Widget build(BuildContext context) {
+    print('List:::: $rows');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -697,13 +656,16 @@ class DynamicTable extends StatelessWidget {
                 tableHeaderCell('Payout %'),
               ],
             ),
-            ...rows.map((rowData) {
+            ...rows.asMap().entries.map((entry) {
+              int index = entry.key;
+              SalesAgentCommissions rowData = entry.value;
+
               return TableRow(
                 children: [
-                  tableCell(rowData['Slab'] ?? ''),
-                  tableCell(rowData['MinDisAmt'] ?? ''),
-                  tableCell(rowData['MaxDisAmt'] ?? ''),
-                  tableCell(rowData['Payout'] ?? '', isPayout: true),
+                  tableCell((index + 1).toString()), // Index for Slab field
+                  tableCell(rowData.minAmount?.toString() ?? ''),
+                  tableCell(rowData.maxAmount?.toString() ?? ''),
+                  tableCell(rowData.payoutPercentage?.toString() ?? '', isPayout: true),
                 ],
               );
             }).toList(),
@@ -734,7 +696,7 @@ class DynamicTable extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(5),
           child: Text(
-            text,
+            isPayout ? '$text %' : text,
             style: GoogleFonts.urbanist(fontSize: 10, color: Colors.black),
           ),
         ),

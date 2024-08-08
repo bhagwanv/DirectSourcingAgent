@@ -218,7 +218,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
                     );
                   }
-                  prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!.toDouble());
+                  if (data.userData?.salesAgentCommissions != null) {
+                    prefsUtil.saveCommissions(data.userData!.salesAgentCommissions!);
+                  }
                   if( data.userData!.docSignedUrl!=null) {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);

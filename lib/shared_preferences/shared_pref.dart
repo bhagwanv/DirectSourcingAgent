@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../view/otp_screens/model/GetUserProfileResponse.dart';
 
 class SharedPref {
 
@@ -57,6 +61,22 @@ class SharedPref {
 
   List<String>? getStringList(String key) {
     return _prefs.getStringList(key);
+  }
+
+  // Save SalesAgentCommissions to SharedPreferences
+  Future<void> saveCommissions(List<SalesAgentCommissions> commissions) async {
+    List<String> commissionsJsonList = commissions.map((commission) => jsonEncode(commission.toJson())).toList();
+    await _prefs.setStringList('salesAgentCommissions', commissionsJsonList);
+  }
+
+// Load SalesAgentCommissions from SharedPreferences
+  Future<List<SalesAgentCommissions>> loadCommissions() async {
+    List<String>? commissionsJsonList = _prefs.getStringList('salesAgentCommissions');
+    if (commissionsJsonList == null) {
+      return [];
+    }
+    List<SalesAgentCommissions> commissions = commissionsJsonList.map((commissionJson) => SalesAgentCommissions.fromJson(jsonDecode(commissionJson))).toList();
+    return commissions;
   }
 
   Future<void> clear() async {
