@@ -88,273 +88,330 @@ class _UserProfileScreenState extends State<UserProfileClass> {
 
   @override
   Widget build(BuildContext context) {
+    List<NameOne> namelist =
+        []; //list of names, you can generate it using JSON as well
+    namelist.add(NameOne(
+        Slab: "30284",
+        MinDisAmt: "149661",
+        MaxDisAmt: "4969716",
+        Payout: "0.61%"));
+    namelist.add(NameOne(
+        Slab: "30284",
+        MinDisAmt: "149661",
+        MaxDisAmt: "4969716",
+        Payout: "0.61%"));
+    namelist.add(NameOne(
+        Slab: "30284",
+        MinDisAmt: "149661",
+        MaxDisAmt: "4969716",
+        Payout: "0.61%"));
+    namelist.add(NameOne(
+        Slab: "30284",
+        MinDisAmt: "149661",
+        MaxDisAmt: "4969716",
+        Payout: "0.61%"));
+    namelist.add(NameOne(
+        Slab: "30284",
+        MinDisAmt: "149661",
+        MaxDisAmt: "4969716",
+        Payout: "0.61%"));
+
+    final List<Map<String, dynamic>> data = [
+      {
+        'title': 'Business Loan',
+        'rows': [
+          {
+            'Slab': '₹ 30,284',
+            'MinDisAmt': '₹ 1,49,661',
+            'MaxDisAmt': '₹ 49,69,716',
+            'Payout': '0.61%'
+          },
+          {
+            'Slab': '₹ 30,284',
+            'MinDisAmt': '₹ 1,49,661',
+            'MaxDisAmt': '₹ 49,69,716',
+            'Payout': '0.61%'
+          },
+          {
+            'Slab': '₹ 30,284',
+            'MinDisAmt': '₹ 1,49,661',
+            'MaxDisAmt': '₹ 49,69,716',
+            'Payout': '0.61%'
+          },
+        ],
+      },
+      {
+        'title': 'Credit Card',
+        'rows': [
+          {
+            'Slab': '₹ 30,284',
+            'MinDisAmt': '₹ 1,49,661',
+            'MaxDisAmt': '₹ 49,69,716',
+            'Payout': '0.61%'
+          },
+          {
+            'Slab': '₹ 30,284',
+            'MinDisAmt': '₹ 1,49,661',
+            'MaxDisAmt': '₹ 49,69,716',
+            'Payout': '0.61%'
+          },
+          {
+            'Slab': '₹ 30,284',
+            'MinDisAmt': '₹ 1,49,661',
+            'MaxDisAmt': '₹ 49,69,716',
+            'Payout': '0.61%'
+          },
+        ],
+      },
+    ];
+
     return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 35,
+      top: true,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 35),
+                Row(
+                  children: [
+                    Spacer(),
+                    SizedBox(width: 50),
+                    Center(
+                      child: Text(
+                        "Profile",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Spacer(),
-                          SizedBox(
-                            width: 50,
+                    ),
+                    Spacer(),
+                    if (type == "DSA")
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: kPrimaryColor,
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          Center(
-                            child: Text(
-                              "Profile",
+                        ),
+                        onPressed: () async {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.white,
+                            builder: (context) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Container(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: CreateUserWidgets(user_payout: user_payout),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Create user',
                               style: GoogleFonts.urbanist(
-                                fontSize: 20,
-                                color: Colors.black,
+                                fontSize: 14,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 25),
+                Row(
+                  children: [
+                    if (user_selfie != null && user_selfie!.isNotEmpty)
+                      Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(user_selfie!),
+                            fit: BoxFit.fill,
                           ),
-                          Spacer(),
-                          (type == "DSA")
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: kPrimaryColor,
-                                    // text color
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.white,
-                                      builder: (context) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom,
-                                          ),
-                                          child: SingleChildScrollView(
-                                            child: Container(
-                                              padding: EdgeInsets.all(16.0),
-                                              // Adjust the padding as needed
-                                              child: CreateUserWidgets(
-                                                  user_payout: user_payout),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Create user',
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ))
-                              : Container(),
-                        ],
+                        ),
+                      )
+                    else
+                      Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(10),
+                          color: light_gry,
+                        ),
                       ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Row(
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          user_selfie != null && user_selfie!.isNotEmpty
-                              ? Container(
-                                  width: 90,
-                                  height: 90,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                        image: NetworkImage(user_selfie!),
-                                        //  image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
-                                        fit: BoxFit.fill),
-                                  ),
-                                )
-                              : Container(
-                                  width: 90,
-                                  height: 90,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: light_gry,
-                                  ),
+                          if (user_name != null)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                user_name!,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                user_name != null
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          user_name!,
-                                          style: GoogleFonts.urbanist(
-                                            fontSize: 20,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      )
-                                    : Container()
-                              ],
+                              ),
                             ),
-                          )
                         ],
                       ),
-                      const SizedBox(
-                        height: 25,
-                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 25),
+                CommonTextField(
+                  controller: _MobileNoController,
+                  enabled: false,
+                  inputFormatter: [
+                    FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  keyboardType: TextInputType.number,
+                  hintText: "Mobile Number",
+                  labelText: "Mobile Number",
+                ),
+                if (type != "DSAUser")
+                  Column(
+                    children: [
+                      SizedBox(height: 16.0),
                       CommonTextField(
-                        controller: _MobileNoController,
+                        controller: _PanCardNoController,
+                        hintText: "PAN number",
+                        labelText: "PAN number",
                         enabled: false,
+                        textCapitalization: TextCapitalization.characters,
                         inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z0-9]'))),
-                          LengthLimitingTextInputFormatter(10)
+                          FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
+                          LengthLimitingTextInputFormatter(10),
                         ],
+                      ),
+                      SizedBox(height: 16.0),
+                      CommonTextField(
+                        inputFormatter: [LengthLimitingTextInputFormatter(17)],
                         keyboardType: TextInputType.number,
-                        hintText: "Mobile Number",
-                        labelText: "Mobile Number",
-                      ),
-                      (type != "DSAUser") ?
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          CommonTextField(
-                            controller: _PanCardNoController,
-                            hintText: "PAN number",
-                            labelText: "PAN number ",
-                            enabled: false,
-                            textCapitalization: TextCapitalization.characters,
-                            inputFormatter: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp((r'[A-Z0-9]'))),
-                              LengthLimitingTextInputFormatter(10)
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          CommonTextField(
-                            inputFormatter: [
-                              LengthLimitingTextInputFormatter(17),
-                              // Limit to 10 characters
-                            ],
-                            keyboardType: TextInputType.number,
-                            controller: _AdharcardNOController,
-                            maxLines: 1,
-                            hintText: "Aadhaar ",
-                            labelText: "Aadhaar",
-                            enabled: false,
-                          ),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          CommonTextField(
-                            controller: _AddreshController,
-                            hintText: "Address",
-                            labelText: "Address",
-                            enabled: false,
-                            textCapitalization: TextCapitalization.characters,
-                          ),
-                        ],
-                      ) : Container(),
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      CommonTextField(
-                        controller: _PayOutController,
-                        hintText: "Payout %",
-                        labelText: "Payout %",
+                        controller: _AdharcardNOController,
+                        maxLines: 1,
+                        hintText: "Aadhaar",
+                        labelText: "Aadhaar",
                         enabled: false,
                       ),
-                      SizedBox(
-                        height: 16.0,
-                      ),
+                      SizedBox(height: 16.0),
                       CommonTextField(
-                        controller: _WorkingLocationController,
-                        hintText: "Working Location",
-                        labelText: "Working Location",
+                        controller: _AddreshController,
+                        hintText: "Address",
+                        labelText: "Address",
                         enabled: false,
-                      ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      type == "DSA"
-                          ? TileList(
-                              fileUrl:
-                                  doc_sign_url != null ? doc_sign_url! : "")
-                          : Container(),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.red,
-                            // text color
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            logOut();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.logout, size: 24),
-                                SizedBox(height: 0, width: 10),
-                                Text(
-                                  'Log out',
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
-                      SizedBox(
-                        height: 30.0,
+                        textCapitalization: TextCapitalization.characters,
                       ),
                     ],
                   ),
+                SizedBox(height: 16.0),
+                CommonTextField(
+                  controller: _PayOutController,
+                  hintText: "Payout %",
+                  labelText: "Payout %",
+                  enabled: false,
                 ),
-              ),
-            )));
+                SizedBox(height: 16.0),
+                CommonTextField(
+                  controller: _WorkingLocationController,
+                  hintText: "Working Location",
+                  labelText: "Working Location",
+                  enabled: false,
+                ),
+                const SizedBox(height: 30.0),
+                Text(
+                  "Payout Structure",
+                  style: GoogleFonts.urbanist(
+                    fontSize: 20,
+                    color: blackSmall,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                // Dynamic ListView for Payout Structure
+                ListView.builder(
+                  shrinkWrap: true, // Take up only necessary space
+                  physics: NeverScrollableScrollPhysics(), // Prevent internal scrolling
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final tableData = data[index];
+                    return DynamicTable(
+                      title: tableData['title'],
+                      rows: List<Map<String, String>>.from(tableData['rows']),
+                    );
+                  },
+                ),
+                const SizedBox(height: 30.0),
+                if (type == "DSA")
+                  TileList(fileUrl: doc_sign_url != null ? doc_sign_url! : ""),
+                const SizedBox(height: 30.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    logOut();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.logout, size: 24),
+                        SizedBox(width: 10),
+                        Text(
+                          'Log out',
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30.0),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
-
-
 
   Future<void> logOut() async {
     final prefsUtil = await SharedPref.getInstance();
@@ -537,28 +594,30 @@ class _TileListState extends State<TileList> {
           children: [
             fileExists
                 ? const Icon(
-              Icons.picture_as_pdf,
-              color: Colors.white,
-            )
+                    Icons.picture_as_pdf,
+                    color: Colors.white,
+                  )
                 : dowloading
-                ? Stack(
-              alignment: Alignment.center,
-              children: [
-                CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 3,
-                  backgroundColor: Colors.grey,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                      Colors.blue),
-                ),
-                Text(
-                  "${(progress * 100).toStringAsFixed(2)}",
-                  style: TextStyle(fontSize: 12),
-                )
-              ],
-            )
-                : const Icon(Icons.download),
-            SizedBox(width: 12.0,),
+                    ? Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            value: progress,
+                            strokeWidth: 3,
+                            backgroundColor: Colors.grey,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.blue),
+                          ),
+                          Text(
+                            "${(progress * 100).toStringAsFixed(2)}",
+                            style: TextStyle(fontSize: 12),
+                          )
+                        ],
+                      )
+                    : const Icon(Icons.download),
+            SizedBox(
+              width: 12.0,
+            ),
             fileExists
                 ? Text(
                     'Open Agreement',
@@ -577,6 +636,107 @@ class _TileListState extends State<TileList> {
                     ),
                   ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class NameOne {
+  String Slab, MinDisAmt, MaxDisAmt, Payout;
+
+  NameOne(
+      {required this.Slab,
+      required this.MinDisAmt,
+      required this.MaxDisAmt,
+      required this.Payout});
+
+  //constructor
+
+  factory NameOne.fromJSON(Map<String, dynamic> json) {
+    return NameOne(
+        Slab: json["sn"],
+        MinDisAmt: json["name"],
+        MaxDisAmt: json["address"],
+        Payout: json["phone"]);
+  }
+}
+
+class DynamicTable extends StatelessWidget {
+  final String title;
+  final List<Map<String, String>> rows;
+
+  DynamicTable({required this.title, required this.rows});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style:
+              GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 8),
+        Table(
+          border: TableBorder.all(width: 1, color: Colors.black45),
+          columnWidths: {
+            0: FractionColumnWidth(0.27),
+            1: FractionColumnWidth(0.27),
+            2: FractionColumnWidth(0.27),
+            3: FractionColumnWidth(0.19),
+          },
+          children: [
+            TableRow(
+              decoration: BoxDecoration(color: Colors.grey[300]),
+              children: [
+                tableHeaderCell('Slab'),
+                tableHeaderCell('Min Dis Amt'),
+                tableHeaderCell('Max Dis Amt'),
+                tableHeaderCell('Payout %'),
+              ],
+            ),
+            ...rows.map((rowData) {
+              return TableRow(
+                children: [
+                  tableCell(rowData['Slab'] ?? ''),
+                  tableCell(rowData['MinDisAmt'] ?? ''),
+                  tableCell(rowData['MaxDisAmt'] ?? ''),
+                  tableCell(rowData['Payout'] ?? '', isPayout: true),
+                ],
+              );
+            }).toList(),
+          ],
+        ),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+
+  TableCell tableHeaderCell(String text) {
+    return TableCell(
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: Text(
+          text,
+          style: GoogleFonts.urbanist(
+              fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  TableCell tableCell(String text, {bool isPayout = false}) {
+    return TableCell(
+      child: Container(
+        color: isPayout ? green_varient : Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(5),
+          child: Text(
+            text,
+            style: GoogleFonts.urbanist(fontSize: 10, color: Colors.black),
+          ),
         ),
       ),
     );
