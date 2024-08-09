@@ -335,7 +335,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                 ListView.builder(
                   shrinkWrap: true, // Take up only necessary space
                   physics: NeverScrollableScrollPhysics(), // Prevent internal scrolling
-                  itemCount: loadedCommissions.length,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
                     return DynamicTable(
                       title: "Business Loan",
@@ -415,7 +415,11 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     loadedCommissions = await prefsUtil.loadCommissions();
 
     if(loadedCommissions.isNotEmpty) {
-      user_payout = loadedCommissions.map((commission) => commission.payoutPercentage).reduce((a, b) => a > b ? a : b);
+      double maxPayoutPercentage = loadedCommissions
+          .map((commission) => commission.payoutPercentage)
+          .reduce((a, b) => a > b ? a : b)
+          .toDouble();
+      user_payout = maxPayoutPercentage;
     }
     doc_sign_url = prefsUtil.getString(USER_DOC_SiGN_URL);
 
