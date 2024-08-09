@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   var startDate = "";
   var endDate = "";
+  var selectedMonthName = "";
   String? userType;
   bool isAgentSelected = false;
 
@@ -248,9 +249,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: Container(
                                         alignment: Alignment.centerRight,
-                                        child: SvgPicture.asset(
-                                          'assets/icons/ic_document_filter.svg',
-                                          semanticsLabel: 'Edit Icon SVG',
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              " $selectedMonthName",
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            SizedBox(width: 8.0,),
+                                            SvgPicture.asset(
+                                              'assets/icons/ic_document_filter.svg',
+                                              semanticsLabel: 'Edit Icon SVG',
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -834,6 +848,8 @@ class _HomeScreenState extends State<HomeScreen> {
     startDate =
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(firstDay.toUtc());
     print("Formatted Date: $startDate");
+    String monthName = DateFormat("MMM").format(firstDay.toUtc());
+    selectedMonthName = monthName;
 
     endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
     print("Formatted Date: $endDate");
@@ -983,6 +999,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 .format(startOfMonth.toUtc());
             endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'")
                 .format(endOfMonth.toUtc());
+            print("Start DATe ${startDate}");
+            String monthName = DateFormat("MMM").format(startOfMonth.toUtc());
+            selectedMonthName = monthName;
             isAgentSelected = true;
             leadOverviewSuccessRate = 0.0;
             leadOverviewProgrssSuccessRate = 0.0;

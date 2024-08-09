@@ -311,9 +311,16 @@ class _SplashScreenState extends State<SplashScreen> {
         print("Create_lead_url Url $createLeadUrl");
         print("Create_lead_url Url $TermsAndCondition");
       } else {
+        //QA
         BaseUrl = BASE_URL_QA;
         createLeadUrl = CREATE_LEAD_URL_QA;
         TermsAndCondition = TERMS_AND_CONDITON;
+
+        //UAT
+        /*BaseUrl = BASE_URL_UAT;
+        createLeadUrl = CREATE_LEAD_URL_UAT;
+        TermsAndCondition = TERMS_AND_CONDITON;*/
+
         print("Base Url " + "Bhagwan");
         print("Create_lead_url Url $createLeadUrl");
         print("Create_lead_url Url $TermsAndCondition");
