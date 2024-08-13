@@ -337,6 +337,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return UpdateDialog(
               allowDismissal: true,
