@@ -3,14 +3,14 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
-import '../../main.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
 import '../../utils/InternetConnectivity.dart';
+import '../../utils/UpdateDialog.dart';
 import '../../utils/constant.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
@@ -325,16 +325,43 @@ class _SplashScreenState extends State<SplashScreen> {
         print("Create_lead_url Url $createLeadUrl");
         print("Create_lead_url Url $TermsAndCondition");
       }
+      print("app_version ${remoteConfig.getString('app_version')}");
+      var version = await getBuildVersion();
+      print("getBuildVersion ${version}");
       await prefsUtil.saveString(BASE_URL, BaseUrl);
       await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
       await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
-      _checkLoginStatus();
+
+      if(version == remoteConfig.getString('app_version')) {
+        _checkLoginStatus();
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return UpdateDialog(
+              allowDismissal: true,
+              description: "A new version of DSA application is available. Please update to version\s ${remoteConfig.getString('app_version')} \s now",
+              version: version!,
+              appLink: "https://play.google.com/store/apps/details?id=com.sk.user.agent&hl=en",
+            );
+          },
+        );
+      }
       return 'Fetched: ${remoteConfig.getString('Base_url')}';
     } else {
       Utils.internetConectivityDilog("No Internet connection", context);
       return "No Internet connection";
     }
   }
+}
+
+Future<String?> getBuildVersion () async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String appName = packageInfo.appName;
+  String packageName = packageInfo.packageName;
+  String version = packageInfo.version;
+  String buildNumber = packageInfo.buildNumber;
+  return version.toString();
 }
 
 class CustomCircularLoader extends StatelessWidget {
