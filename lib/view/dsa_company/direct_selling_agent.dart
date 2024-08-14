@@ -365,12 +365,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint: Text(
           'State',
-          style: TextStyle(
-            color: blueColor,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
+          style: GoogleFonts.urbanist(
+            fontSize: 15,
+            color: blackSmall,
+            fontWeight: FontWeight.w400,
           ),
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
@@ -447,12 +447,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint: Text(
           'City',
-          style: TextStyle(
-            color: blueColor,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
+          style: GoogleFonts.urbanist(
+            fontSize: 15,
+            color: blackSmall,
+            fontWeight: FontWeight.w400,
           ),
         ),
         items: getAllCity(citylist),
@@ -1591,12 +1591,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   borderSide: const BorderSide(color: kPrimaryColor, width: 1),
                 ),
               ),
-              hint: const Text(
+              hint: Text(
                 'Firm Type',
-                style: TextStyle(
-                  color: blueColor,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               items: businessTypeList.map((String item) {
@@ -1666,12 +1666,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         borderSide: const BorderSide(color: gryColor, width: 1),
                       ),
               ),
-              hint: const Text(
+              hint: Text(
                 'Business Document',
-                style: TextStyle(
-                  color: blueColor,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               items: chooseBusinessProofList.map((String item) {

@@ -1,4 +1,4 @@
-
+import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +64,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   String? otpNumberAutoFiled;
 
-
   @override
   void codeUpdated() {
     setState(() {
@@ -85,7 +84,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             sender = event.sender;
             time = event.timeReceived.toString();
             otpNumberAutoFiled = Utils().extractOTP(sms);
-            pinController.text=otpNumberAutoFiled.toString();
+            pinController.text = otpNumberAutoFiled.toString();
           });
         });
       }
@@ -100,8 +99,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       });
     });
   }
-
-
 
   @override
   void dispose() {
@@ -149,172 +146,198 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     print("OTP listen  Called");
   }
 
-
   @override
   Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 30, right: 30, bottom: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: SvgPicture.asset(
-                          "assets/icons/back_arrow_icon.svg",
-                          colorFilter: const ColorFilter.mode(
-                              Colors.black,
-                              BlendMode
-                                  .srcIn), // Replace blackSmall with Colors.black
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        'Verification Code',
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer()
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 125,
-                  ),
-                  userLoginMobile != null
-                      ? Text(
-                          'Please enter the OTP Send to your Number \n+91 ${userLoginMobile}',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        )
-                      : Container(),
-                  const SizedBox(
-                    height: 43,
-                  ),
-                  Center(
-                    child: Pinput(
-                      controller: pinController,
-                      length: 6,
-                      androidSmsAutofillMethod:
-                          AndroidSmsAutofillMethod.smsRetrieverApi,
-                      showCursor: true,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[0-9\]")),
-                      ],
-                      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                      defaultPinTheme: defaultPinTheme,
-                      focusedPinTheme: defaultPinTheme.copyWith(
-                        decoration: defaultPinTheme.decoration!.copyWith(
-                          border: Border.all(color: kPrimaryColor),
-                        ),
-                      ),
-                      onCompleted: (pin) => debugPrint(pin),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: isReSendDisable
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Resend Code in ',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 15,
-                                  color: kPrimaryColor,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              buildCountdown(),
-                            ],
-                          )
-                        : Container(),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                      padding: EdgeInsets.all(10),
-                      child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                              text: 'If you didn’t received a code!',
-                              style: GoogleFonts.urbanist(
-                                fontSize: 14,
-                                color: blackSmall,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              children: <TextSpan>[
-                                isReSendDisable
-                                    ? TextSpan(
-                                        text: '  Resend',
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 15,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {})
-                                    : TextSpan(
-                                        text: '  Resend',
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 15,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {
-                                            listenOtp();
-                                            pinController.clear();
-                                            await reSendOpt(
-                                                context,
-                                                productProvider,
-                                                userLoginMobile!,
-                                                _controller);
-                                            isReSendDisable = true;
-                                          })
-                              ]),
-                        ),
-                      )),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CommonElevatedButton(
-                    textSize: 16,
-                    onPressed: () async {
-                      await callVerifyOtpApi(context, pinController.text,
-                          productProvider, userLoginMobile!, pinController);
-                    },
-                    text: "Verify Code",
-                    upperCase: true,
-                  )
-                ],
-              ),
+        // Use a short delay to ensure the pop operation completes
+        Future.delayed(Duration(milliseconds: 100), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const LoginScreen();
+              },
             ),
           );
-        }),
+        });
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 30, top: 30, right: 30, bottom: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // Use a short delay to ensure the pop operation completes
+                            Future.delayed(Duration(milliseconds: 100), () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return const LoginScreen();
+                                  },
+                                ),
+                              );
+                            });
+                          },
+                          child: SvgPicture.asset(
+                            "assets/icons/back_arrow_icon.svg",
+                            colorFilter: const ColorFilter.mode(
+                                Colors.black,
+                                BlendMode
+                                    .srcIn), // Replace blackSmall with Colors.black
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Verification Code',
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Spacer()
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 125,
+                    ),
+                    userLoginMobile != null
+                        ? Text(
+                            'Please enter the OTP Send to your Number \n+91 ${userLoginMobile}',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )
+                        : Container(),
+                    const SizedBox(
+                      height: 43,
+                    ),
+                    Center(
+                      child: Pinput(
+                        controller: pinController,
+                        length: 6,
+                        androidSmsAutofillMethod:
+                            AndroidSmsAutofillMethod.smsRetrieverApi,
+                        showCursor: true,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9\]")),
+                        ],
+                        pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                        defaultPinTheme: defaultPinTheme,
+                        focusedPinTheme: defaultPinTheme.copyWith(
+                          decoration: defaultPinTheme.decoration!.copyWith(
+                            border: Border.all(color: kPrimaryColor),
+                          ),
+                        ),
+                        onCompleted: (pin) => debugPrint(pin),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: isReSendDisable
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Resend Code in ',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                buildCountdown(),
+                              ],
+                            )
+                          : Container(),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        padding: EdgeInsets.all(10),
+                        child: Center(
+                          child: RichText(
+                            text: TextSpan(
+                                text: 'If you didn’t received a code!',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: blackSmall,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                children: <TextSpan>[
+                                  isReSendDisable
+                                      ? TextSpan(
+                                          text: '  Resend',
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {})
+                                      : TextSpan(
+                                          text: '  Resend',
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 15,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              listenOtp();
+                                              pinController.clear();
+                                              await reSendOpt(
+                                                  context,
+                                                  productProvider,
+                                                  userLoginMobile!,
+                                                  _controller);
+                                              isReSendDisable = true;
+                                            })
+                                ]),
+                          ),
+                        )),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CommonElevatedButton(
+                      textSize: 16,
+                      onPressed: () async {
+                        await callVerifyOtpApi(context, pinController.text,
+                            productProvider, userLoginMobile!, pinController);
+                      },
+                      text: "Verify Code",
+                      upperCase: true,
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -371,91 +394,101 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       DataProvider productProvider,
       String userLoginMobile,
       String userId) async {
-
-      productProvider.disposeAllProviderData();
-      Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false).GetLeadByMobileNo(userId, userLoginMobile);
-      Navigator.of(context, rootNavigator: true).pop();
-      if (productProvider.getLeadMobileNoData != null) {
-        productProvider.getLeadMobileNoData!.when(
-          success: (data) async {
-            if (!data.status!) {
-              Utils.showToast(data.message!, context);
-            } else {
-              final prefsUtil = await SharedPref.getInstance();
-              await prefsUtil.saveInt(LEADE_ID, data.leadId!);
-              fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
-            }
-          },
-          failure: (exception) {
-            Utils.showToast("Something went wrong", context);
-          },
-        );
-      }
-
+    productProvider.disposeAllProviderData();
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .GetLeadByMobileNo(userId, userLoginMobile);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getLeadMobileNoData != null) {
+      productProvider.getLeadMobileNoData!.when(
+        success: (data) async {
+          if (!data.status!) {
+            Utils.showToast(data.message!, context);
+          } else {
+            final prefsUtil = await SharedPref.getInstance();
+            await prefsUtil.saveInt(LEADE_ID, data.leadId!);
+            fetchData(context, prefsUtil.getString(LOGIN_MOBILE_NUMBER)!);
+          }
+        },
+        failure: (exception) {
+          Utils.showToast("Something went wrong", context);
+        },
+      );
+    }
   }
 
-  Future<void> getLoggedInUserData(BuildContext context, DataProvider productProvider) async {
+  Future<void> getLoggedInUserData(
+      BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
-    if(prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null && prefsUtil.getString(USER_ID) != null) {
+    if (prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null &&
+        prefsUtil.getString(USER_ID) != null) {
       var userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
-      var  userId = prefsUtil.getString(USER_ID);
+      var userId = prefsUtil.getString(USER_ID);
       try {
-        await Provider.of<DataProvider>(context, listen: false).getUserData(userId!, userLoginMobile!);
-        final productProvider = Provider.of<DataProvider>(context, listen: false);
-        if(productProvider.getUserProfileResponse != null) {
+        await Provider.of<DataProvider>(context, listen: false)
+            .getUserData(userId!, userLoginMobile!);
+        final productProvider =
+            Provider.of<DataProvider>(context, listen: false);
+        if (productProvider.getUserProfileResponse != null) {
           productProvider.getUserProfileResponse!.when(
             success: (data) async {
-              if(data.status!) {
+              if (data.status!) {
                 final prefsUtil = await SharedPref.getInstance();
                 prefsUtil.saveString(USER_ID, data.userId!);
                 prefsUtil.saveString(TOKEN, data.userToken!);
                 prefsUtil.saveInt(COMPANY_ID, data.companyId!);
                 prefsUtil.saveInt(PRODUCT_ID, data.productId!);
                 prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-                if( data.companyCode!=null) {
+                if (data.companyCode != null) {
                   prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
                 }
-                if( data.role!=null) {
+                if (data.role != null) {
                   prefsUtil.saveString(ROLE, data.role!);
-                } if( data.type!=null) {
+                }
+                if (data.type != null) {
                   prefsUtil.saveString(TYPE, data.type!);
                 }
 
-                if(data.userData!=null){
+                if (data.userData != null) {
                   prefsUtil.saveString(USER_NAME, data.userData!.name!);
-                  prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
-                  prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-                  if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                  prefsUtil.saveString(
+                      USER_PAN_NUMBER, data.userData!.panNumber!);
+                  prefsUtil.saveString(
+                      USER_ADHAR_NO, data.userData!.aadharNumber!);
+                  if (data.userData!.mobile != null)
+                    prefsUtil.saveString(
+                        USER_MOBILE_NO, data.userData!.mobile!);
                   if (data.userData?.address != null) {
                     prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
                   }
-                  if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                  if (data.userData!.workingLocation != null)
+                    prefsUtil.saveString(
+                        USER_WORKING_LOCTION, data.userData!.workingLocation!);
                   if (data.userData?.selfie != null) {
                     prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                   }
                   if (data.userData?.docSignedUrl != null) {
                     prefsUtil.saveString(
-                        USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
-                    );
+                        USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
                   if (data.userData?.salesAgentCommissions != null) {
-                    prefsUtil.saveCommissions(data.userData!.salesAgentCommissions!);
+                    prefsUtil
+                        .saveCommissions(data.userData!.salesAgentCommissions!);
                   }
-                  if( data.userData!.docSignedUrl!=null) {
+                  if (data.userData!.docSignedUrl != null) {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
-
                 }
 
                 prefsUtil.saveBool(IS_LOGGED_IN, true);
                 if (data.isActivated!) {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) =>  BottomNav()),
+                    MaterialPageRoute(builder: (context) => BottomNav()),
                   );
                 } else {
-                  GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+                  GetLeadByMobileNo(
+                      context, productProvider, userLoginMobile, userId);
                 }
               } else {
                 Utils.showBottomToast(data.message!);
@@ -465,12 +498,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             },
             failure: (exception) {
               if (exception is ApiException) {
-                if(exception.statusCode==401){
-                  Utils.showToast(exception.errorMessage,context);
+                if (exception.statusCode == 401) {
+                  Utils.showToast(exception.errorMessage, context);
                   productProvider.disposeAllProviderData();
                   ApiService().handle401(context);
-                }else{
-                  Utils.showToast("Something went Wrong",context);
+                } else {
+                  Utils.showToast("Something went Wrong", context);
                 }
               }
             },
@@ -524,7 +557,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  Future<void> reSendOpt(BuildContext context, DataProvider productProvider, String userLoginMobile, CountdownController controller) async {
+  Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
+      String userLoginMobile, CountdownController controller) async {
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .genrateOtp(context, userLoginMobile);

@@ -312,22 +312,20 @@ class _SplashScreenState extends State<SplashScreen> {
         print("Create_lead_url Url $TermsAndCondition");
       } else {
         //QA
-        BaseUrl = BASE_URL_QA;
+        /*BaseUrl = BASE_URL_QA;
         createLeadUrl = CREATE_LEAD_URL_QA;
-        TermsAndCondition = TERMS_AND_CONDITON;
+        TermsAndCondition = TERMS_AND_CONDITON;*/
 
         //UAT
-        /*BaseUrl = BASE_URL_UAT;
+        BaseUrl = BASE_URL_UAT;
         createLeadUrl = CREATE_LEAD_URL_UAT;
-        TermsAndCondition = TERMS_AND_CONDITON;*/
+        TermsAndCondition = TERMS_AND_CONDITON;
 
         print("Base Url " + "Bhagwan");
         print("Create_lead_url Url $createLeadUrl");
         print("Create_lead_url Url $TermsAndCondition");
       }
-      print("app_version ${remoteConfig.getString('app_version')}");
       var version = await getBuildVersion();
-      print("getBuildVersion ${version}");
       await prefsUtil.saveString(BASE_URL, BaseUrl);
       await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
       await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);

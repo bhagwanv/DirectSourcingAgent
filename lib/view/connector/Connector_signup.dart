@@ -603,7 +603,7 @@ class ConnectorSignup extends State<Connector_signup> {
       isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
-       callSendOptEmail(context, _emailIDController.text);
+      callSendOptEmail(context, _emailIDController.text);
     }
   }
 
@@ -617,8 +617,8 @@ class ConnectorSignup extends State<Connector_signup> {
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
-                emailID: emailID,
-              )));
+                    emailID: emailID,
+                  )));
 
       if (result != null &&
           result.containsKey('isValid') &&
