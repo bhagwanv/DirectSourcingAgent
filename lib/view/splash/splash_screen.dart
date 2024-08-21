@@ -188,6 +188,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
+                  if (data.dsaLeadCode != null) {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, data.dsaLeadCode!);
+                  }
                 }
 
                 prefsUtil.saveBool(IS_LOGGED_IN, true);
@@ -317,7 +321,7 @@ class _SplashScreenState extends State<SplashScreen> {
         TermsAndCondition = TERMS_AND_CONDITON;
 
         //UAT
-       /* BaseUrl = BASE_URL_UAT;
+        /*BaseUrl = BASE_URL_UAT;
         createLeadUrl = CREATE_LEAD_URL_UAT;
         TermsAndCondition = TERMS_AND_CONDITON;*/
 

@@ -479,6 +479,10 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
+                  if (data.dsaLeadCode != null) {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, data.dsaLeadCode!);
+                  }
                 }
 
                 prefsUtil.saveBool(IS_LOGGED_IN, true);

@@ -68,4 +68,5 @@ const String USER_SELFI = "selfie";
 const String USER_PAY_OUT = "payout";
 const String USER_DOC_SiGN_URL = "docSignedUrl";
 const String USER_ACTIVE = "user_active";
+const String DSA_LEAD_CODE = "dsaLeadCode";
 

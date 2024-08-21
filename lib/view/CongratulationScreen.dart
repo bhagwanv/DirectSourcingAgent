@@ -225,6 +225,10 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
+                  if (data.dsaLeadCode != null) {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, data.dsaLeadCode!);
+                  }
 
                 }
 

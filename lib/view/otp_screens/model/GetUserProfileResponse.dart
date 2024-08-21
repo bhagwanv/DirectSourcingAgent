@@ -11,6 +11,7 @@ class GetUserProfileResponse {
   String? role;
   String? type;
   UserData? userData;
+  String? dsaLeadCode;
 
   GetUserProfileResponse(
       {this.status,
@@ -24,7 +25,8 @@ class GetUserProfileResponse {
         this.productId,
         this.role,
         this.type,
-        this.userData});
+        this.userData,
+      this.dsaLeadCode});
 
   GetUserProfileResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -41,6 +43,7 @@ class GetUserProfileResponse {
     userData = json['userData'] != null
         ? new UserData.fromJson(json['userData'])
         : null;
+    dsaLeadCode = json['dsaLeadCode'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,6 +62,7 @@ class GetUserProfileResponse {
     if (this.userData != null) {
       data['userData'] = this.userData!.toJson();
     }
+    data['dsaLeadCode'] = this.dsaLeadCode;
     return data;
   }
 }

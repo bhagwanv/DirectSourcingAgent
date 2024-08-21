@@ -51,6 +51,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   String? role;
   String? type;
   String? user_name;
+  String? user_dsa_lead_code = "";
   String? user_panNumber;
   String? user_aadharNumber;
   String? user_mobile;
@@ -85,55 +86,6 @@ class _UserProfileScreenState extends State<UserProfileClass> {
 
   @override
   Widget build(BuildContext context) {
-
-    /*final List<Map<String, dynamic>> data = [
-      {
-        'title': 'Business Loan',
-        'rows': [
-          {
-            'Slab': '₹ 30,284',
-            'MinDisAmt': '₹ 1,49,661',
-            'MaxDisAmt': '₹ 49,69,716',
-            'Payout': '0.61%'
-          },
-          {
-            'Slab': '₹ 30,284',
-            'MinDisAmt': '₹ 1,49,661',
-            'MaxDisAmt': '₹ 49,69,716',
-            'Payout': '0.61%'
-          },
-          {
-            'Slab': '₹ 30,284',
-            'MinDisAmt': '₹ 1,49,661',
-            'MaxDisAmt': '₹ 49,69,716',
-            'Payout': '0.61%'
-          },
-        ],
-      },
-      {
-        'title': 'Credit Card',
-        'rows': [
-          {
-            'Slab': '₹ 30,284',
-            'MinDisAmt': '₹ 1,49,661',
-            'MaxDisAmt': '₹ 49,69,716',
-            'Payout': '0.61%'
-          },
-          {
-            'Slab': '₹ 30,284',
-            'MinDisAmt': '₹ 1,49,661',
-            'MaxDisAmt': '₹ 49,69,716',
-            'Payout': '0.61%'
-          },
-          {
-            'Slab': '₹ 30,284',
-            'MinDisAmt': '₹ 1,49,661',
-            'MaxDisAmt': '₹ 49,69,716',
-            'Payout': '0.61%'
-          },
-        ],
-      },
-    ];*/
 
     return SafeArea(
       top: true,
@@ -250,6 +202,17 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                                 ),
                               ),
                             ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              user_dsa_lead_code!,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: gryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -401,6 +364,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     role = prefsUtil.getString(ROLE);
     type = prefsUtil.getString(TYPE);
     user_name = prefsUtil.getString(USER_NAME);
+    user_dsa_lead_code = prefsUtil.getString(DSA_LEAD_CODE);
     user_panNumber = prefsUtil.getString(USER_PAN_NUMBER);
     user_aadharNumber = prefsUtil.getString(USER_ADHAR_NO);
     user_mobile = prefsUtil.getString(USER_MOBILE_NO);
