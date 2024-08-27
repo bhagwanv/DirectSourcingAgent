@@ -575,7 +575,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 },
               );
             }
-
             return profileTypeDSA!.isNotEmpty
                 ? profileTypeDSA == "DSA"
                     ? Dsa(dataProvider)
@@ -614,13 +613,11 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       isValidEmail = false;
       Utils.showToast(data.message!, context);
     } else {
-      print("fsfsdfsd222222");
       callSendOptEmail(context, emailID);
     }
   }
 
   void callSendOptEmail(BuildContext context, String emailID) async {
-    updateData = true;
     SendOtpOnEmailResponce data;
     data = await ApiService().sendOtpOnEmail(emailID);
     Navigator.of(context, rootNavigator: true).pop();
@@ -1030,6 +1027,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             if (data.gstNumber != null) {
               _gstController.text = data.gstNumber!;
               gstNumber = data.gstNumber!;
+              gstUpdate = false;
+              isValidGST = true;
+              isGstFilled = true;
             }
             if (data.firmType != null) {
               selectedFirmTypeValue = data.firmType!;

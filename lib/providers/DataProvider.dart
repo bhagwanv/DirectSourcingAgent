@@ -835,6 +835,9 @@ class DataProvider extends ChangeNotifier {
     _getConnectorInfoData = null;
     _getCreatDSAUserData = null;
     _getLeadCreatePermission=null;
+    _getDSAPersonalInfoData = null;
+    _getDsaPersonalDetailData = null;
+
     /*_InProgressScreen = null;*/
     notifyListeners();
   }
@@ -860,11 +863,6 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> disposegetDSAPersonalInfoData() async {
-    _getDSAPersonalInfoData=null;
-    notifyListeners();
-  }
-
-  Future<void> disposegetDSAPersonalInfo() async {
     _getDSAPersonalInfoData=null;
     notifyListeners();
   }

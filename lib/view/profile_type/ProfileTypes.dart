@@ -348,7 +348,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
     Utils.onLoading(context, "");
     await productProvider.getChooseUserType(model);
     Navigator.of(context, rootNavigator: true).pop();
-    productProvider.disposegetDSAPersonalInfo();
+    productProvider.disposegetDSAPersonalInfoData();
     if (productProvider.getChooseUserTypeData != null) {
       productProvider.getChooseUserTypeData!.when(
         success: (data) {
