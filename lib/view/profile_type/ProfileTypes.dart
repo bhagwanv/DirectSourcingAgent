@@ -7,8 +7,6 @@ import 'package:direct_sourcing_agent/shared_preferences/shared_pref.dart';
 import 'package:direct_sourcing_agent/utils/customer_sequence_logic.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/utils/utils_class.dart';
-import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
-import 'package:direct_sourcing_agent/view/dsa_company/direct_selling_agent.dart';
 import 'package:direct_sourcing_agent/view/splash/model/GetLeadResponseModel.dart';
 import 'package:direct_sourcing_agent/view/splash/model/LeadCurrentRequestModel.dart';
 import 'package:direct_sourcing_agent/view/splash/model/LeadCurrentResponseModel.dart';
@@ -20,7 +18,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
-import '../../utils/custom_radio_button.dart';
 import '../aadhaar_screen/components/CheckboxTerm.dart';
 import 'model/ChooseUserTypeRequestModel.dart';
 
@@ -72,9 +69,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
   @override
   void initState() {
     super.initState();
-    /*if (widget.dsaType == "DSAPersonalInfo") {
-      dSAPersonalInfoApi(context);
-    }*/
+   // dSAPersonalInfoApi(context);
   }
 
   @override
@@ -199,14 +194,14 @@ class _ProfileTypesState extends State<ProfileTypes> {
                             _isNavigated = true;
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (data.dsaType == "Connector") {
-                                Navigator.of(context).pushReplacement(
+                                /*Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => Connector_signup(
                                       activityId: widget.activityId,
                                       subActivityId: widget.subActivityId,
                                     ),
                                   ),
-                                );
+                                );*/
                               } else {
                                /* Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(

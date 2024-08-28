@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
-import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -24,7 +23,6 @@ import '../../utils/constant.dart';
 import '../../utils/custom_radio_button.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../../utils/utils_class.dart';
-import '../aadhaar_screen/components/CheckboxTerm.dart';
 import '../connector/model/ConnectorInfoReqModel.dart';
 import '../connector/model/ConnectorInfoResponce.dart';
 import '../personal_info/model/CityResponce.dart';
@@ -810,7 +808,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-     Utils.onLoading(context, "");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -869,8 +867,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       Utils.showToast("Please verify Email Id", context);
     } else if (_presentEmpolymentController.text.trim().isEmpty) {
       Utils.showToast("Please Enter present Employment", context);
-    } else if (_LanguagesController.text.trim().isEmpty) {
-      Utils.showToast("Please Enter Languages", context);
+    } else if (selectedLanguageList.isEmpty) {
+      Utils.showToast("Please select known Languages", context);
     } else if (workingWithParty.isEmpty) {
       Utils.showToast("Please Select Party", context);
     } else if (_refranceNameController.text.trim().isEmpty) {
@@ -900,7 +898,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           alternatePhoneNo: _alternetMobileNumberController.text.toString(),
           emailId: _emailIDController.text.toString(),
           presentEmployment: _presentEmpolymentController.text.toString(),
-          languagesKnown: _LanguagesController.text.toString(),
+          languagesKnown: selectedLanguageList.join(', '),
           workingWithOther: workingWithParty,
           referenceName: _refranceNameController.text.toString(),
           referneceContact: _refranceContectController.text.toString(),
@@ -2056,7 +2054,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 } else if (_qualificationCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Qualification", context);
                 } else if (selectedLanguageList.isEmpty) {
-                  Utils.showToast("Please select Languages Known", context);
+                  Utils.showToast("Please select known Language", context);
                 } else if (_locationCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Location", context);
                 } else if (isPresentlyworking.isEmpty) {
@@ -2123,7 +2121,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           success: (data) {
             connectorInfoResponceModel = data;
 
-            if (updateData) {
+            if (connectorUpdateData) {
               _firstNameController.text = connectorInfoResponceModel!.fullName!;
               _fatherNameController.text =
                   connectorInfoResponceModel!.fatherName!;
@@ -2143,8 +2141,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               }
 
               if (connectorInfoResponceModel!.languagesKnown != null) {
-                _LanguagesController.text =
-                    connectorInfoResponceModel!.languagesKnown!;
+                selectedLanguageList = connectorInfoResponceModel!.languagesKnown!.split(', ');
+
               }
 
               if (connectorInfoResponceModel!.workingLocation != null) {
@@ -2247,7 +2245,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 decoration: BoxDecoration(
                   color: textFiledBackgroundColour,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: kPrimaryLightColor),
+                  border: Border.all(color: gryColor),
                 ),
                 child: Padding(
                   padding:
@@ -2427,7 +2425,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ],
             ),
             SizedBox(height: 20),
-            CommonTextField(
+            /*CommonTextField(
               controller: _LanguagesController,
               enabled: true,
               hintText: "Languages Known",
@@ -2436,6 +2434,40 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               inputFormatter: [
                 FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z, ]'))),
               ],
+            ),*/
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(11),
+                color: kPrimaryColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: CustomDropdown<String>.multiSelectSearchRequest(
+                  futureRequest: _getLanguageSearchRequestData,
+                  items: languageList,
+                  initialItems: selectedLanguageList,
+                  decoration: CustomDropdownDecoration(
+                    headerStyle: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    hintStyle: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    closedBorderRadius: BorderRadius.circular(10),
+                  ),
+                  hintText: 'Select Language',
+                  // Attach the ScrollController
+                  onListChanged: (value) {
+                    print('changing value to: $value');
+                    selectedLanguageList = value;
+                  },
+                ),
+              ),
             ),
             SizedBox(height: 20),
             CommonTextField(
