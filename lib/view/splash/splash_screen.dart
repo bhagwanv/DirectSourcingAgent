@@ -311,9 +311,6 @@ class _SplashScreenState extends State<SplashScreen> {
         BaseUrl = remoteConfig.getString('Base_url');
         createLeadUrl = remoteConfig.getString('Create_lead_url');
         TermsAndCondition = remoteConfig.getString('TermsAndCondition');
-        print("Base Url $BaseUrl");
-        print("Create_lead_url Url $createLeadUrl");
-        print("Create_lead_url Url $TermsAndCondition");
       } else {
         //QA
         BaseUrl = BASE_URL_QA;
@@ -325,7 +322,7 @@ class _SplashScreenState extends State<SplashScreen> {
         createLeadUrl = CREATE_LEAD_URL_UAT;
         TermsAndCondition = TERMS_AND_CONDITON;*/
 
-        print("Base Url " + "Bhagwan");
+        print("Base Url :: $BaseUrl");
         print("Create_lead_url Url $createLeadUrl");
         print("Create_lead_url Url $TermsAndCondition");
       }

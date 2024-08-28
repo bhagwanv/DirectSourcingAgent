@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
 import 'package:direct_sourcing_agent/view/connector/Connector_signup.dart';
@@ -492,6 +493,35 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     }
   }
 
+  List<String> languageList = [
+    'Assamese',
+    'Bengali',
+    'Bodo',
+    'Dogri',
+    'English',
+    'Gujarati',
+    'Hindi',
+    'Kannada',
+    'Kashmiri',
+    'Maithili',
+    'Malayalam',
+    'Marathi',
+    'Meitei',
+    'Nepali',
+    'Odia',
+    'Punjabi',
+    'Sanskrit',
+    'Santali',
+    'Sindhi',
+    'Tamil',
+    'Telugu',
+    'Urdu',
+  ];
+  List<String> selectedLanguageList = [];
+
+  final FocusNode _focusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+
   //connector
   var connectorUpdateData = true;
   final TextEditingController _firstNameController = TextEditingController();
@@ -528,8 +558,25 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        // Scroll to the top when the keyboard is opened
+        _scrollController.animateTo(
+          0.0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
     dSAPersonalInfoApi(context);
   }
 
@@ -745,7 +792,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       presentOccupation: _presentOccupationCl.text,
       noOfYearsInCurrentEmployment: _currentEmploymentCl.text,
       qualification: _qualificationCl.text,
-      languagesKnown: _languagesKnownCl.text,
+      languagesKnown: selectedLanguageList.join(', '),
       workingWithOther: isPresentlyworking,
       referneceName: _referenceNames.text,
       referneceContact: _referenceContactNoCl.text,
@@ -763,7 +810,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
 
     print("saveData${postLeadDsaPersonalDetailReqModel.toJson().toString()}");
 
-    Utils.onLoading(context, "");
+     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadDSAPersonalDetail(postLeadDsaPersonalDetailReqModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -959,6 +1006,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     ConnectorPersonalDetailAPICAll = false;
   }
 
+  // This should be a call to the api or service or similar
+  Future<List<String>> _getLanguageSearchRequestData(String query) async {
+    return await Future.delayed(const Duration(seconds: 1), () {
+      return languageList.where((e) {
+        return e.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
   Widget Dsa(DataProvider dataProvider) {
     if (DSAPersonalDetailAPICAll) {
       Navigator.of(context, rootNavigator: true).pop();
@@ -1013,7 +1069,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               _qualificationCl.text = data.qualification!;
             }
             if (data.languagesKnown != null) {
-              _languagesKnownCl.text = data.languagesKnown!;
+              selectedLanguageList = data.languagesKnown!.split(', ');
             }
             if (data.workingLocation != null) {
               _locationCl.text = data.workingLocation!;
@@ -1325,13 +1381,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                           callEmailIDExist(context, _emailIDCl.text);
                         }
                       },
-                      child: Text(
-                        'Click here to Verify',
-                        style: TextStyle(
+                      child: Text('Click here to Verify',
+                          style: GoogleFonts.urbanist(
                             fontSize: 16,
+                            color: Colors.blue,
                             decoration: TextDecoration.underline,
-                            color: Colors.blue),
-                      ),
+                            fontWeight: FontWeight.w400,
+                          )),
                     )),
             SizedBox(height: 16),
             CommonTextField(
@@ -1370,7 +1426,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             const SizedBox(
               height: 16.0,
             ),
-            CommonTextField(
+            /*CommonTextField(
               controller: _languagesKnownCl,
               enabled: true,
               hintText: "Languages Known",
@@ -1378,6 +1434,40 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               inputFormatter: [
                 FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z, ]'))),
               ],
+            ),*/
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(11),
+                color: kPrimaryColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: CustomDropdown<String>.multiSelectSearchRequest(
+                  futureRequest: _getLanguageSearchRequestData,
+                  items: languageList,
+                  initialItems: selectedLanguageList,
+                  decoration: CustomDropdownDecoration(
+                    headerStyle: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    hintStyle: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    closedBorderRadius: BorderRadius.circular(10),
+                  ),
+                  hintText: 'Select Language',
+                  // Attach the ScrollController
+                  onListChanged: (value) {
+                    print('changing value to: $value');
+                    selectedLanguageList = value;
+                  },
+                ),
+              ),
             ),
             const SizedBox(
               height: 16.0,
@@ -1965,8 +2055,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       context);
                 } else if (_qualificationCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Qualification", context);
-                } else if (_languagesKnownCl.text.trim().isEmpty) {
-                  Utils.showToast("Please enter Languages Known", context);
+                } else if (selectedLanguageList.isEmpty) {
+                  Utils.showToast("Please select Languages Known", context);
                 } else if (_locationCl.text.trim().isEmpty) {
                   Utils.showToast("Please enter Location", context);
                 } else if (isPresentlyworking.isEmpty) {
@@ -2288,10 +2378,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                       children: [
                         Text(
                           'VERIFIED',
-                          style: TextStyle(
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
-                              color: Colors.blue),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         SizedBox(
                           width: 8,
@@ -2314,14 +2406,15 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                           callEmailIDExist(context, _emailIDController.text);
                         }
                       },
-                      child: Text(
-                        'Click here to Verify',
-                        style: TextStyle(
+                      child: Text('Click here to Verify',
+                          style: GoogleFonts.urbanist(
                             fontSize: 16,
+                            color: Colors.blue,
                             decoration: TextDecoration.underline,
-                            color: Colors.blue),
-                      ),
-                    )),
+                            fontWeight: FontWeight.w400,
+                          )),
+                    ),
+                  ),
             SizedBox(height: 25),
             CommonTextField(
               controller: _presentEmpolymentController,
