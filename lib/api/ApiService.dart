@@ -40,7 +40,9 @@ import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/DSAGSTExistResModel.dart';
+import '../view/dsa_company/model/EducationMasterListResponse.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
+import '../view/dsa_company/model/LangauageMasterListResponse.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -1745,6 +1747,76 @@ class ApiService {
           final dynamic jsonData = json.decode(response.body);
           final DsagstExistResModel responseModel =
           DsagstExistResModel.fromJson(jsonData);
+          return responseModel;
+        } else {
+          throw Exception('Failed to load products');
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        throw Exception('No internet connection');
+      }
+    } on Exception catch (e) {
+      throw Failure(e);
+    }
+  }
+
+  Future<EducationMasterListResponse> getEducationMasterList() async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${base_url! + apiUrls.getEducationMasterList}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        if (response.statusCode == 200) {
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final EducationMasterListResponse responseModel =
+          EducationMasterListResponse.fromJson(jsonData);
+          return responseModel;
+        } else {
+          throw Exception('Failed to load products');
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        throw Exception('No internet connection');
+      }
+    } on Exception catch (e) {
+      throw Failure(e);
+    }
+  }
+
+  Future<LangauageMasterListResponse> getLangauageMasterList() async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${base_url! + apiUrls.getLangauageMasterList}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        if (response.statusCode == 200) {
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final LangauageMasterListResponse responseModel =
+          LangauageMasterListResponse.fromJson(jsonData);
           return responseModel;
         } else {
           throw Exception('Failed to load products');

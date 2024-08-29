@@ -29,6 +29,7 @@ class RejectedScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+        backgroundColor: whiteColor,
         body: SafeArea(
           top: true,
           bottom: true,

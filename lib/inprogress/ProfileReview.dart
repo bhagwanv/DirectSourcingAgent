@@ -59,7 +59,8 @@ class _ProfileReviewState extends State<ProfileReview> {
         }
       },
       child: Scaffold(
-        body: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        body:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
           if (productProvider.InProgressScreenData == null && isLoading) {
             return Container();
           } else {
@@ -81,11 +82,11 @@ class _ProfileReviewState extends State<ProfileReview> {
                 },
                 failure: (exception) {
                   if (exception is ApiException) {
-                    if(exception.statusCode==401){
+                    if (exception.statusCode == 401) {
                       productProvider.disposeAllProviderData();
                       ApiService().handle401(context);
-                    }else{
-                      Utils.showToast(exception.errorMessage,context);
+                    } else {
+                      Utils.showToast(exception.errorMessage, context);
                     }
                   }
                 },
@@ -117,7 +118,7 @@ class _ProfileReviewState extends State<ProfileReview> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                     Padding(
+                    Padding(
                       padding: EdgeInsets.only(left: 5, right: 5),
                       child: Column(
                         children: [
@@ -167,18 +168,22 @@ class _ProfileReviewState extends State<ProfileReview> {
   Future<void> callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).leadDataOnInProgressScreen(context, leadId!);
+    Provider.of<DataProvider>(context, listen: false)
+        .leadDataOnInProgressScreen(context, leadId!);
   }
 
   Future<void> getLoggedInUserData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    if(prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null && prefsUtil.getString(USER_ID) != null) {
+    if (prefsUtil.getString(LOGIN_MOBILE_NUMBER) != null &&
+        prefsUtil.getString(USER_ID) != null) {
       var userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
-      var  userId = prefsUtil.getString(USER_ID);
+      var userId = prefsUtil.getString(USER_ID);
       try {
-        await Provider.of<DataProvider>(context, listen: false).getUserData(userId!, userLoginMobile!);
-        final productProvider = Provider.of<DataProvider>(context, listen: false);
-        if(productProvider.getUserProfileResponse != null) {
+        await Provider.of<DataProvider>(context, listen: false)
+            .getUserData(userId!, userLoginMobile!);
+        final productProvider =
+            Provider.of<DataProvider>(context, listen: false);
+        if (productProvider.getUserProfileResponse != null) {
           productProvider.getUserProfileResponse!.when(
             success: (data) async {
               final prefsUtil = await SharedPref.getInstance();
@@ -187,53 +192,64 @@ class _ProfileReviewState extends State<ProfileReview> {
               prefsUtil.saveInt(COMPANY_ID, data.companyId!);
               prefsUtil.saveInt(PRODUCT_ID, data.productId!);
               prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
-              if( data.companyCode!=null) {
+              if (data.companyCode != null) {
                 prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
               }
-              if( data.role!=null) {
+              if (data.role != null) {
                 prefsUtil.saveString(ROLE, data.role!);
-              } if( data.type!=null) {
+              }
+              if (data.type != null) {
                 prefsUtil.saveString(TYPE, data.type!);
               }
 
-              if(data.userData!=null){
+              if (data.userData != null) {
                 prefsUtil.saveString(USER_NAME, data.userData!.name!);
-                prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
-                prefsUtil.saveString(USER_ADHAR_NO, data.userData!.aadharNumber!);
-                if(data.userData!.mobile != null) prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
+                prefsUtil.saveString(
+                    USER_PAN_NUMBER, data.userData!.panNumber!);
+                prefsUtil.saveString(
+                    USER_ADHAR_NO, data.userData!.aadharNumber!);
+                if (data.userData!.mobile != null)
+                  prefsUtil.saveString(USER_MOBILE_NO, data.userData!.mobile!);
                 if (data.userData?.address != null) {
                   prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
                 }
-                if(data.userData!.workingLocation != null) prefsUtil.saveString(USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                if (data.userData!.workingLocation != null)
+                  prefsUtil.saveString(
+                      USER_WORKING_LOCTION, data.userData!.workingLocation!);
                 if (data.userData?.selfie != null) {
                   prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                 }
-                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!);
+                if (data.userData?.salesAgentCommissions != null) {
+                  prefsUtil
+                      .saveCommissions(data.userData!.salesAgentCommissions!);
+                }
                 if (data.userData?.docSignedUrl != null) {
                   prefsUtil.saveString(
-                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!
-                  );
+                      USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                 }
-                prefsUtil.saveDouble(USER_PAY_OUT, data.userData!.payout!.toDouble());
-                if( data.userData!.docSignedUrl!=null) {
+                if (data.userData!.docSignedUrl != null) {
                   prefsUtil.saveString(
                       USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
+                }
+                if (data.dsaLeadCode != null) {
+                  prefsUtil.saveString(DSA_LEAD_CODE, data.dsaLeadCode!);
                 }
               }
 
               prefsUtil.saveBool(IS_LOGGED_IN, true);
               if (data.isActivated!) {
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) =>  BottomNav()),
+                  MaterialPageRoute(builder: (context) => BottomNav()),
                 );
               } else {
-                GetLeadByMobileNo(context, productProvider, userLoginMobile, userId);
+                GetLeadByMobileNo(
+                    context, productProvider, userLoginMobile, userId);
               }
             },
             failure: (exception) {
               if (exception is ApiException) {
-                if(exception.statusCode==401){
-                  Utils.showToast(exception.errorMessage,context);
+                if (exception.statusCode == 401) {
+                  Utils.showToast(exception.errorMessage, context);
                   productProvider.disposeAllProviderData();
                   ApiService().handle401(context);
                 }
@@ -257,7 +273,6 @@ class _ProfileReviewState extends State<ProfileReview> {
       DataProvider productProvider,
       String userLoginMobile,
       String userId) async {
-
     productProvider.disposeAllProviderData();
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
@@ -279,7 +294,6 @@ class _ProfileReviewState extends State<ProfileReview> {
         },
       );
     }
-
   }
 
   Future<void> fetchData(BuildContext context, String userLoginMobile) async {
@@ -299,8 +313,8 @@ class _ProfileReviewState extends State<ProfileReview> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData = await ApiService()
-          .leadCurrentActivityAsync(leadCurrentRequestModel, context)
-      as LeadCurrentResponseModel?;
+              .leadCurrentActivityAsync(leadCurrentRequestModel, context)
+          as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           userLoginMobile,

@@ -24,6 +24,7 @@ const light_gry = Color(0xFFE0E0E0);
 const dark_gry = Color(0xFF7F7F7F);
 const light_dark_gry = Color(0xFFD9D9D9);
 const dark_blue = Color(0xFF00506D);
+const green_varient = Color(0xFFE8F5FA);
 
 
 
@@ -67,4 +68,5 @@ const String USER_SELFI = "selfie";
 const String USER_PAY_OUT = "payout";
 const String USER_DOC_SiGN_URL = "docSignedUrl";
 const String USER_ACTIVE = "user_active";
+const String DSA_LEAD_CODE = "dsaLeadCode";
 

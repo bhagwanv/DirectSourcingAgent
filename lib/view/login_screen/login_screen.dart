@@ -2,9 +2,11 @@ import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
+import '../../utils/PermissionPage.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';
@@ -185,36 +187,46 @@ class _LoginScreenState extends State<LoginScreen> {
                             Utils.showToast(
                                 "Please check term & condition", context);
                           } else {
+                            PermissionStatus cameraPermissionStatus = await Permission.camera.status;
+                            PermissionStatus microphonePermissionStatus = await Permission.microphone.status;
+                            PermissionStatus smsPermissionStatus = await Permission.sms.status;
                             Utils.hideKeyBored(context);
                             final prefsUtil = await SharedPref.getInstance();
-                            Utils.onLoading(context, "");
-                            await Provider.of<DataProvider>(context,
-                                    listen: false)
-                                .genrateOtp(
-                                    context, _mobileNumberController.text);
-                            if (dataProvider.genrateOptData != null) {
-                              await prefsUtil.saveString(LOGIN_MOBILE_NUMBER,
-                                  _mobileNumberController.text.toString());
-                              Navigator.of(context, rootNavigator: true).pop();
-                              dataProvider.genrateOptData!.when(
-                                success: (data) async {
-                                  if (!data.status!) {
-                                    Utils.showToast(data.message!, context);
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return const OtpScreen();
-                                        },
-                                      ),
-                                    );
-                                  }
-                                },
-                                failure: (exception) {},
+                            await prefsUtil.saveString(LOGIN_MOBILE_NUMBER,
+                                _mobileNumberController.text.toString());
+                            if (cameraPermissionStatus.isGranted && microphonePermissionStatus.isGranted && smsPermissionStatus.isGranted) {
+                              Utils.onLoading(context, "");
+                              await Provider.of<DataProvider>(context,
+                                  listen: false)
+                                  .genrateOtp(
+                                  context, _mobileNumberController.text);
+                              if (dataProvider.genrateOptData != null) {
+                                Navigator.of(context, rootNavigator: true).pop();
+                                dataProvider.genrateOptData!.when(
+                                  success: (data) async {
+                                    if (!data.status!) {
+                                      Utils.showToast(data.message!, context);
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return const OtpScreen();
+                                          },
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  failure: (exception) {},
+                                );
+                              }
+                              dataProvider.disposeAllProviderData();
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const PermissionPage()),
                               );
                             }
-                            dataProvider.disposeAllProviderData();
                           }
                         },
                         text: "Continue",

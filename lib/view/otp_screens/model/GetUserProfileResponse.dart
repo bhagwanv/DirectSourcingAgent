@@ -11,6 +11,7 @@ class GetUserProfileResponse {
   String? role;
   String? type;
   UserData? userData;
+  String? dsaLeadCode;
 
   GetUserProfileResponse(
       {this.status,
@@ -24,7 +25,8 @@ class GetUserProfileResponse {
         this.productId,
         this.role,
         this.type,
-        this.userData});
+        this.userData,
+      this.dsaLeadCode});
 
   GetUserProfileResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -41,6 +43,7 @@ class GetUserProfileResponse {
     userData = json['userData'] != null
         ? new UserData.fromJson(json['userData'])
         : null;
+    dsaLeadCode = json['dsaLeadCode'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,6 +62,7 @@ class GetUserProfileResponse {
     if (this.userData != null) {
       data['userData'] = this.userData!.toJson();
     }
+    data['dsaLeadCode'] = this.dsaLeadCode;
     return data;
   }
 }
@@ -71,10 +75,10 @@ class UserData {
   String? address;
   String? workingLocation;
   String? selfie;
-  dynamic? payout;
   String? docSignedUrl;
   String? startedOn;
   String? expiredOn;
+  List<SalesAgentCommissions>? salesAgentCommissions;
 
   UserData(
       {this.name,
@@ -84,10 +88,10 @@ class UserData {
         this.address,
         this.workingLocation,
         this.selfie,
-        this.payout,
       this.docSignedUrl,
       this.startedOn,
-      this.expiredOn});
+      this.expiredOn,
+        this.salesAgentCommissions});
 
   UserData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -97,10 +101,15 @@ class UserData {
     address = json['address'];
     workingLocation = json['workingLocation'];
     selfie = json['selfie'];
-    payout = json['payout'];
     docSignedUrl = json['docSignedUrl'];
     startedOn = json['startedOn'];
     expiredOn = json['expiredOn'];
+    if (json['salesAgentCommissions'] != null) {
+      salesAgentCommissions = <SalesAgentCommissions>[];
+      json['salesAgentCommissions'].forEach((v) {
+        salesAgentCommissions!.add(new SalesAgentCommissions.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -112,10 +121,36 @@ class UserData {
     data['address'] = this.address;
     data['workingLocation'] = this.workingLocation;
     data['selfie'] = this.selfie;
-    data['payout'] = this.payout;
     data['docSignedUrl'] = this.docSignedUrl;
     data['startedOn'] = this.startedOn;
     data['expiredOn'] = this.expiredOn;
+    if (this.salesAgentCommissions != null) {
+      data['salesAgentCommissions'] =
+          this.salesAgentCommissions!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SalesAgentCommissions {
+  dynamic payoutPercentage;
+  dynamic minAmount;
+  dynamic maxAmount;
+
+  SalesAgentCommissions(
+      {this.payoutPercentage, this.minAmount, this.maxAmount});
+
+  SalesAgentCommissions.fromJson(Map<String, dynamic> json) {
+    payoutPercentage = json['payoutPercentage'];
+    minAmount = json['minAmount'];
+    maxAmount = json['maxAmount'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['payoutPercentage'] = this.payoutPercentage;
+    data['minAmount'] = this.minAmount;
+    data['maxAmount'] = this.maxAmount;
     return data;
   }
 }

@@ -47,6 +47,7 @@ class _LeadScreenState extends State<LeadScreen> {
   var take = 10;
   var startDate = "";
   var endDate = "";
+  var selectedMonthName = "";
   String maxDateTime = '';
   bool loading = false;
   bool isAgentSelected = false;
@@ -201,12 +202,22 @@ class _LeadScreenState extends State<LeadScreen> {
                                         showCustomMonthYearPicker(context,productProvider);
                                       },
 
-                                      child: Container(
-                                        alignment: Alignment.centerRight,
-                                        child: SvgPicture.asset(
-                                          'assets/icons/ic_document_filter.svg',
-                                          semanticsLabel: 'Edit Icon SVG',
-                                        ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            " $selectedMonthName",
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(width: 8.0,),
+                                          SvgPicture.asset(
+                                            'assets/icons/ic_document_filter.svg',
+                                            semanticsLabel: 'Edit Icon SVG',
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -683,6 +694,8 @@ class _LeadScreenState extends State<LeadScreen> {
     startDate =
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(firstDay.toUtc());
     print("Formatted Date: $startDate");
+    String monthName = DateFormat("MMM").format(firstDay.toUtc());
+    selectedMonthName = monthName;
     endDate =
         DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(now.toUtc());
     print("Formatted Date: $endDate");
@@ -757,6 +770,8 @@ class _LeadScreenState extends State<LeadScreen> {
                 startOfMonth.toUtc());
             endDate = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").format(
                 endOfMonth.toUtc());
+            String monthName = DateFormat("MMM").format(startOfMonth.toUtc());
+            selectedMonthName = monthName;
           });
 
            getDSADashboardLead(context);

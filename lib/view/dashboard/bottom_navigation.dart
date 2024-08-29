@@ -5,6 +5,8 @@ import 'package:direct_sourcing_agent/view/dashboard/userprofile/UserProfileClas
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/DataProvider.dart';
@@ -261,23 +263,247 @@ class _BottomNavState extends State<BottomNav> {
   }
 
   void createLeadBottom() async {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+    PermissionStatus cameraPermissionStatus = await Permission.camera.status;
+    PermissionStatus microphonePermissionStatus = await Permission.microphone.status;
+    if (cameraPermissionStatus.isGranted && microphonePermissionStatus.isGranted) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(16.0), // Adjust the padding as needed
+                child: CreateLeadWidgets(),
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ForceFullyAskPermissionDialog(
+            allowDismissal: true,
+            description: "Please grant camera permission to continue. This is needed to capture documents and photos securely within the app.",);
+        },
+      );
+    }
+  }
+}
+
+class ForceFullyAskPermissionDialog extends StatefulWidget {
+  final String description;
+  final bool allowDismissal;
+
+  const ForceFullyAskPermissionDialog({Key? key,
+    required this.description,
+    required this.allowDismissal
+  }) : super(key: key);
+
+  @override
+  State<ForceFullyAskPermissionDialog> createState() => _ForceFullyAskPermissionDialogState();
+}
+
+class _ForceFullyAskPermissionDialogState extends State<ForceFullyAskPermissionDialog> {
+  double screenHeight = 0;
+  double screenWidth = 0;
+
+
+  @override
+  Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.fastLinearToSlowEaseIn,
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: content(context),
+      ),
+    );
+  }
+
+  Widget content(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: screenHeight / 10,
+          width: screenWidth / 1,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20),
+            ),
+            color: kPrimaryColor,
           ),
-          child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(16.0), // Adjust the padding as needed
-              child: CreateLeadWidgets(),
+          child: const Center(
+            child: Icon(
+              Icons.error_outline_outlined,
+              color: Colors.white,
+              size: 40,
             ),
           ),
-        );
-      },
+        ),
+        Container(
+          height: screenHeight / 3,
+          width: screenWidth / 1,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+            ),
+            color: Colors.white,
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Permission Required",
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 22,
+                                    color: blackSmall,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              /*Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  widget.version,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),*/
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12,),
+                        Expanded(
+                          flex: 3,
+                          child: SingleChildScrollView(
+                            child: Text(
+                              widget.description,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 16,
+                                color: blackSmall,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        widget.allowDismissal ? Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 48,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: kPrimaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "CANCEL",
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ) : const SizedBox(),
+                        SizedBox(width: widget.allowDismissal ? 16 : 0,),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              Navigator.pop(context);
+                              await openAppSettings();
+                            },
+                            child: Container(
+                              height: 48,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: kPrimaryColor,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: kPrimaryColor,
+                                    blurRadius: 6,
+                                    offset: Offset(2, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "OK",
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
