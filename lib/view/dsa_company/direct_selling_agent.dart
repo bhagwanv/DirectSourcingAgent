@@ -1324,22 +1324,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               }
             }
 
-            if (dataProvider.getEducationMasterListResponseData != null) {
-              if (dataProvider.getEducationMasterListResponseData!.returnObject !=
-                  null) {
-                _qualificationList =
-                dataProvider.getEducationMasterListResponseData!.returnObject!;
-                print("fsaffsfsfs ${_qualificationCl.text}");
-                if (_qualificationList.isNotEmpty &&
-                    _qualificationCl.text != null &&
-                    _qualificationCl.text.isNotEmpty && updateData) {
-                  initialQualification = _qualificationList.firstWhere(
-                        (element) => element?.name == _qualificationCl.text.toString(),
-                  );
-                }
-              }
-            }
-
             updateData = false;
           }
         },
@@ -1363,6 +1347,22 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         image = dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath!;
         businessProofDocId =
             dataProvider.getpostDSABusineesDoumentSingleFileData!.docId!;
+      }
+    }
+
+    if (dataProvider.getEducationMasterListResponseData != null) {
+      if (dataProvider
+          .getEducationMasterListResponseData!.returnObject !=
+          null) {
+        _qualificationList = dataProvider
+            .getEducationMasterListResponseData!.returnObject!;
+        if (_qualificationList.isNotEmpty &&
+            _qualificationCl.text.trim().isNotEmpty) {
+          initialQualification = _qualificationList.firstWhere(
+                (element) =>
+            element?.name == _qualificationCl.text.toString(),
+          );
+        }
       }
     }
 
