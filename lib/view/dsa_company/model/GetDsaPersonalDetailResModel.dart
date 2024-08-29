@@ -32,6 +32,9 @@ class GetDsaPersonalDetailResModel {
   String? buisnessDocImg;
   String? companyCityId;
   String? companyStateId;
+  int? workingLocationCityId;
+  int? workingLocationStateId;
+  String? workingLocationStateName;
 
   GetDsaPersonalDetailResModel(
       {this.gstStatus,
@@ -66,7 +69,10 @@ class GetDsaPersonalDetailResModel {
         this.companyState,
         this.buisnessDocImg,
         this.companyCityId,
-        this.companyStateId});
+        this.companyStateId,
+        this.workingLocationCityId,
+        this.workingLocationStateId,
+        this.workingLocationStateName,});
 
   GetDsaPersonalDetailResModel.fromJson(Map<String, dynamic> json) {
     gstStatus = json['gstStatus'];
@@ -102,6 +108,9 @@ class GetDsaPersonalDetailResModel {
     buisnessDocImg = json['buisnessDocImg'];
     companyCityId = json['companyCityId'];
     companyStateId = json['companyStateId'];
+    workingLocationCityId = json['workingLocationCityId'];
+    workingLocationStateId = json['workingLocationStateId'];
+    workingLocationStateName = json['workingLocationStateName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -139,6 +148,9 @@ class GetDsaPersonalDetailResModel {
     data['buisnessDocImg'] = this.buisnessDocImg;
     data['companyCityId'] = this.companyCityId;
     data['companyStateId'] = this.companyStateId;
+    data['workingLocationCityId'] = this.workingLocationCityId;
+    data['workingLocationStateId'] = this.workingLocationStateId;
+    data['workingLocationStateName'] = this.workingLocationStateName;
     return data;
   }
 }

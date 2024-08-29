@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
 import 'package:direct_sourcing_agent/utils/loader.dart';
+import 'package:direct_sourcing_agent/view/dsa_company/model/EducationMasterListResponse.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -35,6 +36,7 @@ import '../splash/model/LeadCurrentResponseModel.dart';
 import 'EmailOtpScreen.dart';
 import 'model/CustomerDetailUsingGSTResponseModel.dart';
 import 'model/DSAGSTExistResModel.dart';
+import 'model/EducationMasterListResponse.dart';
 import 'model/GetDsaPersonalDetailResModel.dart';
 import 'model/PostLeadDSAPersonalDetailReqModel.dart';
 
@@ -106,6 +108,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   CityResponce? selectedCompanyCity = null;
   ReturnObject? selectedCompanyState = null;
 
+  CityResponce? selectedWorkingLocationCity = null;
+  ReturnObject? selectedWorkingLocationState = null;
+  int? WorkingLocationCityId;
+  int? WorkingLocationStateId;
+  var WorkingLocationcityCallInitial = true;
+  List<CityResponce?> workingLocationCityList = [];
+
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
   final List<String> businessTypeList = [
@@ -132,61 +141,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   CustomerDetailUsingGstResponseModel? getCustomerDetailUsingGSTData;
   GetDsaPersonalDetailResModel? getDsaPersonalDetailData;
 
-  List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
-    final List<DropdownMenuItem<String>> menuItems = [];
-    for (final String item in items) {
-      menuItems.addAll(
-        [
-          DropdownMenuItem<String>(
-            value: item,
-            child: Text(
-              item,
-              style: GoogleFonts.urbanist(
-                fontSize: 15,
-                color: blackSmall,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          //If it's last item, we will not add Divider after it.
-          if (item != items.last)
-            const DropdownMenuItem<String>(
-              enabled: false,
-              child: Divider(
-                height: 0.1,
-              ),
-            ),
-        ],
-      );
-    }
-    return menuItems;
-  }
-
-  List<double> _getCustomItemsHeights(List<String> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
-  }
-
   DateTime date = DateTime.now().subtract(const Duration(days: 1));
 
   String minDateTime = '2010-05-12';
   String maxDateTime = '2030-11-25';
   String initDateTime = '2021-08-31';
 
-  final bool _showTitle = true;
-  final DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
-  final String _format = 'yyyy-MMMM-dd';
-
-  DateTime? _dateTime;
   String? selectedDate = "";
   String? profileTypeDSA = "";
   bool DSAPersonalDetailAPICAll = true;
@@ -261,20 +221,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     return menuItems;
   }
 
-  List<double> _getCustomItemsHeights2(List<ReturnObject?> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
-  }
-
   void _onImageSelected(File imageFile) async {
     isImageDelete = false;
     Utils.onLoading(context, "");
@@ -311,20 +257,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       );
     }
     return menuItems;
-  }
-
-  List<double> _getCustomItemsHeights3(List<CityResponce?> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
   }
 
   Widget buildStateField(DataProvider productProvider) {
@@ -491,31 +423,164 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     }
   }
 
-  List<String> languageList = [
-    'Assamese',
-    'Bengali',
-    'Bodo',
-    'Dogri',
-    'English',
-    'Gujarati',
-    'Hindi',
-    'Kannada',
-    'Kashmiri',
-    'Maithili',
-    'Malayalam',
-    'Marathi',
-    'Meitei',
-    'Nepali',
-    'Odia',
-    'Punjabi',
-    'Sanskrit',
-    'Santali',
-    'Sindhi',
-    'Tamil',
-    'Telugu',
-    'Urdu',
-  ];
+  Widget buildWorkingLocationStateField(DataProvider productProvider) {
+    if (productProvider.getAllStateData != null) {
+      if (productProvider.getAllStateData != null) {
+        var allStates = productProvider.getAllStateData!.returnObject!;
+        if (WorkingLocationStateId != null) {
+          selectedWorkingLocationState = allStates.firstWhere(
+              (element) => element?.id == WorkingLocationStateId!,
+              orElse: () => null);
+
+          if (WorkingLocationcityCallInitial) {
+            workingLocationCityList.clear();
+            Provider.of<DataProvider>(context, listen: false)
+                .getWorkingLocationAllCity(WorkingLocationStateId!);
+            WorkingLocationcityCallInitial = false;
+          }
+        }
+      }
+      return DropdownButtonFormField2<ReturnObject?>(
+        isExpanded: true,
+        value: selectedWorkingLocationState,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: Text(
+          'State',
+          style: GoogleFonts.urbanist(
+            fontSize: 15,
+            color: blackSmall,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        items: getAllState(productProvider.getAllStateData!.returnObject!),
+        onChanged: (ReturnObject? value) {
+          setState(() {
+            workingLocationCityList.clear();
+            Provider.of<DataProvider>(context, listen: false)
+                .getWorkingLocationAllCity(value!.id!);
+            selectedWorkingLocationState = value;
+            selectedWorkingLocationCity = null;
+            WorkingLocationCityId = null;
+            WorkingLocationStateId = null;
+          });
+        },
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        ),
+        iconStyleData: const IconStyleData(
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildWorkingLocationCityField(DataProvider productProvider) {
+    if (productProvider.getWorkingLocationAllCityData != null &&
+        productProvider.getWorkingLocationAllCityData!.isNotEmpty) {
+      workingLocationCityList = productProvider.getWorkingLocationAllCityData!;
+      if (WorkingLocationCityId != null) {
+        selectedWorkingLocationCity = workingLocationCityList.firstWhere(
+            (element) => element?.id == WorkingLocationCityId!,
+            orElse: () => CityResponce());
+      }
+      return DropdownButtonFormField2<CityResponce>(
+        isExpanded: true,
+        value: selectedWorkingLocationCity,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: Text(
+          'City',
+          style: GoogleFonts.urbanist(
+            fontSize: 15,
+            color: blackSmall,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        items: getAllCity(workingLocationCityList),
+        onChanged: (CityResponce? value) {
+          setState(() {
+            selectedWorkingLocationCity = value;
+            WorkingLocationCityId = null;
+          });
+        },
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        ),
+        iconStyleData: IconStyleData(
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  List<String> languageList = [];
   List<String> selectedLanguageList = [];
+
+  List<QualificationList> _qualificationList = [];
+  QualificationList? initialQualification = null;
 
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
@@ -532,7 +597,6 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   final TextEditingController _emailIDController = TextEditingController();
   final TextEditingController _presentEmpolymentController =
       TextEditingController();
-  final TextEditingController _LanguagesController = TextEditingController();
   final TextEditingController _refranceNameController = TextEditingController();
   final TextEditingController _refranceContectController =
       TextEditingController();
@@ -794,7 +858,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       workingWithOther: isPresentlyworking,
       referneceName: _referenceNames.text,
       referneceContact: _referenceContactNoCl.text,
-      workingLocation: _locationCl.text,
+      workingLocation: selectedWorkingLocationCity!.id!.toString(),
       address: _addressCl.text,
       city: cityId,
       state: stateId,
@@ -877,8 +941,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       Utils.showToast("Please Enter Reference Contact No ", context);
     } else if (!Utils.isPhoneNoValid(_refranceContectController.text.trim())) {
       Utils.showToast("Please Enter Valid Reference Contact No", context);
-    } else if (_refranceLocationController.text.trim().isEmpty) {
-      Utils.showToast("Please Enter Reference Location", context);
+    } else if (selectedWorkingLocationCity == null) {
+      Utils.showToast("Please enter working Location", context);
     } else {
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
@@ -902,7 +966,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           workingWithOther: workingWithParty,
           referenceName: _refranceNameController.text.toString(),
           referneceContact: _refranceContectController.text.toString(),
-          WorkingLocation: _refranceLocationController.text.toString(),
+          WorkingLocation: selectedWorkingLocationCity!.id!.toString(),
           currentAddressId: 0,
           mobileNo: loginMobilNumber,
           City: connectorInfoResponceModel!.cityId.toString(),
@@ -990,6 +1054,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     Provider.of<DataProvider>(context, listen: false)
         .getDsaPersonalDetail(userId!, productCode!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
+    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
     Navigator.of(context, rootNavigator: true).pop();
     DSAPersonalDetailAPICAll = false;
   }
@@ -1000,6 +1066,9 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     Provider.of<DataProvider>(context, listen: false)
         .getConnectorInfo(userId!, productCode!);
+    Provider.of<DataProvider>(context, listen: false).getAllState();
+    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
     Navigator.of(context, rootNavigator: true).pop();
     ConnectorPersonalDetailAPICAll = false;
   }
@@ -1071,6 +1140,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             }
             if (data.workingLocation != null) {
               _locationCl.text = data.workingLocation!;
+            }
+            if (data.workingLocationCityId != null) {
+              WorkingLocationCityId = data.workingLocationCityId!;
+            }
+            if (data.workingLocationStateId != null) {
+              WorkingLocationStateId = data.workingLocationStateId!;
             }
             if (data.referneceName != null) {
               _referenceNames.text = data.referneceName!;
@@ -1168,6 +1243,27 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         image = dataProvider.getpostDSABusineesDoumentSingleFileData!.filePath!;
         businessProofDocId =
             dataProvider.getpostDSABusineesDoumentSingleFileData!.docId!;
+      }
+    }
+
+    if (dataProvider.getEducationMasterListResponseData != null) {
+      if (dataProvider.getEducationMasterListResponseData!.returnObject !=
+          null) {
+        _qualificationList =
+            dataProvider.getEducationMasterListResponseData!.returnObject!;
+        initialQualification = _qualificationList.firstWhere(
+          (element) => element?.name == _qualificationCl.text.toString(),
+        );
+      }
+    }
+
+    if (dataProvider.getLangauageMasterListResponseData != null) {
+      if (dataProvider.getLangauageMasterListResponseData!.returnObject !=
+          null) {
+        languageList = dataProvider
+            .getLangauageMasterListResponseData!.returnObject!
+            .map((language) => language.name ?? '')
+            .toList();
       }
     }
 
@@ -1411,7 +1507,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             const SizedBox(
               height: 16.0,
             ),
-            CommonTextField(
+            /*CommonTextField(
               controller: _qualificationCl,
               enabled: true,
               hintText: "Qualification",
@@ -1419,6 +1515,63 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               keyboardType: TextInputType.text,
               inputFormatter: [
                 FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z ]'))),
+              ],
+            ),*/
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(11),
+                      color: kPrimaryColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: CustomDropdown<QualificationList>(
+                        hintText: 'Select Qualification',
+                        items: _qualificationList,
+                        initialItem: initialQualification,
+                        onChanged: (value) {
+                          print('changing value to: $value');
+                          _qualificationCl.text = value.toString();
+                        },
+                        decoration: CustomDropdownDecoration(
+                          headerStyle: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          hintStyle: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          closedBorderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0, // Adjust the vertical position as needed
+                  left: 16, // Adjust the horizontal position as needed
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Qualification', // Your label text
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey[900], // Adjust color as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(
@@ -1468,14 +1621,29 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ),
             ),
             const SizedBox(
-              height: 16.0,
+              height: 20.0,
             ),
-            CommonTextField(
+            /*CommonTextField(
               controller: _locationCl,
               enabled: true,
               hintText: "Location",
               labelText: "Location",
+            ),*/
+            Text('Working Location ',
+                textAlign: TextAlign.left,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                )),
+            const SizedBox(
+              height: 8.0,
             ),
+            buildWorkingLocationStateField(dataProvider),
+            const SizedBox(
+              height: 16.0,
+            ),
+            buildWorkingLocationCityField(dataProvider),
             const SizedBox(
               height: 16.0,
             ),
@@ -2055,8 +2223,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   Utils.showToast("Please enter Qualification", context);
                 } else if (selectedLanguageList.isEmpty) {
                   Utils.showToast("Please select known Language", context);
-                } else if (_locationCl.text.trim().isEmpty) {
-                  Utils.showToast("Please enter Location", context);
+                } else if (selectedWorkingLocationCity == null) {
+                  Utils.showToast("Please enter Working Location", context);
                 } else if (isPresentlyworking.isEmpty) {
                   Utils.showToast(
                       "Please Select  Presently working with other Party/bank/NBFC /Financial Institute?",
@@ -2141,13 +2309,20 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               }
 
               if (connectorInfoResponceModel!.languagesKnown != null) {
-                selectedLanguageList = connectorInfoResponceModel!.languagesKnown!.split(', ');
-
+                selectedLanguageList =
+                    connectorInfoResponceModel!.languagesKnown!.split(', ');
               }
 
               if (connectorInfoResponceModel!.workingLocation != null) {
                 _refranceLocationController.text =
                     connectorInfoResponceModel!.workingLocation!;
+              }
+
+              if (data.workingLocationCityId != null) {
+                WorkingLocationCityId = data.workingLocationCityId!;
+              }
+              if (data.workingLocationStateId != null) {
+                WorkingLocationStateId = data.workingLocationStateId!;
               }
 
               if (connectorInfoResponceModel!.presentEmployment != null) {
@@ -2196,6 +2371,17 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
         );
       }
     }
+
+    if (productProvider.getLangauageMasterListResponseData != null) {
+      if (productProvider.getLangauageMasterListResponseData!.returnObject !=
+          null) {
+        languageList = productProvider
+            .getLangauageMasterListResponseData!.returnObject!
+            .map((language) => language.name ?? '')
+            .toList();
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: SingleChildScrollView(
@@ -2470,7 +2656,22 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               ),
             ),
             SizedBox(height: 20),
-            CommonTextField(
+            Text('Working Location ',
+                textAlign: TextAlign.left,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                )),
+            const SizedBox(
+              height: 8.0,
+            ),
+            buildWorkingLocationStateField(productProvider),
+            const SizedBox(
+              height: 16.0,
+            ),
+            buildWorkingLocationCityField(productProvider),
+            /*CommonTextField(
               controller: _refranceLocationController,
               enabled: true,
               hintText: "Location",
@@ -2478,7 +2679,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               inputFormatter: [
                 FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z,0-9 ]'))),
               ],
-            ),
+            ),*/
             SizedBox(height: 20),
             Text(
                 "Presently working with other Party/bank/NBFC \nFinancial Institute?",

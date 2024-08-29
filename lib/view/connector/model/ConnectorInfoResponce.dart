@@ -17,6 +17,9 @@ class ConnectorInfoResponce {
   String? stateId;
   String? city;
   String? state;
+  int? workingLocationCityId;
+  int? workingLocationStateId;
+  String? workingLocationStateName;
 
   ConnectorInfoResponce(
       {this.fullName,
@@ -36,7 +39,10 @@ class ConnectorInfoResponce {
         this.cityId,
         this.stateId,
         this.city,
-        this.state});
+        this.state,
+        this.workingLocationCityId,
+        this.workingLocationStateId,
+        this.workingLocationStateName,});
 
   ConnectorInfoResponce.fromJson(Map<String, dynamic> json) {
     fullName = json['fullName'];
@@ -57,6 +63,9 @@ class ConnectorInfoResponce {
     stateId = json['stateId'];
     city = json['city'];
     state = json['state'];
+    workingLocationCityId = json['workingLocationCityId'];
+    workingLocationStateId = json['workingLocationStateId'];
+    workingLocationStateName = json['workingLocationStateName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -79,6 +88,9 @@ class ConnectorInfoResponce {
     data['stateId'] = this.stateId;
     data['city'] = this.city;
     data['state'] = this.state;
+    data['workingLocationCityId'] = this.workingLocationCityId;
+    data['workingLocationStateId'] = this.workingLocationStateId;
+    data['workingLocationStateName'] = this.workingLocationStateName;
     return data;
   }
 }

@@ -82,4 +82,6 @@ class ApiUrls{
   final String getDSADashboardPayoutList="/aggregator/DSAAgg/GetDSADashboardPayoutList";
   final String getCheckLeadCreatePermission="/aggregator/DSAAgg/CheckLeadCreatePermission";
   final String getDSAGSTExist="/aggregator/DSAAgg/GetDSAGSTExist";
+  final String getEducationMasterList="/services/company/v1/GetEducationMasterList";
+  final String getLangauageMasterList="/services/company/v1/GetLangauageMasterList";
 }
