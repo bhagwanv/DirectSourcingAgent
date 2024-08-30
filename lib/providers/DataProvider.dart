@@ -178,6 +178,10 @@ class DataProvider extends ChangeNotifier {
 
   AllStateResponce? get getAllStateData => _getAllStateData;
 
+  AllStateResponce? _getWorkingLocationAllStateData;
+
+  AllStateResponce? get getWorkingLocationAllStateData => _getWorkingLocationAllStateData;
+
   List<CityResponce?>? _getAllCityData;
   List<CityResponce?>? get getAllCityData => _getAllCityData;
 
@@ -482,6 +486,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getAllState() async {
     _getAllStateData = await apiService.getAllState();
+    notifyListeners();
+  }
+
+  Future<void> getWorkingLocationAllState() async {
+    _getWorkingLocationAllStateData = await apiService.getAllState();
     notifyListeners();
   }
 

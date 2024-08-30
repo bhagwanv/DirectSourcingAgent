@@ -475,9 +475,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   Widget buildWorkingLocationStateField(DataProvider productProvider) {
-    if (productProvider.getAllStateData != null) {
-      if (productProvider.getAllStateData != null) {
-        var allStates = productProvider.getAllStateData!.returnObject!;
+    if (productProvider.getWorkingLocationAllStateData != null) {
+      if (productProvider.getWorkingLocationAllStateData != null) {
+        var allStates = productProvider.getWorkingLocationAllStateData!.returnObject!;
+        print("WorkingLocationStateId : $WorkingLocationStateId");
         if (WorkingLocationStateId != null) {
           selectedWorkingLocationState = allStates.firstWhere(
               (element) => element?.id == WorkingLocationStateId!,
@@ -524,7 +525,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 ),
               ),
               items:
-                  getAllState(productProvider.getAllStateData!.returnObject!),
+                  getAllState(productProvider.getWorkingLocationAllStateData!.returnObject!),
               onChanged: (ReturnObject? value) {
                 setState(() {
                   workingLocationCityList.clear();
@@ -1153,11 +1154,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
+     Provider.of<DataProvider>(context, listen: false)
         .getDsaPersonalDetail(userId!, productCode!);
-    Provider.of<DataProvider>(context, listen: false).getAllState();
-    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
-    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getAllState();
+     Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+     Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getWorkingLocationAllState();
     Navigator.of(context, rootNavigator: true).pop();
     DSAPersonalDetailAPICAll = false;
   }
@@ -1166,11 +1168,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
+     Provider.of<DataProvider>(context, listen: false)
         .getConnectorInfo(userId!, productCode!);
-    Provider.of<DataProvider>(context, listen: false).getAllState();
-    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
-    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getAllState();
+     Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+     Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getWorkingLocationAllState();
     Navigator.of(context, rootNavigator: true).pop();
     ConnectorPersonalDetailAPICAll = false;
   }
