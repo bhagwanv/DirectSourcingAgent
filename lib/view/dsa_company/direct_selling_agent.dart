@@ -276,71 +276,97 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           }
         }
       }
-      return DropdownButtonFormField2<ReturnObject?>(
-        isExpanded: true,
-        value: selectedCompanyState,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          fillColor: textFiledBackgroundColour,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+      return Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: DropdownButtonFormField2<ReturnObject?>(
+              isExpanded: true,
+              value: selectedCompanyState,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                fillColor: textFiledBackgroundColour,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+              ),
+              hint: Text(
+                'State',
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              items:
+                  getAllState(productProvider.getAllStateData!.returnObject!),
+              onChanged: isGstFilled
+                  ? null
+                  : (ReturnObject? value) {
+                      setState(() {
+                        citylist.clear();
+                        setStateListFirstTime = false;
+                        Provider.of<DataProvider>(context, listen: false)
+                            .getAllCity(value!.id!);
+                        selectedStateValue = value.id!.toString();
+                        selectedCompanyCity = null;
+                        selectedCompanyState = value;
+                        _companyStateCl.text = value!.id.toString();
+                        companyCityId = null;
+                        companyStateId = null;
+                      });
+                    },
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              ),
+              iconStyleData: const IconStyleData(
+                icon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
+              ),
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          Positioned(
+            top: 0, // Adjust the vertical position as needed
+            left: 16, // Adjust the horizontal position as needed
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  'State', // Your label text
+                  style: GoogleFonts.urbanist(
+                    fontSize: 12,
+                    color: Colors.grey[900], // Adjust color as needed
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-        ),
-        hint: Text(
-          'State',
-          style: GoogleFonts.urbanist(
-            fontSize: 15,
-            color: blackSmall,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: isGstFilled
-            ? null
-            : (ReturnObject? value) {
-                setState(() {
-                  citylist.clear();
-                  setStateListFirstTime = false;
-                  Provider.of<DataProvider>(context, listen: false)
-                      .getAllCity(value!.id!);
-                  selectedStateValue = value.id!.toString();
-                  selectedCompanyCity = null;
-                  selectedCompanyState = value;
-                  _companyStateCl.text = value!.id.toString();
-                  companyCityId = null;
-                  companyStateId = null;
-                });
-              },
-        dropdownStyleData: DropdownStyleData(
-          maxHeight: 400,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        ),
-        iconStyleData: const IconStyleData(
-          icon: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_down),
-          ), // Down arrow icon when closed
-          openMenuIcon: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_up),
-          ), // Up arrow icon when open
-        ),
+        ],
       );
     } else {
       return Container();
@@ -358,65 +384,90 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             (element) => element?.id == int.parse(companyCityId!),
             orElse: () => CityResponce());
       }
-      return DropdownButtonFormField2<CityResponce>(
-        isExpanded: true,
-        value: selectedCompanyCity,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          fillColor: textFiledBackgroundColour,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+      return Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: DropdownButtonFormField2<CityResponce>(
+              isExpanded: true,
+              value: selectedCompanyCity,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                fillColor: textFiledBackgroundColour,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+              ),
+              hint: Text(
+                'City',
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              items: getAllCity(citylist),
+              onChanged: isGstFilled
+                  ? null
+                  : (CityResponce? value) {
+                      setState(() {
+                        selectedCompanyCity = value;
+                        setCityListFirstTime = false;
+                        _companyCityCl.text = value!.id.toString();
+                        companyCityId = null;
+                      });
+                    },
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              ),
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
+              ),
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          Positioned(
+            top: 0, // Adjust the vertical position as needed
+            left: 16, // Adjust the horizontal position as needed
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  'City', // Your label text
+                  style: GoogleFonts.urbanist(
+                    fontSize: 12,
+                    color: Colors.grey[900], // Adjust color as needed
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-        ),
-        hint: Text(
-          'City',
-          style: GoogleFonts.urbanist(
-            fontSize: 15,
-            color: blackSmall,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        items: getAllCity(citylist),
-        onChanged: isGstFilled
-            ? null
-            : (CityResponce? value) {
-                setState(() {
-                  selectedCompanyCity = value;
-                  setCityListFirstTime = false;
-                  _companyCityCl.text = value!.id.toString();
-                  companyCityId = null;
-                });
-              },
-        dropdownStyleData: DropdownStyleData(
-          maxHeight: 400,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        ),
-        iconStyleData: IconStyleData(
-          icon: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_down),
-          ), // Down arrow icon when closed
-          openMenuIcon: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_up),
-          ), // Up arrow icon when open
-        ),
+        ],
       );
     } else {
       return Container();
@@ -424,9 +475,10 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   }
 
   Widget buildWorkingLocationStateField(DataProvider productProvider) {
-    if (productProvider.getAllStateData != null) {
-      if (productProvider.getAllStateData != null) {
-        var allStates = productProvider.getAllStateData!.returnObject!;
+    if (productProvider.getWorkingLocationAllStateData != null) {
+      if (productProvider.getWorkingLocationAllStateData != null) {
+        var allStates = productProvider.getWorkingLocationAllStateData!.returnObject!;
+        print("WorkingLocationStateId : $WorkingLocationStateId");
         if (WorkingLocationStateId != null) {
           selectedWorkingLocationState = allStates.firstWhere(
               (element) => element?.id == WorkingLocationStateId!,
@@ -440,66 +492,92 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           }
         }
       }
-      return DropdownButtonFormField2<ReturnObject?>(
-        isExpanded: true,
-        value: selectedWorkingLocationState,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          fillColor: textFiledBackgroundColour,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+      return Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: DropdownButtonFormField2<ReturnObject?>(
+              isExpanded: true,
+              value: selectedWorkingLocationState,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                fillColor: textFiledBackgroundColour,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+              ),
+              hint: Text(
+                'State',
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              items:
+                  getAllState(productProvider.getWorkingLocationAllStateData!.returnObject!),
+              onChanged: (ReturnObject? value) {
+                setState(() {
+                  workingLocationCityList.clear();
+                  Provider.of<DataProvider>(context, listen: false)
+                      .getWorkingLocationAllCity(value!.id!);
+                  selectedWorkingLocationState = value;
+                  selectedWorkingLocationCity = null;
+                  WorkingLocationCityId = null;
+                  WorkingLocationStateId = null;
+                });
+              },
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              ),
+              iconStyleData: const IconStyleData(
+                icon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
+              ),
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          Positioned(
+            top: 0, // Adjust the vertical position as needed
+            left: 16, // Adjust the horizontal position as needed
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  'State', // Your label text
+                  style: GoogleFonts.urbanist(
+                    fontSize: 12,
+                    color: Colors.grey[900], // Adjust color as needed
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-        ),
-        hint: Text(
-          'State',
-          style: GoogleFonts.urbanist(
-            fontSize: 15,
-            color: blackSmall,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: (ReturnObject? value) {
-          setState(() {
-            workingLocationCityList.clear();
-            Provider.of<DataProvider>(context, listen: false)
-                .getWorkingLocationAllCity(value!.id!);
-            selectedWorkingLocationState = value;
-            selectedWorkingLocationCity = null;
-            WorkingLocationCityId = null;
-            WorkingLocationStateId = null;
-          });
-        },
-        dropdownStyleData: DropdownStyleData(
-          maxHeight: 400,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        ),
-        iconStyleData: const IconStyleData(
-          icon: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_down),
-          ), // Down arrow icon when closed
-          openMenuIcon: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_up),
-          ), // Up arrow icon when open
-        ),
+        ],
       );
     } else {
       return Container();
@@ -515,61 +593,86 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             (element) => element?.id == WorkingLocationCityId!,
             orElse: () => CityResponce());
       }
-      return DropdownButtonFormField2<CityResponce>(
-        isExpanded: true,
-        value: selectedWorkingLocationCity,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          fillColor: textFiledBackgroundColour,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+      return Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: DropdownButtonFormField2<CityResponce>(
+              isExpanded: true,
+              value: selectedWorkingLocationCity,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                fillColor: textFiledBackgroundColour,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                ),
+              ),
+              hint: Text(
+                'City',
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: blackSmall,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              items: getAllCity(workingLocationCityList),
+              onChanged: (CityResponce? value) {
+                setState(() {
+                  selectedWorkingLocationCity = value;
+                  WorkingLocationCityId = null;
+                });
+              },
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              ),
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_down),
+                ), // Down arrow icon when closed
+                openMenuIcon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.keyboard_arrow_up),
+                ), // Up arrow icon when open
+              ),
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          Positioned(
+            top: 0, // Adjust the vertical position as needed
+            left: 16, // Adjust the horizontal position as needed
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  'City', // Your label text
+                  style: GoogleFonts.urbanist(
+                    fontSize: 12,
+                    color: Colors.grey[900], // Adjust color as needed
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-          ),
-        ),
-        hint: Text(
-          'City',
-          style: GoogleFonts.urbanist(
-            fontSize: 15,
-            color: blackSmall,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        items: getAllCity(workingLocationCityList),
-        onChanged: (CityResponce? value) {
-          setState(() {
-            selectedWorkingLocationCity = value;
-            WorkingLocationCityId = null;
-          });
-        },
-        dropdownStyleData: DropdownStyleData(
-          maxHeight: 400,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        ),
-        iconStyleData: IconStyleData(
-          icon: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_down),
-          ), // Down arrow icon when closed
-          openMenuIcon: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.keyboard_arrow_up),
-          ), // Up arrow icon when open
-        ),
+        ],
       );
     } else {
       return Container();
@@ -1051,11 +1154,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
+     Provider.of<DataProvider>(context, listen: false)
         .getDsaPersonalDetail(userId!, productCode!);
-    Provider.of<DataProvider>(context, listen: false).getAllState();
-    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
-    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getAllState();
+     Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+     Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getWorkingLocationAllState();
     Navigator.of(context, rootNavigator: true).pop();
     DSAPersonalDetailAPICAll = false;
   }
@@ -1064,11 +1168,12 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
+     Provider.of<DataProvider>(context, listen: false)
         .getConnectorInfo(userId!, productCode!);
-    Provider.of<DataProvider>(context, listen: false).getAllState();
-    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
-    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getAllState();
+     Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+     Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+     Provider.of<DataProvider>(context, listen: false).getWorkingLocationAllState();
     Navigator.of(context, rootNavigator: true).pop();
     ConnectorPersonalDetailAPICAll = false;
   }
@@ -1134,6 +1239,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             }
             if (data.qualification != null) {
               _qualificationCl.text = data.qualification!;
+            } else {
+              _qualificationCl.text = "";
             }
             if (data.languagesKnown != null) {
               selectedLanguageList = data.languagesKnown!.split(', ');
@@ -1247,13 +1354,18 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     }
 
     if (dataProvider.getEducationMasterListResponseData != null) {
-      if (dataProvider.getEducationMasterListResponseData!.returnObject !=
+      if (dataProvider
+          .getEducationMasterListResponseData!.returnObject !=
           null) {
-        _qualificationList =
-            dataProvider.getEducationMasterListResponseData!.returnObject!;
-        initialQualification = _qualificationList.firstWhere(
-          (element) => element?.name == _qualificationCl.text.toString(),
-        );
+        _qualificationList = dataProvider
+            .getEducationMasterListResponseData!.returnObject!;
+        if (_qualificationList.isNotEmpty &&
+            _qualificationCl.text.trim().isNotEmpty) {
+          initialQualification = _qualificationList.firstWhere(
+                (element) =>
+            element?.name == _qualificationCl.text.toString(),
+          );
+        }
       }
     }
 
@@ -1586,39 +1698,64 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z, ]'))),
               ],
             ),*/
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(11),
-                color: kPrimaryColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: CustomDropdown<String>.multiSelectSearchRequest(
-                  futureRequest: _getLanguageSearchRequestData,
-                  items: languageList,
-                  initialItems: selectedLanguageList,
-                  decoration: CustomDropdownDecoration(
-                    headerStyle: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(11),
+                      color: kPrimaryColor,
                     ),
-                    hintStyle: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400,
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: CustomDropdown<String>.multiSelectSearchRequest(
+                        futureRequest: _getLanguageSearchRequestData,
+                        items: languageList,
+                        initialItems: selectedLanguageList,
+                        decoration: CustomDropdownDecoration(
+                          headerStyle: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          hintStyle: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          closedBorderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: 'Select Language',
+                        // Attach the ScrollController
+                        onListChanged: (value) {
+                          print('changing value to: $value');
+                          selectedLanguageList = value;
+                        },
+                      ),
                     ),
-                    closedBorderRadius: BorderRadius.circular(10),
                   ),
-                  hintText: 'Select Language',
-                  // Attach the ScrollController
-                  onListChanged: (value) {
-                    print('changing value to: $value');
-                    selectedLanguageList = value;
-                  },
                 ),
-              ),
+                Positioned(
+                  top: 0, // Adjust the vertical position as needed
+                  left: 16, // Adjust the horizontal position as needed
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Language', // Your label text
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey[900], // Adjust color as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20.0,
@@ -1827,148 +1964,204 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
             const SizedBox(
               height: 16.0,
             ),
-            DropdownButtonFormField2<String>(
-              isExpanded: true,
-              decoration: InputDecoration(
-                fillColor: textFiledBackgroundColour,
-                filled: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-                ),
-              ),
-              hint: Text(
-                'Firm Type',
-                style: GoogleFonts.urbanist(
-                  fontSize: 15,
-                  color: blackSmall,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              items: businessTypeList.map((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(
-                    item,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: DropdownButtonFormField2<String>(
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      fillColor: textFiledBackgroundColour,
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                    ),
+                    hint: Text(
+                      'Firm Type',
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15,
+                        color: blackSmall,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    items: businessTypeList.map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    value: selectedFirmTypeValue,
+                    onChanged: (String? value) {
+                      selectedFirmTypeValue = value;
+                    },
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 400,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    ),
+                    iconStyleData: IconStyleData(
+                      icon: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_down),
+                      ), // Down arrow icon when closed
+                      openMenuIcon: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ), // Up arrow icon when open
                     ),
                   ),
-                );
-              }).toList(),
-              value: selectedFirmTypeValue,
-              onChanged: (String? value) {
-                selectedFirmTypeValue = value;
-              },
-              dropdownStyleData: DropdownStyleData(
-                maxHeight: 400,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
                 ),
-              ),
-              menuItemStyleData: const MenuItemStyleData(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              ),
-              iconStyleData: IconStyleData(
-                icon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Icon(Icons.keyboard_arrow_down),
-                ), // Down arrow icon when closed
-                openMenuIcon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Icon(Icons.keyboard_arrow_up),
-                ), // Up arrow icon when open
-              ),
+                Positioned(
+                  top: 0, // Adjust the vertical position as needed
+                  left: 16, // Adjust the horizontal position as needed
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Firm Type', // Your label text
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey[900], // Adjust color as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 16.0,
             ),
-            DropdownButtonFormField2<String>(
-              isExpanded: true,
-              decoration: InputDecoration(
-                fillColor: textFiledBackgroundColour,
-                filled: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-                ),
-                enabledBorder: gstUpdate
-                    ? OutlineInputBorder(
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: DropdownButtonFormField2<String>(
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      fillColor: textFiledBackgroundColour,
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide:
                             const BorderSide(color: kPrimaryColor, width: 1),
-                      )
-                    : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: gryColor, width: 1),
                       ),
-              ),
-              hint: Text(
-                'Business Document',
-                style: GoogleFonts.urbanist(
-                  fontSize: 15,
-                  color: blackSmall,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              items: chooseBusinessProofList.map((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(
-                    item,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      enabledBorder: gstUpdate
+                          ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            )
+                          : OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                                  const BorderSide(color: gryColor, width: 1),
+                            ),
+                    ),
+                    hint: Text(
+                      'Business Document',
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15,
+                        color: blackSmall,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    items: chooseBusinessProofList.map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    value: selectedBusinessTypeValue,
+                    onChanged: gstUpdate
+                        ? (String? value) {
+                            selectedBusinessTypeValue = value;
+                          }
+                        : null,
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 400,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    ),
+                    iconStyleData: IconStyleData(
+                      icon: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_down),
+                      ), // Down arrow icon when closed
+                      openMenuIcon: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ), // Up arrow icon when open
                     ),
                   ),
-                );
-              }).toList(),
-              value: selectedBusinessTypeValue,
-              onChanged: gstUpdate
-                  ? (String? value) {
-                      selectedBusinessTypeValue = value;
-                    }
-                  : null,
-              dropdownStyleData: DropdownStyleData(
-                maxHeight: 400,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
                 ),
-              ),
-              menuItemStyleData: const MenuItemStyleData(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              ),
-              iconStyleData: IconStyleData(
-                icon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Icon(Icons.keyboard_arrow_down),
-                ), // Down arrow icon when closed
-                openMenuIcon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Icon(Icons.keyboard_arrow_up),
-                ), // Up arrow icon when open
-              ),
+                Positioned(
+                  top: 0, // Adjust the vertical position as needed
+                  left: 16, // Adjust the horizontal position as needed
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Business Document', // Your label text
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey[900], // Adjust color as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 30,
@@ -1994,7 +2187,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                         child: Container(
                           child: (image.isNotEmpty)
                               ? image.contains(".pdf")
-                                  ? Column(
+                                  ? const Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
@@ -2423,36 +2616,61 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
               labelText: "Father Name",
             ),
             SizedBox(height: 20),
-            InkWell(
-              onTap: false ? () {} : null,
-              // Set onTap to null when field is disabled
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: textFiledBackgroundColour,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: gryColor),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        slectedDate!.isNotEmpty
-                            ? '$slectedDate'
-                            : 'Date of Birth',
-                        style: const TextStyle(fontSize: 16.0),
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: InkWell(
+                    onTap: false ? () {} : null,
+                    // Set onTap to null when field is disabled
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: textFiledBackgroundColour,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: gryColor),
                       ),
-                      const Icon(
-                        Icons.date_range,
-                        color: kPrimaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              slectedDate!.isNotEmpty
+                                  ? '$slectedDate'
+                                  : 'Date of Birth',
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                            const Icon(
+                              Icons.date_range,
+                              color: kPrimaryColor,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                Positioned(
+                  top: 0, // Adjust the vertical position as needed
+                  left: 16, // Adjust the horizontal position as needed
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Date of birth', // Your label text
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey[900], // Adjust color as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             CommonTextField(
@@ -2621,39 +2839,64 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                 FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z, ]'))),
               ],
             ),*/
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(11),
-                color: kPrimaryColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: CustomDropdown<String>.multiSelectSearchRequest(
-                  futureRequest: _getLanguageSearchRequestData,
-                  items: languageList,
-                  initialItems: selectedLanguageList,
-                  decoration: CustomDropdownDecoration(
-                    headerStyle: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(11),
+                      color: kPrimaryColor,
                     ),
-                    hintStyle: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400,
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: CustomDropdown<String>.multiSelectSearchRequest(
+                        futureRequest: _getLanguageSearchRequestData,
+                        items: languageList,
+                        initialItems: selectedLanguageList,
+                        decoration: CustomDropdownDecoration(
+                          headerStyle: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          hintStyle: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          closedBorderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: 'Select Language',
+                        // Attach the ScrollController
+                        onListChanged: (value) {
+                          print('changing value to: $value');
+                          selectedLanguageList = value;
+                        },
+                      ),
                     ),
-                    closedBorderRadius: BorderRadius.circular(10),
                   ),
-                  hintText: 'Select Language',
-                  // Attach the ScrollController
-                  onListChanged: (value) {
-                    print('changing value to: $value');
-                    selectedLanguageList = value;
-                  },
                 ),
-              ),
+                Positioned(
+                  top: 0, // Adjust the vertical position as needed
+                  left: 16, // Adjust the horizontal position as needed
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Language', // Your label text
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey[900], // Adjust color as needed
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             Text('Working Location ',

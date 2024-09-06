@@ -228,6 +228,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                   if (data.dsaLeadCode != null) {
                     prefsUtil.saveString(
                         DSA_LEAD_CODE, data.dsaLeadCode!);
+                  } else {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, "");
                   }
 
                 }

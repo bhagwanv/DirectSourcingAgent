@@ -191,6 +191,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   if (data.dsaLeadCode != null) {
                     prefsUtil.saveString(
                         DSA_LEAD_CODE, data.dsaLeadCode!);
+                  } else {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, "");
                   }
                 }
 

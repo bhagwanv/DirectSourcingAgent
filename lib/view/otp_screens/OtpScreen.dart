@@ -482,6 +482,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   if (data.dsaLeadCode != null) {
                     prefsUtil.saveString(
                         DSA_LEAD_CODE, data.dsaLeadCode!);
+                  } else {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, "");
                   }
                 }
 

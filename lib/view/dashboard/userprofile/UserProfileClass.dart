@@ -47,7 +47,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   final TextEditingController _AddreshController = TextEditingController();
   final TextEditingController _PayOutController = TextEditingController();
   final TextEditingController _WorkingLocationController =
-      TextEditingController();
+  TextEditingController();
   String? role;
   String? type;
   String? user_name;
@@ -86,7 +86,6 @@ class _UserProfileScreenState extends State<UserProfileClass> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       top: true,
       bottom: true,
@@ -119,7 +118,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: kPrimaryColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -132,12 +132,16 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                             builder: (context) {
                               return Padding(
                                 padding: EdgeInsets.only(
-                                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                                  bottom: MediaQuery
+                                      .of(context)
+                                      .viewInsets
+                                      .bottom,
                                 ),
                                 child: SingleChildScrollView(
                                   child: Container(
                                     padding: EdgeInsets.all(16.0),
-                                    child: CreateUserWidgets(user_payout: user_payout),
+                                    child: CreateUserWidgets(
+                                        user_payout: user_payout),
                                   ),
                                 ),
                               );
@@ -196,7 +200,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                               child: Text(
                                 user_name!,
                                 style: GoogleFonts.urbanist(
-                                  fontSize: 20,
+                                  fontSize: user_name!.length < 40 ? 20 : 16,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -241,7 +245,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                         enabled: false,
                         textCapitalization: TextCapitalization.characters,
                         inputFormatter: [
-                          FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
                           LengthLimitingTextInputFormatter(10),
                         ],
                       ),
@@ -266,7 +271,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                     ],
                   ),
                 SizedBox(height: 16.0),
-               /* CommonTextField(
+                /* CommonTextField(
                   controller: _PayOutController,
                   hintText: "Payout %",
                   labelText: "Payout %",
@@ -291,14 +296,16 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                 SizedBox(height: 16.0),
                 // Dynamic ListView for Payout Structure
                 ListView.builder(
-                  shrinkWrap: true, // Take up only necessary space
-                  physics: NeverScrollableScrollPhysics(), // Prevent internal scrolling
+                  shrinkWrap: true,
+                  // Take up only necessary space
+                  physics: NeverScrollableScrollPhysics(),
+                  // Prevent internal scrolling
                   itemCount: 1,
                   itemBuilder: (context, index) {
-                    return DynamicTable(
+                    return loadedCommissions.isNotEmpty ? DynamicTable(
                       title: "Business Loan",
                       rows: loadedCommissions,
-                    );
+                    ) : Container();
                   },
                 ),
                 const SizedBox(height: 30.0),
@@ -309,7 +316,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -350,11 +358,10 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     prefsUtil.clear();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => SplashScreen()),
-        (Route route) => false);
+            (Route route) => false);
   }
 
-  Future<void> getUserData(
-      TextEditingController mobileNoController,
+  Future<void> getUserData(TextEditingController mobileNoController,
       TextEditingController panCardNoController,
       TextEditingController adharcardNOController,
       TextEditingController addreshController,
@@ -373,7 +380,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     user_selfie = prefsUtil.getString(USER_SELFI);
     loadedCommissions = await prefsUtil.loadCommissions();
 
-    if(loadedCommissions.isNotEmpty) {
+    if (loadedCommissions.isNotEmpty) {
       double maxPayoutPercentage = loadedCommissions
           .map((commission) => commission.payoutPercentage)
           .reduce((a, b) => a > b ? a : b)
@@ -390,7 +397,7 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     }
     if (user_aadharNumber != null && user_aadharNumber!.isNotEmpty) {
       adharcardNOController.text =
-          "XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
+      "XXXXXXX${user_aadharNumber!.substring(user_aadharNumber!.length - 5)}";
     }
     if (user_address != null) {
       addreshController.text = user_address!;
@@ -464,16 +471,15 @@ class _TileListState extends State<TileList> {
     try {
       await Dio().download(widget.fileUrl, filePath,
           onReceiveProgress: (count, total) {
-        setState(() {
-          progress = (count / total);
-        });
-      }, cancelToken: cancelToken);
+            setState(() {
+              progress = (count / total);
+            });
+          }, cancelToken: cancelToken);
       setState(() {
         dowloading = false;
         fileExists = true;
       });
     } catch (e) {
-      print(e);
       setState(() {
         dowloading = false;
       });
@@ -525,8 +531,8 @@ class _TileListState extends State<TileList> {
         fileExists && dowloading == false
             ? openfile()
             : widget.fileUrl.isNotEmpty
-                ? startDownload()
-                : Utils.showBottomToast("Document not found!!");
+            ? startDownload()
+            : Utils.showBottomToast("Document not found!!");
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -535,47 +541,47 @@ class _TileListState extends State<TileList> {
           children: [
             fileExists
                 ? const Icon(
-                    Icons.picture_as_pdf,
-                    color: Colors.white,
-                  )
+              Icons.picture_as_pdf,
+              color: Colors.white,
+            )
                 : dowloading
-                    ? Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            value: progress,
-                            strokeWidth: 3,
-                            backgroundColor: Colors.grey,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.blue),
-                          ),
-                          Text(
-                            "${(progress * 100).toStringAsFixed(2)}",
-                            style: TextStyle(fontSize: 12),
-                          )
-                        ],
-                      )
-                    : const Icon(Icons.download),
+                ? Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: progress,
+                  strokeWidth: 3,
+                  backgroundColor: Colors.grey,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      Colors.blue),
+                ),
+                Text(
+                  "${(progress * 100).toStringAsFixed(2)}",
+                  style: TextStyle(fontSize: 12),
+                )
+              ],
+            )
+                : const Icon(Icons.download),
             SizedBox(
               width: 12.0,
             ),
             fileExists
                 ? Text(
-                    'Open Agreement',
-                    style: GoogleFonts.urbanist(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )
+              'Open Agreement',
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            )
                 : Text(
-                    'Download Agreement',
-                    style: GoogleFonts.urbanist(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+              'Download Agreement',
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -591,14 +597,13 @@ class DynamicTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('List:::: $rows');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
           style:
-              GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w600),
+          GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 8),
         Table(
@@ -619,7 +624,10 @@ class DynamicTable extends StatelessWidget {
                 tableHeaderCell('Payout %'),
               ],
             ),
-            ...rows.asMap().entries.map((entry) {
+            ...rows
+                .asMap()
+                .entries
+                .map((entry) {
               int index = entry.key;
               SalesAgentCommissions rowData = entry.value;
 
@@ -628,7 +636,8 @@ class DynamicTable extends StatelessWidget {
                   tableCell((index + 1).toString()), // Index for Slab field
                   tableCell(rowData.minAmount?.toString() ?? ''),
                   tableCell(rowData.maxAmount?.toString() ?? ''),
-                  tableCell(rowData.payoutPercentage?.toString() ?? '', isPayout: true),
+                  tableCell(rowData.payoutPercentage?.toString() ?? '',
+                      isPayout: true),
                 ],
               );
             }).toList(),
