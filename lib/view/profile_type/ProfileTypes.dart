@@ -76,7 +76,7 @@ class _ProfileTypesState extends State<ProfileTypes> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }

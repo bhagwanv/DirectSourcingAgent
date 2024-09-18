@@ -14,12 +14,11 @@ class RejectedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }
-        if(pageType == "pushReplacement" ) {
+        if (pageType == "pushReplacement") {
           final bool shouldPop = await Utils().onback(context);
           if (shouldPop) {
             SystemNavigator.pop();

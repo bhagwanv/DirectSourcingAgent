@@ -88,28 +88,26 @@ class _PancardScreenState extends State<PancardScreen> {
   void _handlePermissionsAccepted(bool accept) {
     setState(() {
       _acceptPermissions = accept;
-
-      print("asdfads$_acceptPermissions");
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) {
-          return;
-        }
-        if (widget.pageType == "pushReplacement") {
-          final bool shouldPop = await Utils().onback(context);
-          if (shouldPop) {
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (didPop) {
+            return;
+          }
+          if (widget.pageType == "pushReplacement") {
+            final bool shouldPop = await Utils().onback(context);
+            if (shouldPop) {
+              SystemNavigator.pop();
+            }
+          } else {
             SystemNavigator.pop();
           }
-        } else {
-          SystemNavigator.pop();
-        }
-      },
+        },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(

@@ -749,8 +749,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }

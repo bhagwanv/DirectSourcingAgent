@@ -95,8 +95,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
     // TODO: implement build
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+        onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }
