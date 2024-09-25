@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';
@@ -34,7 +33,7 @@ class OtpScreen extends StatefulWidget {
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
+class _OtpScreenState extends State<OtpScreen>  {
   String? appSignature;
   String? otpCode;
   DataProvider? productProvider;
@@ -64,13 +63,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   String? otpNumberAutoFiled;
 
-  @override
-  void codeUpdated() {
-    setState(() {
-      otpCode = code;
-      print("Code ######## ${otpCode!}");
-    });
-  }
 
   @override
   void initState() {
@@ -92,12 +84,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
     listenOtp();
     _start = 30;
-    SmsAutoFill().getAppSignature.then((signature) {
-      setState(() {
-        appSignature = signature;
-        print("MUkesh ${appSignature!}");
-      });
-    });
   }
 
   @override
@@ -142,8 +128,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   void listenOtp() async {
     final prefsUtil = await SharedPref.getInstance();
     userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
-    await SmsAutoFill().listenForCode();
-    print("OTP listen  Called");
+
   }
 
   @override
