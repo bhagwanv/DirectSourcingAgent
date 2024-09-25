@@ -80,6 +80,9 @@ dependencies:
   package_info_plus: ^8.0.2
   animated_custom_dropdown: ^3.1.1
 
+  #anlytics
+  mixpanel_flutter: ^2.0.0
+
 
 dependency_overrides:
   webview_flutter_android: 3.16.1

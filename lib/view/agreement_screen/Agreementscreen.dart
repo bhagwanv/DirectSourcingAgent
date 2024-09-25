@@ -81,8 +81,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
     }
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }

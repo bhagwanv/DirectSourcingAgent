@@ -91,8 +91,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     LeadAadhaarResponse? leadAadhaarResponse = null;
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }

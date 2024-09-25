@@ -95,8 +95,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
     // TODO: implement build
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+        onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }
@@ -228,6 +227,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                   if (data.dsaLeadCode != null) {
                     prefsUtil.saveString(
                         DSA_LEAD_CODE, data.dsaLeadCode!);
+                  } else {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, "");
                   }
 
                 }

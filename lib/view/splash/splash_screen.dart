@@ -1,6 +1,7 @@
+import 'package:direct_sourcing_agent/utils/MixpanelManager.dart';
+import 'package:direct_sourcing_agent/utils/MixpannelEventName.dart';
 import 'package:direct_sourcing_agent/view/login_screen/login_screen.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -30,14 +31,15 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _isLoggedIn = false;
   final internetConnectivity = InternetConnectivity();
 
-  String BaseUrl = "";
+  String baseUrl = "";
   String createLeadUrl = "";
-  String TermsAndCondition = "";
+  String termsAndCondition = "";
 
   @override
   void initState() {
     super.initState();
     getFirebaseUrl(context);
+    MixpanelManager().trackEvent(MixpannelEventName.splashScreenView);
   }
 
   @override
@@ -53,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Spacer(),
+            const Spacer(),
             Image.asset('assets/images/scaleup_logo.png'),
             // Replace with your logo image path
             const SizedBox(height: 20),
@@ -116,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       _isLoggedIn = prefs.getBool(IS_LOGGED_IN) ?? false;
     });
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (_isLoggedIn) {
         getLoggedInUserData(context);
       } else {
@@ -144,36 +146,46 @@ class _SplashScreenState extends State<SplashScreen> {
             success: (data) async {
               if (data.status!) {
                 final prefsUtil = await SharedPref.getInstance();
+                Map<String, dynamic> mixpanelData = {};
                 prefsUtil.saveString(USER_ID, data.userId!);
                 prefsUtil.saveString(TOKEN, data.userToken!);
                 prefsUtil.saveInt(COMPANY_ID, data.companyId!);
                 prefsUtil.saveInt(PRODUCT_ID, data.productId!);
                 prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
+                mixpanelData['user_id'] = data.userId!;
+                mixpanelData['Product Code'] = data.productCode!;
                 if (data.companyCode != null) {
                   prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+                  mixpanelData['Company Code'] = data.companyCode!;
                 }
                 if (data.role != null) {
                   prefsUtil.saveString(ROLE, data.role!);
+                  mixpanelData['role'] = data.role!;
                 }
                 if (data.type != null) {
                   prefsUtil.saveString(TYPE, data.type!);
+                  mixpanelData['type'] = data.type!;
                 }
 
                 if (data.userData != null) {
                   prefsUtil.saveString(USER_NAME, data.userData!.name!);
+                  mixpanelData['name'] = data.userData!.name!;
                   prefsUtil.saveString(
                       USER_PAN_NUMBER, data.userData!.panNumber!);
                   prefsUtil.saveString(
                       USER_ADHAR_NO, data.userData!.aadharNumber!);
-                  if (data.userData!.mobile != null)
+                  if (data.userData!.mobile != null) {
                     prefsUtil.saveString(
                         USER_MOBILE_NO, data.userData!.mobile!);
+                    mixpanelData['Mobile Number'] = data.userData!.mobile!;
+                  }
                   if (data.userData?.address != null) {
                     prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
                   }
-                  if (data.userData!.workingLocation != null)
+                  if (data.userData!.workingLocation != null) {
                     prefsUtil.saveString(
                         USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                  }
                   if (data.userData?.selfie != null) {
                     prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                   }
@@ -191,17 +203,21 @@ class _SplashScreenState extends State<SplashScreen> {
                   if (data.dsaLeadCode != null) {
                     prefsUtil.saveString(
                         DSA_LEAD_CODE, data.dsaLeadCode!);
+                    mixpanelData['Lead Code'] = data.dsaLeadCode!;
+                  } else {
+                    prefsUtil.saveString(
+                        DSA_LEAD_CODE, "");
                   }
                 }
 
                 prefsUtil.saveBool(IS_LOGGED_IN, true);
-                //  prefsUtil.saveBool(USER_ACTIVE, data.isActivated!);
+                MixpanelManager().setUserProfile(mixpanelData);
                 if (data.isActivated!) {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => BottomNav()),
+                    MaterialPageRoute(builder: (context) => const BottomNav()),
                   );
                 } else {
-                  GetLeadByMobileNo(
+                  getLeadByMobileNo(
                       context, productProvider, userLoginMobile, userId);
                 }
               } else {
@@ -234,7 +250,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  Future<void> GetLeadByMobileNo(
+  Future<void> getLeadByMobileNo(
       BuildContext context,
       DataProvider productProvider,
       String userLoginMobile,
@@ -308,27 +324,27 @@ class _SplashScreenState extends State<SplashScreen> {
 
       await remoteConfig.fetchAndActivate();
       if (kReleaseMode) {
-        BaseUrl = remoteConfig.getString('Base_url');
+        baseUrl = remoteConfig.getString('Base_url');
         createLeadUrl = remoteConfig.getString('Create_lead_url');
-        TermsAndCondition = remoteConfig.getString('TermsAndCondition');
+        termsAndCondition = remoteConfig.getString('TermsAndCondition');
       } else {
         //QA
-        BaseUrl = BASE_URL_QA;
+        baseUrl = BASE_URL_QA;
         createLeadUrl = CREATE_LEAD_URL_QA;
-        TermsAndCondition = TERMS_AND_CONDITON;
-
+        termsAndCondition = TERMS_AND_CONDITON;
         //UAT
-        /*BaseUrl = BASE_URL_UAT;
+        /*baseUrl = BASE_URL_UAT;
         createLeadUrl = CREATE_LEAD_URL_UAT;
         TermsAndCondition = TERMS_AND_CONDITON;*/
-
-        print("Base Url :: $BaseUrl");
-        print("Create_lead_url Url $createLeadUrl");
-        print("Create_lead_url Url $TermsAndCondition");
+        if(kDebugMode) {
+          print("Base Url :: $baseUrl");
+          print("Create_lead_url Url $createLeadUrl");
+          print("Create_lead_url Url $termsAndCondition");
+        }
       }
       var version = await getBuildVersion();
-      await prefsUtil.saveString(BASE_URL, BaseUrl);
-      await prefsUtil.saveString(Terms_And_Condition, TermsAndCondition);
+      await prefsUtil.saveString(BASE_URL, baseUrl);
+      await prefsUtil.saveString(Terms_And_Condition, termsAndCondition);
       await prefsUtil.saveString(CREATE_LEAD_BASE_URL, createLeadUrl);
 
       if(version == remoteConfig.getString('app_version')) {
@@ -340,7 +356,7 @@ class _SplashScreenState extends State<SplashScreen> {
           builder: (BuildContext context) {
             return UpdateDialog(
               allowDismissal: true,
-              description: "A new version of DSA application is available. Please update to version\s ${remoteConfig.getString('app_version')} \s now",
+              description: "A new version of DSA application is available. Please update to version ${remoteConfig.getString('app_version')} now",
               version: version!,
               appLink: "https://play.google.com/store/apps/details?id=com.sk.user.agent&hl=en",
             );
@@ -357,10 +373,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
 Future<String?> getBuildVersion () async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  String appName = packageInfo.appName;
-  String packageName = packageInfo.packageName;
   String version = packageInfo.version;
-  String buildNumber = packageInfo.buildNumber;
+  /*String appName = packageInfo.appName;
+  String packageName = packageInfo.packageName;
+  String buildNumber = packageInfo.buildNumber;*/
   return version.toString();
 }
 
@@ -369,10 +385,10 @@ class CustomCircularLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return const SizedBox(
       width: 36,
       height: 36,
-      child: const CircularProgressIndicator(
+      child: CircularProgressIndicator(
         strokeWidth: 3,
         valueColor: AlwaysStoppedAnimation(kPrimaryColor),
       ),

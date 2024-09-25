@@ -36,7 +36,9 @@ import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/dsa_company/model/DSAGSTExistResModel.dart';
+import '../view/dsa_company/model/EducationMasterListResponse.dart';
 import '../view/dsa_company/model/GetDsaPersonalDetailResModel.dart';
+import '../view/dsa_company/model/LangauageMasterListResponse.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -176,8 +178,15 @@ class DataProvider extends ChangeNotifier {
 
   AllStateResponce? get getAllStateData => _getAllStateData;
 
+  AllStateResponce? _getWorkingLocationAllStateData;
+
+  AllStateResponce? get getWorkingLocationAllStateData => _getWorkingLocationAllStateData;
+
   List<CityResponce?>? _getAllCityData;
   List<CityResponce?>? get getAllCityData => _getAllCityData;
+
+  List<CityResponce?>? _getWorkingLocationAllCityData;
+  List<CityResponce?>? get getWorkingLocationAllCityData => _getWorkingLocationAllCityData;
 
   List<CityResponce?>? _getCurrentAllCityData;
   List<CityResponce?>? get getCurrentAllCityData => _getCurrentAllCityData;
@@ -323,6 +332,12 @@ class DataProvider extends ChangeNotifier {
 
   Result<LeadCreatePermissionModel,Exception>? _getLeadCreatePermission;
   Result<LeadCreatePermissionModel,Exception>? get getLeadCreatePermission => _getLeadCreatePermission;
+
+  EducationMasterListResponse? _getEducationMasterListResponseData;
+  EducationMasterListResponse? get getEducationMasterListResponseData => _getEducationMasterListResponseData;
+
+  LangauageMasterListResponse? _getLangauageMasterListResponseData;
+  LangauageMasterListResponse? get getLangauageMasterListResponseData => _getLangauageMasterListResponseData;
 
 
   Future<void> productCompanyDetail(String product, String company) async {
@@ -474,8 +489,18 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getWorkingLocationAllState() async {
+    _getWorkingLocationAllStateData = await apiService.getAllState();
+    notifyListeners();
+  }
+
   Future<void> getAllCity(int stateID) async {
     _getAllCityData = await apiService.GetCityByStateId(stateID);
+    notifyListeners();
+  }
+
+  Future<void> getWorkingLocationAllCity(int stateID) async {
+    _getWorkingLocationAllCityData = await apiService.GetCityByStateId(stateID);
     notifyListeners();
   }
 
@@ -780,6 +805,16 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getEducationMasterList() async {
+    _getEducationMasterListResponseData = await apiService.getEducationMasterList();
+    notifyListeners();
+  }
+
+  Future<void> getLangauageMasterList() async {
+    _getLangauageMasterListResponseData = await apiService.getLangauageMasterList();
+    notifyListeners();
+  }
+
   Future<void> disposeAllProviderData() async {
     /*_getCustomerOrderSummaryData = null;
     _getCustomerTransactionListTwoData = null;
@@ -837,6 +872,8 @@ class DataProvider extends ChangeNotifier {
     _getLeadCreatePermission=null;
     _getDSAPersonalInfoData = null;
     _getDsaPersonalDetailData = null;
+    _getEducationMasterListResponseData = null;
+    _getLangauageMasterListResponseData = null;
 
     /*_InProgressScreen = null;*/
     notifyListeners();

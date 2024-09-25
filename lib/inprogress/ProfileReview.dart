@@ -44,8 +44,7 @@ class _ProfileReviewState extends State<ProfileReview> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }
@@ -233,6 +232,9 @@ class _ProfileReviewState extends State<ProfileReview> {
                 }
                 if (data.dsaLeadCode != null) {
                   prefsUtil.saveString(DSA_LEAD_CODE, data.dsaLeadCode!);
+                } else {
+                  prefsUtil.saveString(
+                      DSA_LEAD_CODE, "");
                 }
               }
 

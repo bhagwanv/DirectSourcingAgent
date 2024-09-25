@@ -1,3 +1,5 @@
+import 'package:direct_sourcing_agent/utils/MixpanelManager.dart';
+import 'package:direct_sourcing_agent/utils/MixpannelEventName.dart';
 import 'package:direct_sourcing_agent/utils/common_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,8 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }
@@ -88,8 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
                         inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[0-9]'))),
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(10)
                         ],
                         maxLines: 1,
@@ -176,10 +176,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: CommonElevatedButton(
                         textSize: 20.0,
                         onPressed: () async {
+                          var mixpanelData = {
+                            'Button Name': 'Continue',
+                            'Screen': 'Login Screen',
+                            'Mobile Number':
+                                _mobileNumberController.text.trim(),
+                            'Term and Condition Check': isTermChecked,
+                          };
+                          MixpanelManager().trackEvent(
+                              MixpannelEventName.loginAttempt, mixpanelData);
                           if (_mobileNumberController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please enter mobile number", context);
-                          } else if (!Utils.isPhoneNoValid(_mobileNumberController.text)) {
+                          } else if (!Utils.isPhoneNoValid(
+                              _mobileNumberController.text)) {
                             Utils.showToast(
                                 "Please enter valid mobile number", context);
                           } else if (!isTermChecked) {
@@ -187,26 +197,40 @@ class _LoginScreenState extends State<LoginScreen> {
                             Utils.showToast(
                                 "Please check term & condition", context);
                           } else {
-                            PermissionStatus cameraPermissionStatus = await Permission.camera.status;
-                            PermissionStatus microphonePermissionStatus = await Permission.microphone.status;
-                            PermissionStatus smsPermissionStatus = await Permission.sms.status;
+                            PermissionStatus cameraPermissionStatus =
+                                await Permission.camera.status;
+                            PermissionStatus microphonePermissionStatus =
+                                await Permission.microphone.status;
+                            PermissionStatus smsPermissionStatus =
+                                await Permission.sms.status;
                             Utils.hideKeyBored(context);
                             final prefsUtil = await SharedPref.getInstance();
                             await prefsUtil.saveString(LOGIN_MOBILE_NUMBER,
                                 _mobileNumberController.text.toString());
-                            if (cameraPermissionStatus.isGranted && microphonePermissionStatus.isGranted && smsPermissionStatus.isGranted) {
+                            if (cameraPermissionStatus.isGranted &&
+                                microphonePermissionStatus.isGranted &&
+                                smsPermissionStatus.isGranted) {
                               Utils.onLoading(context, "");
                               await Provider.of<DataProvider>(context,
-                                  listen: false)
+                                      listen: false)
                                   .genrateOtp(
-                                  context, _mobileNumberController.text);
+                                      context, _mobileNumberController.text);
                               if (dataProvider.genrateOptData != null) {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                                 dataProvider.genrateOptData!.when(
                                   success: (data) async {
                                     if (!data.status!) {
                                       Utils.showToast(data.message!, context);
                                     } else {
+                                      var mixpanelData = {
+                                        'Button Name': 'Continue',
+                                        'Screen': 'Login Screen',
+                                        'Mobile Number':
+                                        _mobileNumberController.text.trim(),
+                                      };
+                                      MixpanelManager().trackEvent(
+                                          MixpannelEventName.otpSent, mixpanelData);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -224,7 +248,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             } else {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const PermissionPage()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PermissionPage()),
                               );
                             }
                           }
