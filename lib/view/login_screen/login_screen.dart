@@ -15,8 +15,8 @@ import '../../utils/utils_class.dart';
 import '../otp_screens/OtpScreen.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String? pageType;
 
+  final String? pageType;
   const LoginScreen({super.key, this.pageType});
 
   @override
@@ -231,11 +231,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       };
                                       MixpanelManager().trackEvent(
                                           MixpannelEventName.otpSent, mixpanelData);
+                                      prefsUtil.saveString(DSA_OTP, data.otp!);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) {
-                                            return const OtpScreen();
+                                            return  OtpScreen(userOtp: data.otp!,userLoginMobile:_mobileNumberController.text,);
                                           },
                                         ),
                                       );

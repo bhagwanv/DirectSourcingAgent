@@ -34,7 +34,8 @@ const String BASE_URL_QA = "https://gateway-qa.scaleupfin.com";
 const String CREATE_LEAD_URL_QA = "https://customer-qa.scaleupfin.com/#/lead";
 const String BASE_URL_UAT = "https://gateway-uat.scaleupfin.com";
 const String CREATE_LEAD_URL_UAT = "https://customer-uat.scaleupfin.com/#/lead";
-const String TERMS_AND_CONDITON = "https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html";
+//const String TERMS_AND_CONDITON = "https://uat.shopkirana.in/images/policy/DSATermsAndCondition.html";
+const String TERMS_AND_CONDITON = "https://gateway.scaleupfin.com/aggregator/DSAAgg/DSATermsAndCondition";
 
 /*shared variable*/
 const String BASE_URL = "base_url";
@@ -69,4 +70,5 @@ const String USER_PAY_OUT = "payout";
 const String USER_DOC_SiGN_URL = "docSignedUrl";
 const String USER_ACTIVE = "user_active";
 const String DSA_LEAD_CODE = "dsaLeadCode";
+const String DSA_OTP = "otp";
 

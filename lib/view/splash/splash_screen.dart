@@ -329,13 +329,13 @@ class _SplashScreenState extends State<SplashScreen> {
         termsAndCondition = remoteConfig.getString('TermsAndCondition');
       } else {
         //QA
-        baseUrl = BASE_URL_QA;
+    /*    baseUrl = BASE_URL_QA;
         createLeadUrl = CREATE_LEAD_URL_QA;
-        termsAndCondition = TERMS_AND_CONDITON;
+        termsAndCondition = TERMS_AND_CONDITON;*/
         //UAT
-        /*baseUrl = BASE_URL_UAT;
+        baseUrl = BASE_URL_UAT;
         createLeadUrl = CREATE_LEAD_URL_UAT;
-        TermsAndCondition = TERMS_AND_CONDITON;*/
+        termsAndCondition = TERMS_AND_CONDITON;
         if(kDebugMode) {
           print("Base Url :: $baseUrl");
           print("Create_lead_url Url $createLeadUrl");
@@ -358,7 +358,7 @@ class _SplashScreenState extends State<SplashScreen> {
               allowDismissal: true,
               description: "A new version of DSA application is available. Please update to version ${remoteConfig.getString('app_version')} now",
               version: version!,
-              appLink: "https://play.google.com/store/apps/details?id=com.sk.user.agent&hl=en",
+              appLink: "https://play.google.com/store/apps/details?id=com.direct.sourcing&hl=en",
             );
           },
         );

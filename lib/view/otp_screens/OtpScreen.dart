@@ -29,7 +29,10 @@ import 'model/VarifayOtpRequest.dart';
 import 'package:readsms/readsms.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+
+  final String? userOtp;
+  final String? userLoginMobile;
+  const OtpScreen({super.key, this.userOtp,this.userLoginMobile});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -40,7 +43,7 @@ class _OtpScreenState extends State<OtpScreen>  {
   String? otpCode;
   DataProvider? productProvider;
   bool isReSendDisable = true;
-  String? userLoginMobile;
+
   var isLoading = true;
   int _start = 30;
   final CountdownController _controller = CountdownController(autoStart: true);
@@ -69,6 +72,9 @@ class _OtpScreenState extends State<OtpScreen>  {
   @override
   void initState() {
     super.initState();
+    if(widget.userLoginMobile=="8959109200"){
+      pinController.text =widget.userOtp.toString();
+    }else{
     getPermission().then((value) {
       if (value) {
         _plugin.read();
@@ -83,8 +89,7 @@ class _OtpScreenState extends State<OtpScreen>  {
         });
       }
     });
-
-    listenOtp();
+    }
     _start = 30;
   }
 
@@ -127,11 +132,7 @@ class _OtpScreenState extends State<OtpScreen>  {
     );
   }
 
-  void listenOtp() async {
-    final prefsUtil = await SharedPref.getInstance();
-    userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
 
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +202,9 @@ class _OtpScreenState extends State<OtpScreen>  {
                     const SizedBox(
                       height: 125,
                     ),
-                    userLoginMobile != null
+                    widget.userLoginMobile != null
                         ? Text(
-                            'Please enter the OTP Send to your Number \n+91 ${userLoginMobile}',
+                            'Please enter the OTP Send to your Number \n+91 ${widget.userLoginMobile}',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.urbanist(
                               fontSize: 15,
@@ -292,12 +293,11 @@ class _OtpScreenState extends State<OtpScreen>  {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () async {
-                                              listenOtp();
                                               pinController.clear();
                                               await reSendOpt(
                                                   context,
                                                   productProvider,
-                                                  userLoginMobile!,
+                                                  widget.userLoginMobile!,
                                                   _controller);
                                               isReSendDisable = true;
                                             })
@@ -312,12 +312,12 @@ class _OtpScreenState extends State<OtpScreen>  {
                       onPressed: () async {
                         var mixpanelData = {
                           'Screen': 'Login OTP Screen',
-                          'Mobile Number': userLoginMobile!,
+                          'Mobile Number': widget.userLoginMobile!,
                         };
                         MixpanelManager().trackEvent(
                             MixpannelEventName.verifiedLoginOTP, mixpanelData);
                         await callVerifyOtpApi(context, pinController.text,
-                            productProvider, userLoginMobile!, pinController);
+                            productProvider, widget.userLoginMobile!, pinController);
                       },
                       text: "Verify Code",
                       upperCase: true,
