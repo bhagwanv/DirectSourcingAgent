@@ -37,7 +37,7 @@ class _LoaderState extends State<Loader> {
                 // Adjust width and height according to your image size
               ),
               SizedBox(width: 20.0,height: 60.0),
-              new Text(msg),
+              Text(msg),
             ],
           ),
         ),

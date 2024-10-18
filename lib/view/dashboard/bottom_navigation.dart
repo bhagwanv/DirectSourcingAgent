@@ -38,8 +38,7 @@ class _BottomNavState extends State<BottomNav> {
     productProvider = Provider.of<DataProvider>(context, listen: false);
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }

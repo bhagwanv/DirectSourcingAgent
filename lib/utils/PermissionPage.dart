@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import '../providers/DataProvider.dart';
 import '../shared_preferences/shared_pref.dart';
 import '../view/otp_screens/OtpScreen.dart';
+import 'MixpanelManager.dart';
+import 'MixpannelEventName.dart';
 
 class PermissionPage extends StatefulWidget {
   const PermissionPage({Key? key}) : super(key: key);
@@ -32,6 +34,11 @@ class _PermissionPageState extends State<PermissionPage>
     if (WidgetsBinding.instance.lifecycleState != null) {
       _checkPermision();
     }
+    var mixpanelData = {
+      'Screen': 'Permission Screen',
+    };
+    MixpanelManager()
+        .trackEvent(MixpannelEventName.permissionAsk, mixpanelData);
   }
 
   @override
@@ -51,8 +58,7 @@ class _PermissionPageState extends State<PermissionPage>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         }
@@ -146,6 +152,12 @@ class _PermissionPageState extends State<PermissionPage>
                               if (_cameraGranted &&
                                   _microphoneGranted &&
                                   _smsGranted) {
+                                var mixpanelData = {
+                                  'Screen': 'Permission Screen',
+                                };
+                                MixpanelManager().trackEvent(
+                                    MixpannelEventName.permissionGranted,
+                                    mixpanelData);
                                 _navigateToHome(dataProvider);
                               } else {
                                 _requestPermissions();
@@ -239,6 +251,14 @@ class _PermissionPageState extends State<PermissionPage>
           if (!data.status!) {
             Utils.showToast(data.message!, context);
           } else {
+            var mixpanelData = {
+              'Button Name': 'Continue',
+              'Screen': 'Permission Screen',
+              'Mobile Number':
+              mobileNumber,
+            };
+            MixpanelManager().trackEvent(
+                MixpannelEventName.otpSent, mixpanelData);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

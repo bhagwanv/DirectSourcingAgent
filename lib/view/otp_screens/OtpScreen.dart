@@ -15,6 +15,8 @@ import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../providers/DataProvider.dart';
 import '../../shared_preferences/shared_pref.dart';
+import '../../utils/MixpanelManager.dart';
+import '../../utils/MixpannelEventName.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constant.dart';
 import '../../utils/customer_sequence_logic.dart';
@@ -150,11 +152,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        debugPrint("didPop1: $didPop");
-
-        // Use a short delay to ensure the pop operation completes
-        Future.delayed(Duration(milliseconds: 100), () {
+      onPopInvokedWithResult: (didPop, result) async {
+        Future.delayed(const Duration(milliseconds: 100), () {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -326,6 +325,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                     CommonElevatedButton(
                       textSize: 16,
                       onPressed: () async {
+                        var mixpanelData = {
+                          'Screen': 'Login OTP Screen',
+                          'Mobile Number': userLoginMobile!,
+                        };
+                        MixpanelManager().trackEvent(
+                            MixpannelEventName.verifiedLoginOTP, mixpanelData);
                         await callVerifyOtpApi(context, pinController.text,
                             productProvider, userLoginMobile!, pinController);
                       },
@@ -434,36 +439,45 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             success: (data) async {
               if (data.status!) {
                 final prefsUtil = await SharedPref.getInstance();
+                Map<String, dynamic> mixpanelData = {};
                 prefsUtil.saveString(USER_ID, data.userId!);
                 prefsUtil.saveString(TOKEN, data.userToken!);
                 prefsUtil.saveInt(COMPANY_ID, data.companyId!);
                 prefsUtil.saveInt(PRODUCT_ID, data.productId!);
                 prefsUtil.saveString(PRODUCT_CODE, data.productCode!);
+                mixpanelData['user_id'] = data.userId!;
+                mixpanelData['Product Code'] = data.productCode!;
                 if (data.companyCode != null) {
                   prefsUtil.saveString(COMPANY_CODE, data.companyCode!);
+                  mixpanelData['Company Code'] = data.companyCode!;
                 }
                 if (data.role != null) {
                   prefsUtil.saveString(ROLE, data.role!);
+                  mixpanelData['role'] = data.role!;
                 }
                 if (data.type != null) {
                   prefsUtil.saveString(TYPE, data.type!);
+                  mixpanelData['type'] = data.type!;
                 }
 
                 if (data.userData != null) {
                   prefsUtil.saveString(USER_NAME, data.userData!.name!);
-                  prefsUtil.saveString(
-                      USER_PAN_NUMBER, data.userData!.panNumber!);
+                  prefsUtil.saveString(USER_PAN_NUMBER, data.userData!.panNumber!);
                   prefsUtil.saveString(
                       USER_ADHAR_NO, data.userData!.aadharNumber!);
-                  if (data.userData!.mobile != null)
+                  mixpanelData['name'] = data.userData!.name!;
+                  if (data.userData!.mobile != null) {
                     prefsUtil.saveString(
                         USER_MOBILE_NO, data.userData!.mobile!);
+                    mixpanelData['Mobile Number'] = data.userData!.mobile!;
+                  }
                   if (data.userData?.address != null) {
                     prefsUtil.saveString(USER_ADDRESS, data.userData!.address!);
                   }
-                  if (data.userData!.workingLocation != null)
+                  if (data.userData!.workingLocation != null) {
                     prefsUtil.saveString(
                         USER_WORKING_LOCTION, data.userData!.workingLocation!);
+                  }
                   if (data.userData?.selfie != null) {
                     prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                   }
@@ -480,15 +494,15 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
                   if (data.dsaLeadCode != null) {
-                    prefsUtil.saveString(
-                        DSA_LEAD_CODE, data.dsaLeadCode!);
+                    prefsUtil.saveString(DSA_LEAD_CODE, data.dsaLeadCode!);
+                    mixpanelData['Lead Code'] = data.dsaLeadCode!;
                   } else {
-                    prefsUtil.saveString(
-                        DSA_LEAD_CODE, "");
+                    prefsUtil.saveString(DSA_LEAD_CODE, "");
                   }
                 }
 
                 prefsUtil.saveBool(IS_LOGGED_IN, true);
+                MixpanelManager().setUserProfile(mixpanelData);
                 if (data.isActivated!) {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => BottomNav()),
