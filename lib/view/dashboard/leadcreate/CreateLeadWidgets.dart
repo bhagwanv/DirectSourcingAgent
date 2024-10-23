@@ -17,6 +17,10 @@ import 'package:provider/provider.dart';
 import '../../../utils/myWebBrowser.dart';
 
 class CreateLeadWidgets extends StatefulWidget {
+
+  final String productType;
+  const CreateLeadWidgets({super.key, required this.productType});
+
   @override
   State<CreateLeadWidgets> createState() => _CreateLeadWidgetsState();
 }
@@ -25,7 +29,6 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final TextEditingController _MobileNumberController = TextEditingController();
   String? createLeadBaseUrl;
   String? companyID;
-  String? productCode;
   String? UserToken;
   String? UserID;
   final browser = MyInAppBrowser();
@@ -40,6 +43,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   @override
   void initState() {
     // TODO: implement initState
+
     getUserData();
   }
 
@@ -156,9 +160,10 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     final prefsUtil = await SharedPref.getInstance();
     createLeadBaseUrl = prefsUtil.getString(CREATE_LEAD_BASE_URL);
     companyID = prefsUtil.getString(COMPANY_CODE);
-    productCode = prefsUtil.getString(PRODUCT_CODE);
+   // productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
     UserID = prefsUtil.getString(USER_ID);
+    print("productType-${widget.productType}");
   }
 
   void openInAppBrowser(String token, BuildContext _context,String userID) {
@@ -177,7 +182,7 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     String baseUrl = createLeadBaseUrl?.toString() ?? "";
     String mobileNumber = _MobileNumberController.text.toString() ?? "";
     String companyId = companyID?.toString() ?? "";
-    String productId = productCode?.toString() ?? "";
+    String productId =  widget.productType?.toString() ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
   }
 }

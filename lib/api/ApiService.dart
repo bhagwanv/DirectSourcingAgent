@@ -36,6 +36,7 @@ import '../view/dashboard/Lead_screen/model/DSADashboardLeadListResModel.dart';
 import '../view/dashboard/home/DSASalesAgentListResModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
+import '../view/dashboard/leadcreate/model/GetDSAProductListResModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
@@ -1827,6 +1828,43 @@ class ApiService {
       }
     } on Exception catch (e) {
       throw Failure(e);
+    }
+  }
+
+
+  Future<Result<GetDSAProductListResModel, Exception>> getDSAProductList(
+      String userId) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${base_url! + apiUrls.getDSAProductList}?UserId=$userId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        );
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final GetDSAProductListResModel responseModel =
+            GetDSAProductListResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 }

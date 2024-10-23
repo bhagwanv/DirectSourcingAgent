@@ -32,6 +32,7 @@ import '../view/dashboard/Lead_screen/model/DSADashboardLeadListResModel.dart';
 import '../view/dashboard/home/DSASalesAgentListResModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsReqModel.dart';
 import '../view/dashboard/home/GetDSADashboardDetailsResModel.dart';
+import '../view/dashboard/leadcreate/model/GetDSAProductListResModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListReqModel.dart';
 import '../view/dashboard/payout_screen/model/GetDSADashboardPayoutListResModel.dart';
 import '../view/dsa_company/model/CustomerDetailUsingGSTResponseModel.dart';
@@ -42,7 +43,6 @@ import '../view/dsa_company/model/LangauageMasterListResponse.dart';
 import '../view/dsa_company/model/PostLeadDSAPersonalDetailReqModel.dart';
 import '../view/dsa_company/model/PostLeadDsaPersonalDetailResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
-import '../view/otp_screens/model/GetUserProfileRequest.dart';
 import '../view/otp_screens/model/GetUserProfileResponse.dart';
 import '../view/otp_screens/model/LeadMobileNoResModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
@@ -338,6 +338,9 @@ class DataProvider extends ChangeNotifier {
 
   LangauageMasterListResponse? _getLangauageMasterListResponseData;
   LangauageMasterListResponse? get getLangauageMasterListResponseData => _getLangauageMasterListResponseData;
+
+  Result<GetDSAProductListResModel,Exception>? _getDSAProductListData;
+  Result<GetDSAProductListResModel,Exception>? get getDSAProductListData => _getDSAProductListData;
 
 
   Future<void> productCompanyDetail(String product, String company) async {
@@ -814,6 +817,11 @@ class DataProvider extends ChangeNotifier {
     _getLangauageMasterListResponseData = await apiService.getLangauageMasterList();
     notifyListeners();
   }
+  Future<void> getDSAProductList(String UserID) async {
+    _getDSAProductListData = await apiService.getDSAProductList(UserID);
+    notifyListeners();
+  }
+
 
   Future<void> disposeAllProviderData() async {
     /*_getCustomerOrderSummaryData = null;
