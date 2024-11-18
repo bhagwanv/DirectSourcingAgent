@@ -329,13 +329,13 @@ class _SplashScreenState extends State<SplashScreen> {
         termsAndCondition = remoteConfig.getString('TermsAndCondition');
       } else {
         //QA
-    /*    baseUrl = BASE_URL_QA;
+        baseUrl = BASE_URL_QA;
         createLeadUrl = CREATE_LEAD_URL_QA;
-        termsAndCondition = TERMS_AND_CONDITON;*/
-        //UAT
-        baseUrl = BASE_URL_UAT;
-        createLeadUrl = CREATE_LEAD_URL_UAT;
         termsAndCondition = TERMS_AND_CONDITON;
+        //UAT
+       /* baseUrl = BASE_URL_UAT;
+        createLeadUrl = CREATE_LEAD_URL_UAT;
+        termsAndCondition = TERMS_AND_CONDITON;*/
         if(kDebugMode) {
           print("Base Url :: $baseUrl");
           print("Create_lead_url Url $createLeadUrl");
