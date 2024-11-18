@@ -84,4 +84,5 @@ class ApiUrls{
   final String getDSAGSTExist="/aggregator/DSAAgg/GetDSAGSTExist";
   final String getEducationMasterList="/services/company/v1/GetEducationMasterList";
   final String getLangauageMasterList="/services/company/v1/GetLangauageMasterList";
+  final String getDSAProductList="/services/product/v1/GetDSAProductList";
 }

@@ -8,7 +8,9 @@ class DsaDashboardLeadList {
       this.mobileNo, 
       this.totalRecords, 
       this.profileImage,
-      this.agentFullName,});
+      this.agentFullName,
+      this.productCode,
+  });
 
   DsaDashboardLeadList.fromJson(dynamic json) {
     leadId = json['leadId'];
@@ -20,6 +22,7 @@ class DsaDashboardLeadList {
     totalRecords = json['totalRecords'];
     profileImage = json['profileImage'];
     agentFullName = json['agentFullName'];
+    productCode = json['productCode'];
   }
   int? leadId;
   String? status;
@@ -30,6 +33,7 @@ class DsaDashboardLeadList {
   int? totalRecords;
   String? profileImage;
   String? agentFullName;
+  String? productCode;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -42,6 +46,7 @@ class DsaDashboardLeadList {
     map['totalRecords'] = totalRecords;
     map['profileImage'] = profileImage;
     map['agentFullName'] = agentFullName;
+    map['productCode'] = productCode;
     return map;
   }
 

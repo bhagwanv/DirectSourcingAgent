@@ -12,7 +12,7 @@ class MixpanelManager {
 
   Future<void> init() async {
     if(mixpanel == null){
-      mixpanel = await Mixpanel.init("a8e16f35b6f80dba0fc7f9ed116072d9",
+      mixpanel = await Mixpanel.init("b56d1c2f900cfc2c33f55a11fc86e345",
           optOutTrackingDefault: false, trackAutomaticEvents: true);
       mixpanel!.setLoggingEnabled(true);
     }

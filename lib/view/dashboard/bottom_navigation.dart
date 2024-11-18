@@ -13,6 +13,7 @@ import '../../providers/DataProvider.dart';
 import '../../utils/constant.dart';
 import '../../utils/utils_class.dart';
 import 'home/home_screen.dart';
+import 'leadcreate/SelectOptionWidgets.dart';
 
 class BottomNav extends StatefulWidget {
   final String? pageType;
@@ -54,8 +55,11 @@ class _BottomNavState extends State<BottomNav> {
           extendBody: true,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              setState(() {
+             /* setState(() {
                 createLeadBottom();
+              });*/
+               setState(() {
+                selectOptionBottom();
               });
             },
             shape: RoundedRectangleBorder(
@@ -261,7 +265,32 @@ class _BottomNavState extends State<BottomNav> {
     );
   }
 
-  void createLeadBottom() async {
+  void selectOptionBottom() async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.5, // 50% of the screen height
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              child: SelectOptionWidgets(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+ /* void createLeadBottom() async {
     PermissionStatus cameraPermissionStatus = await Permission.camera.status;
     PermissionStatus microphonePermissionStatus = await Permission.microphone.status;
     if (cameraPermissionStatus.isGranted && microphonePermissionStatus.isGranted) {
@@ -293,7 +322,7 @@ class _BottomNavState extends State<BottomNav> {
         },
       );
     }
-  }
+  }*/
 }
 
 class ForceFullyAskPermissionDialog extends StatefulWidget {

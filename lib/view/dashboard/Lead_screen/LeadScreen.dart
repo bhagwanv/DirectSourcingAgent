@@ -73,7 +73,7 @@ class _LeadScreenState extends State<LeadScreen> {
       webViewSettings: InAppWebViewSettings(
           javaScriptEnabled: true, isInspectable: kDebugMode,clearCache:true));
   String? companyID;
-  String? productCode;
+  String? productID;
   String? UserToken;
   String? LeadCreateMobileNo;
   String? createLeadBaseUrl;
@@ -459,6 +459,7 @@ class _LeadScreenState extends State<LeadScreen> {
           String status = dsaDashboardLead.status.toString() ?? '';
           LeadCreateMobileNo = dsaDashboardLead.mobileNo ?? '';
           String? profileImage = dsaDashboardLead.profileImage.toString() ?? '';
+          var productCode = dsaDashboardLead.productCode ?? '';
 
           return GestureDetector(
             onTap: () async {
@@ -519,9 +520,30 @@ class _LeadScreenState extends State<LeadScreen> {
                                     )),
                               ],
                             ),
+
                             SizedBox(
-                              height: 10,
+                              height: 5,
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                      "ProdectName:$productCode",
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight
+                                            .w500,
+                                      )),
+                                ),
+
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -584,6 +606,8 @@ class _LeadScreenState extends State<LeadScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+
+                                    productID=dsaDashboardLead.productCode ?? '';
                                     openInAppBrowser(UserToken!,context, dsaDashboardLead.mobileNo.toString(),UserID!);
                                   },
                                   child: Card(
@@ -796,17 +820,18 @@ class _LeadScreenState extends State<LeadScreen> {
     final prefsUtil = await SharedPref.getInstance();
     createLeadBaseUrl = prefsUtil.getString(CREATE_LEAD_BASE_URL);
     companyID = prefsUtil.getString(COMPANY_CODE);
-    productCode = prefsUtil.getString(PRODUCT_CODE);
+   // productCode = prefsUtil.getString(PRODUCT_CODE);
     UserToken = prefsUtil.getString(TOKEN);
     UserID = prefsUtil.getString(USER_ID);
 
   }
 
   String _constructUrl(String mobile) {
+    print("productID -$productID");
     String baseUrl = createLeadBaseUrl?.toString() ?? "";
     String mobileNumber = mobile ?? "";
     String companyId = companyID?.toString() ?? "";
-    String productId = productCode?.toString() ?? "";
+    String productId = productID ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
   }
 }
