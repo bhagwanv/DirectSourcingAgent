@@ -69,9 +69,25 @@ class _LeadScreenState extends State<LeadScreen> {
   final browser = MyInAppBrowser();
 
   final settings = InAppBrowserClassSettings(
-      browserSettings: InAppBrowserSettings(hideUrlBar: true),
-      webViewSettings: InAppWebViewSettings(
-          javaScriptEnabled: true, isInspectable: kDebugMode,clearCache:true));
+    browserSettings: InAppBrowserSettings(
+      hideUrlBar: true,
+    ),
+    webViewSettings: InAppWebViewSettings(
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      javaScriptEnabled: true,
+      isInspectable: kDebugMode,
+      clearCache: true,
+      geolocationEnabled: true,
+      allowFileAccess: true, // Allows access to files
+      allowContentAccess: true, // Allows access to content
+      mediaPlaybackRequiresUserGesture: false, // For autoplay
+      allowsInlineMediaPlayback: true, // Allows inline playback of media
+      useWideViewPort: true, // Makes the web view more adaptable
+      allowUniversalAccessFromFileURLs: true, // Enables universal access
+      domStorageEnabled: true,
+
+    ),
+  );
   String? companyID;
   String? productID;
   String? UserToken;
@@ -687,7 +703,6 @@ class _LeadScreenState extends State<LeadScreen> {
               ),
             ),
           );
-          ;
         }
       },
     );
@@ -832,6 +847,8 @@ class _LeadScreenState extends State<LeadScreen> {
     String mobileNumber = mobile ?? "";
     String companyId = companyID?.toString() ?? "";
     String productId = productID ?? "";
-    return "$baseUrl/$mobileNumber/$companyId/$productId/true";
+   return "$baseUrl/$mobileNumber/$companyId/$productId/true";
+    //return "https://uatpartnerweb.switchpe.com/3297c1604d2db3058b391e4b5d28f0a9412fdcb94d30b72360bb0d2f45d65915f26351e5409ca1d042f890c2f5dcd6492f0cca3d5800b7af52cb180f18ede38b";
+
   }
 }

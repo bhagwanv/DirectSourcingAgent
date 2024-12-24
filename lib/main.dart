@@ -19,6 +19,9 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Permission.camera.request();
+  await Permission.microphone.request();
+  await Permission.location.request();
   await _initializeFirebase();
   await MixpanelManager().init();
   _initializeErrorHandling();
@@ -39,8 +42,6 @@ Future<void> _initializeFirebase() async {
 
 void _initializeErrorHandling() {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
-  // Pass uncaught asynchronous errors to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;

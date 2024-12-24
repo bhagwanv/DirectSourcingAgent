@@ -26,7 +26,6 @@ import '../splash/model/LeadCurrentRequestModel.dart';
 import '../splash/model/LeadCurrentResponseModel.dart';
 import 'model/GetUserProfileRequest.dart';
 import 'model/VarifayOtpRequest.dart';
-import 'package:readsms/readsms.dart';
 
 class OtpScreen extends StatefulWidget {
 
@@ -61,10 +60,10 @@ class _OtpScreenState extends State<OtpScreen>  {
       border: Border.all(color: kPrimaryColor),
     ),
   );
-  final _plugin = Readsms();
+  /*final _plugin = Readsms();
   String sms = 'no sms received';
   String sender = 'no sms received';
-  String time = 'no sms received';
+  String time = 'no sms received';*/
 
   String? otpNumberAutoFiled;
 
@@ -73,6 +72,9 @@ class _OtpScreenState extends State<OtpScreen>  {
   void initState() {
     super.initState();
     if(widget.userLoginMobile=="8959109200"){
+      pinController.text =widget.userOtp.toString();
+    }
+   /* if(widget.userLoginMobile=="8959109200"){
       pinController.text =widget.userOtp.toString();
     }else{
     getPermission().then((value) {
@@ -89,17 +91,17 @@ class _OtpScreenState extends State<OtpScreen>  {
         });
       }
     });
-    }
+    }*/
     _start = 30;
   }
 
   @override
   void dispose() {
     super.dispose();
-    _plugin.dispose();
+   // _plugin.dispose();
   }
 
-  Future<bool> getPermission() async {
+  /*Future<bool> getPermission() async {
     if (await Permission.sms.status == PermissionStatus.granted) {
       return true;
     } else {
@@ -109,7 +111,7 @@ class _OtpScreenState extends State<OtpScreen>  {
         return false;
       }
     }
-  }
+  }*/
 
   Widget buildCountdown() {
     return Countdown(
@@ -310,14 +312,16 @@ class _OtpScreenState extends State<OtpScreen>  {
                     CommonElevatedButton(
                       textSize: 16,
                       onPressed: () async {
+                        final prefsUtil = await SharedPref.getInstance();
+                        var mobileNumber = await prefsUtil.getString(LOGIN_MOBILE_NUMBER);
                         var mixpanelData = {
                           'Screen': 'Login OTP Screen',
-                          'Mobile Number': widget.userLoginMobile!,
+                          'Mobile Number': mobileNumber,
                         };
                         MixpanelManager().trackEvent(
                             MixpannelEventName.verifiedLoginOTP, mixpanelData);
                         await callVerifyOtpApi(context, pinController.text,
-                            productProvider, widget.userLoginMobile!, pinController);
+                            productProvider, mobileNumber!, pinController);
                       },
                       text: "Verify Code",
                       upperCase: true,

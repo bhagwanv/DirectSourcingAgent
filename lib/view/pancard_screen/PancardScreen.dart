@@ -113,8 +113,7 @@ class _PancardScreenState extends State<PancardScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
+          child: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getLeadPANData == null && isLoading) {
               return Utils.onLoading(context, "");
             } else {
@@ -122,7 +121,6 @@ class _PancardScreenState extends State<PancardScreen> {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
               }
-
               if (productProvider.getLeadPANData != null) {
                 productProvider.getLeadPANData!.when(
                   success: (LeadPanResponseModel) {
@@ -170,9 +168,7 @@ class _PancardScreenState extends State<PancardScreen> {
                   },
                 );
               }
-
-              if (productProvider.getPostSingleFileData != null &&
-                  !isImageDelete) {
+              if (productProvider.getPostSingleFileData != null && !isImageDelete) {
                 if (productProvider.getPostSingleFileData!.filePath != null) {
                   image = productProvider.getPostSingleFileData!.filePath!;
                   documentId = productProvider.getPostSingleFileData!.docId!;
@@ -255,10 +251,9 @@ class _PancardScreenState extends State<PancardScreen> {
                                 enabled: isEnabledPanNumber,
                                 labelText: "Enter PAN Number",
                                 textCapitalization:
-                                    TextCapitalization.characters,
+                                TextCapitalization.characters,
                                 inputFormatter: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp((r'[A-Z0-9]'))),
+                                  FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
                                   LengthLimitingTextInputFormatter(10)
                                 ],
                                 onChanged: (text) async {
@@ -668,8 +663,7 @@ class _PancardScreenState extends State<PancardScreen> {
     }
   }
 
-  Future<void> getLeadValidPanCard(BuildContext context, String pancardNumber,
-      DataProvider productProvider) async {
+  Future<void> getLeadValidPanCard(BuildContext context, String pancardNumber, DataProvider productProvider) async {
     Utils.hideKeyBored(context);
 
     await Provider.of<DataProvider>(context, listen: false)

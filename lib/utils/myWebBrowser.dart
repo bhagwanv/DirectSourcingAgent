@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:direct_sourcing_agent/utils/utils_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'directory_path.dart';
 import 'loader.dart';
@@ -87,12 +89,17 @@ class MyInAppBrowser extends InAppBrowser {
 
   @override
   void onConsoleMessage(ConsoleMessage consoleMessage) {
-    if (consoleMessage.messageLevel == 1 &&
-        consoleMessage.message == "Back To Flutter App") {
+    print("ShopKirana ${consoleMessage.message}");
+
+    if (consoleMessage.messageLevel == 1 && consoleMessage.message == "Back To Flutter App") {
       close();
       if (kDebugMode) {
         print("ShopKirana ${consoleMessage.message}");
       }
+    } else if (consoleMessage.messageLevel == 1 && consoleMessage.message.contains("BannerUrl")) {
+      String pdf = consoleMessage.message;
+      _launchURL(pdf);
+
     } else if (consoleMessage.messageLevel == 1 && consoleMessage.message.contains("DownloadEMIPDF")) {
       String pdf = consoleMessage.message;
       const String removePdfPart = 'DownloadEMIPDF';
@@ -106,6 +113,8 @@ class MyInAppBrowser extends InAppBrowser {
       Uri uri = Uri.parse(finalPdfPart);
       onDownloadStart(uri);
 
+    }else if(consoleMessage.messageLevel == 3 && consoleMessage.message.contains("Permissions policy violation: camera is not allowed in this document.")){
+      Utils.showBottomToast("Bhagwan");
     }
     super.onConsoleMessage(consoleMessage);
   }
@@ -142,4 +151,12 @@ class MyInAppBrowser extends InAppBrowser {
   void onExit() {
     print("Browser  closed!");
   }
+
+  _launchURL(String pdf) async {
+    final Uri url = Uri.parse(pdf);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
 }

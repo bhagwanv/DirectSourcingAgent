@@ -1068,7 +1068,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
           workingWithOther: workingWithParty,
           referenceName: _refranceNameController.text.toString(),
           referneceContact: _refranceContectController.text.toString(),
-          WorkingLocation: selectedWorkingLocationCity!.id!.toString(),
+          WorkingLocation: selectedWorkingLocationCity!.name!.toString(),
           currentAddressId: 0,
           mobileNo: loginMobilNumber,
           City: connectorInfoResponceModel!.cityId.toString(),

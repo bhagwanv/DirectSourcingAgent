@@ -34,11 +34,25 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
   final browser = MyInAppBrowser();
 
   final settings = InAppBrowserClassSettings(
-      browserSettings: InAppBrowserSettings(hideUrlBar: true),
-      webViewSettings: InAppWebViewSettings(
-          javaScriptEnabled: true,
-          isInspectable: kDebugMode,
-          clearCache: true));
+    browserSettings: InAppBrowserSettings(
+      hideUrlBar: true,
+    ),
+    webViewSettings: InAppWebViewSettings(
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      javaScriptEnabled: true,
+      isInspectable: kDebugMode,
+      clearCache: true,
+      geolocationEnabled: true,
+      allowFileAccess: true, // Allows access to files
+      allowContentAccess: true, // Allows access to content
+      mediaPlaybackRequiresUserGesture: false, // For autoplay
+      allowsInlineMediaPlayback: true, // Allows inline playback of media
+      useWideViewPort: true, // Makes the web view more adaptable
+      allowUniversalAccessFromFileURLs: true, // Enables universal access
+      domStorageEnabled: true,
+
+    ),
+  );
 
   @override
   void initState() {
@@ -46,6 +60,8 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
 
     getUserData();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -184,5 +200,5 @@ class _CreateLeadWidgetsState extends State<CreateLeadWidgets> {
     String companyId = companyID?.toString() ?? "";
     String productId =  widget.productType?.toString() ?? "";
     return "$baseUrl/$mobileNumber/$companyId/$productId/true";
-  }
+     }
 }

@@ -14,17 +14,19 @@ import 'MixpanelManager.dart';
 import 'MixpannelEventName.dart';
 
 class PermissionPage extends StatefulWidget {
-  const PermissionPage({Key? key}) : super(key: key);
+
+  final String? userOtp;
+  final String? userLoginMobile;
+  const PermissionPage({super.key, this.userOtp,this.userLoginMobile});
 
   @override
   _PermissionPageState createState() => _PermissionPageState();
 }
 
-class _PermissionPageState extends State<PermissionPage>
-    with WidgetsBindingObserver {
+class _PermissionPageState extends State<PermissionPage> with WidgetsBindingObserver {
   bool _cameraGranted = false;
   bool _microphoneGranted = false;
-  bool _smsGranted = false;
+  //bool _smsGranted = false;
   bool _permissionsRequested = false;
 
   @override
@@ -37,8 +39,7 @@ class _PermissionPageState extends State<PermissionPage>
     var mixpanelData = {
       'Screen': 'Permission Screen',
     };
-    MixpanelManager()
-        .trackEvent(MixpannelEventName.permissionAsk, mixpanelData);
+    MixpanelManager().trackEvent(MixpannelEventName.permissionAsk, mixpanelData);
   }
 
   @override
@@ -117,19 +118,19 @@ class _PermissionPageState extends State<PermissionPage>
                               description: 'To record audio',
                               isMandatory: true,
                               icon: "assets/icons/microphone_icon.png"),
-                          _buildPermissionItem(
+                         /* _buildPermissionItem(
                               granted: _smsGranted,
                               title: 'SMS Permission',
                               description: 'To detect due bills',
                               isMandatory: true,
-                              icon: "assets/icons/sms_icon.png"),
-                          _buildPermissionItem(
+                              icon: "assets/icons/sms_icon.png"),*/
+                         /* _buildPermissionItem(
                               granted: _smsGranted,
                               title: 'Auto Fetch Permission',
                               description:
                                   'To detect generated bills instantly',
                               isMandatory: true,
-                              icon: "assets/icons/phone_icon.png"),
+                              icon: "assets/icons/phone_icon.png"),*/
                           SizedBox(height: 72),
                         ],
                       ),
@@ -137,9 +138,7 @@ class _PermissionPageState extends State<PermissionPage>
                   ),
                   Positioned(
                     bottom: 0.0,
-                    // Adjust this value if you need more or less space
                     left: 0.0,
-                    // Adjust these values to position the button horizontally
                     right: 0.0,
                     child: Container(
                       color: Colors.white,
@@ -150,8 +149,7 @@ class _PermissionPageState extends State<PermissionPage>
                           child: ElevatedButton(
                             onPressed: () {
                               if (_cameraGranted &&
-                                  _microphoneGranted &&
-                                  _smsGranted) {
+                                  _microphoneGranted) {
                                 var mixpanelData = {
                                   'Screen': 'Permission Screen',
                                 };
@@ -173,8 +171,7 @@ class _PermissionPageState extends State<PermissionPage>
                             child: Text(
                               _permissionsRequested &&
                                       _cameraGranted &&
-                                      _microphoneGranted &&
-                                      _smsGranted
+                                      _microphoneGranted
                                   ? 'Continue'
                                   : 'Allow Access',
                               style: GoogleFonts.urbanist(
@@ -201,7 +198,7 @@ class _PermissionPageState extends State<PermissionPage>
     PermissionStatus cameraPermissionStatus = await Permission.camera.status;
     PermissionStatus microphonePermissionStatus =
         await Permission.microphone.status;
-    PermissionStatus smsPermissionStatus = await Permission.sms.status;
+    //PermissionStatus smsPermissionStatus = await Permission.sms.status;
 
     if (cameraPermissionStatus.isGranted) {
       _cameraGranted = true;
@@ -211,9 +208,9 @@ class _PermissionPageState extends State<PermissionPage>
       _microphoneGranted = true;
     }
 
-    if (smsPermissionStatus.isGranted) {
+    /*if (smsPermissionStatus.isGranted) {
       _smsGranted = true;
-    }
+    }*/
     setState(() {});
   }
 
@@ -223,7 +220,7 @@ class _PermissionPageState extends State<PermissionPage>
     });
     _cameraGranted = await _requestPermission(Permission.camera);
     _microphoneGranted = await _requestPermission(Permission.microphone);
-    _smsGranted = await _requestPermission(Permission.sms);
+   // _smsGranted = await _requestPermission(Permission.sms);
   }
 
   Future<bool> _requestPermission(Permission permission) async {
@@ -263,7 +260,7 @@ class _PermissionPageState extends State<PermissionPage>
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return const OtpScreen();
+                  return  OtpScreen(userOtp: data.otp!,userLoginMobile:mobileNumber);
                 },
               ),
             );

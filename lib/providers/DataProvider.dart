@@ -95,8 +95,7 @@ class DataProvider extends ChangeNotifier {
   Result< LeadPanResponseModel, Exception>? get getLeadPANData => _getLeadPANData;
 
   Result<ValidPanCardResponsModel,Exception>? _getLeadValidPanCardData;
-  Result<ValidPanCardResponsModel,Exception>? get getLeadValidPanCardData =>
-      _getLeadValidPanCardData;
+  Result<ValidPanCardResponsModel,Exception>? get getLeadValidPanCardData => _getLeadValidPanCardData;
 
   Result<FathersNameByValidPanCardResponseModel,Exception>? _getFathersNameByValidPanCardData;
   Result<FathersNameByValidPanCardResponseModel,Exception>? get getFathersNameByValidPanCardData => _getFathersNameByValidPanCardData;
