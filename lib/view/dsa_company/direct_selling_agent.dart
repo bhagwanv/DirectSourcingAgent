@@ -477,7 +477,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
   Widget buildWorkingLocationStateField(DataProvider productProvider) {
     if (productProvider.getWorkingLocationAllStateData != null) {
       if (productProvider.getWorkingLocationAllStateData != null) {
-        var allStates = productProvider.getWorkingLocationAllStateData!.returnObject!;
+        var allStates =
+            productProvider.getWorkingLocationAllStateData!.returnObject!;
         print("WorkingLocationStateId : $WorkingLocationStateId");
         if (WorkingLocationStateId != null) {
           selectedWorkingLocationState = allStates.firstWhere(
@@ -524,8 +525,8 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              items:
-                  getAllState(productProvider.getWorkingLocationAllStateData!.returnObject!),
+              items: getAllState(productProvider
+                  .getWorkingLocationAllStateData!.returnObject!),
               onChanged: (ReturnObject? value) {
                 setState(() {
                   workingLocationCityList.clear();
@@ -960,7 +961,7 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
       workingWithOther: isPresentlyworking,
       referneceName: _referenceNames.text,
       referneceContact: _referenceContactNoCl.text,
-      workingLocation: selectedWorkingLocationCity!.id!.toString(),
+      workingLocation: selectedWorkingLocationCity!.name!.toString(),
       address: _addressCl.text,
       city: cityId,
       state: stateId,
@@ -1153,12 +1154,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-     Provider.of<DataProvider>(context, listen: false)
+    Provider.of<DataProvider>(context, listen: false)
         .getDsaPersonalDetail(userId!, productCode!);
-     Provider.of<DataProvider>(context, listen: false).getAllState();
-     Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
-     Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
-     Provider.of<DataProvider>(context, listen: false).getWorkingLocationAllState();
+    Provider.of<DataProvider>(context, listen: false).getAllState();
+    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+    Provider.of<DataProvider>(context, listen: false)
+        .getWorkingLocationAllState();
     Navigator.of(context, rootNavigator: true).pop();
     DSAPersonalDetailAPICAll = false;
   }
@@ -1167,12 +1169,13 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     final prefsUtil = await SharedPref.getInstance();
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-     Provider.of<DataProvider>(context, listen: false)
+    Provider.of<DataProvider>(context, listen: false)
         .getConnectorInfo(userId!, productCode!);
-     Provider.of<DataProvider>(context, listen: false).getAllState();
-     Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
-     Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
-     Provider.of<DataProvider>(context, listen: false).getWorkingLocationAllState();
+    Provider.of<DataProvider>(context, listen: false).getAllState();
+    Provider.of<DataProvider>(context, listen: false).getEducationMasterList();
+    Provider.of<DataProvider>(context, listen: false).getLangauageMasterList();
+    Provider.of<DataProvider>(context, listen: false)
+        .getWorkingLocationAllState();
     Navigator.of(context, rootNavigator: true).pop();
     ConnectorPersonalDetailAPICAll = false;
   }
@@ -1353,16 +1356,14 @@ class _DirectSellingAgent extends State<DirectSellingAgent> {
     }
 
     if (dataProvider.getEducationMasterListResponseData != null) {
-      if (dataProvider
-          .getEducationMasterListResponseData!.returnObject !=
+      if (dataProvider.getEducationMasterListResponseData!.returnObject !=
           null) {
-        _qualificationList = dataProvider
-            .getEducationMasterListResponseData!.returnObject!;
+        _qualificationList =
+            dataProvider.getEducationMasterListResponseData!.returnObject!;
         if (_qualificationList.isNotEmpty &&
             _qualificationCl.text.trim().isNotEmpty) {
           initialQualification = _qualificationList.firstWhere(
-                (element) =>
-            element?.name == _qualificationCl.text.toString(),
+            (element) => element?.name == _qualificationCl.text.toString(),
           );
         }
       }
