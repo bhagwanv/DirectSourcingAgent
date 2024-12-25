@@ -218,9 +218,9 @@ class _ProfileReviewState extends State<ProfileReview> {
                 if (data.userData?.selfie != null) {
                   prefsUtil.saveString(USER_SELFI, data.userData!.selfie!);
                 }
-                if (data.userData?.salesAgentCommissions != null) {
+                if (data.userData?.productWiseCommissions != null) {
                   prefsUtil
-                      .saveCommissions(data.userData!.salesAgentCommissions!);
+                      .saveCommissions(data.userData!.productWiseCommissions!);
                 }
                 if (data.userData?.docSignedUrl != null) {
                   prefsUtil.saveString(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../view/login_screen/model/ProductWiseCommissions.dart';
 import '../view/otp_screens/model/GetUserProfileResponse.dart';
 
 class SharedPref {
@@ -64,18 +65,18 @@ class SharedPref {
   }
 
   // Save SalesAgentCommissions to SharedPreferences
-  Future<void> saveCommissions(List<SalesAgentCommissions> commissions) async {
+  Future<void> saveCommissions(List<ProductWiseCommissions> commissions) async {
     List<String> commissionsJsonList = commissions.map((commission) => jsonEncode(commission.toJson())).toList();
-    await _prefs.setStringList('salesAgentCommissions', commissionsJsonList);
+    await _prefs.setStringList('productWiseCommissions', commissionsJsonList);
   }
 
 // Load SalesAgentCommissions from SharedPreferences
-  Future<List<SalesAgentCommissions>> loadCommissions() async {
-    List<String>? commissionsJsonList = _prefs.getStringList('salesAgentCommissions');
+  Future<List<ProductWiseCommissions>> loadCommissions() async {
+    List<String>? commissionsJsonList = _prefs.getStringList('productWiseCommissions');
     if (commissionsJsonList == null) {
       return [];
     }
-    List<SalesAgentCommissions> commissions = commissionsJsonList.map((commissionJson) => SalesAgentCommissions.fromJson(jsonDecode(commissionJson))).toList();
+    List<ProductWiseCommissions> commissions = commissionsJsonList.map((commissionJson) => ProductWiseCommissions.fromJson(jsonDecode(commissionJson))).toList();
     return commissions;
   }
 

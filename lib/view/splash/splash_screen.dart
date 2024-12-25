@@ -193,8 +193,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
-                  if (data.userData?.salesAgentCommissions != null) {
-                    prefsUtil.saveCommissions(data.userData!.salesAgentCommissions!);
+                  if (data.userData?.productWiseCommissions != null) {
+                    prefsUtil.saveCommissions(data.userData!.productWiseCommissions!);
                   }
                   if (data.userData!.docSignedUrl != null) {
                     prefsUtil.saveString(

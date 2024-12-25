@@ -1,3 +1,5 @@
+import '../../login_screen/model/ProductWiseCommissions.dart';
+
 class GetUserProfileResponse {
   bool? status;
   String? message;
@@ -79,6 +81,8 @@ class UserData {
   String? startedOn;
   String? expiredOn;
   List<SalesAgentCommissions>? salesAgentCommissions;
+  List<ProductWiseCommissions>? productWiseCommissions;
+
 
   UserData(
       {this.name,
@@ -91,7 +95,7 @@ class UserData {
       this.docSignedUrl,
       this.startedOn,
       this.expiredOn,
-        this.salesAgentCommissions});
+        this.salesAgentCommissions,this.productWiseCommissions});
 
   UserData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -108,6 +112,12 @@ class UserData {
       salesAgentCommissions = <SalesAgentCommissions>[];
       json['salesAgentCommissions'].forEach((v) {
         salesAgentCommissions!.add(new SalesAgentCommissions.fromJson(v));
+      });
+    }
+    if (json['productWiseCommissions'] != null) {
+      productWiseCommissions = <ProductWiseCommissions>[];
+      json['productWiseCommissions'].forEach((v) {
+        productWiseCommissions!.add(new ProductWiseCommissions.fromJson(v));
       });
     }
   }
@@ -127,6 +137,10 @@ class UserData {
     if (this.salesAgentCommissions != null) {
       data['salesAgentCommissions'] =
           this.salesAgentCommissions!.map((v) => v.toJson()).toList();
+    }
+    if (this.productWiseCommissions != null) {
+      data['productWiseCommissions'] =
+          this.productWiseCommissions!.map((v) => v.toJson()).toList();
     }
     return data;
   }

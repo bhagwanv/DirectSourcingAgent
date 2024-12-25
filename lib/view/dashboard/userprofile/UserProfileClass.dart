@@ -24,6 +24,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as Path;
 
 import '../../../utils/directory_path.dart';
+import '../../login_screen/model/ProductWiseCommissions.dart';
 import '../../otp_screens/model/GetUserProfileResponse.dart';
 
 class UserProfileClass extends StatefulWidget {
@@ -58,8 +59,8 @@ class _UserProfileScreenState extends State<UserProfileClass> {
   String? user_address;
   String? user_workingLocation;
   String? user_selfie;
-  double? user_payout;
-  List<SalesAgentCommissions> loadedCommissions = [];
+  dynamic user_payout;
+  List<ProductWiseCommissions> loadedCommissions = [];
   String? doc_sign_url;
   var savedDir = "";
   bool dowloading = false;
@@ -300,11 +301,11 @@ class _UserProfileScreenState extends State<UserProfileClass> {
                   // Take up only necessary space
                   physics: NeverScrollableScrollPhysics(),
                   // Prevent internal scrolling
-                  itemCount: 1,
+                  itemCount:loadedCommissions.length ,
                   itemBuilder: (context, index) {
                     return loadedCommissions.isNotEmpty ? DynamicTable(
-                      title: "Business Loan",
-                      rows: loadedCommissions,
+                      title: loadedCommissions[index].productCode!,
+                      rows: loadedCommissions[index].payouts!,
                     ) : Container();
                   },
                 ),
@@ -381,11 +382,19 @@ class _UserProfileScreenState extends State<UserProfileClass> {
     loadedCommissions = await prefsUtil.loadCommissions();
 
     if (loadedCommissions.isNotEmpty) {
-      double maxPayoutPercentage = loadedCommissions
+      for (var commission in loadedCommissions) {
+        if (commission.payouts!.isNotEmpty) {
+          dynamic maxPayoutPercentage = commission.payouts?.map((payout) => payout.payoutPercentage).reduce((a, b) => a! > b! ? a : b);
+          user_payout = maxPayoutPercentage;
+        }
+      }
+
+
+     /* double maxPayoutPercentage = loadedCommissions
           .map((commission) => commission.payoutPercentage)
           .reduce((a, b) => a > b ? a : b)
-          .toDouble();
-      user_payout = maxPayoutPercentage;
+          .toDouble();*/
+
     }
     doc_sign_url = prefsUtil.getString(USER_DOC_SiGN_URL);
 
@@ -591,7 +600,7 @@ class _TileListState extends State<TileList> {
 
 class DynamicTable extends StatelessWidget {
   final String title;
-  final List<SalesAgentCommissions> rows;
+  final List<Payouts> rows;
 
   DynamicTable({required this.title, required this.rows});
 
@@ -624,12 +633,9 @@ class DynamicTable extends StatelessWidget {
                 tableHeaderCell('Payout %'),
               ],
             ),
-            ...rows
-                .asMap()
-                .entries
-                .map((entry) {
+            ...rows.asMap().entries.map((entry) {
               int index = entry.key;
-              SalesAgentCommissions rowData = entry.value;
+              Payouts rowData = entry.value;
 
               return TableRow(
                 children: [

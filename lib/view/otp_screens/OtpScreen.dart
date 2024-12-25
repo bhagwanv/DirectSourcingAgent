@@ -474,9 +474,9 @@ class _OtpScreenState extends State<OtpScreen>  {
                     prefsUtil.saveString(
                         USER_DOC_SiGN_URL, data.userData!.docSignedUrl!);
                   }
-                  if (data.userData?.salesAgentCommissions != null) {
+                  if (data.userData?.productWiseCommissions != null) {
                     prefsUtil
-                        .saveCommissions(data.userData!.salesAgentCommissions!);
+                        .saveCommissions(data.userData!.productWiseCommissions!);
                   }
                   if (data.userData!.docSignedUrl != null) {
                     prefsUtil.saveString(
